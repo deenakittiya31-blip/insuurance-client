@@ -3,12 +3,22 @@ import { listCompanySelect } from '../service/insurance/CompanyInsur';
 import { listTypeSelect } from '../service/insurance/TypeInsur';
 import { listPackageSelect } from '../service/insurance/PackageInsur';
 import { listCarUsageSelect } from '../service/car/CarUsage';
+import { listCarType } from '../service/car/CarType';
 
-const useActionStore = create((set, get) => ({
+const useActionStore = create((set) => ({
     company: [],
     typeInsur: [],
     packageSelect: [],
     carUsage: [],
+    cartype: [],
+    getCarType: async () => {
+        try {
+            const res = await listCarType()
+            set({ cartype: res.data.data })
+        } catch (err) {
+            console.log(err)
+        }
+    },
     getCompany: async () => {
         try {
             const res = await listCompanySelect()

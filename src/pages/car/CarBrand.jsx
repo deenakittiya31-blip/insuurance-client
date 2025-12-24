@@ -96,7 +96,7 @@ const CarBrand = () => {
         try {
             const res = await removeCarBrand(token, id)
             getCarBrand();
-            toast.success('ลบบริษัทประกันสำเร็จ');
+            toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
         }

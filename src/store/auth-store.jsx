@@ -1,20 +1,11 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { login, loginWithGoogle, loginWithLine, register } from '../service/auth';
-import { listCarType } from '../service/car/CarType';
 
 const authStore = (set, get) => ({
     user: null,
     token: null,
-    cartype: [],
-    getCarType: async () => {
-        try {
-            const res = await listCarType()
-            set({ cartype: res.data.data })
-        } catch (err) {
-            console.log(err)
-        }
-    },
+
     actionLogin: async (form) => {
         const res = await login(form)
         //รับข้อมูลจากหลังบ้านมาเก็บไว้ใน user and token ที่ประกาศไว้ข้างบน

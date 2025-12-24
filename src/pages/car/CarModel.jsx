@@ -29,7 +29,6 @@ const CarModel = () => {
         getCarModel(page)
     }, [page])
 
-    console.log(carModel)
     const hdlOnChange = (e) => {
         setForm({
             ...form,
@@ -78,8 +77,8 @@ const CarModel = () => {
         }
     }
 
-    const hdlDelete = (id) => {
-        Swal.fire({
+    const hdlDelete = async (id) => {
+        const result = await Swal.fire({
             title: "คุณแน่ใจ ?",
             text: "ต้องการจะลบจริง ๆ ใช่ไหม?",
             icon: "question",
@@ -88,13 +87,17 @@ const CarModel = () => {
             confirmButtonColor: "#d33",
             confirmButtonText: "ลบ",
             cancelButtonText: 'ยกเลิก'
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                const res = await removeCarModel(token, id)
-                getCarModel();
-                toast.success(res.data.msg);
-            }
-        });
+        })
+
+        if (!result.isConfirmed) return
+
+        try {
+            const res = await removeCarModel(token, id)
+            getCarModel();
+            toast.success(res.data.msg);
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     const hdlUpdate = async (id, data) => {

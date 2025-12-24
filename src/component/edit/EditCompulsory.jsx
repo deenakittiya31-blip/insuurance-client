@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
-import useInsureAuth from '../../store/auth-store'
 import Select from '../form/Select'
 import TextInput from '../form/TextInput'
+import useActionStore from '../../store/action-store'
 
 const EditCompulsory = ({ isOpen, onClose, onChange, onSubmit, value }) => {
-    const carType = useInsureAuth((s) => s.cartype)
-    const getCarType = useInsureAuth((s) => s.getCarType)
+    const carType = useActionStore((s) => s.cartype)
+    const getCarType = useActionStore((s) => s.getCarType)
 
     useEffect(() => {
         getCarType();

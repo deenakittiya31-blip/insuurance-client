@@ -10,7 +10,7 @@ export const createCarType = async (token, type) => {
 }
 
 export const listCarType = async () => {
-    return axios.get('${API_URL}/api/list-cartype')
+    return axios.get(`${API_URL}/api/list-cartype`)
 }
 
 export const updateCarType = async (token, id, type) => {

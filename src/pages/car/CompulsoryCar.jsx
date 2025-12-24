@@ -3,7 +3,7 @@ import ModalCompul from '../../component/modal/ModalCompul'
 import TableCompulsory from '../../component/table/TableCompulsory'
 import { useState } from 'react'
 import { useEffect } from 'react'
-import { ListCompulsory, readCompulsory, removeCompulsory, updateCompulsory } from '../../service/car/Compulsory'
+import { createCompulsory, ListCompulsory, readCompulsory, removeCompulsory, updateCompulsory } from '../../service/car/Compulsory'
 import Swal from 'sweetalert2'
 import useInsureAuth from '../../store/auth-store'
 import toast from 'react-hot-toast'
@@ -56,8 +56,21 @@ const CompulsoryCar = () => {
             })
     }
 
-    const hdlDelete = (id) => {
-        Swal.fire({
+    const hdlSubmit = async (e) => {
+        e.preventDefault()
+        try {
+            const res = await createCompulsory(token, form)
+            document.getElementById('my_modal_2').close();
+            getCompulsory();
+            toast.success(res.data.msg)
+        } catch (err) {
+            console.log(err)
+            toast.error(err.response.data.message)
+        }
+    }
+
+    const hdlDelete = async (id) => {
+        const result = await Swal.fire({
             title: "คุณแน่ใจ ?",
             text: "ต้องการจะลบจริง ๆ ใช่ไหม?",
             icon: "question",
@@ -66,13 +79,17 @@ const CompulsoryCar = () => {
             confirmButtonColor: "#d33",
             confirmButtonText: "ลบ",
             cancelButtonText: 'ยกเลิก'
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                const res = await removeCompulsory(token, id)
-                getCompulsory();
-                toast.success(res.data.msg);
-            }
-        });
+        })
+
+        if (!result.isConfirmed) return
+
+        try {
+            const res = await removeCompulsory(token, id)
+            getCompulsory();
+            toast.success(res.data.msg);
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     const handleUpdate = async (e) => {
@@ -91,7 +108,11 @@ const CompulsoryCar = () => {
 
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
-            <ModalCompul onSuccess={getCompulsory} />
+            <ModalCompul
+                form={form}
+                onChange={hdlOnChange}
+                onSubmit={hdlSubmit}
+            />
             <TableCompulsory
                 data={compulsory}
                 onDelete={hdlDelete}

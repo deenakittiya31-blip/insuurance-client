@@ -26,7 +26,7 @@ const EditPackage = ({ isOpen, onClose, onchange, onSubmit, value }) => {
                     name='company_id'
                     onChange={onchange}
                     valueKey='id'
-                    labelKey='nameCompany'
+                    labelKey='namecompany'
                 />
                 <Select
                     text='การใช้งาน'
@@ -35,7 +35,7 @@ const EditPackage = ({ isOpen, onClose, onchange, onSubmit, value }) => {
                     name='insurance_type_id'
                     onChange={onchange}
                     valueKey='id'
-                    labelKey='nameType'
+                    labelKey='nametype'
                 />
                 <TextInput
                     width='w-sm'

@@ -48,6 +48,7 @@ const InsurCompany = () => {
 
     const closeForm = () => {
         setOpen(false)
+        setForm(initialState)
     }
 
     const hdlSubmit = async (e) => {
@@ -111,9 +112,9 @@ const InsurCompany = () => {
         if (!result.isConfirmed) return
 
         try {
-            await removeCompany(token, id)
+            const res = await removeCompany(token, id)
             getCompany();
-            toast.success('ลบบริษัทประกันสำเร็จ');
+            toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
         }

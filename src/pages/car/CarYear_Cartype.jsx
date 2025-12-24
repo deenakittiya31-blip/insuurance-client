@@ -9,11 +9,13 @@ import TableYear from '../../component/table/TableYear'
 import TableCarType from '../../component/table/TableCarType'
 import { createCarType, removeCarType, updateCarType } from '../../service/car/CarType'
 import Pagination from '../../component/paginationComponent/Pagination'
+import Swal from 'sweetalert2'
+import useActionStore from '../../store/action-store'
 
 const CarYear_Cartype = () => {
     const token = useInsureAuth((s) => s.token)
-    const getCarType = useInsureAuth((s) => s.getCarType)
-    const cartype = useInsureAuth((s) => s.cartype)
+    const cartype = useActionStore((s) => s.cartype)
+    const getCarType = useActionStore((s) => s.getCarType)
     const [year, setYear] = useState('')
     const [type, setType] = useState('')
     const [yearData, setYearData] = useState([])
@@ -21,8 +23,8 @@ const CarYear_Cartype = () => {
 
 
     useEffect(() => {
-        getYear(page);
         getCarType();
+        getYear(page);
     }, [page])
 
     const getYear = async (page) => {
@@ -62,28 +64,45 @@ const CarYear_Cartype = () => {
     }
 
     const hdlDelete = async (id) => {
-        console.log(id)
+        const result = await Swal.fire({
+            title: "คุณแน่ใจ ?",
+            text: "ต้องการจะลบจริง ๆ ใช่ไหม?",
+            icon: "question",
+            showCancelButton: true,
+            cancelButtonColor: "#E5E4E2",
+            confirmButtonColor: "#d33",
+            confirmButtonText: "ลบ",
+            cancelButtonText: 'ยกเลิก'
+        })
+
+        if (!result.isConfirmed) return
+
         try {
-            if (window.confirm('ลบปีนี้ใช่ไหม')) {
-                const res = await removeYear(token, id)
-                toast.success(res.data.message)
-                getYear();
-            }
+            const res = await removeYear(token, id)
+            toast.success(res.data.msg)
+            getYear();
         } catch (err) {
             console.log(err)
-            toast.error(err.response.data.message)
         }
-
     }
 
     const hdlDeleteType = async (id) => {
-        console.log(id)
+        const result = await Swal.fire({
+            title: "คุณแน่ใจ ?",
+            text: "ต้องการจะลบจริง ๆ ใช่ไหม?",
+            icon: "question",
+            showCancelButton: true,
+            cancelButtonColor: "#E5E4E2",
+            confirmButtonColor: "#d33",
+            confirmButtonText: "ลบ",
+            cancelButtonText: 'ยกเลิก'
+        })
+
+        if (!result.isConfirmed) return
         try {
-            if (window.confirm('ลบปีนี้ใช่ไหม')) {
-                const res = await removeCarType(token, id)
-                toast.success(res.data.message)
-                getCarType();
-            }
+            const res = await removeCarType(token, id)
+            toast.success(res.data.msg)
+            getCarType();
         } catch (err) {
             console.log(err)
             toast.error(err.response.data.message)
@@ -93,8 +112,8 @@ const CarYear_Cartype = () => {
 
     const hdlUpdateType = async (id, value) => {
         try {
-            await updateCarType(token, id, value)
-            toast.success('อัปเดตเรียบร้อย')
+            const res = await updateCarType(token, id, value)
+            toast.success(res.data.msg)
             getCarType()
         } catch (err) {
             console.log(err)
@@ -104,12 +123,11 @@ const CarYear_Cartype = () => {
 
     const hdlUpdateYear = async (id, value) => {
         try {
-            await updateYear(token, id, value)
-            toast.success('อัปเดตเรียบร้อย')
+            const res = await updateYear(token, id, value)
+            toast.success(res.data.msg)
             getYear()
         } catch (err) {
             console.log(err)
-            toast.error('อัปเดตไม่สำเร็จ')
         }
     }
 

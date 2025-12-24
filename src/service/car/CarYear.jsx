@@ -14,7 +14,7 @@ export const listYear = async (pageNumber) => {
 }
 
 export const updateYear = async (token, id, year) => {
-    return axios.put('${API_URL}/api/update-year/' + id, { year }, {
+    return axios.put(`${API_URL}/api/update-year/${id}`, { year }, {
         headers: {
             Authorization: `Bearer ${token}`
         }

@@ -29,7 +29,7 @@ const ModalPackage = ({ form, onSubmit, onChange }) => {
                         value={form.company_id}
                         onChange={onChange}
                         valueKey='id'
-                        labelKey='nameCompany'
+                        labelKey='namecompany'
                     />
                     <Select
                         text='ประเภทของประกัน'
@@ -38,7 +38,7 @@ const ModalPackage = ({ form, onSubmit, onChange }) => {
                         value={form.insurance_type_id}
                         onChange={onChange}
                         valueKey='id'
-                        labelKey='nameType'
+                        labelKey='nametype'
                     />
                     <TextInput
                         width='w-sm'

@@ -10,7 +10,7 @@ export const createCompulsory = async (token, form) => {
 }
 
 export const ListCompulsory = async () => {
-    return axios.get('${API_URL}/api/list-compulsory')
+    return axios.get(`${API_URL}/api/list-compulsory`)
 }
 
 export const readCompulsory = async (token, id) => {

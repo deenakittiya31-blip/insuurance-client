@@ -7,6 +7,7 @@ import { createCarUsage, listCarUsage, removeCarUsage, updateCarUsage } from '..
 import TableCarUsage from '../../component/table/TableCarUsage'
 import toast from 'react-hot-toast'
 import Pagination from '../../component/paginationComponent/Pagination'
+import Swal from 'sweetalert2'
 
 const UsageCar = () => {
     const token = useInsureAuth((s) => s.token)
@@ -44,12 +45,24 @@ const UsageCar = () => {
     }
 
     const hdlDelete = async (id) => {
+        const result = await Swal.fire({
+            title: "คุณแน่ใจ ?",
+            text: "ต้องการจะลบจริง ๆ ใช่ไหม?",
+            icon: "question",
+            showCancelButton: true,
+            cancelButtonColor: "#E5E4E2",
+            confirmButtonColor: "#d33",
+            confirmButtonText: "ลบ",
+            cancelButtonText: 'ยกเลิก'
+        })
+
+        if (!result.isConfirmed) return
+
         try {
-            if (window.confirm('ลบปีนี้ใช่ไหม')) {
-                const res = await removeCarUsage(token, id)
-                toast.success(res.data.message)
-                getUsage(page);
-            }
+            const res = await removeCarUsage(token, id)
+            getUsage(page);
+            toast.success(res.data.msg)
+
         } catch (err) {
             console.log(err)
             toast.error(err.response.data.message)
@@ -59,12 +72,11 @@ const UsageCar = () => {
 
     const hdlUpdateCarUsage = async (id, value) => {
         try {
-            await updateCarUsage(token, id, value)
-            toast.success('อัปเดตเรียบร้อย')
+            const res = await updateCarUsage(token, id, value)
+            toast.success(res.data.msg)
             getUsage()
         } catch (err) {
             console.log(err)
-            toast.error('อัปเดตไม่สำเร็จ')
         }
     }
 

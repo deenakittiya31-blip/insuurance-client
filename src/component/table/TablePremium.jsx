@@ -1,6 +1,7 @@
 import React from 'react'
 
 const TablePremium = ({ data, onDelete, onEdite }) => {
+
     return (
         <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 font-prompt">
             <table className="table">
@@ -26,7 +27,7 @@ const TablePremium = ({ data, onDelete, onEdite }) => {
                                 <td className='text-center'>{i.year}</td>
                                 <td className='text-center'>{i.premium}</td>
                                 <td className='text-center'>{i.compulsory}</td>
-                                <td className='text-center'>{i.compulsory + i.premium}</td>
+                                <td className='text-center'>{i.total}</td>
                                 <td className='flex gap-5 justify-center'>
                                     <button onClick={() => onEdite(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
                                     <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>

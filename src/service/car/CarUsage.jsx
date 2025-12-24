@@ -14,7 +14,7 @@ export const listCarUsage = async (pageNumber) => {
 }
 
 export const listCarUsageSelect = () => {
-    return axios.get('${API_URL}/api/list-carusage-select')
+    return axios.get(`${API_URL}/api/list-carusage-select`)
 }
 
 export const updateCarUsage = async (token, id, usage) => {
