@@ -10,11 +10,11 @@ const EditTypeInsur = ({ isOpen, onClose, onChange, onSubmit, value }) => {
                 <TextInput
                     width='w-sm'
                     title='ประเภทประกัน'
-                    name='nameType'
+                    name='nametype'
                     type='text'
                     placeholder='กรอกประเภทของประกัน เช่น ชั้น 1...'
                     onChange={onChange}
-                    value={value.nameType}
+                    value={value.nametype}
                 />
                 <fieldset className="fieldset">
                     <legend className="fieldset-legend text-sm">รายละเอียด</legend>

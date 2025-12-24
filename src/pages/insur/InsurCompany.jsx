@@ -9,7 +9,7 @@ import EditCompany from '../../component/edit/EditCompany'
 import Title from '../../component/form/Title'
 
 const initialState = {
-    nameCompany: '',
+    namecompany: '',
     code: '',
     logo_url: null,
     phone: '',
@@ -53,7 +53,7 @@ const InsurCompany = () => {
     const hdlSubmit = async (e) => {
         e.preventDefault()
 
-        if (!form.nameCompany || !form.logo_url) {
+        if (!form.namecompany || !form.logo_url) {
             toast.error('กรุณากรอกชื่อและเลือกรูป')
             return
         }

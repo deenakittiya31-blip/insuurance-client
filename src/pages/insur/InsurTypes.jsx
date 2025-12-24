@@ -8,7 +8,7 @@ import ModalInsurType from '../../component/modal/ModalInsurType'
 import EditTypeInsur from '../../component/edit/EditTypeInsur'
 
 const initialState = {
-    nameType: '',
+    nametype: '',
     description: ''
 }
 
@@ -58,7 +58,7 @@ const InsurTypes = () => {
     const hdlSubmit = async (e) => {
         e.preventDefault()
 
-        if (!form.nameType) {
+        if (!form.nametype) {
             toast.error('กรุณากรอกประเภทของประกัน')
             return
         }

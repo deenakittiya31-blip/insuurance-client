@@ -1,10 +1,5 @@
-import React, { useState } from 'react'
-import useInsureAuth from '../../store/auth-store'
+import React from 'react'
 import TextInput from '../form/TextInput'
-import toast from 'react-hot-toast'
-import { creatType } from '../../service/insurance/TypeInsur'
-
-
 
 const ModalInsurType = ({ value, onSubmit, onChange }) => {
 
@@ -17,11 +12,11 @@ const ModalInsurType = ({ value, onSubmit, onChange }) => {
                     <TextInput
                         width='w-sm'
                         title='ประเภทประกัน'
-                        name='nameType'
+                        name='nametype'
                         type='text'
                         placeholder='กรอกประเภทของประกัน เช่น ชั้น 1...'
                         onChange={onChange}
-                        value={value.nameType}
+                        value={value.nametype}
                     />
                     <fieldset className="fieldset">
                         <legend className="fieldset-legend text-sm">รายละเอียด</legend>

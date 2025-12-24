@@ -15,11 +15,11 @@ const EditCompany = ({ isOpen, form, setForm, onSubmit, onChange, onClose }) => 
                 <TextInput
                     width='w-sm'
                     title='ชื่อบริษัท'
-                    name='nameCompany'
+                    name='namecompany'
                     type='text'
                     placeholder='ชื่อบริษัท'
                     onChange={onChange}
-                    value={form.nameCompany}
+                    value={form.namecompany}
                 />
                 <TextInput
                     width='w-sm'
