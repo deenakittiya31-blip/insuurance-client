@@ -1,0 +1,39 @@
+import React from 'react'
+
+const TablePackage = ({ data, onDelete, onEdite }) => {
+    return (
+        <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 font-prompt">
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th>ลำดับ</th>
+                        <th className='text-center'>บริษัท</th>
+                        <th className='text-center'>ประเภทของประกัน</th>
+                        <th className='text-center'>แพ็กเกจ</th>
+                        <th className='text-center'>คุ้มครอง</th>
+                        <th className='text-center'>จัดการ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        data?.map((i, idx) => (
+                            <tr key={i.id}>
+                                <th>{idx + 1}</th>
+                                <td className='text-center'>{i.company}</td>
+                                <td className='text-center'>{i.type}</td>
+                                <td className='text-center'>{i.package_name}</td>
+                                <td className='text-center'>{i.coverage_amount}</td>
+                                <td className='flex gap-5 justify-center'>
+                                    <button onClick={() => onEdite(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
+                                    <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
+                                </td>
+                            </tr>
+                        ))
+                    }
+                </tbody>
+            </table>
+        </div>
+    )
+}
+
+export default TablePackage
