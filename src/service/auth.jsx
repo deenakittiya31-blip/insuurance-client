@@ -1,17 +1,19 @@
 import axios from "axios";
+import { API_URL } from "../config/api";
+
 
 export const login = async (form) => {
-    return axios.post('http://localhost:5000/api/login', form)
+    return axios.post(`${API_URL}/api/login`, form)
 }
 
 export const loginWithLine = async (form) => {
-    return axios.post('http://localhost:5000/api/login-line', form)
+    return axios.post(`${API_URL}/api/login-line`, form)
 }
 
 export const loginWithGoogle = async (credential) => {
-    return axios.post('http://localhost:5000/api/login-google', { credential })
+    return axios.post(`${API_URL}/api/login-google`, { credential })
 }
 
 export const register = async (form) => {
-    return axios.post('http://localhost:5000/api/register', form)
+    return axios.post(`${API_URL}/api/register`, form)
 }

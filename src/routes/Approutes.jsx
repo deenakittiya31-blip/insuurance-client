@@ -19,7 +19,7 @@ const Approutes = () => {
     return (
         <BrowserRouter>
             <Routes>
-                <Route index element={<Login />} />
+                <Route path='login' element={<Login />} />
                 <Route path='register' element={<Register />} />
                 <Route path='line' element={<LoginLine />} />
                 <Route path='/admin' element={<Layout />}>
