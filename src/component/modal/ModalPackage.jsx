@@ -5,7 +5,7 @@ import TextInput from '../form/TextInput'
 
 
 
-const ModalPackage = ({ form, onSubmit, onChange }) => {
+const ModalPackage = ({ form, onSubmit, onChange, }) => {
     const company = useActionStore((s) => s.company)
     const typeInsur = useActionStore((s) => s.typeInsur)
     const getCompany = useActionStore((s) => s.getCompany)

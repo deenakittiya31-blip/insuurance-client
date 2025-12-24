@@ -46,6 +46,7 @@ const InsurPackage = () => {
 
     const closeForm = () => {
         setOpen(false)
+        setForm(initialState)
     }
 
     const getPackage = async () => {
@@ -103,6 +104,7 @@ const InsurPackage = () => {
             const res = await removePackage(token, id)
             getPackage()
             toast.success(res.data.msg)
+
         } catch (err) {
             console.log(err)
         }
@@ -114,6 +116,7 @@ const InsurPackage = () => {
                 form={form}
                 onSubmit={hdlSubmit}
                 onChange={hdlOnChange}
+                onClose={closeForm}
             />
             <TablePackage
                 data={packageData}
