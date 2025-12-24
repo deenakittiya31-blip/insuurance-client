@@ -23,12 +23,12 @@ const TableCompany = ({ data, onDelete, onEdit }) => {
                                 <td>
                                     <img
                                         src={i.logo_url}
-                                        alt={i.nameCompany}
+                                        alt={i.namecompany}
                                         className="w-10 h-10 object-contain mx-auto"
                                     />
                                 </td>
                                 <td className='text-center'>
-                                    {i.nameCompany}
+                                    {i.namecompany}
                                 </td>
                                 <td className='text-center'>
                                     {i.code}

@@ -19,7 +19,7 @@ const TableInsurType = ({ data, onDelete, onEdite }) => {
                             <tr key={i.id}>
                                 <th>{idx + 1}</th>
                                 <td className='text-center'>
-                                    {i.nameType}
+                                    {i.nametype}
                                 </td>
                                 <td className='text-center'>
                                     {i.description}
