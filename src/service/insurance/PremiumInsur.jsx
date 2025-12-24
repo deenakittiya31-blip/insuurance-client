@@ -1,7 +1,8 @@
 import axios from "axios";
+import { API_URL } from "../../config/api";
 
 export const createPremium = (token, form) => {
-    return axios.post('http://localhost:5000/api/create-premium', form, {
+    return axios.post(`${API_URL}/api/create-premium`, form, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -9,11 +10,11 @@ export const createPremium = (token, form) => {
 }
 
 export const listPremium = () => {
-    return axios.get('http://localhost:5000/api/list-premium')
+    return axios.get(`${API_URL}/api/list-premium`)
 }
 
 export const readPremium = (token, id) => {
-    return axios.get(`http://localhost:5000/api/read-premium/${id}`, {
+    return axios.get(`${API_URL}/api/read-premium/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -21,7 +22,7 @@ export const readPremium = (token, id) => {
 }
 
 export const updatePremium = (token, id, form) => {
-    return axios.put(`http://localhost:5000/api/update-premium/${id}`, form, {
+    return axios.put(`${API_URL}/api/update-premium/${id}`, form, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -29,7 +30,7 @@ export const updatePremium = (token, id, form) => {
 }
 
 export const removePremium = (token, id) => {
-    return axios.delete(`http://localhost:5000/api/delete-premium/${id}`, {
+    return axios.delete(`${API_URL}/api/delete-premium/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }

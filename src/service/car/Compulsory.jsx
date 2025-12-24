@@ -1,7 +1,8 @@
 import axios from 'axios'
+import { API_URL } from '../../config/api'
 
 export const createCompulsory = async (token, form) => {
-    return axios.post('http://localhost:5000/api/create-compulsory', form, {
+    return axios.post(`${API_URL}/api/create-compulsory`, form, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -9,11 +10,11 @@ export const createCompulsory = async (token, form) => {
 }
 
 export const ListCompulsory = async () => {
-    return axios.get('http://localhost:5000/api/list-compulsory')
+    return axios.get('${API_URL}/api/list-compulsory')
 }
 
 export const readCompulsory = async (token, id) => {
-    return axios.get(`http://localhost:5000/api/read-compulsory/${id}`, {
+    return axios.get(`${API_URL}/api/read-compulsory/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -21,7 +22,7 @@ export const readCompulsory = async (token, id) => {
 }
 
 export const updateCompulsory = (token, id, form) => {
-    return axios.put(`http://localhost:5000/api/update-compulsory/${id}`, form, {
+    return axios.put(`${API_URL}/api/update-compulsory/${id}`, form, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -29,7 +30,7 @@ export const updateCompulsory = (token, id, form) => {
 }
 
 export const removeCompulsory = async (token, id) => {
-    return axios.delete(`http://localhost:5000/api/delete-compulsory/${id}`, {
+    return axios.delete(`${API_URL}/api/delete-compulsory/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }

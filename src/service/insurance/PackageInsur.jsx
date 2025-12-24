@@ -1,7 +1,8 @@
 import axios from 'axios'
+import { API_URL } from '../../config/api'
 
 export const createPackage = (token, form) => {
-    return axios.post('http://localhost:5000/api/create-package', form, {
+    return axios.post(`${API_URL}/api/create-package`, form, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -9,15 +10,15 @@ export const createPackage = (token, form) => {
 }
 
 export const listPackage = () => {
-    return axios.get('http://localhost:5000/api/list-package')
+    return axios.get(`${API_URL}/api/list-package`)
 }
 
 export const listPackageSelect = () => {
-    return axios.get('http://localhost:5000/api/list-package-select')
+    return axios.get(`${API_URL}/api/list-package-select`)
 }
 
 export const readPackage = (token, id) => {
-    return axios.get(`http://localhost:5000/api/read-package/${id}`, {
+    return axios.get(`${API_URL}/api/read-package/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -25,7 +26,7 @@ export const readPackage = (token, id) => {
 }
 
 export const updatePackage = (token, id, form) => {
-    return axios.put(`http://localhost:5000/api/update-package/${id}`, form, {
+    return axios.put(`${API_URL}/api/update-package/${id}`, form, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -33,7 +34,7 @@ export const updatePackage = (token, id, form) => {
 }
 
 export const removePackage = (token, id) => {
-    return axios.delete(`http://localhost:5000/api/delete-package/${id}`, {
+    return axios.delete(`${API_URL}/api/delete-package/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }

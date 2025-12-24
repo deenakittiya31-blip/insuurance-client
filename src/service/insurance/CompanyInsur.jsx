@@ -1,7 +1,8 @@
 import axios from "axios";
+import { API_URL } from "../../config/api";
 
 export const createCompany = (token, form) => {
-    return axios.post('http://localhost:5000/api/create-company', form, {
+    return axios.post(`${API_URL}/api/create-company`, form, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -9,15 +10,15 @@ export const createCompany = (token, form) => {
 }
 
 export const listCompany = () => {
-    return axios.get('http://localhost:5000/api/list-company')
+    return axios.get(`${API_URL}/api/list-company`)
 }
 
 export const listCompanySelect = () => {
-    return axios.get('http://localhost:5000/api/list-company-select')
+    return axios.get(`${API_URL}/api/list-company-select`)
 }
 
 export const readCompany = (token, id) => {
-    return axios.get(`http://localhost:5000/api/read-company/${id}`, {
+    return axios.get(`${API_URL}/api/read-company/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -25,7 +26,7 @@ export const readCompany = (token, id) => {
 }
 
 export const updateCompany = (token, id, form) => {
-    return axios.put(`http://localhost:5000/api/update-company/${id}`, form, {
+    return axios.put(`${API_URL}/api/update-company/${id}`, form, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -33,7 +34,7 @@ export const updateCompany = (token, id, form) => {
 }
 
 export const removeCompany = (token, id) => {
-    return axios.delete(`http://localhost:5000/api/delete-company/${id}`, {
+    return axios.delete(`${API_URL}/api/delete-company/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }

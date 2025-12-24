@@ -1,7 +1,8 @@
 import axios from 'axios'
+import { API_URL } from '../../config/api'
 
 export const createYear = async (token, year) => {
-    return axios.post('http://localhost:5000/api/create-year', { year }, {
+    return axios.post(`${API_URL}/api/create-year`, { year }, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -9,11 +10,11 @@ export const createYear = async (token, year) => {
 }
 
 export const listYear = async (pageNumber) => {
-    return axios.get(`http://localhost:5000/api/list-year/page?page=${pageNumber}&per_page=5`)
+    return axios.get(`${API_URL}/api/list-year/page?page=${pageNumber}&per_page=5`)
 }
 
 export const updateYear = async (token, id, year) => {
-    return axios.put('http://localhost:5000/api/update-year/' + id, { year }, {
+    return axios.put('${API_URL}/api/update-year/' + id, { year }, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -21,7 +22,7 @@ export const updateYear = async (token, id, year) => {
 }
 
 export const removeYear = async (token, id) => {
-    return axios.delete(`http://localhost:5000/api/delete-year/${id}`, {
+    return axios.delete(`${API_URL}/api/delete-year/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
