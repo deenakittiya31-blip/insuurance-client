@@ -6,8 +6,8 @@ import { createCarModel, listCarModel, removeCarModel, updateCarModel } from '..
 import Input from '../../component/form/Input'
 import toast from 'react-hot-toast'
 import Swal from 'sweetalert2'
-import Pagination from '../../component/pagination/pagination'
 import TableCarModel from '../../component/table/TableCarModel'
+import Pagination from '../../component/paginationComponent/Pagination'
 
 const initialForm = {
     brand_id: '',

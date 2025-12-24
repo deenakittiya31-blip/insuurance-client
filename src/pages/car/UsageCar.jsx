@@ -5,8 +5,8 @@ import { useState } from 'react'
 import useInsureAuth from '../../store/auth-store'
 import { createCarUsage, listCarUsage, removeCarUsage, updateCarUsage } from '../../service/car/CarUsage'
 import TableCarUsage from '../../component/table/TableCarUsage'
-import Pagination from '../../component/pagination/pagination'
 import toast from 'react-hot-toast'
+import Pagination from '../../component/paginationComponent/Pagination'
 
 const UsageCar = () => {
     const token = useInsureAuth((s) => s.token)

@@ -7,8 +7,8 @@ import { useEffect } from 'react'
 import Input from '../../component/form/Input'
 import TableYear from '../../component/table/TableYear'
 import TableCarType from '../../component/table/TableCarType'
-import Pagination from '../../component/pagination/Pagination'
 import { createCarType, removeCarType, updateCarType } from '../../service/car/CarType'
+import Pagination from '../../component/paginationComponent/Pagination'
 
 const CarYear_Cartype = () => {
     const token = useInsureAuth((s) => s.token)
