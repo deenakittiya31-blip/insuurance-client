@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import useInsureAuth from '../store/auth-store'
 import { Navigate } from 'react-router-dom'
-import LoadingToRedirect from './LoadingToRedirect';
 import LoadingScreen from './LoadingScreen';
 import Forbidden from './Forbidden';
 
