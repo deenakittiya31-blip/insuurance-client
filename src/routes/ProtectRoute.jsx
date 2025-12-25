@@ -27,12 +27,6 @@ const ProtectRoute = ({ children, allowRoles = [] }) => {
         init()
     }, [token, user])
 
-    console.log('ProtectRoute token:', token)
-    console.log('ProtectRoute user:', user)
-    console.log('ProtectRoute role:', user?.role)
-    console.log('allowRoles:', allowRoles)
-
-
     if (loading) return null
 
     if (!token) return <Navigate to="/" replace />

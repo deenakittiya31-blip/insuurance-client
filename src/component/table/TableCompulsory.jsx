@@ -1,6 +1,6 @@
 import React from 'react'
 
-const TableCompulsory = ({ data, onDelete, onEdite }) => {
+const TableCompulsory = ({ data, page, limit, onDelete, onEdite }) => {
     return (
         <div className="overflow-x-auto font-prompt">
             <table className="table">
@@ -17,7 +17,7 @@ const TableCompulsory = ({ data, onDelete, onEdite }) => {
                     {
                         data?.map((i, idx) => (
                             <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
-                                <td>{idx + 1}</td>
+                                <td>{(page - 1) * limit + idx + 1}</td>
                                 <td>{i.type}</td>
                                 <td>{i.price}</td>
                                 <td>{i.coverage_detail}</td>

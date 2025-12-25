@@ -5,10 +5,10 @@ import useActionStore from '../../store/action-store'
 
 const ModalCompul = ({ form, onSubmit, onChange }) => {
     const cartype = useActionStore((s) => s.cartype)
-    const getCarType = useActionStore((s) => s.getCarType)
+    const getCarTypeSelect = useActionStore((s) => s.getCarTypeSelect)
 
     useEffect(() => {
-        getCarType();
+        getCarTypeSelect();
     }, [])
 
     return (

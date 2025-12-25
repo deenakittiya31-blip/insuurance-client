@@ -8,6 +8,7 @@ import useInsureAuth from '../../store/auth-store'
 import EditCompany from '../../component/edit/EditCompany'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
+import Pagination from '../../component/paginationComponent/Pagination'
 
 const initialState = {
     namecompany: '',
@@ -23,10 +24,14 @@ const InsurCompany = () => {
     const [form, setForm] = useState(initialState)
     const [open, setOpen] = useState(false)
     const [idSelect, setIdSelect] = useState(null)
+    const [page, setPage] = useState(1)
+    const [total, setTotal] = useState(0)
+    const limit = 10;
+    const lastPage = Math.ceil(total / limit)
 
     useEffect(() => {
-        getCompany();
-    }, [])
+        getCompany(page);
+    }, [page])
 
     const handleOnChange = (e) => {
         setForm({
@@ -63,7 +68,7 @@ const InsurCompany = () => {
         try {
             const res = await createCompany(token, form)
             document.getElementById('my_modal_2').close();
-            getCompany();
+            getCompany(page);
             toast.success(res.data.msg)
             setForm(initialState)
 
@@ -82,17 +87,18 @@ const InsurCompany = () => {
             setForm(initialState)
             closeForm()
             toast.success(res.data.msg)
-            getCompany()
+            getCompany(page)
 
         } catch (err) {
             console.log(err)
         }
     }
 
-    const getCompany = async () => {
+    const getCompany = async (page) => {
         try {
-            const res = await listCompany()
+            const res = await listCompany(page)
             setCompany(res.data.data)
+            setTotal(res.data.total)
         } catch (err) {
             console.log(err)
         }
@@ -114,7 +120,7 @@ const InsurCompany = () => {
 
         try {
             const res = await removeCompany(token, id)
-            getCompany();
+            getCompany(page);
             toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
@@ -143,7 +149,21 @@ const InsurCompany = () => {
                     data={company}
                     onDelete={hdlDelete}
                     onEdit={openModal}
+                    page={page}
+                    limit={limit}
                 />
+            </div>
+            <div className='flex justify-end'>
+                {
+                    total > limit && (
+                        <Pagination
+                            disablePrev={page === 1}
+                            disableNext={page === lastPage}
+                            onPrevious={() => setPage(page - 1)}
+                            onNext={() => setPage(page + 1)}
+                        />
+                    )
+                }
             </div>
             <EditCompany
                 isOpen={open}

@@ -9,8 +9,8 @@ export const createPremium = (token, form) => {
     })
 }
 
-export const listPremium = () => {
-    return axios.get(`${API_URL}/api/list-premium`)
+export const listPremium = (pageNumber) => {
+    return axios.get(`${API_URL}/api/list-premium/page?page=${pageNumber}&per_page=10`)
 }
 
 export const readPremium = (token, id) => {

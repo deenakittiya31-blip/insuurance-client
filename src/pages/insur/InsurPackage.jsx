@@ -8,6 +8,7 @@ import useInsureAuth from '../../store/auth-store'
 import EditPackage from '../../component/edit/EditPackage'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
+import Pagination from '../../component/paginationComponent/Pagination'
 
 const initialState = {
     company_id: '',
@@ -22,10 +23,14 @@ const InsurPackage = () => {
     const [form, setForm] = useState(initialState)
     const [open, setOpen] = useState(false)
     const [idSelect, setIdSelect] = useState(null)
+    const [page, setPage] = useState(1)
+    const [total, setTotal] = useState(0)
+    const limit = 10;
+    const lastPage = Math.ceil(total / limit)
 
     useEffect(() => {
-        getPackage();
-    }, [])
+        getPackage(page);
+    }, [page])
 
     const hdlOnChange = (e) => {
         setForm({
@@ -51,10 +56,11 @@ const InsurPackage = () => {
         setForm(initialState)
     }
 
-    const getPackage = async () => {
+    const getPackage = async (page) => {
         try {
-            const res = await listPackage();
+            const res = await listPackage(page);
             setPackageData(res.data.data)
+            setTotal(res.data.total)
         } catch (err) {
             console.log(err)
         }
@@ -66,7 +72,7 @@ const InsurPackage = () => {
             const res = await createPackage(token, form)
             document.getElementById('my_modal_2').close();
             setForm(initialState)
-            getPackage();
+            getPackage(page);
             toast.success(res.data.msg)
         } catch (err) {
             console.log(err)
@@ -81,7 +87,7 @@ const InsurPackage = () => {
             setForm(initialState)
             closeForm()
             toast.success(res.data.msg)
-            getPackage()
+            getPackage(page)
 
         } catch (err) {
             console.log(err)
@@ -104,7 +110,7 @@ const InsurPackage = () => {
 
         try {
             const res = await removePackage(token, id)
-            getPackage()
+            getPackage(page)
             toast.success(res.data.msg)
 
         } catch (err) {
@@ -135,7 +141,21 @@ const InsurPackage = () => {
                     data={packageData}
                     onDelete={hdlDelete}
                     onEdite={openModal}
+                    page={page}
+                    limit={limit}
                 />
+            </div>
+            <div className='flex justify-end'>
+                {
+                    total > limit && (
+                        <Pagination
+                            disablePrev={page === 1}
+                            disableNext={page === lastPage}
+                            onPrevious={() => setPage(page - 1)}
+                            onNext={() => setPage(page + 1)}
+                        />
+                    )
+                }
             </div>
             <EditPackage
                 value={form}

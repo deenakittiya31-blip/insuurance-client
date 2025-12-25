@@ -8,12 +8,12 @@ import TextInput from '../form/TextInput'
 const ModalPackage = ({ form, onSubmit, onChange, }) => {
     const company = useActionStore((s) => s.company)
     const typeInsur = useActionStore((s) => s.typeInsur)
-    const getCompany = useActionStore((s) => s.getCompany)
-    const getTypeInsur = useActionStore((s) => s.getTypeInsur)
+    const getCompanySelect = useActionStore((s) => s.getCompanySelect)
+    const getTypeInsurSelect = useActionStore((s) => s.getTypeInsurSelect)
 
     useEffect(() => {
-        getCompany();
-        getTypeInsur();
+        getCompanySelect();
+        getTypeInsurSelect();
     }, [])
 
     return (

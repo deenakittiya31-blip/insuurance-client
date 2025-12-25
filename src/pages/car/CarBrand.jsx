@@ -10,6 +10,7 @@ import EditCarBrand from '../../component/edit/EditCarBrand'
 import ModalCarBrand from '../../component/modal/ModalCarBrand'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
+import Pagination from '../../component/paginationComponent/Pagination'
 
 const initialState = {
     name: '',
@@ -23,10 +24,14 @@ const CarBrand = () => {
     const [form, setForm] = useState(initialState)
     const [open, setOpen] = useState(false)
     const [idSelect, setIdSelect] = useState(false)
+    const [page, setPage] = useState(1)
+    const [total, setTotal] = useState(0)
+    const limit = 10;
+    const lastPage = Math.ceil(total / limit)
 
     useEffect(() => {
-        getCarBrand();
-    }, [])
+        getCarBrand(page);
+    }, [page])
 
     const handleOnChange = (e) => {
         setForm({
@@ -53,10 +58,11 @@ const CarBrand = () => {
         setForm(initialState)
     }
 
-    const getCarBrand = async () => {
-        const res = await listCarBrand()
+    const getCarBrand = async (page) => {
+        const res = await listCarBrand(page)
             .then((res) => {
                 setData(res.data.data)
+                setTotal(res.data.total)
             })
             .catch((err) => console.log(err))
     }
@@ -73,7 +79,7 @@ const CarBrand = () => {
             const res = await createCarBrand(token, form)
             toast.success(res.data.msg)
             setForm(initialState)
-            getCarBrand()
+            getCarBrand(page)
             document.getElementById('my_modal_2').close()
         } catch (err) {
             console.error(err)
@@ -97,7 +103,7 @@ const CarBrand = () => {
 
         try {
             const res = await removeCarBrand(token, id)
-            getCarBrand();
+            getCarBrand(page);
             toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
@@ -111,7 +117,7 @@ const CarBrand = () => {
             setForm(initialState)
             closeForm()
             toast.success(res.data.msg)
-            getCarBrand()
+            getCarBrand(page)
 
         } catch (err) {
             console.log(err)
@@ -141,7 +147,21 @@ const CarBrand = () => {
                     data={data}
                     onDelete={hdlDelete}
                     onEdit={openModal}
+                    page={page}
+                    limit={limit}
                 />
+            </div>
+            <div className='flex justify-end'>
+                {
+                    total > limit && (
+                        <Pagination
+                            disablePrev={page === 1}
+                            disableNext={page === lastPage}
+                            onPrevious={() => setPage(page - 1)}
+                            onNext={() => setPage(page + 1)}
+                        />
+                    )
+                }
             </div>
             <EditCarBrand
                 form={form}

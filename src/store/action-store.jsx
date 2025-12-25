@@ -3,7 +3,7 @@ import { listCompanySelect } from '../service/insurance/CompanyInsur';
 import { listTypeSelect } from '../service/insurance/TypeInsur';
 import { listPackageSelect } from '../service/insurance/PackageInsur';
 import { listCarUsageSelect } from '../service/car/CarUsage';
-import { listCarType } from '../service/car/CarType';
+import { listCarTypeSelect } from '../service/car/CarType';
 import { listCarBrandSelect } from '../service/car/CarBrand';
 
 const useActionStore = create((set) => ({
@@ -13,7 +13,7 @@ const useActionStore = create((set) => ({
     carUsage: [],
     cartype: [],
     carbrand: [],
-    getCarBrand: async () => {
+    getCarBrandSelect: async () => {
         try {
             const res = await listCarBrandSelect()
             set({ carbrand: res.data.data })
@@ -21,15 +21,15 @@ const useActionStore = create((set) => ({
             console.log(err)
         }
     },
-    getCarType: async () => {
+    getCarTypeSelect: async () => {
         try {
-            const res = await listCarType()
+            const res = await listCarTypeSelect()
             set({ cartype: res.data.data })
         } catch (err) {
             console.log(err)
         }
     },
-    getCompany: async () => {
+    getCompanySelect: async () => {
         try {
             const res = await listCompanySelect()
             set({ company: res.data.data })
@@ -37,7 +37,7 @@ const useActionStore = create((set) => ({
             console.log(err)
         }
     },
-    getTypeInsur: async () => {
+    getTypeInsurSelect: async () => {
         try {
             const res = await listTypeSelect()
             set({ typeInsur: res.data.data })
@@ -53,7 +53,7 @@ const useActionStore = create((set) => ({
             console.log(err)
         }
     },
-    getCarUsage: async () => {
+    getCarUsageSelect: async () => {
         try {
             const res = await listCarUsageSelect()
             set({ carUsage: res.data.data })

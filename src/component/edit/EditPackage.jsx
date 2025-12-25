@@ -6,12 +6,12 @@ import useActionStore from '../../store/action-store';
 const EditPackage = ({ isOpen, onClose, onchange, onSubmit, value }) => {
     const company = useActionStore((s) => s.company)
     const typeInsur = useActionStore((s) => s.typeInsur)
-    const getCompany = useActionStore((s) => s.getCompany)
-    const getTypeInsur = useActionStore((s) => s.getTypeInsur)
+    const getCompanySelect = useActionStore((s) => s.getCompanySelect)
+    const getTypeInsurSelect = useActionStore((s) => s.getTypeInsurSelect)
 
     useEffect(() => {
-        getCompany();
-        getTypeInsur();
+        getCompanySelect();
+        getTypeInsurSelect();
     }, [])
 
     if (!isOpen) return null;

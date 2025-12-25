@@ -8,6 +8,7 @@ import toast from 'react-hot-toast'
 import EditCompulsory from '../../component/edit/EditCompulsory'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
+import Pagination from '../../component/paginationComponent/Pagination'
 
 const initialState = {
     car_type_id: '',
@@ -21,10 +22,14 @@ const CompulsoryCar = () => {
     const [form, setForm] = useState(initialState)
     const [open, setOpen] = useState(false)
     const [idSelect, setIdSelect] = useState(null)
+    const [page, setPage] = useState(1)
+    const [total, setTotal] = useState(0)
+    const limit = 10;
+    const lastPage = Math.ceil(total / limit)
 
     useEffect(() => {
-        getCompulsory()
-    }, [])
+        getCompulsory(page)
+    }, [page])
 
     const hdlOnChange = (e) => {
         setForm({
@@ -53,6 +58,7 @@ const CompulsoryCar = () => {
         await ListCompulsory()
             .then((res) => {
                 setCompulsory(res.data.data)
+                setTotal(res.data.total)
             })
     }
 
@@ -61,7 +67,7 @@ const CompulsoryCar = () => {
         try {
             const res = await createCompulsory(token, form)
             document.getElementById('my_modal_2').close();
-            getCompulsory();
+            getCompulsory(page);
             toast.success(res.data.msg)
         } catch (err) {
             console.log(err)
@@ -85,7 +91,7 @@ const CompulsoryCar = () => {
 
         try {
             const res = await removeCompulsory(token, id)
-            getCompulsory();
+            getCompulsory(page);
             toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
@@ -99,7 +105,7 @@ const CompulsoryCar = () => {
             setForm(initialState)
             closeForm()
             toast.success(res.data.msg)
-            getCompulsory()
+            getCompulsory(page)
 
         } catch (err) {
             console.log(err)
@@ -128,7 +134,21 @@ const CompulsoryCar = () => {
                     data={compulsory}
                     onDelete={hdlDelete}
                     onEdite={openModal}
+                    page={page}
+                    limit={limit}
                 />
+            </div>
+            <div className='flex justify-end'>
+                {
+                    total > limit && (
+                        <Pagination
+                            disablePrev={page === 1}
+                            disableNext={page === lastPage}
+                            onPrevious={() => setPage(page - 1)}
+                            onNext={() => setPage(page + 1)}
+                        />
+                    )
+                }
             </div>
             <EditCompulsory
                 value={form}

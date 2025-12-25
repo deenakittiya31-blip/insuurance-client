@@ -10,7 +10,7 @@ export const createCarUsage = async (token, usage) => {
 }
 
 export const listCarUsage = async (pageNumber) => {
-    return axios.get(`${API_URL}/api/list-carusage/page?page=${pageNumber}&per_page=5`)
+    return axios.get(`${API_URL}/api/list-carusage/page?page=${pageNumber}&per_page=10`)
 }
 
 export const listCarUsageSelect = () => {

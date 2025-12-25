@@ -33,7 +33,7 @@ const TableCarModel = ({ data, page, limit, onDelete, onUpdate, carBrand }) => {
                     <tr>
                         <th className='font-medium text-neutral-400'>ลำดับ</th>
                         <th className='font-medium text-neutral-400'>ยี่ห้อ</th>
-                        <th className='font-medium text-neutral-400'>รุ่นรถ</th>
+                        <th className='font-medium text-neutral-400 text-center'>รุ่นรถ</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
                 </thead>

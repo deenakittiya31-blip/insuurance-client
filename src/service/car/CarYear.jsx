@@ -10,7 +10,7 @@ export const createYear = async (token, year) => {
 }
 
 export const listYear = async (pageNumber) => {
-    return axios.get(`${API_URL}/api/list-year/page?page=${pageNumber}&per_page=5`)
+    return axios.get(`${API_URL}/api/list-year/page?page=${pageNumber}&per_page=10`)
 }
 
 export const updateYear = async (token, id, year) => {

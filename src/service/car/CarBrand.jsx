@@ -9,8 +9,8 @@ export const createCarBrand = (token, form) => {
     })
 }
 
-export const listCarBrand = () => {
-    return axios.get(`${API_URL}/api/list-carbrand`)
+export const listCarBrand = (pageNumber) => {
+    return axios.get(`${API_URL}/api/list-carbrand/page?page=${pageNumber}&per_page=10`)
 }
 
 export const listCarBrandSelect = () => {

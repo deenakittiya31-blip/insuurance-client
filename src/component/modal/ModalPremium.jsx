@@ -7,11 +7,11 @@ const ModalPremium = ({ form, onSubmit, onChange }) => {
     const packageSelect = useActionStore((s) => s.packageSelect)
     const carUsage = useActionStore((s) => s.carUsage)
     const getPackageSelect = useActionStore((s) => s.getPackageSelect)
-    const getCarUsage = useActionStore((s) => s.getCarUsage)
+    const getCarUsageSelect = useActionStore((s) => s.getCarUsageSelect)
 
     useEffect(() => {
         getPackageSelect();
-        getCarUsage();
+        getCarUsageSelect();
     }, [])
 
     return (

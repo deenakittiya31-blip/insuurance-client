@@ -9,8 +9,8 @@ export const createPackage = (token, form) => {
     })
 }
 
-export const listPackage = () => {
-    return axios.get(`${API_URL}/api/list-package`)
+export const listPackage = (pageNumber) => {
+    return axios.get(`${API_URL}/api/list-package/page?page=${pageNumber}&per_page=10`)
 }
 
 export const listPackageSelect = () => {

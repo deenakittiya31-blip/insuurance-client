@@ -9,8 +9,8 @@ export const createCompany = (token, form) => {
     })
 }
 
-export const listCompany = () => {
-    return axios.get(`${API_URL}/api/list-company`)
+export const listCompany = (pageNumber) => {
+    return axios.get(`${API_URL}/api/list-company/page?page=${pageNumber}&per_page=10`)
 }
 
 export const listCompanySelect = () => {

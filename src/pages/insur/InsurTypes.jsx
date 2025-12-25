@@ -8,6 +8,7 @@ import ModalInsurType from '../../component/modal/ModalInsurType'
 import EditTypeInsur from '../../component/edit/EditTypeInsur'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
+import Pagination from '../../component/paginationComponent/Pagination'
 
 const initialState = {
     nametype: '',
@@ -20,10 +21,14 @@ const InsurTypes = () => {
     const [form, setForm] = useState(initialState)
     const [open, setOpen] = useState(false)
     const [idSelect, setIdSelect] = useState(null)
+    const [page, setPage] = useState(1)
+    const [total, setTotal] = useState(0)
+    const limit = 10;
+    const lastPage = Math.ceil(total / limit)
 
     useEffect(() => {
-        getTypeInsur();
-    }, [])
+        getTypeInsur(page);
+    }, [page])
 
     const hdlOnChange = (e) => {
         setForm({
@@ -48,10 +53,11 @@ const InsurTypes = () => {
         setOpen(false)
     }
 
-    const getTypeInsur = async () => {
+    const getTypeInsur = async (page) => {
         try {
-            const res = await listType();
+            const res = await listType(page);
             setType(res.data.data)
+            setTotal(res.data.total)
         } catch (err) {
             console.log(err)
         }
@@ -84,7 +90,7 @@ const InsurTypes = () => {
             setForm(initialState)
             closeForm()
             toast.success(res.data.msg)
-            getTypeInsur()
+            getTypeInsur(page)
 
         } catch (err) {
             console.log(err)
@@ -107,7 +113,7 @@ const InsurTypes = () => {
 
         try {
             const res = await removeType(token, id)
-            getTypeInsur();
+            getTypeInsur(page);
             toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
@@ -135,7 +141,21 @@ const InsurTypes = () => {
                     data={type}
                     onDelete={hdlDelete}
                     onEdite={openModal}
+                    page={page}
+                    limit={limit}
                 />
+                <div className='flex justify-end'>
+                    {
+                        total > limit && (
+                            <Pagination
+                                disablePrev={page === 1}
+                                disableNext={page === lastPage}
+                                onPrevious={() => setPage(page - 1)}
+                                onNext={() => setPage(page + 1)}
+                            />
+                        )
+                    }
+                </div>
                 <EditTypeInsur
                     value={form}
                     onChange={hdlOnChange}
@@ -144,8 +164,6 @@ const InsurTypes = () => {
                     onClose={closeForm}
                 />
             </div>
-
-
         </div>
     )
 }

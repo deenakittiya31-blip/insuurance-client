@@ -1,54 +1,52 @@
-import React from 'react'
-import Input from '../../component/form/Input'
-import { useEffect } from 'react'
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import useInsureAuth from '../../store/auth-store'
-import { createCarUsage, listCarUsage, removeCarUsage, updateCarUsage } from '../../service/car/CarUsage'
-import TableCarUsage from '../../component/table/TableCarUsage'
 import toast from 'react-hot-toast'
+import Input from '../../component/form/Input'
+import TableCarType from '../../component/table/TableCarType'
+import { createCarType, removeCarType, updateCarType } from '../../service/car/CarType'
 import Pagination from '../../component/paginationComponent/Pagination'
 import Swal from 'sweetalert2'
+import useActionStore from '../../store/action-store'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
 
-const UsageCar = () => {
+const Cartype = () => {
     const token = useInsureAuth((s) => s.token)
-    const [usage, setUsage] = useState('')
-    const [usageData, setUsageData] = useState([])
+    const [typeData, setTypeData] = useState([])
+    const [type, setType] = useState('')
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
     const limit = 10;
     const lastPage = Math.ceil(total / limit)
 
     useEffect(() => {
-        getUsage(page);
+        getCarType(page);
     }, [page])
 
-
-    const getUsage = async (page) => {
-        const res = await listCarUsage(page)
+    const getCarType = async (page) => {
+        const res = await listCarModel(page)
             .then((res) => {
-                setUsageData(res.data.data)
+                setTypeData(res.data.data)
                 setTotal(res.data.total)
-                setUsage('');
             })
             .catch((err) => console.log(err))
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmitType = (e) => {
         e.preventDefault()
-        if (!usage.trim()) {
-            return toast('กรุณากรอกประเภทการใช้งาน')
+        if (!type.trim()) {
+            return toast('กรุณากรอกประเภทรถ')
         }
-        createCarUsage(token, usage)
+        createCarType(token, type)
             .then((res) => {
                 toast.success(res.data.msg)
-                getUsage(page)
+                setType('')
+                getCarType(page)
             })
             .catch((err) => console.log(err))
     }
 
-    const hdlDelete = async (id) => {
+    const hdlDeleteType = async (id) => {
         const result = await Swal.fire({
             title: "คุณแน่ใจ ?",
             text: "ต้องการจะลบจริง ๆ ใช่ไหม?",
@@ -61,12 +59,10 @@ const UsageCar = () => {
         })
 
         if (!result.isConfirmed) return
-
         try {
-            const res = await removeCarUsage(token, id)
-            getUsage(page);
+            const res = await removeCarType(token, id)
             toast.success(res.data.msg)
-
+            getCarType(page);
         } catch (err) {
             console.log(err)
             toast.error(err.response.data.message)
@@ -74,31 +70,32 @@ const UsageCar = () => {
 
     }
 
-    const hdlUpdateCarUsage = async (id, value) => {
+    const hdlUpdateType = async (id, value) => {
         try {
-            const res = await updateCarUsage(token, id, value)
+            const res = await updateCarType(token, id, value)
             toast.success(res.data.msg)
-            getUsage(page)
+            getCarType(page)
         } catch (err) {
             console.log(err)
+            toast.error('อัปเดตไม่สำเร็จ')
         }
     }
 
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
+            {/* หัวข้อ */}
             <div className='flex justify-between items-center'>
                 <Title
-                    title='ประเภทการใช้งาน'
-                    subtitle='ข้อมูลประเภทการใช้งานรถยนต์'
+                    title='ประเภทรถยนต์'
+                    subtitle='ข้อมูลประเภทรถยนต์'
                 />
-                <form onSubmit={handleSubmit} className='flex gap-5 font-prompt'>
+                <form onSubmit={handleSubmitType} className='flex gap-5 font-prompt'>
                     <Input
-                        value={usage}
-                        placeholder='เพิ่มประเภทการใช้งานของรถ'
+                        placeholder='เพิ่มประเภทของรถ'
                         width='w-xs'
                         name='year'
                         type='text'
-                        onChange={(e) => setUsage(e.target.value)}
+                        onChange={(e) => setType(e.target.value)}
                     />
                     <button className="btn bg-main px-5 rounded-md text-white font-semibold">บันทึก</button>
                 </form>
@@ -106,14 +103,14 @@ const UsageCar = () => {
             <div className='bg-white rounded-2xl p-5'>
                 <NameTable
                     icon='🚗'
-                    name='ตารางประเภทการใช้งาน'
+                    name='ตารางประเภทรถยนต์'
                 />
-                <TableCarUsage
-                    data={usageData}
+                <TableCarType
+                    data={typeData}
+                    onDelete={hdlDeleteType}
+                    onUpdate={hdlUpdateType}
                     page={page}
                     limit={limit}
-                    onDelete={hdlDelete}
-                    onUpdate={hdlUpdateCarUsage}
                 />
             </div>
             <div className='flex justify-end'>
@@ -132,4 +129,4 @@ const UsageCar = () => {
     )
 }
 
-export default UsageCar
+export default Cartype

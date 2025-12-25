@@ -1,13 +1,13 @@
 import React from 'react'
 
-const TableCompany = ({ data, onDelete, onEdit }) => {
+const TableCompany = ({ data, page, limit, onDelete, onEdit }) => {
     return (
         <div className="overflow-x-auto font-prompt ">
             <table className="table">
                 {/* head */}
                 <thead>
                     <tr>
-                        <th></th>
+                        <th className='font-medium text-neutral-400'>ลำดับ</th>
                         <th className='font-medium text-neutral-400'>บริษัท</th>
                         <th className='font-medium text-neutral-400'>รหัส</th>
                         <th className='font-medium text-neutral-400'>เบอร์โทรศัพท์</th>
@@ -18,6 +18,7 @@ const TableCompany = ({ data, onDelete, onEdit }) => {
                     {
                         data?.map((i) => (
                             <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
+                                <td>{(page - 1) * limit + idx + 1}</td>
                                 <td>
                                     <div className='w-10 h-10 rounded-sm overflow-hidden'>
                                         <img

@@ -5,10 +5,10 @@ import useActionStore from '../../store/action-store'
 
 const EditCompulsory = ({ isOpen, onClose, onChange, onSubmit, value }) => {
     const carType = useActionStore((s) => s.cartype)
-    const getCarType = useActionStore((s) => s.getCarType)
+    const getCarTypeSelect = useActionStore((s) => s.getCarTypeSelect)
 
     useEffect(() => {
-        getCarType();
+        getCarTypeSelect();
     }, [])
 
     if (!isOpen) return null;

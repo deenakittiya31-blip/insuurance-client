@@ -9,8 +9,8 @@ export const creatType = (token, form) => {
     })
 }
 
-export const listType = () => {
-    return axios.get(`${API_URL}/api/list-type`)
+export const listType = (pageNumber) => {
+    return axios.get(`${API_URL}/api/list-type/page?page=${pageNumber}&per_page=10`)
 }
 
 export const listTypeSelect = () => {

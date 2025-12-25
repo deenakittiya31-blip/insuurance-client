@@ -9,8 +9,12 @@ export const createCarType = async (token, type) => {
     })
 }
 
-export const listCarType = async () => {
-    return axios.get(`${API_URL}/api/list-cartype`)
+export const listCarType = async (pageNumber) => {
+    return axios.get(`${API_URL}/api/list-cartype/page?page=${pageNumber}&per_page=10`)
+}
+
+export const listCarTypeSelect = () => {
+    return axios.get(`${API_URL}/api/list-cartype-select`)
 }
 
 export const updateCarType = async (token, id, type) => {

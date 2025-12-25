@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import useInsureAuth from '../../store/auth-store'
-import Select from '../../component/form/Select'
-import { listCarBrandSelect } from '../../service/car/CarBrand'
 import { createCarModel, listCarModel, removeCarModel, updateCarModel } from '../../service/car/CarModel'
-import Input from '../../component/form/Input'
 import toast from 'react-hot-toast'
 import Swal from 'sweetalert2'
 import TableCarModel from '../../component/table/TableCarModel'
@@ -22,7 +19,7 @@ const CarModel = () => {
     const token = useInsureAuth((s) => s.token)
     const [carModel, setCarModel] = useState([])
     const [form, setForm] = useState(initialForm)
-    const getCarBrand = useActionStore((s) => s.getCarBrand)
+    const getCarBrandSelect = useActionStore((s) => s.getCarBrandSelect)
     const carbrand = useActionStore((s) => s.carbrand)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
@@ -30,7 +27,7 @@ const CarModel = () => {
     const lastPage = Math.ceil(total / limit)
 
     useEffect(() => {
-        getCarBrand()
+        getCarBrandSelect()
         getCarModel(page)
     }, [page])
 
@@ -114,7 +111,7 @@ const CarModel = () => {
             <div className='flex items-center justify-between'>
                 <Title
                     title='รุ่นรถรถยนต์'
-                    subtitle='ข้อมูลและรูปภาพของรุ่นรถรถยนต์'
+                    subtitle='ข้อมูลของรุ่นรถรถยนต์'
                 />
                 <ModalCarModel
                     form={form}

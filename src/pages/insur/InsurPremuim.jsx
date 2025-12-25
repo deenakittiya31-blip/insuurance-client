@@ -8,6 +8,7 @@ import toast from 'react-hot-toast'
 import EditPremium from '../../component/edit/EditPremium'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
+import Pagination from '../../component/paginationComponent/Pagination'
 
 const initialState = {
     package_id: '',
@@ -23,10 +24,14 @@ const InsurPremuim = () => {
     const [form, setForm] = useState(initialState)
     const [open, setOpen] = useState(false)
     const [idSelect, setIdSelect] = useState(null)
+    const [page, setPage] = useState(1)
+    const [total, setTotal] = useState(0)
+    const limit = 10;
+    const lastPage = Math.ceil(total / limit)
 
     useEffect(() => {
-        getPremium();
-    }, [])
+        getPremium(page);
+    }, [page])
 
     const hdlOnChange = (e) => {
         setForm({
@@ -38,7 +43,6 @@ const InsurPremuim = () => {
     const openModal = async (id) => {
         setOpen(true)
         setIdSelect(id)
-        console.log(id)
         try {
             const res = await readPremium(token, id)
             setForm(res.data.data)
@@ -56,6 +60,7 @@ const InsurPremuim = () => {
         try {
             const res = await listPremium()
             setPremium(res.data.data)
+            setTotal(res.data.total)
         } catch (err) {
             console.log(err)
         }
@@ -76,7 +81,7 @@ const InsurPremuim = () => {
             const res = await createPremium(token, form)
             document.getElementById('my_modal_2').close();
             setForm(initialState)
-            getPremium();
+            getPremium(page);
             toast.success(res.data.msg)
         } catch (err) {
             console.log(err)
@@ -91,7 +96,7 @@ const InsurPremuim = () => {
             setForm(initialState)
             closeForm()
             toast.success(res.data.msg)
-            getPremium()
+            getPremium(page)
 
         } catch (err) {
             console.log(err)
@@ -114,7 +119,7 @@ const InsurPremuim = () => {
 
         try {
             const res = await removePremium(token, id)
-            getPremium()
+            getPremium(page)
             toast.success(res.data.msg)
         } catch (err) {
             console.log(err)
@@ -143,7 +148,21 @@ const InsurPremuim = () => {
                     data={premium}
                     onDelete={hdlDelete}
                     onEdite={openModal}
+                    page={page}
+                    limit={limit}
                 />
+            </div>
+            <div className='flex justify-end'>
+                {
+                    total > limit && (
+                        <Pagination
+                            disablePrev={page === 1}
+                            disableNext={page === lastPage}
+                            onPrevious={() => setPage(page - 1)}
+                            onNext={() => setPage(page + 1)}
+                        />
+                    )
+                }
             </div>
             <EditPremium
                 value={form}

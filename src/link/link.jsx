@@ -4,6 +4,8 @@ import { LuShield, LuCarTaxiFront } from "react-icons/lu";
 import { TbPackages, TbPremiumRights } from "react-icons/tb";
 import { CgBmw } from "react-icons/cg";
 import { IoCarSportOutline, IoDocumentOutline } from "react-icons/io5";
+import { MdOutlineElectricCar } from "react-icons/md";
+import { FiBox } from "react-icons/fi";
 
 export const adminInsur = [
     {
@@ -45,7 +47,7 @@ export const adminCar = [
         link: '/admin/compulsorycar'
     },
     {
-        icon: <FaLayerGroup className='size-4' />,
+        icon: <FiBox className='size-4' />,
         title: 'กลุ่มรถยนต์',
         link: '/admin/groupcar'
     },
@@ -55,8 +57,13 @@ export const adminCar = [
         link: '/admin/usagecar'
     },
     {
+        icon: <MdOutlineElectricCar className='size-4' />,
+        title: 'ประเภทรถยนต์',
+        link: '/admin/cartype'
+    },
+    {
         icon: <FaRegCalendar className='size-4' />,
-        title: 'ประเภท / ปี ของรถยนต์',
-        link: '/admin/caryear&cartype'
+        title: 'ปีรถยนต์',
+        link: '/admin/caryear'
     },
 ]

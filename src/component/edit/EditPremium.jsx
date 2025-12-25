@@ -7,11 +7,11 @@ const EditPremium = ({ isOpen, onClose, onchange, onSubmit, value }) => {
     const packageSelect = useActionStore((s) => s.packageSelect)
     const getPackageSelect = useActionStore((s) => s.getPackageSelect)
     const carUsage = useActionStore((s) => s.carUsage)
-    const getCarUsage = useActionStore((s) => s.getCarUsage)
+    const getCarUsageSelect = useActionStore((s) => s.getCarUsageSelect)
 
     useEffect(() => {
         getPackageSelect();
-        getCarUsage();
+        getCarUsageSelect();
     }, [])
 
     if (!isOpen) return null;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const TableCarType = ({ data, onDelete, onUpdate }) => {
+const TableCarType = ({ data, page, limit, onDelete, onUpdate }) => {
     const [editingId, setEditingId] = useState(null)
     const [editValue, setEditValue] = useState('')
 
@@ -34,7 +34,7 @@ const TableCarType = ({ data, onDelete, onUpdate }) => {
                     {
                         data?.map((i, idx) => (
                             <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
-                                <td>{idx + 1}</td>
+                                <td>{(page - 1) * limit + idx + 1}</td>
                                 <td>
                                     {editingId === i.id ? (
                                         <input

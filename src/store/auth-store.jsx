@@ -20,7 +20,6 @@ const authStore = (set, get) => ({
     actionLogin: async (form) => {
         const res = await login(form)
 
-        console.log('LOGIN TOKEN:', res.data.token) // 🔍 debug
         set({
             token: res.data.token
         })

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const TableCarBrand = ({ data, onDelete, onEdit }) => {
+const TableCarBrand = ({ data, page, limit, onDelete, onEdit }) => {
     return (
         <div className="overflow-x-auto font-prompt">
             <table className="table">
@@ -17,7 +17,7 @@ const TableCarBrand = ({ data, onDelete, onEdit }) => {
                     {
                         data?.map((i, idx) => (
                             <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
-                                <td>{idx + 1}</td>
+                                <td>{(page - 1) * limit + idx + 1}</td>
                                 <td>
                                     <div className='w-10 h-10 bg-white rounded-sm overflow-hidden'>
                                         <img

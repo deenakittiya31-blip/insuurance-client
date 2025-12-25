@@ -1,49 +1,47 @@
-import React from 'react'
-import Input from '../../component/form/Input'
-import { useEffect } from 'react'
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import useInsureAuth from '../../store/auth-store'
-import { createCarUsage, listCarUsage, removeCarUsage, updateCarUsage } from '../../service/car/CarUsage'
-import TableCarUsage from '../../component/table/TableCarUsage'
-import toast from 'react-hot-toast'
-import Pagination from '../../component/paginationComponent/Pagination'
+import { createYear, listYear, removeYear, updateYear } from '../../service/car/CarYear'
 import Swal from 'sweetalert2'
+import toast from 'react-hot-toast'
+import Input from '../../component/form/Input'
 import Title from '../../component/form/Title'
+import TableYear from '../../component/table/TableYear'
 import NameTable from '../../component/form/NameTable'
+import Pagination from '../../component/paginationComponent/Pagination'
 
-const UsageCar = () => {
+const CarYear = () => {
     const token = useInsureAuth((s) => s.token)
-    const [usage, setUsage] = useState('')
-    const [usageData, setUsageData] = useState([])
+    const [year, setYear] = useState('')
+    const [yearData, setYearData] = useState([])
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
     const limit = 10;
     const lastPage = Math.ceil(total / limit)
 
+
     useEffect(() => {
-        getUsage(page);
+        getYear(page);
     }, [page])
 
-
-    const getUsage = async (page) => {
-        const res = await listCarUsage(page)
+    const getYear = async (page) => {
+        const res = await listYear(page)
             .then((res) => {
-                setUsageData(res.data.data)
+                setYearData(res.data.data)
                 setTotal(res.data.total)
-                setUsage('');
             })
             .catch((err) => console.log(err))
     }
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        if (!usage.trim()) {
-            return toast('กรุณากรอกประเภทการใช้งาน')
+        if (!year.trim()) {
+            return toast('กรุณากรอกปี')
         }
-        createCarUsage(token, usage)
+        createYear(token, year)
             .then((res) => {
                 toast.success(res.data.msg)
-                getUsage(page)
+                setYear('')
+                getYear(page)
             })
             .catch((err) => console.log(err))
     }
@@ -63,42 +61,37 @@ const UsageCar = () => {
         if (!result.isConfirmed) return
 
         try {
-            const res = await removeCarUsage(token, id)
-            getUsage(page);
+            const res = await removeYear(token, id)
             toast.success(res.data.msg)
-
+            getYear(page);
         } catch (err) {
             console.log(err)
-            toast.error(err.response.data.message)
         }
-
     }
 
-    const hdlUpdateCarUsage = async (id, value) => {
+    const hdlUpdateYear = async (id, value) => {
         try {
-            const res = await updateCarUsage(token, id, value)
+            const res = await updateYear(token, id, value)
             toast.success(res.data.msg)
-            getUsage(page)
+            getYear(page)
         } catch (err) {
             console.log(err)
         }
     }
-
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
-            <div className='flex justify-between items-center'>
+            <div className='flex items-center justify-between'>
                 <Title
-                    title='ประเภทการใช้งาน'
-                    subtitle='ข้อมูลประเภทการใช้งานรถยนต์'
+                    title='ปีรถยนต์'
+                    subtitle='ข้อมูลปีรถยนต์'
                 />
                 <form onSubmit={handleSubmit} className='flex gap-5 font-prompt'>
                     <Input
-                        value={usage}
-                        placeholder='เพิ่มประเภทการใช้งานของรถ'
+                        placeholder='เพิ่มปีของรถ'
                         width='w-xs'
                         name='year'
                         type='text'
-                        onChange={(e) => setUsage(e.target.value)}
+                        onChange={(e) => setYear(e.target.value)}
                     />
                     <button className="btn bg-main px-5 rounded-md text-white font-semibold">บันทึก</button>
                 </form>
@@ -108,12 +101,12 @@ const UsageCar = () => {
                     icon='🚗'
                     name='ตารางประเภทการใช้งาน'
                 />
-                <TableCarUsage
-                    data={usageData}
+                <TableYear
+                    data={yearData}
                     page={page}
                     limit={limit}
                     onDelete={hdlDelete}
-                    onUpdate={hdlUpdateCarUsage}
+                    onUpdate={hdlUpdateYear}
                 />
             </div>
             <div className='flex justify-end'>
@@ -132,4 +125,4 @@ const UsageCar = () => {
     )
 }
 
-export default UsageCar
+export default CarYear
