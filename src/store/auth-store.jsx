@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { currentUser, login, loginWithGoogle, loginWithLine, register } from '../service/auth';
 
-const authStore = (set) => ({
+const authStore = (set, get) => ({
     user: null,
     token: null,
     actionCurrentUser: async () => {
@@ -19,6 +19,8 @@ const authStore = (set) => ({
     },
     actionLogin: async (form) => {
         const res = await login(form)
+
+        console.log('LOGIN TOKEN:', res.data.token) // 🔍 debug
         set({
             token: res.data.token
         })
