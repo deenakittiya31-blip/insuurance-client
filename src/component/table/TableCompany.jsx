@@ -16,7 +16,7 @@ const TableCompany = ({ data, page, limit, onDelete, onEdit }) => {
                 </thead>
                 <tbody>
                     {
-                        data?.map((i) => (
+                        data?.map((i, idx) => (
                             <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
                                 <td>{(page - 1) * limit + idx + 1}</td>
                                 <td>
