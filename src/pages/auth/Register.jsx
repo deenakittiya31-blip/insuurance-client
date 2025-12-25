@@ -37,10 +37,10 @@ const Register = () => {
     }
     return (
         <div className='bg-[url(/bg.jpg)] bg-cover bg-center bg-no-repeat w-full h-screen flex flex-col justify-center items-center'>
-            <div className='flex flex-col gap-3 justify-center items-center p-10 bg-white/30 backdrop-blur-lg border border-white/50 rounded-xl'>
+            <div className='flex flex-col gap-3 justify-center items-center p-10 bg-white/30 backdrop-blur-lg border border-white/50 rounded-xl font-prompt'>
                 <div className='w-full flex flex-col items-center gap-3'>
-                    <h1 className='font-dm font-bold text-2xl text-black'>ลงทะเบียนสมาชิก</h1>
-                    <h1 className='font-sb text-md text-gray-500'>กรุณากรอกข้อมูลให้ครบ</h1>
+                    <h1 className='font-dm font-bold text-2xl text-text-primary'>ลงทะเบียนสมาชิก</h1>
+                    <h1 className='font-sb text-md text-text-primary'>กรุณากรอกข้อมูลให้ครบ</h1>
                 </div>
                 <form onSubmit={hdlSubmit} className='flex flex-col gap-5 items-center'>
                     <TextInputAuth

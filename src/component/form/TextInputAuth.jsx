@@ -3,7 +3,7 @@ import React from 'react'
 const TextInputAuth = ({ width, name, type, placeholder, onChange, value, error }) => {
     return (
         <div className='flex flex-col w-full'>
-            <label htmlFor={name} className='mb-2 font-epilogue font-semibold text-black text-sm capitalize'>
+            <label htmlFor={name} className='mb-2 font-epilogue font-semibold text-text-primary text-sm capitalize'>
                 {name}
             </label>
             <input
