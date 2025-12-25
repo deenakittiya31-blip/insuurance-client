@@ -1,39 +1,41 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { login, loginWithGoogle, loginWithLine, register } from '../service/auth';
+import { currentUser, login, loginWithGoogle, loginWithLine, register } from '../service/auth';
 
-const authStore = (set, get) => ({
+const authStore = (set) => ({
     user: null,
     token: null,
+    actionCurrentUser: async () => {
+        try {
+            const token = get().token
+            if (!token) return
 
+            const res = await currentUser(token)
+            set({ user: res.data.user })
+        } catch (err) {
+            // token หมดอายุ / invalid
+            set({ user: null, token: null })
+        }
+    },
     actionLogin: async (form) => {
         const res = await login(form)
-        //รับข้อมูลจากหลังบ้านมาเก็บไว้ใน user and token ที่ประกาศไว้ข้างบน
         set({
-            user: res.data.payload,
             token: res.data.token
         })
-        //ส่งข้อมูลกลับ
         return res
     },
     actionLoginLine: async (form) => {
         const res = await loginWithLine(form)
-        //รับข้อมูลจากหลังบ้านมาเก็บไว้ใน user and token ที่ประกาศไว้ข้างบน
         set({
-            user: res.data.payload,
             token: res.data.token
         })
-        //ส่งข้อมูลกลับ
         return res
     },
     actionLoginGoogle: async (credential) => {
         const res = await loginWithGoogle(credential)
-        //รับข้อมูลจากหลังบ้านมาเก็บไว้ใน user and token ที่ประกาศไว้ข้างบน
         set({
-            user: res.data.payload,
             token: res.data.token
         })
-        //ส่งข้อมูลกลับ
         return res
     },
     actionRegister: async (form) => {
@@ -52,7 +54,8 @@ const authStore = (set, get) => ({
 
 const usePersist = {
     name: 'insure-store',
-    storage: createJSONStorage(() => localStorage)
+    storage: createJSONStorage(() => localStorage),
+    partialize: (state) => ({ token: state.token })
 }
 
 const useInsureAuth = create(persist(authStore, usePersist))

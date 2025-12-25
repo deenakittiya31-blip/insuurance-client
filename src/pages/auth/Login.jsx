@@ -39,7 +39,6 @@ const Login = () => {
         e.preventDefault()
         actionLogin(form)
             .then(() => {
-                navigate('/admin')
                 toast.success('ล็อกอินสำเร็จ')
             })
             .catch((err) => {

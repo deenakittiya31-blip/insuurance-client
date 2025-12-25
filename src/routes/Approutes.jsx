@@ -14,6 +14,7 @@ import LoginLine from '../pages/auth/LoginLine'
 import CarYear_Cartype from '../pages/car/CarYear_Cartype'
 import CompulsoryCar from '../pages/car/CompulsoryCar'
 import InsurPackage from '../pages/insur/InsurPackage'
+import ProtectRoute from './ProtectRoute'
 
 const Approutes = () => {
     return (
@@ -22,7 +23,14 @@ const Approutes = () => {
                 <Route index element={<Login />} />
                 <Route path='register' element={<Register />} />
                 <Route path='line' element={<LoginLine />} />
-                <Route path='/admin' element={<Layout />}>
+
+                <Route
+                    path='/admin'
+                    element={
+                        <ProtectRoute allowRoles={['admin']}>
+                            <Layout />
+                        </ProtectRoute>
+                    }>
                     <Route path='caryear&cartype' element={<CarYear_Cartype />} />
                     <Route path='usagecar' element={<UsageCar />} />
                     <Route path='groupcar' element={<GroupCar />} />
