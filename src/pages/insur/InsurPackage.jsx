@@ -6,6 +6,8 @@ import Swal from 'sweetalert2'
 import toast from 'react-hot-toast'
 import useInsureAuth from '../../store/auth-store'
 import EditPackage from '../../component/edit/EditPackage'
+import Title from '../../component/form/Title'
+import NameTable from '../../component/form/NameTable'
 
 const initialState = {
     company_id: '',
@@ -112,17 +114,29 @@ const InsurPackage = () => {
 
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
-            <ModalPackage
-                form={form}
-                onSubmit={hdlSubmit}
-                onChange={hdlOnChange}
-                onClose={closeForm}
-            />
-            <TablePackage
-                data={packageData}
-                onDelete={hdlDelete}
-                onEdite={openModal}
-            />
+            <div className='flex items-center justify-between'>
+                <Title
+                    title='แพ็กเกจ'
+                    subtitle='ข้อมูลของแพ็กเกจแต่ละบริษัท'
+                />
+                <ModalPackage
+                    form={form}
+                    onSubmit={hdlSubmit}
+                    onChange={hdlOnChange}
+                    onClose={closeForm}
+                />
+            </div>
+            <div className='bg-white rounded-2xl p-5'>
+                <NameTable
+                    icon='📒'
+                    name='ตารางแพ็กเกจ'
+                />
+                <TablePackage
+                    data={packageData}
+                    onDelete={hdlDelete}
+                    onEdite={openModal}
+                />
+            </div>
             <EditPackage
                 value={form}
                 onchange={hdlOnChange}

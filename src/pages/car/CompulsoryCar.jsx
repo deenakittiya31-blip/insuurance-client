@@ -1,13 +1,13 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import ModalCompul from '../../component/modal/ModalCompul'
 import TableCompulsory from '../../component/table/TableCompulsory'
-import { useState } from 'react'
-import { useEffect } from 'react'
 import { createCompulsory, ListCompulsory, readCompulsory, removeCompulsory, updateCompulsory } from '../../service/car/Compulsory'
 import Swal from 'sweetalert2'
 import useInsureAuth from '../../store/auth-store'
 import toast from 'react-hot-toast'
 import EditCompulsory from '../../component/edit/EditCompulsory'
+import Title from '../../component/form/Title'
+import NameTable from '../../component/form/NameTable'
 
 const initialState = {
     car_type_id: '',
@@ -108,16 +108,28 @@ const CompulsoryCar = () => {
 
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
-            <ModalCompul
-                form={form}
-                onChange={hdlOnChange}
-                onSubmit={hdlSubmit}
-            />
-            <TableCompulsory
-                data={compulsory}
-                onDelete={hdlDelete}
-                onEdite={openModal}
-            />
+            <div className='flex items-center justify-between'>
+                <Title
+                    title='ยี่ห้อรถยนต์'
+                    subtitle='ข้อมูลและรูปภาพของยี่ห้อรถยนต์'
+                />
+                <ModalCompul
+                    form={form}
+                    onChange={hdlOnChange}
+                    onSubmit={hdlSubmit}
+                />
+            </div>
+            <div className='bg-white rounded-2xl p-5'>
+                <NameTable
+                    icon='🚗'
+                    name='ตารางยี่ห้อ'
+                />
+                <TableCompulsory
+                    data={compulsory}
+                    onDelete={hdlDelete}
+                    onEdite={openModal}
+                />
+            </div>
             <EditCompulsory
                 value={form}
                 onChange={hdlOnChange}

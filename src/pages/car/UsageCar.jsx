@@ -8,6 +8,8 @@ import TableCarUsage from '../../component/table/TableCarUsage'
 import toast from 'react-hot-toast'
 import Pagination from '../../component/paginationComponent/Pagination'
 import Swal from 'sweetalert2'
+import Title from '../../component/form/Title'
+import NameTable from '../../component/form/NameTable'
 
 const UsageCar = () => {
     const token = useInsureAuth((s) => s.token)
@@ -82,8 +84,12 @@ const UsageCar = () => {
 
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
-            <div className='flex flex-col gap-5'>
-                <form onSubmit={handleSubmit} className='flex gap-5'>
+            <div className='flex justify-between items-center'>
+                <Title
+                    title='ประเภทการใช้งาน'
+                    subtitle='ข้อมูลประเภทการใช้งานรถยนต์'
+                />
+                <form onSubmit={handleSubmit} className='flex gap-5 font-prompt'>
                     <Input
                         value={usage}
                         placeholder='เพิ่มประเภทการใช้งานของรถ'
@@ -92,8 +98,14 @@ const UsageCar = () => {
                         type='text'
                         onChange={(e) => setUsage(e.target.value)}
                     />
-                    <button className="btn btn-primary">บันทึก</button>
+                    <button className="btn bg-main px-5 rounded-md text-white font-semibold">บันทึก</button>
                 </form>
+            </div>
+            <div className='bg-white rounded-2xl p-5'>
+                <NameTable
+                    icon='🚗'
+                    name='ตารางประเภทการใช้งาน'
+                />
                 <TableCarUsage
                     data={usageData}
                     page={page}
@@ -101,16 +113,16 @@ const UsageCar = () => {
                     onDelete={hdlDelete}
                     onUpdate={hdlUpdateCarUsage}
                 />
-                <div className='flex justify-end'>
-                    {
-                        total > 5 && (
-                            <Pagination
-                                onPrevious={() => page > 1 && setPage(page - 1)}
-                                onNext={() => setPage(page + 1)}
-                            />
-                        )
-                    }
-                </div>
+            </div>
+            <div className='flex justify-end'>
+                {
+                    total > 5 && (
+                        <Pagination
+                            onPrevious={() => page > 1 && setPage(page - 1)}
+                            onNext={() => setPage(page + 1)}
+                        />
+                    )
+                }
             </div>
         </div>
     )

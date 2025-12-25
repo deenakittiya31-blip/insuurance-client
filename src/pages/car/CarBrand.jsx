@@ -8,6 +8,8 @@ import { useEffect } from 'react'
 import Swal from 'sweetalert2'
 import EditCarBrand from '../../component/edit/EditCarBrand'
 import ModalCarBrand from '../../component/modal/ModalCarBrand'
+import Title from '../../component/form/Title'
+import NameTable from '../../component/form/NameTable'
 
 const initialState = {
     name: '',
@@ -118,17 +120,29 @@ const CarBrand = () => {
 
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
-            <ModalCarBrand
-                form={form}
-                setForm={setForm}
-                onChange={handleOnChange}
-                onSubmit={handleSubmit}
-            />
-            <TableCarBrand
-                data={data}
-                onDelete={hdlDelete}
-                onEdit={openModal}
-            />
+            <div className='flex items-center justify-between'>
+                <Title
+                    title='ยี่ห้อรถยนต์'
+                    subtitle='ข้อมูลและรูปภาพของยี่ห้อรถยนต์'
+                />
+                <ModalCarBrand
+                    form={form}
+                    setForm={setForm}
+                    onChange={handleOnChange}
+                    onSubmit={handleSubmit}
+                />
+            </div>
+            <div className='bg-white rounded-2xl p-5'>
+                <NameTable
+                    icon='🚗'
+                    name='ตารางยี่ห้อ'
+                />
+                <TableCarBrand
+                    data={data}
+                    onDelete={hdlDelete}
+                    onEdit={openModal}
+                />
+            </div>
             <EditCarBrand
                 form={form}
                 setForm={setForm}

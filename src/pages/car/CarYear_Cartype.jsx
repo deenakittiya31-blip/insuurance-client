@@ -1,9 +1,7 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import useInsureAuth from '../../store/auth-store'
-import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { createYear, listYear, removeYear, updateYear } from '../../service/car/CarYear'
-import { useEffect } from 'react'
 import Input from '../../component/form/Input'
 import TableYear from '../../component/table/TableYear'
 import TableCarType from '../../component/table/TableCarType'
@@ -11,6 +9,8 @@ import { createCarType, removeCarType, updateCarType } from '../../service/car/C
 import Pagination from '../../component/paginationComponent/Pagination'
 import Swal from 'sweetalert2'
 import useActionStore from '../../store/action-store'
+import Title from '../../component/form/Title'
+import NameTable from '../../component/form/NameTable'
 
 const CarYear_Cartype = () => {
     const token = useInsureAuth((s) => s.token)
@@ -132,42 +132,68 @@ const CarYear_Cartype = () => {
     }
 
     return (
-        <div className='flex flex-col gap-5 h-auto p-5'>
+        <div className='flex flex-col gap-10 h-auto p-5'>
+            {/* หัวข้อ */}
             <div className='flex flex-col gap-5'>
-                <form onSubmit={handleSubmitType} className='flex gap-5'>
-                    <Input
-                        placeholder='เพิ่มประเภทของรถ'
-                        width='w-xs'
-                        name='year'
-                        type='text'
-                        onChange={(e) => setType(e.target.value)}
+                <div className='flex justify-between items-center'>
+                    <Title
+                        title='ประเภทรถยนต์'
+                        subtitle='ข้อมูลประเภทรถยนต์'
                     />
-                    <button className="btn btn-primary">บันทึก</button>
-                </form>
-                <TableCarType
-                    data={cartype}
-                    onDelete={hdlDeleteType}
-                    onUpdate={hdlUpdateType}
-                />
+                    <form onSubmit={handleSubmitType} className='flex gap-5 font-prompt'>
+                        <Input
+                            placeholder='เพิ่มประเภทของรถ'
+                            width='w-xs'
+                            name='year'
+                            type='text'
+                            onChange={(e) => setType(e.target.value)}
+                        />
+                        <button className="btn bg-main px-5 rounded-md text-white font-semibold">บันทึก</button>
+                    </form>
+                </div>
+                <div className='bg-white rounded-2xl p-5'>
+                    <NameTable
+                        icon='🚗'
+                        name='ตารางประเภทรถยนต์'
+                    />
+                    <TableCarType
+                        data={cartype}
+                        onDelete={hdlDeleteType}
+                        onUpdate={hdlUpdateType}
+                    />
+                </div>
             </div>
+            {/* หัวข้อ */}
             <div className='flex flex-col gap-5'>
-                <form onSubmit={handleSubmit} className='flex gap-5'>
-                    <Input
-                        placeholder='เพิ่มปีของรถ'
-                        width='w-xs'
-                        name='year'
-                        type='text'
-                        onChange={(e) => setYear(e.target.value)}
+                <div className='flex justify-between items-center'>
+                    <Title
+                        title='ปีรถยนต์'
+                        subtitle='ข้อมูลปีรถยนต์'
                     />
-                    <button className="btn btn-primary">บันทึก</button>
-                </form>
-                <TableYear
-                    data={yearData}
-                    page={page}
-                    limit={5}
-                    onDelete={hdlDelete}
-                    onUpdate={hdlUpdateYear}
-                />
+                    <form onSubmit={handleSubmit} className='flex gap-5 font-prompt'>
+                        <Input
+                            placeholder='เพิ่มปีของรถ'
+                            width='w-xs'
+                            name='year'
+                            type='text'
+                            onChange={(e) => setYear(e.target.value)}
+                        />
+                        <button className="btn bg-main px-5 rounded-md text-white font-semibold">บันทึก</button>
+                    </form>
+                </div>
+                <div className='bg-white rounded-2xl p-5'>
+                    <NameTable
+                        icon='🚗'
+                        name='ตารางประเภทการใช้งาน'
+                    />
+                    <TableYear
+                        data={yearData}
+                        page={page}
+                        limit={5}
+                        onDelete={hdlDelete}
+                        onUpdate={hdlUpdateYear}
+                    />
+                </div>
                 <div className='flex justify-end'>
                     <Pagination
                         onPrevious={() => setPage(page - 1)}

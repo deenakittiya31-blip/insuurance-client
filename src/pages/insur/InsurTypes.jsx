@@ -6,6 +6,8 @@ import toast from 'react-hot-toast'
 import TableInsurType from '../../component/table/TableInsurType'
 import ModalInsurType from '../../component/modal/ModalInsurType'
 import EditTypeInsur from '../../component/edit/EditTypeInsur'
+import Title from '../../component/form/Title'
+import NameTable from '../../component/form/NameTable'
 
 const initialState = {
     nametype: '',
@@ -112,24 +114,38 @@ const InsurTypes = () => {
         }
     }
     return (
-        <div className='flex flex-col gap-5 h-auto p-5'>
-            <ModalInsurType
-                value={form}
-                onChange={hdlOnChange}
-                onSubmit={hdlSubmit}
-            />
-            <TableInsurType
-                data={type}
-                onDelete={hdlDelete}
-                onEdite={openModal}
-            />
-            <EditTypeInsur
-                value={form}
-                onChange={hdlOnChange}
-                onSubmit={handleUpdate}
-                isOpen={open}
-                onClose={closeForm}
-            />
+        <div className='flex flex-col gap-5 p-5'>
+            <div className='flex items-center justify-between'>
+                <Title
+                    title='ประกันรถยนต์'
+                    subtitle='ข้อมูลประกันรถยนต์และรายละเอียด'
+                />
+                <ModalInsurType
+                    value={form}
+                    onChange={hdlOnChange}
+                    onSubmit={hdlSubmit}
+                />
+            </div>
+            <div className='flex-1 bg-white rounded-2xl p-5'>
+                <NameTable
+                    icon='🛡️'
+                    name='ตารางประกันรถยนต์'
+                />
+                <TableInsurType
+                    data={type}
+                    onDelete={hdlDelete}
+                    onEdite={openModal}
+                />
+                <EditTypeInsur
+                    value={form}
+                    onChange={hdlOnChange}
+                    onSubmit={handleUpdate}
+                    isOpen={open}
+                    onClose={closeForm}
+                />
+            </div>
+
+
         </div>
     )
 }

@@ -8,6 +8,10 @@ import toast from 'react-hot-toast'
 import Swal from 'sweetalert2'
 import TableCarModel from '../../component/table/TableCarModel'
 import Pagination from '../../component/paginationComponent/Pagination'
+import ModalCarModel from '../../component/modal/ModalCarModel'
+import useActionStore from '../../store/action-store'
+import Title from '../../component/form/Title'
+import NameTable from '../../component/form/NameTable'
 
 const initialForm = {
     brand_id: '',
@@ -17,8 +21,9 @@ const initialForm = {
 const CarModel = () => {
     const token = useInsureAuth((s) => s.token)
     const [carModel, setCarModel] = useState([])
-    const [carBrand, setCarBrand] = useState([])
     const [form, setForm] = useState(initialForm)
+    const getCarBrand = useActionStore((s) => s.getCarBrand)
+    const carbrand = useActionStore((s) => s.carbrand)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
     const limit = 10;
@@ -34,14 +39,6 @@ const CarModel = () => {
             ...form,
             [e.target.name]: e.target.value
         })
-    }
-
-    const getCarBrand = async () => {
-        const res = await listCarBrandSelect()
-            .then((res) => {
-                setCarBrand(res.data.data)
-            })
-            .catch((err) => console.log(err))
     }
 
     const getCarModel = async (page) => {
@@ -68,6 +65,7 @@ const CarModel = () => {
 
         try {
             const res = await createCarModel(token, form)
+            document.getElementById('my_modal_2').close()
             toast.success(res.data.msg)
             setForm(initialForm)
             getCarModel(page);
@@ -113,34 +111,32 @@ const CarModel = () => {
 
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
-
-            <form onSubmit={hdlSubmit} className='flex justify-center items-baseline gap-5'>
-                <Input
-                    placeholder='เพิ่มโมเดลของรถ'
-                    width='w-xs'
-                    name='name'
-                    type='text'
+            <div className='flex items-center justify-between'>
+                <Title
+                    title='รุ่นรถรถยนต์'
+                    subtitle='ข้อมูลและรูปภาพของรุ่นรถรถยนต์'
+                />
+                <ModalCarModel
+                    form={form}
+                    onSubmit={hdlSubmit}
                     onChange={hdlOnChange}
-                    value={form.name}
+                    carbrand={carbrand}
                 />
-                <Select
-                    text='ยี่ห้อรถ'
-                    data={carBrand}
-                    value={form.brand_id}
-                    onChange={(e) => setForm({ ...form, brand_id: Number(e.target.value) })}
-                    valueKey='id'
-                    labelKey='name'
+            </div>
+            <div className='bg-white rounded-2xl p-5'>
+                <NameTable
+                    icon='🚗'
+                    name='ตารางรุ่นรถ'
                 />
-                <button type='submit' className="btn btn-primary">บันทึก</button>
-            </form>
-            <TableCarModel
-                data={carModel}
-                onDelete={hdlDelete}
-                page={page}
-                limit={limit}
-                carBrand={carBrand}
-                onUpdate={hdlUpdate}
-            />
+                <TableCarModel
+                    data={carModel}
+                    onDelete={hdlDelete}
+                    page={page}
+                    limit={limit}
+                    carBrand={carbrand}
+                    onUpdate={hdlUpdate}
+                />
+            </div>
             <div className='flex justify-end'>
                 {
                     total > limit && (

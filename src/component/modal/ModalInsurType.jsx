@@ -5,7 +5,7 @@ const ModalInsurType = ({ value, onSubmit, onChange }) => {
 
     return (
         <div className='font-prompt'>
-            <button className="btn btn-primary" onClick={() => document.getElementById('my_modal_2').showModal()}>เพิ่มข้อมูล</button>
+            <button className="btn bg-main px-5 rounded-md text-white font-semibold" onClick={() => document.getElementById('my_modal_2').showModal()}>เพิ่มข้อมูล</button>
             <dialog id="my_modal_2" className="modal">
                 <form onSubmit={onSubmit} className="modal-box w-auto flex flex-col gap-5">
                     <h3 className="font-bold text-lg">เพิ่มข้อมูลประเภทประกัน</h3>

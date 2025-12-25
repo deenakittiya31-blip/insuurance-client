@@ -26,22 +26,22 @@ const TableCarModel = ({ data, page, limit, onDelete, onUpdate, carBrand }) => {
         await onUpdate(id, { brand_id })
     }
     return (
-        <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+        <div className="overflow-x-auto font-prompt">
             <table className="table">
                 {/* head */}
                 <thead>
                     <tr>
-                        <th>ลำดับ</th>
-                        <th className='text-center'>ยี่ห้อ</th>
-                        <th className='text-center'>รุ่นรถ</th>
-                        <th className='text-center'>จัดการ</th>
+                        <th className='font-medium text-neutral-400'>ลำดับ</th>
+                        <th className='font-medium text-neutral-400'>ยี่ห้อ</th>
+                        <th className='font-medium text-neutral-400'>รุ่นรถ</th>
+                        <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
                 </thead>
                 <tbody>
                     {
                         data?.map((i, idx) => (
-                            <tr key={i.id}>
-                                <th>{(page - 1) * limit + idx + 1}</th>
+                            <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
+                                <td>{(page - 1) * limit + idx + 1}</td>
                                 <td className="text-center">
                                     <Select
                                         data={carBrand}

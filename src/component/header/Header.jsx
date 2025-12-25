@@ -43,7 +43,6 @@ const Header = () => {
                                     <h3>ออกจากระบบ</h3>
                                 </button>
                             )
-
                             : (
                                 <Link to='/' className='flex gap-5 items-center px-5 py-2 group rounded-full text-text-primary transition duration-300 ease-in-out hover:bg-main'>
                                     <TbLogin2 size={25} className='group-hover:text-white' />

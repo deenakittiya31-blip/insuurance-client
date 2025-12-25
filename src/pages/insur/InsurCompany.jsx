@@ -7,6 +7,7 @@ import toast from 'react-hot-toast'
 import useInsureAuth from '../../store/auth-store'
 import EditCompany from '../../component/edit/EditCompany'
 import Title from '../../component/form/Title'
+import NameTable from '../../component/form/NameTable'
 
 const initialState = {
     namecompany: '',
@@ -121,21 +122,29 @@ const InsurCompany = () => {
     }
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
-            <Title
-                title='บริษัทประกัน'
-                subtitle='ข้อมูลของบริษัทประกันที่เป็นพาร์ทเนอร์'
-            />
-            <ModalCompany
-                form={form}
-                setForm={setForm}
-                onChange={handleOnChange}
-                onSubmit={hdlSubmit}
-            />
-            <TableCompany
-                data={company}
-                onDelete={hdlDelete}
-                onEdit={openModal}
-            />
+            <div className='flex items-center justify-between'>
+                <Title
+                    title='บริษัทประกัน'
+                    subtitle='ข้อมูลของบริษัทประกันที่เป็นพาร์ทเนอร์'
+                />
+                <ModalCompany
+                    form={form}
+                    setForm={setForm}
+                    onChange={handleOnChange}
+                    onSubmit={hdlSubmit}
+                />
+            </div>
+            <div className='bg-white rounded-2xl p-5'>
+                <NameTable
+                    icon='🏢'
+                    name='ตารางบริษัท'
+                />
+                <TableCompany
+                    data={company}
+                    onDelete={hdlDelete}
+                    onEdit={openModal}
+                />
+            </div>
             <EditCompany
                 isOpen={open}
                 form={form}

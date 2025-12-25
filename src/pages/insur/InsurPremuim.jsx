@@ -6,6 +6,8 @@ import { createPremium, listPremium, readPremium, removePremium, updatePremium }
 import Swal from 'sweetalert2'
 import toast from 'react-hot-toast'
 import EditPremium from '../../component/edit/EditPremium'
+import Title from '../../component/form/Title'
+import NameTable from '../../component/form/NameTable'
 
 const initialState = {
     package_id: '',
@@ -121,16 +123,28 @@ const InsurPremuim = () => {
 
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
-            <ModalPremium
-                form={form}
-                onSubmit={hdlSubmit}
-                onChange={hdlOnChange}
-            />
-            <TablePremium
-                data={premium}
-                onDelete={hdlDelete}
-                onEdite={openModal}
-            />
+            <div className='flex items-center justify-between'>
+                <Title
+                    title='เบี้ยประกัน'
+                    subtitle='ข้อมูลของเบี้ยประกัน ชื่อแพ็กเกจ และราคารวม'
+                />
+                <ModalPremium
+                    form={form}
+                    onSubmit={hdlSubmit}
+                    onChange={hdlOnChange}
+                />
+            </div>
+            <div className='bg-white rounded-2xl p-5'>
+                <NameTable
+                    icon='🪙'
+                    name='ตารางเบี้ยประกัน'
+                />
+                <TablePremium
+                    data={premium}
+                    onDelete={hdlDelete}
+                    onEdite={openModal}
+                />
+            </div>
             <EditPremium
                 value={form}
                 onchange={hdlOnChange}

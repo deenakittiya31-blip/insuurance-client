@@ -2,38 +2,38 @@ import React from 'react'
 
 const TableCompany = ({ data, onDelete, onEdit }) => {
     return (
-        <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+        <div className="overflow-x-auto font-prompt ">
             <table className="table">
                 {/* head */}
                 <thead>
                     <tr>
-                        <th>ลำดับ</th>
-                        <th className='text-center'>รูปภาพ</th>
-                        <th className='text-center'>บริษัท</th>
-                        <th className='text-center'>รหัส</th>
-                        <th className='text-center'>เบอร์โทรศัพท์</th>
-                        <th className='text-center'>จัดการ</th>
+                        <th></th>
+                        <th className='font-medium text-neutral-400'>บริษัท</th>
+                        <th className='font-medium text-neutral-400'>รหัส</th>
+                        <th className='font-medium text-neutral-400'>เบอร์โทรศัพท์</th>
+                        <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
                 </thead>
                 <tbody>
                     {
-                        data?.map((i, idx) => (
-                            <tr key={i.id}>
-                                <th>{idx + 1}</th>
+                        data?.map((i) => (
+                            <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
                                 <td>
-                                    <img
-                                        src={i.logo_url}
-                                        alt={i.namecompany}
-                                        className="w-10 h-10 object-contain mx-auto"
-                                    />
+                                    <div className='w-10 h-10 rounded-sm overflow-hidden'>
+                                        <img
+                                            src={i.logo_url}
+                                            alt={i.namecompany}
+                                            className="w-full object-cover"
+                                        />
+                                    </div>
                                 </td>
-                                <td className='text-center'>
+                                <td>
                                     {i.namecompany}
                                 </td>
-                                <td className='text-center'>
+                                <td>
                                     {i.code}
                                 </td>
-                                <td className='text-center'>
+                                <td>
                                     {i.phone}
                                 </td>
                                 <td className='flex gap-5 justify-center'>
