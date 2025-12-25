@@ -7,7 +7,7 @@ export const login = async (form) => {
 }
 
 export const currentUser = async (token) => {
-    return axios.post(`${API_URL}/api/current-user`, {
+    return axios.post(`${API_URL}/api/current-user`, {}, {
         headers: {
             Authorization: `Bearer ${token}`
         }

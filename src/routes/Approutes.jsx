@@ -15,6 +15,7 @@ import CarYear_Cartype from '../pages/car/CarYear_Cartype'
 import CompulsoryCar from '../pages/car/CompulsoryCar'
 import InsurPackage from '../pages/insur/InsurPackage'
 import ProtectRoute from './ProtectRoute'
+import Forbidden from './Forbidden'
 
 const Approutes = () => {
     return (
@@ -23,21 +24,22 @@ const Approutes = () => {
                 <Route index element={<Login />} />
                 <Route path='register' element={<Register />} />
                 <Route path='line' element={<LoginLine />} />
+                <Route path='forbidden' element={<Forbidden />} />
 
                 <Route
                     path='/admin'
                     element={
-                        <ProtectRoute allowRoles={['admin']}>
+                        <ProtectRoute allowRoles={['admin']} >
                             <Layout />
                         </ProtectRoute>
                     }>
+                    <Route index element={<InsurCompany />} />
                     <Route path='caryear&cartype' element={<CarYear_Cartype />} />
                     <Route path='usagecar' element={<UsageCar />} />
                     <Route path='groupcar' element={<GroupCar />} />
                     <Route path='compulsorycar' element={<CompulsoryCar />} />
                     <Route path='carmodel' element={<CarModel />} />
                     <Route path='carbrand' element={<CarBrand />} />
-                    <Route index element={<InsurCompany />} />
                     <Route path='insurpremuim' element={<InsurPremuim />} />
                     <Route path='insurtypes' element={<InsurTypes />} />
                     <Route path='package' element={<InsurPackage />} />

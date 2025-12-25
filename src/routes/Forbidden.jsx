@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react'
+import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
 const Forbidden = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
+        toast.error('คุณไม่มีสิทธิ์เข้าใช้')
         const timer = setTimeout(() => {
             navigate('/', { replace: true })
         }, 3000)

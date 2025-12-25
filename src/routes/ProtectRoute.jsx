@@ -1,51 +1,47 @@
 import React, { useEffect, useState } from 'react'
 import useInsureAuth from '../store/auth-store'
 import { Navigate } from 'react-router-dom'
-import LoadingScreen from './LoadingScreen';
-import Forbidden from './Forbidden';
+import toast from 'react-hot-toast';
 
 const ProtectRoute = ({ children, allowRoles = [] }) => {
-    const { token, user, actionCurrentUser } = useInsureAuth()
+    const token = useInsureAuth((s) => s.token)
+    const user = useInsureAuth((s) => s.user)
+    const actionCurrentUser = useInsureAuth((s) => s.actionCurrentUser)
+
     const [loading, setLoading] = useState(true)
-    const [allowed, setAllowed] = useState(false)
 
     useEffect(() => {
-        const checkAuth = async () => {
-            try {
-                //เช็คว่าได้ล็อกอินหรือไม่
-                if (!token) {
-                    setAllowed(false)
-                    return
-                }
-
-                //รีเฟรชหน้าถ้ายังไม่มี user
-                if (!user) {
-                    await actionCurrentUser()
-                }
-
-                //เช็คถ้ามีการกำหนดสิทธิ์ไว้และตัว user.role ที่ได้มาไม่ตรงกับที่อยู่ใน arrowRolesที่กำหนดไว้ไม่มีสิทธิ์เข้า
-                if (allowRoles.length && !allowRoles.includes(user?.role)) {
-                    setAllowed(false)
-                    return
-                }
-
-                //ถ้าผ่าน if ด้านบนมาหมดให้แสดง element
-                setAllowed(true)
-            } catch (err) {
-                setAllowed(false)
-            } finally {
+        const init = async () => {
+            //เช็คว่าได้ล็อกอินหรือไม่
+            if (!token) {
                 setLoading(false)
+                return
             }
-        }
 
-        checkAuth()
+            //รีเฟรชหน้าถ้ายังไม่มี user
+            if (!user) {
+                await actionCurrentUser()
+            }
+            setLoading(false)
+        }
+        init()
     }, [token, user])
 
-    if (loading) return <LoadingScreen />
+    console.log('ProtectRoute token:', token)
+    console.log('ProtectRoute user:', user)
+    console.log('ProtectRoute role:', user?.role)
+    console.log('allowRoles:', allowRoles)
 
-    if (!allowed) return <Forbidden />
 
-    return allowed ? children : <Navigate to='/' />
+    if (loading) return null
+
+    if (!token) return <Navigate to="/" replace />
+
+    if (allowRoles.length && !allowRoles.includes(user?.role)) {
+        return <Navigate to="/forbidden" replace />
+    }
+
+    return children
 }
 
 export default ProtectRoute

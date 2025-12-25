@@ -49,7 +49,6 @@ const authStore = (set) => ({
             token: null
         })
     },
-    setUser: (user) => set({ user }),
 })
 
 const usePersist = {

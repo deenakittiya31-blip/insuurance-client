@@ -10,6 +10,8 @@ import TextInputAuth from '../../component/form/TextInputAuth'
 const Login = () => {
     const actionLogin = useInsureAuth((s) => s.actionLogin)
     const actionLoginGoogle = useInsureAuth((s) => s.actionLoginGoogle)
+    const user = useInsureAuth((s) => s.user)
+    const actionCurrentUser = useInsureAuth((s) => s.actionCurrentUser)
     const navigate = useNavigate()
     const [form, setForm] = useState({
         email: '',
@@ -19,6 +21,17 @@ const Login = () => {
     useEffect(() => {
         liff.init({ liffId: '2008686120-kHUafHAb' })
     }, [])
+
+    //Redirect หลังรู้ role เท่านั้น
+    useEffect(() => {
+        if (!user) return
+
+        if (user.role === 'admin') {
+            navigate('/admin', { replace: true })
+        } else {
+            navigate('/forbidden', { replace: true })
+        }
+    }, [user])
 
     const hdlLoginLine = () => {
         try {
@@ -37,21 +50,21 @@ const Login = () => {
 
     const hdlSubmit = async (e) => {
         e.preventDefault()
-        actionLogin(form)
-            .then(() => {
-                toast.success('ล็อกอินสำเร็จ')
-            })
-            .catch((err) => {
-                console.log(err)
-                toast.error(err.response.data.message)
-            })
+
+        try {
+            await actionLogin(form)
+            await actionCurrentUser()
+            toast.success('ล็อกอินสำเร็จ')
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Login failed')
+        }
     }
 
     const onSuccess = async (res) => {
         try {
             await actionLoginGoogle(res.credential)
+            await actionCurrentUser()
             toast.success('เข้าสู่ระบบด้วย Google สำเร็จ')
-            navigate('/admin')
         } catch (err) {
             console.log(err)
             toast.error('Google login ล้มเหลว')
