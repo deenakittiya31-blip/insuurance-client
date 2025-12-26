@@ -1,9 +1,9 @@
 import React from 'react'
 
-const TextInput = ({ width, name, title, type, placeholder, onChange, value, error }) => {
+const TextInput = ({ width, name, title, type, placeholder, onChange, value }) => {
     return (
-        <div className='flex flex-col w-full'>
-            <label htmlFor={name} className='mb-2 font-epilogue font-semibold text-black text-sm capitalize'>
+        <div className='flex flex-col w-full font-prompt text-text-primary'>
+            <label htmlFor={name} className='mb-2 font-prompt font-semibold text-sm capitalize'>
                 {title}
             </label>
             <input
@@ -14,7 +14,6 @@ const TextInput = ({ width, name, title, type, placeholder, onChange, value, err
                 value={value}
                 className={`${width} input font-prompt pr-5`}
             />
-            {error && <span className={`w-sm font-epilogue text-red-600 text-xs mt-1`}>{error}</span>}
         </div>
     )
 }

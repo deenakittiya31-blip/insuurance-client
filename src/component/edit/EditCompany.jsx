@@ -7,7 +7,7 @@ const EditCompany = ({ isOpen, form, setForm, onSubmit, onChange, onClose }) => 
     return (
         <div className='mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20'>
             <form onSubmit={onSubmit} className="w-auto p-6 radius-box flex flex-col gap-5 bg-white rounded-lg">
-                <h3 className="font-bold text-lg font-prompt">เพิ่มข้อมูลบริษัท</h3>
+                <h3 className="font-bold text-lg font-prompt text-text-primary">เพิ่มข้อมูลบริษัท</h3>
                 <UploadFile
                     form={form}
                     setForm={setForm}

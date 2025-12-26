@@ -13,6 +13,14 @@ export const listCarModel = async (pageNumber) => {
     return axios.get(`${API_URL}/api/list-carmodel/page?page=${pageNumber}&per_page=10`)
 }
 
+export const readCarModel = (token, id) => {
+    return axios.get(`${API_URL}/api/read-carmodel/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
 export const updateCarModel = async (token, id, form) => {
     return axios.put(`${API_URL}/api/update-carmodel/${id}`, form, {
         headers: {

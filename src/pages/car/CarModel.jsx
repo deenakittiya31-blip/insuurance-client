@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import useInsureAuth from '../../store/auth-store'
-import { createCarModel, listCarModel, removeCarModel, updateCarModel } from '../../service/car/CarModel'
+import { createCarModel, listCarModel, readCarModel, removeCarModel, updateCarModel } from '../../service/car/CarModel'
 import toast from 'react-hot-toast'
 import Swal from 'sweetalert2'
 import TableCarModel from '../../component/table/TableCarModel'
@@ -9,8 +9,9 @@ import ModalCarModel from '../../component/modal/ModalCarModel'
 import useActionStore from '../../store/action-store'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
+import EditCarmodel from '../../component/edit/EditCarmodel'
 
-const initialForm = {
+const initialState = {
     brand_id: '',
     name: ''
 }
@@ -18,9 +19,11 @@ const initialForm = {
 const CarModel = () => {
     const token = useInsureAuth((s) => s.token)
     const [carModel, setCarModel] = useState([])
-    const [form, setForm] = useState(initialForm)
+    const [form, setForm] = useState(initialState)
     const getCarBrandSelect = useActionStore((s) => s.getCarBrandSelect)
     const carbrand = useActionStore((s) => s.carbrand)
+    const [open, setOpen] = useState(false)
+    const [idSelect, setIdSelect] = useState(null)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
     const limit = 10;
@@ -47,6 +50,24 @@ const CarModel = () => {
             .catch((err) => console.log(err))
     }
 
+    const openModal = async (id) => {
+        setOpen(true)
+        setIdSelect(id)
+        try {
+            const res = await readCarModel(token, id)
+            setForm(res.data.data)
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const closeForm = () => {
+        setOpen(false)
+        setForm(initialState)
+    }
+
+
 
     const hdlSubmit = async (e) => {
         e.preventDefault()
@@ -64,7 +85,7 @@ const CarModel = () => {
             const res = await createCarModel(token, form)
             document.getElementById('my_modal_2').close()
             toast.success(res.data.msg)
-            setForm(initialForm)
+            setForm(initialState)
             getCarModel(page);
         } catch (err) {
             console.log(err)
@@ -95,9 +116,12 @@ const CarModel = () => {
         }
     }
 
-    const hdlUpdate = async (id, data) => {
+    const hdlUpdate = async (e) => {
+        e.preventDefault()
         try {
-            await updateCarModel(token, id, data)
+            await updateCarModel(token, idSelect, form)
+            setForm(initialState)
+            closeForm()
             toast.success('อัปเดตเรียบร้อย')
             getCarModel(page)
         } catch (err) {
@@ -130,8 +154,7 @@ const CarModel = () => {
                     onDelete={hdlDelete}
                     page={page}
                     limit={limit}
-                    carBrand={carbrand}
-                    onUpdate={hdlUpdate}
+                    onEdit={openModal}
                 />
             </div>
             <div className='flex justify-end'>
@@ -146,6 +169,14 @@ const CarModel = () => {
                     )
                 }
             </div>
+            <EditCarmodel
+                carbrand={carbrand}
+                value={form}
+                onChange={hdlOnChange}
+                onSubmit={hdlUpdate}
+                isOpen={open}
+                onClose={closeForm}
+            />
         </div>
     )
 }

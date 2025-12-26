@@ -16,9 +16,9 @@ const EditPackage = ({ isOpen, onClose, onchange, onSubmit, value }) => {
 
     if (!isOpen) return null;
     return (
-        <div className='mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20'>
+        <div className='mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20 font-prompt'>
             <form onSubmit={onSubmit} className="w-auto p-6 radius-box flex flex-col gap-5 bg-white rounded-lg">
-                <h3 className="font-bold text-lg font-prompt">เพิ่มข้อมูล แพ็กเกจ</h3>
+                <h3 className="font-bold text-lg font-prompt text-text-primary">แก้ไขข้อมูลแพ็กเกจ</h3>
                 <Select
                     text='ชื่อแพ็กเกจ'
                     data={company}

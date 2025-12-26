@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import useInsureAuth from '../../store/auth-store'
-import { creatType, listType, readType, removeType, updateType } from '../../service/insurance/TypeInsur'
+import { creatType, listType, readType, removeType, statusType, updateType } from '../../service/insurance/TypeInsur'
 import Swal from 'sweetalert2'
 import toast from 'react-hot-toast'
 import TableInsurType from '../../component/table/TableInsurType'
@@ -119,12 +119,40 @@ const InsurTypes = () => {
             console.log(err)
         }
     }
+
+    const hdlToggleActive = async (id, currentStatus) => {
+        try {
+            // optimistic update (UI เปลี่ยนทันที)
+            setType(prev =>
+                prev.map(item =>
+                    item.id === id
+                        ? { ...item, is_active: !currentStatus }
+                        : item
+                )
+            )
+
+            await statusType(token, id, !currentStatus)
+
+            toast.success('อัปเดตสถานะสำเร็จ')
+        } catch (err) {
+            toast.error('อัปเดตสถานะไม่สำเร็จ')
+
+            // rollback ถ้า error
+            setType(prev =>
+                prev.map(item =>
+                    item.id === id
+                        ? { ...item, is_active: currentStatus }
+                        : item
+                )
+            )
+        }
+    }
     return (
         <div className='flex flex-col gap-5 p-5'>
             <div className='flex items-center justify-between'>
                 <Title
-                    title='ประกันรถยนต์'
-                    subtitle='ข้อมูลประกันรถยนต์และรายละเอียด'
+                    title='ประเภทประกัน'
+                    subtitle='ข้อมูลประเภทประกันและรายละเอียด'
                 />
                 <ModalInsurType
                     value={form}
@@ -143,6 +171,7 @@ const InsurTypes = () => {
                     onEdite={openModal}
                     page={page}
                     limit={limit}
+                    onToggle={hdlToggleActive}
                 />
                 <div className='flex justify-end'>
                     {

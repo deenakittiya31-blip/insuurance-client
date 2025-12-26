@@ -33,6 +33,14 @@ export const updateType = (token, id, form) => {
     })
 }
 
+export const statusType = (token, id, is_active) => {
+    return axios.put(`${API_URL}/api/status-type/${id}`, { is_active }, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
 export const removeType = (token, id) => {
     return axios.delete(`${API_URL}/api/delete-type/${id}`, {
         headers: {

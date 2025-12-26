@@ -68,9 +68,9 @@ const UploadFile = ({ form, setForm }) => {
         }
     }
     return (
-        <div className='flex flex-col'>
-            <h3 className='block text-md font-medium'>Logo</h3>
-            <div className='flex gap-5 my-2'>
+        <div className='flex flex-col text-text-primary'>
+            <p className='font-semibold text-sm font-prompt'>รูปภาพ</p>
+            <div className='flex gap-5 mb-2'>
                 {
                     isLoading && <RiLoader4Fill color='#FFBB20' size={20} className='animate-spin mb-3' />
                 }

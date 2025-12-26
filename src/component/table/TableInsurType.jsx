@@ -1,6 +1,6 @@
 import React from 'react'
 
-const TableInsurType = ({ data, page, limit, onDelete, onEdite }) => {
+const TableInsurType = ({ data, page, limit, onDelete, onEdite, onToggle }) => {
     return (
         <div className="overflow-x-auto font-prompt">
             <table className="table">
@@ -10,6 +10,7 @@ const TableInsurType = ({ data, page, limit, onDelete, onEdite }) => {
                         <th className='font-medium text-neutral-400'>ลำดับ</th>
                         <th className='font-medium text-neutral-400'>ประเภทประกัน</th>
                         <th className='font-medium text-neutral-400'>รายละเอียด</th>
+                        <th className='font-medium text-neutral-400'>สถานะ</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
                 </thead>
@@ -18,11 +19,14 @@ const TableInsurType = ({ data, page, limit, onDelete, onEdite }) => {
                         data?.map((i, idx) => (
                             <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
                                 <td>{(page - 1) * limit + idx + 1}</td>
+                                <td>{i.nametype}</td>
+                                <td>{i.description}</td>
                                 <td>
-                                    {i.nametype}
-                                </td>
-                                <td>
-                                    {i.description}
+                                    <input
+                                        type="checkbox"
+                                        onChange={() => onToggle(i.id, i.is_active)}
+                                        checked={i.is_active}
+                                        className="toggle" />
                                 </td>
                                 <td className='flex gap-5 justify-center'>
                                     <button onClick={() => onEdite(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>

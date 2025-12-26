@@ -19,7 +19,7 @@ const ModalPremium = ({ form, onSubmit, onChange }) => {
             <button className="btn bg-main px-5 rounded-md text-white font-semibold" onClick={() => document.getElementById('my_modal_2').showModal()}>เพิ่มข้อมูล</button>
             <dialog id="my_modal_2" className="modal">
                 <form onSubmit={onSubmit} className="modal-box w-auto flex flex-col gap-5">
-                    <h3 className="font-bold text-lg">เพิ่มข้อมูล แพ็กเกจ</h3>
+                    <h3 className="font-bold text-lg text-text-primary">เพิ่มข้อมูลเบี้ยประกัน</h3>
                     <Select
                         text='ชื่อแพ็กเกจ'
                         data={packageSelect}
@@ -31,7 +31,7 @@ const ModalPremium = ({ form, onSubmit, onChange }) => {
                         required
                     />
                     <Select
-                        text='การใช้งาน'
+                        text='ประเภทการใช้งาน'
                         data={carUsage}
                         name='car_usage_id'
                         value={form.car_usage_id}

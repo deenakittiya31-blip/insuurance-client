@@ -61,6 +61,7 @@ const CarYear = () => {
 
     const closeForm = () => {
         setOpen(false)
+        setForm(initialState)
     }
 
     const handleSubmit = (e) => {

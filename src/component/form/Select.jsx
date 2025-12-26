@@ -10,8 +10,8 @@ const Select = ({
     text
 }) => {
     return (
-        <fieldset className="fieldset font-prompt ">
-            <legend className="fieldset-legend text-sm">{text}</legend>
+        <fieldset className="fieldset font-prompt text-text-primary">
+            <legend className="fieldset-legend text-sm text-text-primary">{text}</legend>
             <select
                 name={name}
                 value={value}

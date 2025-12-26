@@ -21,7 +21,7 @@ const ModalPackage = ({ form, onSubmit, onChange, }) => {
             <button className="btn bg-main px-5 rounded-md text-white font-semibold" onClick={() => document.getElementById('my_modal_2').showModal()}>เพิ่มข้อมูล</button>
             <dialog id="my_modal_2" className="modal">
                 <form onSubmit={onSubmit} className="modal-box w-auto flex flex-col gap-5">
-                    <h3 className="font-bold text-lg">เพิ่มข้อมูล แพ็กเกจ</h3>
+                    <h3 className="font-bold text-lg text-text-primary">เพิ่มข้อมูลแพ็กเกจ</h3>
                     <Select
                         text='ชื่อบริษัท'
                         data={company}

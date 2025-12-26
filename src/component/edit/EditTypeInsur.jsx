@@ -4,9 +4,9 @@ import TextInput from '../form/TextInput';
 const EditTypeInsur = ({ isOpen, onClose, onChange, onSubmit, value }) => {
     if (!isOpen) return null;
     return (
-        <div className='mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20'>
+        <div className='mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20 font-prompt'>
             <form onSubmit={onSubmit} className="w-auto p-6 radius-box flex flex-col gap-5 bg-white rounded-lg">
-                <h3 className="font-bold text-lg font-prompt">เพิ่มข้อมูลประเภทประกัน</h3>
+                <h3 className="font-bold text-lg font-prompt text-text-primary">แก้ไขข้อมูลประเภทประกัน</h3>
                 <TextInput
                     width='w-sm'
                     title='ประเภทประกัน'
@@ -17,12 +17,12 @@ const EditTypeInsur = ({ isOpen, onClose, onChange, onSubmit, value }) => {
                     value={value.nametype}
                 />
                 <fieldset className="fieldset">
-                    <legend className="fieldset-legend text-sm">รายละเอียด</legend>
+                    <legend className="fieldset-legend text-sm text-text-primary">รายละเอียด</legend>
                     <textarea
                         name='description'
                         onChange={onChange}
                         value={value.description}
-                        className="textarea h-24 w-full" placeholder="รายละเอียด...">
+                        className="textarea h-24 w-full text-text-primary" placeholder="รายละเอียด...">
                     </textarea>
                 </fieldset>
                 <div className='modal-action'>
