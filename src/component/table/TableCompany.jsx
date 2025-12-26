@@ -8,9 +8,10 @@ const TableCompany = ({ data, page, limit, onDelete, onEdit }) => {
                 <thead>
                     <tr>
                         <th className='font-medium text-neutral-400'>ลำดับ</th>
+                        <th className='font-medium text-neutral-400'>รูปภาพ</th>
                         <th className='font-medium text-neutral-400'>บริษัท</th>
                         <th className='font-medium text-neutral-400'>รหัส</th>
-                        <th className='font-medium text-neutral-400'>เบอร์โทรศัพท์</th>
+                        <th className='font-medium text-neutral-400'>เบอร์โทรแจ้งเหตุ</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
                 </thead>

@@ -3,10 +3,9 @@ import useInsureAuth from '../../store/auth-store'
 import toast from 'react-hot-toast'
 import Input from '../../component/form/Input'
 import TableCarType from '../../component/table/TableCarType'
-import { createCarType, removeCarType, updateCarType } from '../../service/car/CarType'
+import { createCarType, listCarType, removeCarType, updateCarType } from '../../service/car/CarType'
 import Pagination from '../../component/paginationComponent/Pagination'
 import Swal from 'sweetalert2'
-import useActionStore from '../../store/action-store'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
 
@@ -24,7 +23,7 @@ const Cartype = () => {
     }, [page])
 
     const getCarType = async (page) => {
-        const res = await listCarModel(page)
+        const res = await listCarType(page)
             .then((res) => {
                 setTypeData(res.data.data)
                 setTotal(res.data.total)

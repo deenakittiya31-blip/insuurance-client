@@ -15,7 +15,7 @@ export const adminInsur = [
     },
     {
         icon: <LuShield className='size-4' />,
-        title: 'ประกันรถยนต์',
+        title: 'ประเภทประกัน',
         link: '/admin/insurtypes'
     },
     {

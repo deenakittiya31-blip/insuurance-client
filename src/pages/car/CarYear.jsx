@@ -1,18 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import useInsureAuth from '../../store/auth-store'
-import { createYear, listYear, removeYear, updateYear } from '../../service/car/CarYear'
+import { createYear, listYear, readYear, removeYear, updateYear } from '../../service/car/CarYear'
 import Swal from 'sweetalert2'
 import toast from 'react-hot-toast'
-import Input from '../../component/form/Input'
 import Title from '../../component/form/Title'
 import TableYear from '../../component/table/TableYear'
 import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
+import ModalYear from '../../component/modal/ModalYear'
+import EditYear from '../../component/edit/EditYear'
+
+const initialState = {
+    year_be: '',
+    year_ad: ''
+}
 
 const CarYear = () => {
     const token = useInsureAuth((s) => s.token)
-    const [year, setYear] = useState('')
+    const [form, setForm] = useState(initialState)
     const [yearData, setYearData] = useState([])
+    const [idSelect, setIdSelect] = useState(null)
+    const [open, setOpen] = useState(false)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
     const limit = 10;
@@ -32,15 +40,45 @@ const CarYear = () => {
             .catch((err) => console.log(err))
     }
 
+    const hdlOnChange = (e) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    const openModal = async (id) => {
+        setOpen(true)
+        setIdSelect(id)
+        try {
+            const res = await readYear(token, id)
+            setForm(res.data.data)
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const closeForm = () => {
+        setOpen(false)
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault()
-        if (!year.trim()) {
-            return toast('กรุณากรอกปี')
+        if (!form.year_ad) {
+            toast.error('กรุณากรอกปี')
+            return
         }
+
+        if (!form.year_be) {
+            toast.error('กรุณากรอกปี')
+            return
+        }
+
         createYear(token, year)
             .then((res) => {
                 toast.success(res.data.msg)
-                setYear('')
+                setForm(initialState)
                 getYear(page)
             })
             .catch((err) => console.log(err))
@@ -69,9 +107,11 @@ const CarYear = () => {
         }
     }
 
-    const hdlUpdateYear = async (id, value) => {
+    const hdlUpdateYear = async (e) => {
+        e.preventDefault()
         try {
-            const res = await updateYear(token, id, value)
+            const res = await updateYear(token, idSelect, form)
+            closeForm()
             toast.success(res.data.msg)
             getYear(page)
         } catch (err) {
@@ -85,16 +125,11 @@ const CarYear = () => {
                     title='ปีรถยนต์'
                     subtitle='ข้อมูลปีรถยนต์'
                 />
-                <form onSubmit={handleSubmit} className='flex gap-5 font-prompt'>
-                    <Input
-                        placeholder='เพิ่มปีของรถ'
-                        width='w-xs'
-                        name='year'
-                        type='text'
-                        onChange={(e) => setYear(e.target.value)}
-                    />
-                    <button className="btn bg-main px-5 rounded-md text-white font-semibold">บันทึก</button>
-                </form>
+                <ModalYear
+                    form={form}
+                    onChange={hdlOnChange}
+                    onSubmit={handleSubmit}
+                />
             </div>
             <div className='bg-white rounded-2xl p-5'>
                 <NameTable
@@ -106,7 +141,7 @@ const CarYear = () => {
                     page={page}
                     limit={limit}
                     onDelete={hdlDelete}
-                    onUpdate={hdlUpdateYear}
+                    onEdite={openModal}
                 />
             </div>
             <div className='flex justify-end'>
@@ -121,6 +156,13 @@ const CarYear = () => {
                     )
                 }
             </div>
+            <EditYear
+                form={form}
+                onChange={hdlOnChange}
+                onSubmit={hdlUpdateYear}
+                isOpen={open}
+                onClose={closeForm}
+            />
         </div>
     )
 }
