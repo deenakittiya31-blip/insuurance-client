@@ -52,6 +52,7 @@ const CompulsoryCar = () => {
 
     const closeForm = () => {
         setOpen(false)
+        setForm(initialState)
     }
 
     const getCompulsory = async () => {

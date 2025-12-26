@@ -8,11 +8,24 @@ import Pagination from '../../component/paginationComponent/Pagination'
 import Swal from 'sweetalert2'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
+import ModalCarType from '../../component/modal/ModalCarType'
+import useActionStore from '../../store/action-store'
+import EditCarType from '../../component/edit/EditCarType'
+
+const initialState = {
+    type: '',
+    code: '',
+    car_usage_id: ''
+}
 
 const Cartype = () => {
     const token = useInsureAuth((s) => s.token)
+    const getCarUsage = useActionStore((s) => s.getCarUsageSelect)
+    const carUsage = useActionStore((s) => s.carUsage)
     const [typeData, setTypeData] = useState([])
-    const [type, setType] = useState('')
+    const [form, setForm] = useState(initialState)
+    const [open, setOpen] = useState(false)
+    const [idSelect, setIdSelect] = useState(null)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
     const limit = 10;
@@ -20,6 +33,7 @@ const Cartype = () => {
 
     useEffect(() => {
         getCarType(page);
+        getCarUsage();
     }, [page])
 
     const getCarType = async (page) => {
@@ -31,15 +45,43 @@ const Cartype = () => {
             .catch((err) => console.log(err))
     }
 
+    const hdlOnChange = (e) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    const openModal = async (id) => {
+        setOpen(true)
+        setIdSelect(id)
+        try {
+            const res = await readCompulsory(token, id)
+            setForm(res.data.data)
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const closeForm = () => {
+        setOpen(false)
+        setForm(initialState)
+    }
+
     const handleSubmitType = (e) => {
         e.preventDefault()
-        if (!type.trim()) {
+        if (!form.type) {
             return toast('กรุณากรอกประเภทรถ')
         }
-        createCarType(token, type)
+        if (!form.car_usage_id) {
+            return toast('กรุณากรอกประเภทการใช้งานรถ')
+        }
+        createCarType(token, form)
             .then((res) => {
+                document.getElementById('my_modal_2').close()
                 toast.success(res.data.msg)
-                setType('')
+                setForm(initialState)
                 getCarType(page)
             })
             .catch((err) => console.log(err))
@@ -69,9 +111,12 @@ const Cartype = () => {
 
     }
 
-    const hdlUpdateType = async (id, value) => {
+    const handleUpdate = async (e) => {
+        e.preventDefault()
         try {
-            const res = await updateCarType(token, id, value)
+            const res = await updateCarType(token, idSelect, form)
+            setForm(initialState)
+            closeForm()
             toast.success(res.data.msg)
             getCarType(page)
         } catch (err) {
@@ -88,16 +133,12 @@ const Cartype = () => {
                     title='ประเภทรถยนต์'
                     subtitle='ข้อมูลประเภทรถยนต์'
                 />
-                <form onSubmit={handleSubmitType} className='flex gap-5 font-prompt'>
-                    <Input
-                        placeholder='เพิ่มประเภทของรถ'
-                        width='w-xs'
-                        name='year'
-                        type='text'
-                        onChange={(e) => setType(e.target.value)}
-                    />
-                    <button className="btn bg-main px-5 rounded-md text-white font-semibold">บันทึก</button>
-                </form>
+                <ModalCarType
+                    form={form}
+                    onSubmit={handleSubmitType}
+                    onChange={hdlOnChange}
+                    carUsage={carUsage}
+                />
             </div>
             <div className='bg-white rounded-2xl p-5'>
                 <NameTable
@@ -107,7 +148,7 @@ const Cartype = () => {
                 <TableCarType
                     data={typeData}
                     onDelete={hdlDeleteType}
-                    onUpdate={hdlUpdateType}
+                    onEdit={openModal}
                     page={page}
                     limit={limit}
                 />
@@ -124,6 +165,14 @@ const Cartype = () => {
                     )
                 }
             </div>
+            <EditCarType
+                carUsage={carUsage}
+                value={form}
+                onChange={hdlOnChange}
+                onSubmit={handleUpdate}
+                isOpen={open}
+                onClose={closeForm}
+            />
         </div>
     )
 }

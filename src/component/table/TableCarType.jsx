@@ -1,24 +1,7 @@
 import React, { useState } from 'react'
 
-const TableCarType = ({ data, page, limit, onDelete, onUpdate }) => {
-    const [editingId, setEditingId] = useState(null)
-    const [editValue, setEditValue] = useState('')
+const TableCarType = ({ data, page, limit, onDelete, onEdit }) => {
 
-    const startEdit = (item) => {
-        setEditingId(item.id)
-        setEditValue(item.type)
-    }
-
-    const cancelEdit = () => {
-        setEditingId(null)
-        setEditValue('')
-    }
-
-    const saveEdit = async (id, value) => {
-        if (!value.trim()) return cancelEdit()
-        await onUpdate(id, value)
-        cancelEdit()
-    }
     return (
         <div className="overflow-x-auto font-prompt">
             <table className="table">
@@ -26,7 +9,9 @@ const TableCarType = ({ data, page, limit, onDelete, onUpdate }) => {
                 <thead>
                     <tr>
                         <th className='font-medium text-neutral-400'>ลำดับ</th>
-                        <th className='font-medium text-neutral-400'>ประเภท</th>
+                        <th className='font-medium text-neutral-400'>ประเภทรถยนต์</th>
+                        <th className='font-medium text-neutral-400'>รหัสการใช้งาน</th>
+                        <th className='font-medium text-neutral-400'>ประเภทการใช้งาน</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
                 </thead>
@@ -35,32 +20,11 @@ const TableCarType = ({ data, page, limit, onDelete, onUpdate }) => {
                         data?.map((i, idx) => (
                             <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
                                 <td>{(page - 1) * limit + idx + 1}</td>
-                                <td>
-                                    {editingId === i.id ? (
-                                        <input
-                                            autoFocus
-                                            value={editValue}
-                                            onChange={(e) => setEditValue(e.target.value)}
-                                            onBlur={(e) => saveEdit(i.id, e.target.value)}
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter') {
-                                                    e.preventDefault()
-                                                    saveEdit(i.id, e.target.value)
-                                                }
-                                                if (e.key === 'Escape') cancelEdit()
-                                            }}
-                                            className="text-center p-2 border rounded focus:outline-none"
-                                        />
-                                    ) : (
-                                        <span
-                                            onDoubleClick={() => startEdit(i)}
-                                            className="cursor-pointer hover:underline"
-                                        >
-                                            {i.type}
-                                        </span>
-                                    )}
-                                </td>
+                                <td> {i.type}</td>
+                                <td> {i.code}</td>
+                                <td> {i.usage_name}</td>
                                 <td className='flex gap-5 justify-center'>
+                                    <button onClick={() => onEdit(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
                                     <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
                                 </td>
                             </tr>

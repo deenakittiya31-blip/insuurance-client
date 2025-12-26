@@ -8,7 +8,8 @@ const TableYear = ({ data, page, limit, onDelete, onEdite }) => {
                 <thead>
                     <tr>
                         <th className='font-medium text-neutral-400'>ลำดับ</th>
-                        <th className='font-medium text-neutral-400'>ปี</th>
+                        <th className='font-medium text-neutral-400'>ปี พ.ศ.</th>
+                        <th className='font-medium text-neutral-400'>ปี ค.ศ.</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
                 </thead>
@@ -20,7 +21,7 @@ const TableYear = ({ data, page, limit, onDelete, onEdite }) => {
                                 <td>{i.year_be}</td>
                                 <td>{i.year_ad}</td>
                                 <td className='flex gap-5 justify-center'>
-                                    <button onClick={() => onEdite(i.id)} className="btn btn-sm btn-soft btn-error">แก้ไข</button>
+                                    <button onClick={() => onEdite(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
                                     <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
                                 </td>
                             </tr>
