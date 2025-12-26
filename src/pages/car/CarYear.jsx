@@ -75,7 +75,7 @@ const CarYear = () => {
             return
         }
 
-        createYear(token, year)
+        createYear(token, form)
             .then((res) => {
                 toast.success(res.data.msg)
                 setForm(initialState)
