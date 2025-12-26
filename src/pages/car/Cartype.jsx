@@ -3,7 +3,7 @@ import useInsureAuth from '../../store/auth-store'
 import toast from 'react-hot-toast'
 import Input from '../../component/form/Input'
 import TableCarType from '../../component/table/TableCarType'
-import { createCarType, listCarType, removeCarType, updateCarType } from '../../service/car/CarType'
+import { createCarType, listCarType, readCarType, removeCarType, updateCarType } from '../../service/car/CarType'
 import Pagination from '../../component/paginationComponent/Pagination'
 import Swal from 'sweetalert2'
 import Title from '../../component/form/Title'
@@ -56,7 +56,7 @@ const Cartype = () => {
         setOpen(true)
         setIdSelect(id)
         try {
-            const res = await readCompulsory(token, id)
+            const res = await readCarType(token, id)
             setForm(res.data.data)
 
         } catch (err) {

@@ -1,4 +1,6 @@
 import React from 'react'
+import TextInput from '../form/TextInput';
+import Select from '../form/Select';
 
 const EditCarType = ({ isOpen, carUsage, onClose, onChange, onSubmit, value }) => {
 
