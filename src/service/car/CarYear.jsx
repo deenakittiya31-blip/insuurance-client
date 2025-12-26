@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { API_URL } from '../../config/api'
 
-export const createYear = async (token, year) => {
-    return axios.post(`${API_URL}/api/create-year`, { year }, {
+export const createYear = async (token, form) => {
+    return axios.post(`${API_URL}/api/create-year`, form, {
         headers: {
             Authorization: `Bearer ${token}`
         }
