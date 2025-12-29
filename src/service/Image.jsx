@@ -1,9 +1,10 @@
 import axios from "axios"
 import { API_URL } from "../config/api"
+import api from "../config/axios"
 
 export const uploadImages = async (token, form) => {
 
-    return axios.post(`${API_URL}/api/images`, {
+    return api.post('/api/images', {
         image: form
     }, {
         headers: {
@@ -13,7 +14,7 @@ export const uploadImages = async (token, form) => {
 }
 
 export const removeImage = async (token, logo_public_id) => {
-    return axios.post(`${API_URL}/api/removeImages`, { logo_public_id }, {
+    return api.post('/api/removeImages', { logo_public_id }, {
         headers: {
             Authorization: `Bearer ${token}`
         }

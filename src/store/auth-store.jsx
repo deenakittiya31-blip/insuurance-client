@@ -13,8 +13,7 @@ const authStore = (set, get) => ({
             const res = await currentUser(token)
             set({ user: res.data.user })
         } catch (err) {
-            // token หมดอายุ / invalid
-            set({ user: null, token: null })
+            get().actionLogout()
         }
     },
     actionLogin: async (form) => {
@@ -45,6 +44,8 @@ const authStore = (set, get) => ({
         return res
     },
     actionLogout: () => {
+        localStorage.removeItem('insure-store')
+
         set({
             user: null,
             token: null

@@ -122,31 +122,15 @@ const InsurTypes = () => {
 
     const hdlToggleActive = async (id, currentStatus) => {
         try {
-            // optimistic update (UI เปลี่ยนทันที)
-            setType(prev =>
-                prev.map(item =>
-                    item.id === id
-                        ? { ...item, is_active: !currentStatus }
-                        : item
-                )
-            )
-
             await statusType(token, id, !currentStatus)
-
+            getTypeInsur(page)
             toast.success('อัปเดตสถานะสำเร็จ')
         } catch (err) {
+            console.log(err)
             toast.error('อัปเดตสถานะไม่สำเร็จ')
-
-            // rollback ถ้า error
-            setType(prev =>
-                prev.map(item =>
-                    item.id === id
-                        ? { ...item, is_active: currentStatus }
-                        : item
-                )
-            )
         }
     }
+
     return (
         <div className='flex flex-col gap-5 p-5'>
             <div className='flex items-center justify-between'>

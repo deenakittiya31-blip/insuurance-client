@@ -1,4 +1,5 @@
 import axios from "axios";
+import api from "../config/axios";
 import { API_URL } from "../config/api";
 
 
@@ -7,7 +8,7 @@ export const login = async (form) => {
 }
 
 export const currentUser = async (token) => {
-    return axios.post(`${API_URL}/api/current-user`, {}, {
+    return api.post('/api/current-user', {}, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -25,3 +26,12 @@ export const loginWithGoogle = async (credential) => {
 export const register = async (form) => {
     return axios.post(`${API_URL}/api/register`, form)
 }
+
+
+// export const currentUser = async (token) => {
+//     return api.post(`${API_URL}/api/current-user`, {}, {
+//         headers: {
+//             Authorization: `Bearer ${token}`
+//         }
+//     })
+// }
