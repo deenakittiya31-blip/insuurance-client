@@ -1,8 +1,7 @@
-import axios from 'axios'
-import { API_URL } from '../../config/api'
+import api from '../../config/axios'
 
 export const createCarType = async (token, type) => {
-    return axios.post(`${API_URL}/api/create-cartype`, type, {
+    return api.post('/api/create-cartype', type, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -10,15 +9,15 @@ export const createCarType = async (token, type) => {
 }
 
 export const listCarType = async (pageNumber) => {
-    return axios.get(`${API_URL}/api/list-cartype/page?page=${pageNumber}&per_page=10`)
+    return api.get(`/api/list-cartype/page?page=${pageNumber}&per_page=10`)
 }
 
 export const listCarTypeSelect = () => {
-    return axios.get(`${API_URL}/api/list-cartype-select`)
+    return api.get('/api/list-cartype-select')
 }
 
 export const readCarType = (token, id) => {
-    return axios.get(`${API_URL}/api/read-cartype/${id}`, {
+    return api.get(`/api/read-cartype/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -26,7 +25,7 @@ export const readCarType = (token, id) => {
 }
 
 export const updateCarType = async (token, id, type) => {
-    return axios.put(`${API_URL}/api/update-cartype/${id}`, type, {
+    return api.put(`/api/update-cartype/${id}`, type, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -34,7 +33,7 @@ export const updateCarType = async (token, id, type) => {
 }
 
 export const removeCarType = async (token, id) => {
-    return axios.delete(`${API_URL}/api/delete-cartype/${id}`, {
+    return api.delete(`/api/delete-cartype/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }

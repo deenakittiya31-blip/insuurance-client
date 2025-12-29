@@ -1,8 +1,7 @@
-import axios from 'axios'
-import { API_URL } from '../../config/api'
+import api from '../../config/axios'
 
 export const createCarBrand = (token, form) => {
-    return axios.post(`${API_URL}/api/create-carbrand`, form, {
+    return api.post('/api/create-carbrand', form, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -10,15 +9,15 @@ export const createCarBrand = (token, form) => {
 }
 
 export const listCarBrand = (pageNumber) => {
-    return axios.get(`${API_URL}/api/list-carbrand/page?page=${pageNumber}&per_page=10`)
+    return api.get(`/api/list-carbrand/page?page=${pageNumber}&per_page=10`)
 }
 
 export const listCarBrandSelect = () => {
-    return axios.get(`${API_URL}/api/list-carbrand-select`)
+    return api.get('/api/list-carbrand-select')
 }
 
 export const readCarBrand = (token, id) => {
-    return axios.get(`${API_URL}/api/read-carbrand/${id}`, {
+    return api.get(`/api/read-carbrand/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -26,7 +25,7 @@ export const readCarBrand = (token, id) => {
 }
 
 export const updateCarBrand = (token, id, form) => {
-    return axios.put(`${API_URL}/api/update-carbrand/${id}`, form, {
+    return api.put(`/api/update-carbrand/${id}`, form, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -34,7 +33,7 @@ export const updateCarBrand = (token, id, form) => {
 }
 
 export const removeCarBrand = (token, id) => {
-    return axios.delete(`${API_URL}/api/delete-carbrand/${id}`, {
+    return api.delete(`/api/delete-carbrand/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }

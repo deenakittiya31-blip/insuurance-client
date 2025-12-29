@@ -1,6 +1,4 @@
-import axios from "axios";
 import api from "../../config/axios";
-import { API_URL } from "../../config/api";
 
 export const createCompany = (token, form) => {
     return api.post('/api/create-company', form, {

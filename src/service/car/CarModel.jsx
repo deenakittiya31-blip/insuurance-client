@@ -1,8 +1,7 @@
-import axios from 'axios'
-import { API_URL } from '../../config/api'
+import api from '../../config/axios'
 
 export const createCarModel = async (token, form) => {
-    return axios.post(`${API_URL}/api/create-carmodel`, form, {
+    return api.post('/api/create-carmodel', form, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -10,11 +9,11 @@ export const createCarModel = async (token, form) => {
 }
 
 export const listCarModel = async (pageNumber) => {
-    return axios.get(`${API_URL}/api/list-carmodel/page?page=${pageNumber}&per_page=10`)
+    return api.get(`/api/list-carmodel/page?page=${pageNumber}&per_page=10`)
 }
 
 export const readCarModel = (token, id) => {
-    return axios.get(`${API_URL}/api/read-carmodel/${id}`, {
+    return api.get(`/api/read-carmodel/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -22,7 +21,7 @@ export const readCarModel = (token, id) => {
 }
 
 export const updateCarModel = async (token, id, form) => {
-    return axios.put(`${API_URL}/api/update-carmodel/${id}`, form, {
+    return api.put(`/api/update-carmodel/${id}`, form, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -30,7 +29,7 @@ export const updateCarModel = async (token, id, form) => {
 }
 
 export const removeCarModel = async (token, id) => {
-    return axios.delete(`${API_URL}/api/delete-carmodel/${id}`, {
+    return api.delete(`/api/delete-carmodel/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }

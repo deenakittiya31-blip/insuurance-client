@@ -1,5 +1,3 @@
-import axios from "axios"
-import { API_URL } from "../config/api"
 import api from "../config/axios"
 
 export const uploadImages = async (token, form) => {
