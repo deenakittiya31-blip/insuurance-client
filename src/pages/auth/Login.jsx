@@ -6,6 +6,7 @@ import liff from '@line/liff'
 import useInsureAuth from '../../store/auth-store'
 import toast from 'react-hot-toast'
 import TextInputAuth from '../../component/form/TextInputAuth'
+import ReCAPTCHA from 'react-google-recaptcha'
 
 const Login = () => {
     const actionLogin = useInsureAuth((s) => s.actionLogin)
@@ -13,6 +14,8 @@ const Login = () => {
     const user = useInsureAuth((s) => s.user)
     const actionCurrentUser = useInsureAuth((s) => s.actionCurrentUser)
     const navigate = useNavigate()
+    const keyReCAPTCHA = import.meta.env.VITE_RECAPTCHA_SITE_KEY
+    const [capVal, setCapVal] = useState(null)
     const [form, setForm] = useState({
         email: '',
         password: '',
@@ -51,8 +54,15 @@ const Login = () => {
     const hdlSubmit = async (e) => {
         e.preventDefault()
 
+        if (!capVal) {
+            return toast.error('กรุณายืนยัน reCAPTCHA')
+        }
         try {
-            await actionLogin(form)
+            await actionLogin({
+                ...form,
+                captcha: capVal
+            })
+
             await actionCurrentUser()
             toast.success('ล็อกอินสำเร็จ')
         } catch (err) {
@@ -73,7 +83,7 @@ const Login = () => {
 
     return (
         <div className='bg-[url(/bg.jpg)] bg-cover bg-center bg-no-repeat w-full h-screen flex flex-col justify-center items-center'>
-            <div className='flex flex-col gap-3 justify-center items-center p-10 bg-white/30 backdrop-blur-lg border border-white/50 rounded-xl font-prompt'>
+            <div className='flex flex-col gap-3 justify-center items-center p-7 bg-white/30 backdrop-blur-lg border border-white/50 rounded-xl font-prompt'>
                 <div className='w-full flex flex-col items-center gap-3'>
                     <h1 className='font-dm font-bold text-4xl text-text-primary'>เข้าสู่ระบบ</h1>
                     <h1 className='font-sb text-md text-text-primary'>กรุณาเข้าสู่ระบบก่อนเข้าใช้งาน</h1>
@@ -93,10 +103,11 @@ const Login = () => {
                         onChange={hdlOnChange}
                         width='w-70 md:w-sm'
                     />
-                    <Button
-                        name='เข้าสู่ระบบ'
-                        style=' w-full bg-black text-white'
+                    <ReCAPTCHA
+                        sitekey={keyReCAPTCHA}
+                        onChange={(val) => setCapVal(val)}
                     />
+                    <button type='submit' disabled={!capVal} className="btn btn-neutral w-full">เข้าสู่ระบบ</button>
                 </form>
                 <div className='flex items-center gap-5 w-full text-neutral-400'>
                     <hr className='w-full' />
@@ -111,7 +122,7 @@ const Login = () => {
                         }}
                     />
                 </div>
-                <button onClick={hdlLoginLine} className='w-full bg-green-500 rounded-sm py-1 px-3 text-white text-base'>เข้าสู่ระบบผ่าน Line</button>
+                <button onClick={hdlLoginLine} className="btn bg-green-500 text-white w-full">เข้าสู่ระบบผ่าน Line</button>
                 <Link to='/register' className='text-sm hover:underline underline-offset-4'>Create Account</Link>
             </div>
         </div>

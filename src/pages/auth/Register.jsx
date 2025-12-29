@@ -4,11 +4,14 @@ import Button from '../../component/form/Button'
 import toast from 'react-hot-toast'
 import useInsureAuth from '../../store/auth-store'
 import TextInputAuth from '../../component/form/TextInputAuth'
+import ReCAPTCHA from 'react-google-recaptcha'
 
 
 const Register = () => {
     const actionRehister = useInsureAuth((s) => s.actionRegister)
     const navigate = useNavigate()
+    const keyReCAPTCHA = import.meta.env.VITE_RECAPTCHA_SITE_KEY
+    const [capVal, setCapVal] = useState(null)
     const [form, setForm] = useState({
         name: '',
         email: '',
@@ -25,6 +28,10 @@ const Register = () => {
 
     const hdlSubmit = async (e) => {
         e.preventDefault()
+        if (!capVal) {
+            return toast.error('กรุณายืนยัน reCAPTCHA')
+        }
+
         actionRehister(form)
             .then((res) => {
                 navigate('/')
@@ -37,7 +44,7 @@ const Register = () => {
     }
     return (
         <div className='bg-[url(/bg.jpg)] bg-cover bg-center bg-no-repeat w-full h-screen flex flex-col justify-center items-center'>
-            <div className='flex flex-col gap-3 justify-center items-center p-10 bg-white/30 backdrop-blur-lg border border-white/50 rounded-xl font-prompt'>
+            <div className='flex flex-col gap-3 justify-center items-center py-3 px-7  bg-white/30 backdrop-blur-lg border border-white/50 rounded-xl font-prompt'>
                 <div className='w-full flex flex-col items-center gap-3'>
                     <h1 className='font-dm font-bold text-2xl text-text-primary'>ลงทะเบียนสมาชิก</h1>
                     <h1 className='font-sb text-md text-text-primary'>กรุณากรอกข้อมูลให้ครบ</h1>
@@ -71,10 +78,11 @@ const Register = () => {
                         onChange={hdlOnChange}
                         width='w-70 md:w-sm'
                     />
-                    <Button
-                        name='ลงทะเบียน'
-                        style=' w-full bg-black text-white'
+                    <ReCAPTCHA
+                        sitekey={keyReCAPTCHA}
+                        onChange={(val) => setCapVal(val)}
                     />
+                    <button type='submit' className="btn btn-neutral w-full">ลงทะเบียน</button>
                 </form>
                 <Link to='/' className='font-epilogue text-sm hover:underline underline-offset-4 mt-5'>Login Account</Link>
             </div>
