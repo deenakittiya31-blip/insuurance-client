@@ -62,7 +62,6 @@ const Login = () => {
                 ...form,
                 captcha: capVal
             })
-            console.log('captchalogin', capVal)
             await actionCurrentUser()
             toast.success('ล็อกอินสำเร็จ')
         } catch (err) {
