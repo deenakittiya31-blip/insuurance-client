@@ -28,6 +28,11 @@ export const adminInsur = [
         title: 'แพ็คเก็จ',
         link: '/admin/package'
     },
+    {
+        icon: <TbPackages className='size-4' />,
+        title: 'ใบเสนอราคา',
+        link: '/admin/invoice'
+    },
 ]
 
 export const adminCar = [
