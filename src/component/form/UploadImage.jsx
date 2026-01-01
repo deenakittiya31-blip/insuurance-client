@@ -9,7 +9,9 @@ const UploadImage = () => {
 
     const handleOnChange = (e) => {
         const file = e.target.files[0]
+
         console.log('File size:', (file.size / 1024 / 1024).toFixed(2), 'MB')
+        console.log('Type:', file.type)
 
         if (!file) return
 
@@ -26,7 +28,10 @@ const UploadImage = () => {
 
 
             //เก็บไว้ใน state image
-            setImage(base64)
+            setImage({
+                base64,
+                type: file.type.includes('pdf') ? 'pdf' : 'image'
+            })
         }
 
         reader.readAsDataURL(file)
@@ -52,7 +57,7 @@ const UploadImage = () => {
                 onChange={handleOnChange}
                 type='file'
                 className='file-input w-full'
-                accept='image/*'
+                accept='image/*,application/pdf'
             ></input>
             <button type="submit" className="btn btn-neutral">upload</button>
         </form>
