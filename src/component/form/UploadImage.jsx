@@ -28,10 +28,7 @@ const UploadImage = () => {
 
 
             //เก็บไว้ใน state image
-            setImage({
-                base64,
-                type: file.type.includes('pdf') ? 'pdf' : 'image'
-            })
+            setImage(base64)
         }
 
         reader.readAsDataURL(file)
