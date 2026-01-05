@@ -7,7 +7,6 @@ const UploadImage = () => {
     const token = useInsureAuth((s) => s.token)
     const [image, setImage] = useState('')
     const [fileType, setFileType] = useState('');
-    const [loadind, setLoading] = useState(true)
 
     const handleOnChange = (e) => {
         const file = e.target.files[0]
@@ -42,10 +41,7 @@ const UploadImage = () => {
         e.preventDefault()
 
         try {
-            setLoading(false)
-
             const res = await createInvoice(token, image, fileType)
-            setLoading(true)
             console.log(res.data)
         } catch (err) {
             console.log(err)
@@ -59,7 +55,7 @@ const UploadImage = () => {
                 className='file-input w-full'
                 accept='image/*,application/pdf'
             ></input>
-            <button type="submit" className="btn btn-neutral">upload{loadind ? 'upload' : 'uploading'}</button>
+            <button type="submit" className="btn btn-neutral">upload</button>
         </form>
 
     )
