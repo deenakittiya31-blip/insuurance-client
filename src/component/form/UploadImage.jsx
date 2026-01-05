@@ -1,17 +1,13 @@
 import { useState } from "react"
 import useInsureAuth from "../../store/auth-store"
 import { createInvoice } from "../../service/aigen"
-import toast from "react-hot-toast"
 
 const UploadImage = () => {
     const token = useInsureAuth((s) => s.token)
     const [image, setImage] = useState('')
-    const [fileType, setFileType] = useState('');
 
     const handleOnChange = (e) => {
         const file = e.target.files[0]
-
-        setFileType(file.type)
 
         console.log('File size:', (file.size / 1024 / 1024).toFixed(2), 'MB')
         console.log('Type:', file.type)
