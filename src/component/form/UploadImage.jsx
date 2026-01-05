@@ -51,7 +51,7 @@ const UploadImage = () => {
             ></input>
             <button
                 type="submit"
-                disabled={loading || !image}
+                disabled={loading || !data}
                 className="btn btn-neutral">
                 {loading ? (
                     <span className="flex items-center gap-2">
