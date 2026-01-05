@@ -18,16 +18,10 @@ const UploadImage = () => {
         reader.onloadend = () => {
             //ได้ base64 แบบมี prefix
             const base64WithPrefix = reader.result
-
-            // ตัด prefix ออก
-            const base64 = base64WithPrefix.split(',').pop();
-            const base64SizeInBytes = (base64.length * 3) / 4
-            const base64SizeInMB = base64SizeInBytes / 1024 / 1024
-
-            console.log('Base64 size:', base64SizeInMB.toFixed(2), 'MB')
+            console.log('data', base64WithPrefix)
 
             //เก็บไว้ใน state image
-            setImage(base64)
+            setImage(base64WithPrefix)
         }
 
         reader.readAsDataURL(file)
