@@ -4,23 +4,25 @@ import { createAkson } from "../../service/aksorn"
 
 const UploadImage = () => {
     const token = useInsureAuth((s) => s.token)
-    const [image, setImage] = useState('')
+    const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
 
-    const handleOnChange = (e) => {
-        const file = e.target.files[0]
+    const handleOnChange = async (e) => {
+        const files = Array.from(e.target.files)
 
-        console.log('File size:', (file.size / 1024 / 1024).toFixed(2), 'MB')
-        console.log('Type:', file.type)
+        if (!files) return
 
-        if (!file) return
+        const base64Images = await Promise.all(
+            files.map(file => new Promise(resolve => {
+                const reader = new FileReader()
+                reader.onloadend = () => resolve(reader.result)
+                reader.readAsDataURL(file)
+            }))
+        )
 
-        const reader = new FileReader()
-        reader.onloadend = () => {
-            //เก็บไว้ใน state image
-            setImage(reader.result)
-        }
-        reader.readAsDataURL(file)
+        setData(base64Images)
+
+        console.log(data)
     }
 
     const handleSubmit = async (e) => {
@@ -30,7 +32,7 @@ const UploadImage = () => {
         setLoading(true) //start loading
 
         try {
-            const res = await createAkson(token, image)
+            const res = await createAkson(token, data)
             console.log(res.data)
         } catch (err) {
             console.log(err)
