@@ -1,6 +1,6 @@
 import { useState } from "react"
 import useInsureAuth from "../../store/auth-store"
-import { createInvoice } from "../../service/aigen"
+import { createAkson } from "../../service/aksorn"
 
 const UploadImage = () => {
     const token = useInsureAuth((s) => s.token)
@@ -31,7 +31,7 @@ const UploadImage = () => {
         e.preventDefault()
 
         try {
-            const res = await createInvoice(token, image)
+            const res = await createAkson(token, image)
             console.log(res.data)
         } catch (err) {
             console.log(err)
