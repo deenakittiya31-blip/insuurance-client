@@ -37,7 +37,7 @@ const UploadImage = () => {
         e.preventDefault()
 
         try {
-            const res = await createInvoice(token, image, fileType)
+            const res = await createInvoice(token, image)
             console.log(res.data)
         } catch (err) {
             console.log(err)
