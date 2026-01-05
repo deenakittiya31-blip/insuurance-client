@@ -45,6 +45,7 @@ const UploadImage = () => {
                 type='file'
                 className='file-input w-full'
                 accept='image/*,application/pdf'
+                multiple
             ></input>
             <button
                 type="submit"
