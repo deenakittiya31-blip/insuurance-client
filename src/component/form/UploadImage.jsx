@@ -21,13 +21,13 @@ const UploadImage = () => {
         )
 
         setData(base64Images)
-
-        console.log(data)
     }
+
+    console.log(data)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if (!image) return
+        if (!data) return
 
         setLoading(true) //start loading
 
