@@ -5,6 +5,7 @@ import { createAkson } from "../../service/aksorn"
 const UploadImage = () => {
     const token = useInsureAuth((s) => s.token)
     const [image, setImage] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const handleOnChange = (e) => {
         const file = e.target.files[0]
@@ -16,25 +17,25 @@ const UploadImage = () => {
 
         const reader = new FileReader()
         reader.onloadend = () => {
-            //ได้ base64 แบบมี prefix
-            const base64WithPrefix = reader.result
-            console.log('data', base64WithPrefix)
-
             //เก็บไว้ใน state image
-            setImage(base64WithPrefix)
+            setImage(reader.result)
         }
-
         reader.readAsDataURL(file)
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        if (!image) return
+
+        setLoading(true) //start loading
 
         try {
             const res = await createAkson(token, image)
             console.log(res.data)
         } catch (err) {
             console.log(err)
+        } finally {
+            setLoading(false) //stop loading
         }
     }
     return (
@@ -45,7 +46,19 @@ const UploadImage = () => {
                 className='file-input w-full'
                 accept='image/*,application/pdf'
             ></input>
-            <button type="submit" className="btn btn-neutral">upload</button>
+            <button
+                type="submit"
+                disabled={loading || !image}
+                className="btn btn-neutral">
+                {loading ? (
+                    <span className="flex items-center gap-2">
+                        <span className="loading loading-spinner loading-sm"></span>
+                        กำลังประมวลผล OCR...
+                    </span>
+                ) : (
+                    'Upload'
+                )}
+            </button>
         </form>
 
     )
