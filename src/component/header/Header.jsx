@@ -24,10 +24,6 @@ const Header = () => {
     const actionLogOut = useInsureAuth((s) => s.actionLogout)
     const { getCarModelSelect, carmodel } = useActionStore();
 
-    useEffect(() => {
-        getCarModelSelect();
-    }, [])
-
     const hdlLogout = () => {
         actionLogOut()
         navigate('/')
@@ -47,6 +43,8 @@ const Header = () => {
             await getCarModelSelect(value)
         }
     }
+
+    console.log(form)
 
     const createQuotation = async () => {
         if (loading) return   // กันกดซ้ำ
