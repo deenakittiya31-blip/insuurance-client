@@ -3,6 +3,8 @@ import UploadImage from "../../component/form/UploadImage"
 import useInsureAuth from "../../store/auth-store"
 import { createAkson } from "../../service/aksorn"
 import toast from "react-hot-toast"
+import { useParams } from "react-router-dom"
+import TableQuotation from "../../component/table/TableQuotation"
 
 const initialState = {
     company_id: '',
@@ -14,6 +16,8 @@ const Quotaion = () => {
     const [activeTab, setActiveTab] = useState(1)
     const [form, setForm] = useState(initialState)
     const [loading, setLoading] = useState(false)
+    const [dataOcr, setDataOcr] = useState({})
+    const { q_id } = useParams();
 
     const hdlOnChange = async (e) => {
         const { name, value, files } = e.target
@@ -53,8 +57,12 @@ const Quotaion = () => {
         setLoading(true)
 
         try {
-            const res = await createAkson(token, form)
-            console.log(res.data)
+            const payload = {
+                ...form,
+                compare_id: q_id,
+            };
+            const res = await createAkson(token, payload)
+            setDataOcr(res.data.ocrData)
         } catch (err) {
             console.log(err)
         } finally {
@@ -62,8 +70,13 @@ const Quotaion = () => {
         }
     }
 
+    console.log(dataOcr)
+
     return (
         <div className='flex flex-col p-5 font-prompt'>
+            <div className="flex justify-end">
+                <button className='btn bg-main rounded-md px-7 text-white hover:bg-second'>พิมพ์ PDF</button>
+            </div>
             <div role="tablist" className="tabs tabs-lift flex justify-center">
                 <a
                     role="tab"
@@ -86,7 +99,7 @@ const Quotaion = () => {
                     เอกสารฉบับที่ 3
                 </a>
             </div>
-            <div className="bg-white p-5 rounded-xl">
+            <div className="flex flex-col gap-5 bg-white p-5 rounded-xl">
                 {activeTab === 1 &&
                     <UploadImage
                         onChange={hdlOnChange}
@@ -111,6 +124,7 @@ const Quotaion = () => {
                         form={form}
                     />
                 }
+                <TableQuotation />
             </div>
 
         </div>

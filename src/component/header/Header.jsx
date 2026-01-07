@@ -49,17 +49,19 @@ const Header = () => {
         document.getElementById('my_modal_2').close()
     }
 
-    const hldOnSubmit = async () => {
+    const hldOnSubmit = async (e) => {
+        e.preventDefault();
+
         try {
             const res = await createCompare(token, form)
+            document.getElementById('my_modal_2').close()
+            setForm(initialState)
             toast.success('สร้างใบเสนอราคาเรียบร้อย')
+
             navigate(`/admin/quotaion/${res.data.q_id}`)
-            console.log(res.data.q_id)
         } catch (err) {
             console.log(err)
             toast.error('สร้างใบเสนอราคาไม่สำเร็จ')
-        } finally {
-            setLoading(false)
         }
     }
 
