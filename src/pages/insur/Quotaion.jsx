@@ -5,6 +5,7 @@ import { createAkson } from "../../service/aksorn"
 import toast from "react-hot-toast"
 import { useParams } from "react-router-dom"
 import TableQuotation from "../../component/table/TableQuotation"
+import { createFieldsQuotation } from "../../service/quotation"
 
 const initialState = {
     company_id: '',
