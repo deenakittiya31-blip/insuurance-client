@@ -4,6 +4,7 @@ import useInsureAuth from '../../store/auth-store';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { AiFillSmile } from "react-icons/ai";
+import { createQuot } from '../../service/quotation';
 
 const Header = () => {
     const token = useInsureAuth((s) => s.token)
@@ -17,7 +18,7 @@ const Header = () => {
         toast.success('ออกจากระบบสำเร็จ')
     }
 
-    const createQuot = async () => {
+    const createQuotation = async () => {
         try {
             const res = await createQuot(token)
 
@@ -46,7 +47,7 @@ const Header = () => {
                         <p className='text-xs text-border'>{user?.role}</p>
                     </div>
                 </div>
-                <button className='btn bg-main px-3 rounded-md text-white font-semibold hover:bg-second'>สร้างใบเสนอราคา</button>
+                <button onClick={createQuotation} className='btn bg-main px-3 rounded-md text-white font-semibold hover:bg-second'>สร้างใบเสนอราคา</button>
                 <div>
                     {
                         token
