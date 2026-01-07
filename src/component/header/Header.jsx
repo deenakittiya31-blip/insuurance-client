@@ -4,14 +4,14 @@ import useInsureAuth from '../../store/auth-store';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { AiFillSmile } from "react-icons/ai";
-import { createQuot } from '../../service/quotation';
+import { createCompare, createQuot } from '../../service/compare';
 import { useState } from 'react';
 import ModalQuot from '../modal/ModalQuot';
 import useActionStore from '../../store/action-store';
 
 const initialState = {
     car_brand_id: '',
-    car_modal_id: '',
+    car_model_id: '',
     car_usage_id: '',
 }
 
@@ -44,19 +44,17 @@ const Header = () => {
         }
     }
 
-    console.log(form)
+    const hdlOnClose = () => {
+        setForm(initialState)
+        document.getElementById('my_modal_2').close()
+    }
 
-    const createQuotation = async () => {
-        if (loading) return   // กันกดซ้ำ
-
-        setLoading(true)
+    const hldOnSubmit = async () => {
         try {
-            await new Promise((resolve) => setInterval(resolve, 1000))
-            const res = await createQuot(token)
+            const res = await createCompare(token, form)
             toast.success('สร้างใบเสนอราคาเรียบร้อย')
             navigate(`/admin/quotaion/${res.data.q_id}`)
             console.log(res.data.q_id)
-
         } catch (err) {
             console.log(err)
             toast.error('สร้างใบเสนอราคาไม่สำเร็จ')
@@ -88,22 +86,9 @@ const Header = () => {
                     form={form}
                     onChange={hdlOnChange}
                     carmodel={carmodel}
+                    onClose={hdlOnClose}
+                    onSubmit={hldOnSubmit}
                 />
-                {/* <button
-                    onClick={createQuotation}
-                    disabled={loading}
-                    className={`btn bg-main px-3 rounded-md text-white font-semibold hover:bg-second disabled:opacity-60 disabled:cursor-not-allowed`}>{
-                        loading ? (
-                            <span className='flex items-center gap-2'>
-                                <span className="loading loading-spinner loading-sm"></span>
-                                กำลังสร้าง...
-                            </span>
-                        )
-                            : (
-                                'สร้างใบเสนอราคา'
-                            )}
-                </button> */}
-
                 <div>
                     {
                         token

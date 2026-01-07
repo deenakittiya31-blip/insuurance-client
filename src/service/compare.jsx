@@ -1,7 +1,7 @@
 import api from '../config/axios'
 
-export const createQuot = (token) => {
-    return api.post('/api/create-quotation', {}, {
+export const createCompare = (token, form) => {
+    return api.post('/api/create-compare', form, {
         headers: {
             Authorization: `Bearer ${token}`
         }

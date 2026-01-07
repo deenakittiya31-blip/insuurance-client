@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import useActionStore from "../../store/action-store"
 import Select from "../form/Select"
 
-const ModalQuot = ({ onSubmit, onChange, form, carmodel }) => {
+const ModalQuot = ({ onSubmit, onChange, form, carmodel, onClose }) => {
     const { getCarBrandSelect, carbrand, getCarUsageSelect, carUsage } = useActionStore();
 
     useEffect(() => {
@@ -44,7 +44,7 @@ const ModalQuot = ({ onSubmit, onChange, form, carmodel }) => {
                         labelKey='usage_name'
                     />
                     <div className='modal-action'>
-                        <button type='button' className="btn btn-soft btn-error" onClick={() => document.getElementById('my_modal_2').close()}>ยกเลิก</button>
+                        <button type='button' className="btn btn-soft btn-error" onClick={onClose}>ยกเลิก</button>
                         <button type="submit" className="btn btn-soft btn-primary">บันทึก</button>
                     </div>
                 </form>
