@@ -4,14 +4,15 @@ import useInsureAuth from '../../store/auth-store';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { AiFillSmile } from "react-icons/ai";
-import { createCompare, createQuot } from '../../service/compare';
+import { createCompare } from '../../service/compare';
 import { useState } from 'react';
-import ModalQuot from '../modal/ModalQuot';
+import ModalQuot from '../modal/ModalCompare';
 import useActionStore from '../../store/action-store';
 
 const initialState = {
     car_brand_id: '',
     car_model_id: '',
+    car_year_id: '',
     car_usage_id: '',
 }
 
@@ -19,7 +20,6 @@ const Header = () => {
     const token = useInsureAuth((s) => s.token)
     const user = useInsureAuth((s) => s.user)
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false)
     const [form, setForm] = useState(initialState)
     const actionLogOut = useInsureAuth((s) => s.actionLogout)
     const { getCarModelSelect, carmodel } = useActionStore();

@@ -1,14 +1,31 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useActionStore from "../../store/action-store"
 import Select from "../form/Select"
+import { listCarYearSelect } from "../../service/car/CarYear";
 
 const ModalQuot = ({ onSubmit, onChange, form, carmodel, onClose }) => {
-    const { getCarBrandSelect, carbrand, getCarUsageSelect, carUsage } = useActionStore();
+    const [year, setYear] = useState([])
+    const {
+        getCarBrandSelect,
+        carbrand,
+        getCarUsageSelect,
+        carUsage
+    } = useActionStore();
 
     useEffect(() => {
         getCarBrandSelect();
         getCarUsageSelect();
+        getCarYear();
     }, [])
+
+    const getCarYear = async () => {
+        try {
+            const res = await listCarYearSelect();
+            setYear(res.data.data)
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     return (
         <div className='font-prompt'>
@@ -34,6 +51,27 @@ const ModalQuot = ({ onSubmit, onChange, form, carmodel, onClose }) => {
                         valueKey='id'
                         labelKey='name'
                     />
+                    <fieldset className="fieldset w-full font-prompt text-text-primary p-0">
+                        <p className="fieldset-legend text-sm text-text-primary p-0">ปีรถยนต์</p>
+                        <select
+                            name='car_year_id'
+                            onChange={onChange}
+                            className="select w-full"
+                            value={form.car_year_id}
+                        >
+                            <option value="" disabled={true}>โปรดเลือก</option>
+                            {
+                                year.map((i) => (
+                                    <option
+                                        key={i.id}
+                                        value={i.id}
+                                    >
+                                        {i.year_be}/{i.year_ad}
+                                    </option>
+                                ))
+                            }
+                        </select>
+                    </fieldset>
                     <Select
                         text='ประเภทการใช้งาน'
                         data={carUsage}

@@ -12,6 +12,10 @@ export const listYear = async (pageNumber) => {
     return api.get(`/api/list-year/page?page=${pageNumber}&per_page=10`)
 }
 
+export const listCarYearSelect = async () => {
+    return api.get('/api/list-year-select')
+}
+
 export const readYear = async (token, id) => {
     return api.get(`/api/read-year/${id}`, {
         headers: {
