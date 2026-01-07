@@ -1,16 +1,32 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { TbLogout } from "react-icons/tb";
 import useInsureAuth from '../../store/auth-store';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { AiFillSmile } from "react-icons/ai";
 import { createQuot } from '../../service/quotation';
+import { useState } from 'react';
+import ModalQuot from '../modal/ModalQuot';
+import useActionStore from '../../store/action-store';
+
+const initialState = {
+    car_brand_id: '',
+    car_modal_id: '',
+    car_usage_id: '',
+}
 
 const Header = () => {
     const token = useInsureAuth((s) => s.token)
     const user = useInsureAuth((s) => s.user)
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false)
+    const [form, setForm] = useState(initialState)
     const actionLogOut = useInsureAuth((s) => s.actionLogout)
+    const { getCarModelSelect, carmodel } = useActionStore();
+
+    useEffect(() => {
+        getCarModelSelect();
+    }, [])
 
     const hdlLogout = () => {
         actionLogOut()
@@ -18,15 +34,37 @@ const Header = () => {
         toast.success('ออกจากระบบสำเร็จ')
     }
 
-    const createQuotation = async () => {
-        try {
-            const res = await createQuot(token)
+    const hdlOnChange = async (e) => {
+        const { name, value } = e.target
 
-            console.log(res)
+        setForm(prev => ({
+            ...prev,
+            [name]: value,
+            ...(name === 'car_brand_id' && { car_model_id: '' })
+        }))
+
+        if (name === 'car_brand_id') {
+            await getCarModelSelect(value)
+        }
+    }
+
+    const createQuotation = async () => {
+        if (loading) return   // กันกดซ้ำ
+
+        setLoading(true)
+        try {
+            await new Promise((resolve) => setInterval(resolve, 1000))
+            const res = await createQuot(token)
+            toast.success('สร้างใบเสนอราคาเรียบร้อย')
+            navigate(`/admin/quotaion/${res.data.q_id}`)
+            console.log(res.data.q_id)
+
         } catch (err) {
             console.log(err)
+            toast.error('สร้างใบเสนอราคาไม่สำเร็จ')
+        } finally {
+            setLoading(false)
         }
-
     }
 
     return (
@@ -47,7 +85,27 @@ const Header = () => {
                         <p className='text-xs text-border'>{user?.role}</p>
                     </div>
                 </div>
-                <button onClick={createQuotation} className='btn bg-main px-3 rounded-md text-white font-semibold hover:bg-second'>สร้างใบเสนอราคา</button>
+                {/* สร้างเลขใบเสนอราคา */}
+                <ModalQuot
+                    form={form}
+                    onChange={hdlOnChange}
+                    carmodel={carmodel}
+                />
+                {/* <button
+                    onClick={createQuotation}
+                    disabled={loading}
+                    className={`btn bg-main px-3 rounded-md text-white font-semibold hover:bg-second disabled:opacity-60 disabled:cursor-not-allowed`}>{
+                        loading ? (
+                            <span className='flex items-center gap-2'>
+                                <span className="loading loading-spinner loading-sm"></span>
+                                กำลังสร้าง...
+                            </span>
+                        )
+                            : (
+                                'สร้างใบเสนอราคา'
+                            )}
+                </button> */}
+
                 <div>
                     {
                         token
@@ -65,7 +123,7 @@ const Header = () => {
                     }
                 </div>
             </div>
-        </header>
+        </header >
     )
 }
 

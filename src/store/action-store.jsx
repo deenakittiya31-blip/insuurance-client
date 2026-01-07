@@ -5,6 +5,7 @@ import { listPackageSelect } from '../service/insurance/PackageInsur';
 import { listCarUsageSelect } from '../service/car/CarUsage';
 import { listCarTypeSelect } from '../service/car/CarType';
 import { listCarBrandSelect } from '../service/car/CarBrand';
+import { listByCarModel } from '../service/car/CarModel';
 
 const useActionStore = create((set) => ({
     company: [],
@@ -13,10 +14,19 @@ const useActionStore = create((set) => ({
     carUsage: [],
     cartype: [],
     carbrand: [],
+    carmodel: [],
     getCarBrandSelect: async () => {
         try {
             const res = await listCarBrandSelect()
             set({ carbrand: res.data.data })
+        } catch (err) {
+            console.log(err)
+        }
+    },
+    getCarModelSelect: async (brand_id) => {
+        try {
+            const res = await listByCarModel(brand_id)
+            set({ carmodel: res.data.data })
         } catch (err) {
             console.log(err)
         }

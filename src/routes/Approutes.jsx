@@ -17,7 +17,7 @@ import ProtectRoute from './ProtectRoute'
 import Forbidden from './Forbidden'
 import Cartype from '../pages/car/Cartype'
 import CarYear from '../pages/car/CarYear'
-import Invioce from '../pages/insur/Invioce'
+import Quotaion from '../pages/insur/Quotaion'
 
 const Approutes = () => {
     return (
@@ -46,7 +46,7 @@ const Approutes = () => {
                     <Route path='insurpremuim' element={<InsurPremuim />} />
                     <Route path='insurtypes' element={<InsurTypes />} />
                     <Route path='package' element={<InsurPackage />} />
-                    <Route path='invoice' element={<Invioce />} />
+                    <Route path='quotaion/:id' element={<Quotaion />} />
                 </Route>
             </Routes>
         </BrowserRouter>

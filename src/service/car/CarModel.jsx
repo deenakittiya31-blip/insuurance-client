@@ -12,6 +12,10 @@ export const listCarModel = async (pageNumber) => {
     return api.get(`/api/list-carmodel/page?page=${pageNumber}&per_page=10`)
 }
 
+export const listByCarModel = async (brand_id) => {
+    return api.get(`/api/car-model?brand_id=${brand_id}`)
+}
+
 export const readCarModel = (token, id) => {
     return api.get(`/api/read-carmodel/${id}`, {
         headers: {

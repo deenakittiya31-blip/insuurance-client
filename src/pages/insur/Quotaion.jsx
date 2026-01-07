@@ -9,7 +9,7 @@ const initialState = {
     image: ''
 }
 
-const Invioce = () => {
+const Quotaion = () => {
     const token = useInsureAuth((s) => s.token)
     const [activeTab, setActiveTab] = useState(1)
     const [form, setForm] = useState(initialState)
@@ -116,4 +116,4 @@ const Invioce = () => {
         </div>
     )
 }
-export default Invioce
+export default Quotaion
