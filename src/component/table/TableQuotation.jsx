@@ -1,18 +1,18 @@
 import TextInput from '../form/TextInput'
 
-const TableQuotation = ({ data }) => {
+const TableQuotation = ({ data, onChange, onSubmit }) => {
     return (
         <div className="flex flex-col gap-5 font-prompt text-text-primary">
             <h1 className="font-bold">ตรวจสอบข้อมูล</h1>
-            <form className='grid gap-5 items-end lg:grid-cols-2'>
+            <form onSubmit={onSubmit} className='grid gap-5 items-end lg:grid-cols-2'>
                 <TextInput
                     width='w-auto'
                     title='เลขที่ใบเสนอราคา'
                     name='quotation_number'
                     type='text'
                     placeholder='กรอกเลขที่ใบเสนอราคา'
-                // onChange={onChange}
-                // value={form.price}
+                    onChange={onChange}
+                    value={data.quotation_number || ''}
                 />
                 <TextInput
                     width='w-auto'
@@ -20,8 +20,8 @@ const TableQuotation = ({ data }) => {
                     name='quotation_date'
                     type='text'
                     placeholder='กรอกวันที่ออกใบเสนอราคา'
-                // onChange={onChange}
-                // value={form.price}
+                    onChange={onChange}
+                    value={data.quotation_date || ''}
                 />
                 <TextInput
                     width='w-auto'
@@ -29,8 +29,8 @@ const TableQuotation = ({ data }) => {
                     name='repair_type'
                     type='text'
                     placeholder='กรอกประเภทซ่อม'
-                // onChange={onChange}
-                // value={form.price}
+                    onChange={onChange}
+                    value={data.repair_type || ''}
                 />
                 <TextInput
                     width='w-auto'
@@ -38,8 +38,8 @@ const TableQuotation = ({ data }) => {
                     name='engine_size'
                     type='text'
                     placeholder='กรอกขนาดเครื่องยนต์ CC'
-                // onChange={onChange}
-                // value={form.price}
+                    onChange={onChange}
+                    value={data.engine_size || ''}
                 />
                 <TextInput
                     width='w-auto'
@@ -47,8 +47,8 @@ const TableQuotation = ({ data }) => {
                     name='insurance_type'
                     type='text'
                     placeholder='กรอกประเภทประกัน'
-                // onChange={onChange}
-                // value={form.price}
+                    onChange={onChange}
+                    value={data.insurance_type || ''}
                 />
                 <TextInput
                     width='w-auto'
@@ -56,8 +56,8 @@ const TableQuotation = ({ data }) => {
                     name='coverage_amount'
                     type='text'
                     placeholder='กรอกทุนประกัน'
-                // onChange={onChange}
-                // value={form.price}
+                    onChange={onChange}
+                    value={data.coverage_amount || ''}
                 />
                 <TextInput
                     width='w-auto'
@@ -65,8 +65,8 @@ const TableQuotation = ({ data }) => {
                     name='premium_total'
                     type='text'
                     placeholder='กรอกเบี้ยประกันรวม'
-                // onChange={onChange}
-                // value={form.price}
+                    onChange={onChange}
+                    value={data.premium_total || ''}
                 />
                 <TextInput
                     width='w-auto'
@@ -74,8 +74,8 @@ const TableQuotation = ({ data }) => {
                     name='thirdparty_injury_death_per_person'
                     type='text'
                     placeholder='กรอกข้อมูล...'
-                // onChange={onChange}
-                // value={form.price}
+                    onChange={onChange}
+                    value={data.thirdparty_injury_death_per_person || ''}
                 />
                 <TextInput
                     width='w-auto'
@@ -83,8 +83,8 @@ const TableQuotation = ({ data }) => {
                     name='thirdparty_injury_death_per_accident'
                     type='text'
                     placeholder='กรอกข้อมูล...'
-                // onChange={onChange}
-                // value={form.price}
+                    onChange={onChange}
+                    value={data.thirdparty_injury_death_per_accident || ''}
                 />
                 <TextInput
                     width='w-auto'
@@ -92,8 +92,8 @@ const TableQuotation = ({ data }) => {
                     name='thirdparty_property'
                     type='text'
                     placeholder='กรอกข้อมูล...'
-                // onChange={onChange}
-                // value={form.price}
+                    onChange={onChange}
+                    value={data.thirdparty_property || ''}
                 />
                 <TextInput
                     width='w-auto'
@@ -101,8 +101,8 @@ const TableQuotation = ({ data }) => {
                     name='car_own_damage'
                     type='text'
                     placeholder='กรอกข้อมูล...'
-                // onChange={onChange}
-                // value={form.price}
+                    onChange={onChange}
+                    value={data.car_own_damage || ''}
                 />
                 <TextInput
                     width='w-auto'
@@ -110,8 +110,8 @@ const TableQuotation = ({ data }) => {
                     name='car_own_damage_deductible'
                     type='text'
                     placeholder='กรอกข้อมูล...'
-                // onChange={onChange}
-                // value={form.price}
+                    onChange={onChange}
+                    value={data.car_own_damage_deductible || ''}
                 />
                 <TextInput
                     width='w-auto'
@@ -119,8 +119,8 @@ const TableQuotation = ({ data }) => {
                     name='car_fire_theft'
                     type='text'
                     placeholder='กรอกข้อมูล...'
-                // onChange={onChange}
-                // value={form.price}
+                    onChange={onChange}
+                    value={data.car_fire_theft || ''}
                 />
                 <TextInput
                     width='w-auto'
@@ -128,8 +128,8 @@ const TableQuotation = ({ data }) => {
                     name='additional_personal_permanent_driver_cover'
                     type='text'
                     placeholder='กรอกข้อมูล...'
-                // onChange={onChange}
-                // value={form.price}
+                    onChange={onChange}
+                    value={data.additional_personal_permanent_driver_cover || ''}
                 />
                 <TextInput
                     width='w-auto'
@@ -137,8 +137,8 @@ const TableQuotation = ({ data }) => {
                     name='additional_medical_expense_cover'
                     type='text'
                     placeholder='กรอกข้อมูล...'
-                // onChange={onChange}
-                // value={form.price}
+                    onChange={onChange}
+                    value={data.additional_medical_expense_cover || ''}
                 />
                 <TextInput
                     width='w-auto'
@@ -146,8 +146,8 @@ const TableQuotation = ({ data }) => {
                     name='additional_bail_bond'
                     type='text'
                     placeholder='กรอกข้อมูล...'
-                // onChange={onChange}
-                // value={form.price}
+                    onChange={onChange}
+                    value={data.additional_bail_bond || ''}
                 />
                 <TextInput
                     width='w-auto'
@@ -155,8 +155,8 @@ const TableQuotation = ({ data }) => {
                     name='additional_personal_permanent_driver_number'
                     type='text'
                     placeholder='กรอกข้อมูล...'
-                // onChange={onChange}
-                // value={form.price}
+                    onChange={onChange}
+                    value={data.additional_personal_permanent_driver_number || ''}
                 />
                 <div className=''>
                     <button className='btn bg-green-500 rounded-md px-7 text-white hover:bg-green-600'>บันทึก</button>

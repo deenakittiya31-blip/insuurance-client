@@ -17,6 +17,7 @@ const Quotaion = () => {
     const [form, setForm] = useState(initialState)
     const [loading, setLoading] = useState(false)
     const [dataOcr, setDataOcr] = useState({})
+    const [quotation_id, setQuotation_id] = useState()
     const { q_id } = useParams();
 
     const hdlOnChange = async (e) => {
@@ -48,6 +49,15 @@ const Quotaion = () => {
         }))
     }
 
+    const handleOcrChange = (e) => {
+        const { name, value } = e.target
+
+        setDataOcr(prev => ({
+            ...prev,
+            [name]: value
+        }))
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (!form.company_id || !form.image) {
@@ -63,6 +73,7 @@ const Quotaion = () => {
             };
             const res = await createAkson(token, payload)
             setDataOcr(res.data.ocrData)
+            setQuotation_id(res.data.id)
         } catch (err) {
             console.log(err)
         } finally {
@@ -71,6 +82,23 @@ const Quotaion = () => {
     }
 
     console.log(dataOcr)
+
+    const handleSaveQuotation = async (e) => {
+        e.preventDefault()
+        if (!quotation_id) {
+            toast.error('ยังไม่มี quotation_id')
+            return
+        }
+
+        try {
+            const res = await createFieldsQuotation(token, quotation_id, dataOcr)
+
+            toast.success(res.data.msg)
+        } catch (err) {
+            console.log(err)
+            toast.error('บันทึกไม่สำเร็จ')
+        }
+    }
 
     return (
         <div className='flex flex-col p-5 font-prompt'>
@@ -124,7 +152,11 @@ const Quotaion = () => {
                         form={form}
                     />
                 }
-                <TableQuotation />
+                <TableQuotation
+                    data={dataOcr}
+                    onChange={handleOcrChange}
+                    onSubmit={handleSaveQuotation}
+                />
             </div>
 
         </div>
