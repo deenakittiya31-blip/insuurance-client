@@ -20,7 +20,7 @@ const EditPackage = ({ isOpen, onClose, onchange, onSubmit, value }) => {
             <form onSubmit={onSubmit} className="w-auto p-6 radius-box flex flex-col gap-5 bg-white rounded-lg">
                 <h3 className="font-bold text-lg font-prompt text-text-primary">แก้ไขข้อมูลแพ็กเกจ</h3>
                 <Select
-                    text='ชื่อแพ็กเกจ'
+                    text='ชื่อบริษัท'
                     data={company}
                     value={value.company_id}
                     name='company_id'

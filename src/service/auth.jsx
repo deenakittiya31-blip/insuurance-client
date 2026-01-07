@@ -26,12 +26,3 @@ export const loginWithGoogle = async (credential) => {
 export const register = async (form) => {
     return axios.post(`${API_URL}/api/register`, form)
 }
-
-
-// export const currentUser = async (token) => {
-//     return api.post(`${API_URL}/api/current-user`, {}, {
-//         headers: {
-//             Authorization: `Bearer ${token}`
-//         }
-//     })
-// }

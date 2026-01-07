@@ -53,7 +53,6 @@ const Login = () => {
 
     const hdlSubmit = async (e) => {
         e.preventDefault()
-
         if (!capVal) {
             return toast.error('กรุณายืนยัน reCAPTCHA')
         }
@@ -106,7 +105,7 @@ const Login = () => {
                         sitekey={keyReCAPTCHA}
                         onChange={(val) => setCapVal(val)}
                     />
-                    <button type='submit' disabled={!capVal} className="btn btn-neutral w-full">เข้าสู่ระบบ</button>
+                    <button type='submit' className="btn btn-neutral w-full">เข้าสู่ระบบ</button>
                 </form>
                 <div className='flex items-center gap-5 w-full text-neutral-400'>
                     <hr className='w-full' />

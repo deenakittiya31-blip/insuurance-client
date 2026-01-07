@@ -1,5 +1,5 @@
 import React from 'react'
-import Profile from '../../assets/user.png'
+import { TbLogout } from "react-icons/tb";
 import useInsureAuth from '../../store/auth-store';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +15,17 @@ const Header = () => {
         actionLogOut()
         navigate('/')
         toast.success('ออกจากระบบสำเร็จ')
+    }
+
+    const createQuot = async () => {
+        try {
+            const res = await createQuot(token)
+
+            console.log(res)
+        } catch (err) {
+            console.log(err)
+        }
+
     }
 
     return (
@@ -35,12 +46,13 @@ const Header = () => {
                         <p className='text-xs text-border'>{user?.role}</p>
                     </div>
                 </div>
+                <button className='btn bg-main px-3 rounded-md text-white font-semibold hover:bg-second'>สร้างใบเสนอราคา</button>
                 <div>
                     {
                         token
                             ? (
-                                <button onClick={hdlLogout} className='btn bg-main px-3 rounded-md text-white font-semibold hover:bg-second'>
-                                    <h3>ออกจากระบบ</h3>
+                                <button onClick={hdlLogout} className='btn rounded-md'>
+                                    <TbLogout className='size-5' />
                                 </button>
                             )
                             : (
