@@ -20,6 +20,7 @@ export const createPDF = (token, id) => {
     return api.get(`/api/pdf-compare/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
-        }
+        },
+        responseType: 'blob'
     })
 }
