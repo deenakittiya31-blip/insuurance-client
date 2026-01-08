@@ -80,6 +80,8 @@ const Quotaion = () => {
         }
     }
 
+    console.log(detail)
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (!form.company_id || !form.image) {
@@ -124,13 +126,13 @@ const Quotaion = () => {
 
     return (
         <div className='flex flex-col p-5 font-prompt'>
-            <div className="flex justify-end">
-                <div>
-                    <h1>เลขใบเสนอราคา: {detail.q_id}</h1>
-                    <h1>ชื่อยี่ห้อรถยนต์: {detail.car_brand}</h1>
-                    <h1>ชื่อรุ่นรถยนต์: {detail.car_model}</h1>
-                    <h1>ประเภทการใช้งาน: {detail.usage}</h1>
-                    <h1>ปีของรถยนต์: {detail.year}</h1>
+            <div className="flex justify-between">
+                <div className="font-medium text-text-primary">
+                    <h1>เลขใบเสนอราคา : {detail.q_id}</h1>
+                    <h1>ชื่อยี่ห้อรถยนต์ : {detail.car_brand}</h1>
+                    <h1>ชื่อรุ่นรถยนต์ : {detail.car_model}</h1>
+                    <h1>ประเภทการใช้งาน : {detail.usage}</h1>
+                    <h1>ปีของรถยนต์ : {detail.year}</h1>
                 </div>
                 <button className='btn bg-main rounded-md px-7 text-white hover:bg-second'>พิมพ์ PDF</button>
             </div>
