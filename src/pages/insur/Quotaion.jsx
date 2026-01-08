@@ -5,9 +5,10 @@ import { createAkson } from "../../service/aksorn"
 import toast from "react-hot-toast"
 import { useParams } from "react-router-dom"
 import TableQuotation from "../../component/table/TableQuotation"
-import { createFieldsQuotation } from "../../service/quotation"
+import { createFieldsQuotation, deleteQuotation } from "../../service/quotation"
 import { getDetailCompare } from "../../service/compare"
 import { useEffect } from "react"
+import Swal from "sweetalert2"
 
 const initialState = {
     company_id: '',
@@ -16,18 +17,21 @@ const initialState = {
 
 const Quotaion = () => {
     const token = useInsureAuth((s) => s.token)
+    const { q_id } = useParams();
     const [activeTab, setActiveTab] = useState(1)
     const [form, setForm] = useState(initialState)
     const [loading, setLoading] = useState(false)
-    const [dataOcr, setDataOcr] = useState({})
     const [detail, setDetail] = useState({})
-    // const [ocrByTab, setOcrByTab] = useState({
-    //     1: {},
-    //     2: {},
-    //     3: {}
-    // })
-    const [quotation_id, setQuotation_id] = useState()
-    const { q_id } = useParams();
+    const [ocrByTab, setOcrByTab] = useState({
+        1: {},
+        2: {},
+        3: {}
+    })
+    const [quotationIdByTab, setQuotationIdByTab] = useState({
+        1: null,
+        2: null,
+        3: null
+    })
 
     useEffect(() => {
         if (!q_id) return;
@@ -63,16 +67,6 @@ const Quotaion = () => {
         }))
     }
 
-    const handleOcrChange = (e) => {
-        const { name, value } = e.target
-
-        setDataOcr(prev => ({
-            ...prev,
-            [name]: value
-        }))
-    }
-
-    console.log('q_id from params:', q_id);
 
     const getDetail = async () => {
         try {
@@ -82,8 +76,6 @@ const Quotaion = () => {
             console.log(err)
         }
     }
-
-    console.log(detail)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -97,10 +89,19 @@ const Quotaion = () => {
             const payload = {
                 ...form,
                 compare_id: q_id,
+                doc_id: activeTab
             };
             const res = await createAkson(token, payload)
-            setDataOcr(res.data.ocrData)
-            setQuotation_id(res.data.id)
+
+            setOcrByTab(prev => ({
+                ...prev,
+                [activeTab]: res.data.ocrData
+            }))
+
+            setQuotationIdByTab(prev => ({
+                ...prev,
+                [activeTab]: res.data.id
+            }))
         } catch (err) {
             console.log(err)
         } finally {
@@ -108,17 +109,60 @@ const Quotaion = () => {
         }
     }
 
-    console.log(dataOcr)
+    const removeQuotation = async () => {
+        const quotationId = quotationIdByTab[activeTab]
+
+        const result = await Swal.fire({
+            title: "คุณแน่ใจ ?",
+            text: "ต้องการจะเปลี่ยนจริง ๆ ใช่ไหม?",
+            icon: "question",
+            showCancelButton: true,
+            cancelButtonColor: "#E5E4E2",
+            confirmButtonColor: "#d33",
+            confirmButtonText: "ลบ",
+            cancelButtonText: 'ยกเลิก'
+        })
+
+        if (!result.isConfirmed) return
+
+        try {
+            await deleteQuotation(token, quotationId)
+
+            //ล้าง quotation ใน state
+            setQuotationIdByTab(prev => ({
+                ...prev,
+                [activeTab]: null
+            }))
+
+            //ล้างข้อมูลที่เก็บไว้
+            setOcrByTab(prev => ({
+                ...prev,
+                [activeTab]: {}
+            }))
+
+            //ล้างไฟล์ที่เลือก
+            setForm(prev => ({
+                ...prev,
+                image: ''
+            }))
+        } catch (err) {
+            console.log(err)
+        }
+
+    }
 
     const handleSaveQuotation = async (e) => {
         e.preventDefault()
-        if (!quotation_id) {
+
+        const quotationId = quotationIdByTab[activeTab]
+
+        if (!quotationId) {
             toast.error('ยังไม่มี quotation_id')
             return
         }
 
         try {
-            const res = await createFieldsQuotation(token, quotation_id, dataOcr)
+            const res = await createFieldsQuotation(token, quotationId, ocrByTab[activeTab])
 
             toast.success(res.data.msg)
         } catch (err) {
@@ -128,69 +172,86 @@ const Quotaion = () => {
     }
 
     return (
-        <div className='flex flex-col p-5 font-prompt'>
-            <div className="flex justify-between">
-                <div className="font-medium text-text-primary">
-                    <h1>เลขใบเสนอราคา : {detail.q_id}</h1>
-                    <h1>ชื่อยี่ห้อรถยนต์ : {detail.car_brand}</h1>
-                    <h1>ชื่อรุ่นรถยนต์ : {detail.car_model}</h1>
-                    <h1>ประเภทการใช้งาน : {detail.usage}</h1>
-                    <h1>ปีของรถยนต์ : {detail.year}</h1>
+        <div className='flex flex-col p-5 gap-5 font-prompt'>
+            <div className="flex justify-between bg-main p-5 rounded-xl">
+                <div className="gap-5 font-medium text-text-primary">
+                    <div className="flex gap-2">
+                        <p className="font-semibold">หมายเลขใบเสนอราคา : <span className="font-medium text-sm">{detail.q_id}</span></p>
+                        |
+                        <p className="font-semibold"> ประเภท : <span className="font-medium text-sm">{detail.usage}</span></p>
+                    </div>
+                    <ul>
+                        <li>
+                            <p className="font-semibold"> ชื่อยี่ห้อรถยนต์ : <span className="font-medium text-sm">{detail.car_brand}</span></p>
+                        </li>
+                        <li>
+                            <p className="font-semibold"> ชื่อรุ่นรถยนต์ : <span className="font-medium text-sm">{detail.car_model}</span></p>
+                        </li>
+                        <li>
+                            <p className="font-semibold"> ปีของรถยนต์ : <span className="font-medium text-sm">{detail.year_be
+                            }/{detail.year_ad}</span></p>
+                        </li>
+                    </ul>
                 </div>
-                <button className='btn bg-main rounded-md px-7 text-white hover:bg-second'>พิมพ์ PDF</button>
+                <button className='btn bg-text-primary rounded-md px-7 text-white hover:bg-[#202b3b]'>พิมพ์ PDF</button>
             </div>
-            <div role="tablist" className="tabs tabs-lift flex justify-center">
-                <a
-                    role="tab"
-                    className={`tab font-medium ${activeTab === 1 ? "tab-active" : ""}`}
-                    onClick={() => setActiveTab(1)}
-                >
-                    เอกสารฉบับที่ 1
-                </a>
-                <a
-                    role="tab"
-                    className={`tab font-medium ${activeTab === 2 ? "tab-active" : ""}`}
-                    onClick={() => setActiveTab(2)}
-                >เอกสารฉบับที่ 2
-                </a>
-                <a
-                    role="tab"
-                    className={`tab font-medium ${activeTab === 3 ? "tab-active" : ""}`}
-                    onClick={() => setActiveTab(3)}
-                >
-                    เอกสารฉบับที่ 3
-                </a>
-            </div>
-            <div className="flex flex-col gap-5 bg-white p-5 rounded-xl">
-                {activeTab === 1 &&
-                    <UploadImage
-                        onChange={hdlOnChange}
-                        isLoading={loading}
-                        onSubmit={handleSubmit}
-                        form={form}
+            <div>
+                <div role="tablist" className="tabs tabs-lift flex justify-center">
+                    <a
+                        role="tab"
+                        className={`tab font-medium ${activeTab === 1 ? "tab-active" : ""}`}
+                        onClick={() => setActiveTab(1)}
+                    >
+                        เอกสารฉบับที่ 1
+                    </a>
+                    <a
+                        role="tab"
+                        className={`tab font-medium ${activeTab === 2 ? "tab-active" : ""}`}
+                        onClick={() => setActiveTab(2)}
+                    >เอกสารฉบับที่ 2
+                    </a>
+                    <a
+                        role="tab"
+                        className={`tab font-medium ${activeTab === 3 ? "tab-active" : ""}`}
+                        onClick={() => setActiveTab(3)}
+                    >
+                        เอกสารฉบับที่ 3
+                    </a>
+                </div>
+                <div className="flex flex-col gap-7 bg-white p-5 rounded-xl">
+                    {activeTab === 1 &&
+                        <UploadImage
+                            onChange={hdlOnChange}
+                            isLoading={loading}
+                            onSubmit={handleSubmit}
+                            form={form}
+                        />
+                    }
+                    {activeTab === 2 &&
+                        <UploadImage
+                            onChange={hdlOnChange}
+                            isLoading={loading}
+                            onSubmit={handleSubmit}
+                            form={form}
+                        />
+                    }
+                    {activeTab === 3 &&
+                        <UploadImage
+                            onChange={hdlOnChange}
+                            isLoading={loading}
+                            onSubmit={handleSubmit}
+                            form={form}
+                        />
+                    }
+                    <hr className="border-dashed border border-border" />
+                    <TableQuotation
+                        quotationID={quotationIdByTab[activeTab]}
+                        onChangData={removeQuotation}
+                        data={ocrByTab[activeTab]}
+                        onSubmit={handleSaveQuotation}
                     />
-                }
-                {activeTab === 2 &&
-                    <UploadImage
-                        onChange={hdlOnChange}
-                        isLoading={loading}
-                        onSubmit={handleSubmit}
-                        form={form}
-                    />
-                }
-                {activeTab === 3 &&
-                    <UploadImage
-                        onChange={hdlOnChange}
-                        isLoading={loading}
-                        onSubmit={handleSubmit}
-                        form={form}
-                    />
-                }
-                <TableQuotation
-                    data={dataOcr}
-                    onChange={handleOcrChange}
-                    onSubmit={handleSaveQuotation}
-                />
+                </div>
+
             </div>
 
         </div>

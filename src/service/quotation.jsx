@@ -13,3 +13,11 @@ export const createFieldsQuotation = (token, quotation_id, fields) => {
         }
     )
 }
+
+export const deleteQuotation = (token, id) => {
+    return api.delete(`/api/delete-quotation/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
