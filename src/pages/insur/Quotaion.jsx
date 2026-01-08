@@ -6,7 +6,7 @@ import toast from "react-hot-toast"
 import { useParams } from "react-router-dom"
 import TableQuotation from "../../component/table/TableQuotation"
 import { createFieldsQuotation, deleteQuotation } from "../../service/quotation"
-import { getDetailCompare } from "../../service/compare"
+import { createPDF, getDetailCompare } from "../../service/compare"
 import { useEffect } from "react"
 import Swal from "sweetalert2"
 
@@ -171,6 +171,15 @@ const Quotaion = () => {
         }
     }
 
+    const createComparePDF = async () => {
+        try {
+            const res = await createPDF(token, q_id)
+            console.log(res.data)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     return (
         <div className='flex flex-col p-5 gap-5 font-prompt'>
             <div className="flex justify-between bg-main p-5 rounded-xl">
@@ -193,7 +202,7 @@ const Quotaion = () => {
                         </li>
                     </ul>
                 </div>
-                <button className='btn bg-text-primary rounded-md px-7 text-white hover:bg-[#202b3b]'>พิมพ์ PDF</button>
+                <button onClick={createComparePDF} className='btn bg-text-primary rounded-md px-7 text-white hover:bg-[#202b3b]'>พิมพ์ PDF</button>
             </div>
             <div>
                 <div role="tablist" className="tabs tabs-lift flex justify-center">

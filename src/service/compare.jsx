@@ -9,7 +9,15 @@ export const createCompare = (token, form) => {
 }
 
 export const getDetailCompare = (token, id) => {
-    return api.get(`api/detail-compare/${id}`, {
+    return api.get(`/api/detail-compare/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
+export const createPDF = (token, id) => {
+    return api.get(`/api/pdf-compare/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
