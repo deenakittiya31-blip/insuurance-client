@@ -30,8 +30,9 @@ const Quotaion = () => {
     const { q_id } = useParams();
 
     useEffect(() => {
-        getDetail(q_id);
-    }, [])
+        if (!q_id) return;
+        getDetail();
+    }, [q_id])
 
     const hdlOnChange = async (e) => {
         const { name, value, files } = e.target
@@ -70,6 +71,8 @@ const Quotaion = () => {
             [name]: value
         }))
     }
+
+    console.log('q_id from params:', q_id);
 
     const getDetail = async () => {
         try {
