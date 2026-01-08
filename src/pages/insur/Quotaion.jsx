@@ -6,6 +6,8 @@ import toast from "react-hot-toast"
 import { useParams } from "react-router-dom"
 import TableQuotation from "../../component/table/TableQuotation"
 import { createFieldsQuotation } from "../../service/quotation"
+import { getDetailCompare } from "../../service/compare"
+import { useEffect } from "react"
 
 const initialState = {
     company_id: '',
@@ -18,8 +20,18 @@ const Quotaion = () => {
     const [form, setForm] = useState(initialState)
     const [loading, setLoading] = useState(false)
     const [dataOcr, setDataOcr] = useState({})
+    const [detail, setDetail] = useState({})
+    // const [ocrByTab, setOcrByTab] = useState({
+    //     1: {},
+    //     2: {},
+    //     3: {}
+    // })
     const [quotation_id, setQuotation_id] = useState()
     const { q_id } = useParams();
+
+    useEffect(() => {
+        getDetail(q_id);
+    }, [])
 
     const hdlOnChange = async (e) => {
         const { name, value, files } = e.target
@@ -57,6 +69,15 @@ const Quotaion = () => {
             ...prev,
             [name]: value
         }))
+    }
+
+    const getDetail = async () => {
+        try {
+            const res = await getDetailCompare(q_id)
+            setDetail(res.data.data)
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     const handleSubmit = async (e) => {
@@ -104,6 +125,13 @@ const Quotaion = () => {
     return (
         <div className='flex flex-col p-5 font-prompt'>
             <div className="flex justify-end">
+                <div>
+                    <h1>เลขใบเสนอราคา: {detail.q_id}</h1>
+                    <h1>ชื่อยี่ห้อรถยนต์: {detail.car_brand}</h1>
+                    <h1>ชื่อรุ่นรถยนต์: {detail.car_model}</h1>
+                    <h1>ประเภทการใช้งาน: {detail.usage}</h1>
+                    <h1>ปีของรถยนต์: {detail.year}</h1>
+                </div>
                 <button className='btn bg-main rounded-md px-7 text-white hover:bg-second'>พิมพ์ PDF</button>
             </div>
             <div role="tablist" className="tabs tabs-lift flex justify-center">

@@ -7,3 +7,11 @@ export const createCompare = (token, form) => {
         }
     })
 }
+
+export const getDetailCompare = (token, id) => {
+    return api.get(`api/detail-compare/${id}`, {}, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
