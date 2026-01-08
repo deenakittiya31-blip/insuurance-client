@@ -73,7 +73,7 @@ const Quotaion = () => {
 
     const getDetail = async () => {
         try {
-            const res = await getDetailCompare(q_id)
+            const res = await getDetailCompare(token, q_id)
             setDetail(res.data.data)
         } catch (err) {
             console.log(err)
