@@ -174,9 +174,18 @@ const Quotaion = () => {
     const createComparePDF = async () => {
         try {
             const res = await createPDF(token, q_id)
-            console.log(res.data)
+
+            // สร้าง blob URL
+            const blob = new Blob([res.data], { type: 'application/pdf' })
+            const url = window.URL.createObjectURL(blob)
+
+            // เปิดในแท็บใหม่
+            window.open(url, '_blank')
+
+            toast.success('เปิด PDF สำเร็จ')
         } catch (err) {
             console.log(err)
+            toast.error('สร้าง PDF ไม่สำเร็จ')
         }
     }
 
