@@ -7,8 +7,6 @@ import toast from 'react-hot-toast';
 const LoginLine = () => {
     const actionLoginLine = useInsureAuth((s) => s.actionLoginLine)
     const actionCurrentUser = useInsureAuth((s) => s.actionCurrentUser)
-    const user = useInsureAuth((s) => s.user)
-
     const navigate = useNavigate()
 
     //set up & เก็บข้อมูลที่ได้
@@ -26,6 +24,7 @@ const LoginLine = () => {
             await actionLoginLine(profile) // ได้ token
             const currentUser = await actionCurrentUser()      // ได้ user + role
 
+            console.log(currentUser.role)
             toast.success('ลงชื่อเข้าใช้สำเร็จ')
 
             if (currentUser.role === 'admin') {
