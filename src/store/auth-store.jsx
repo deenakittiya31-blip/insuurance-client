@@ -7,12 +7,16 @@ const authStore = (set, get) => ({
     token: null,
     actionCurrentUser: async () => {
         try {
-            const res = await currentUser()
+            const token = overrideToken || get().token
+            if (!token) return null
+
+            const res = await currentUser(token)
             set({ user: res.data.user })
 
             return res.data.user
         } catch (err) {
             get().actionLogout()
+            return null
         }
     },
     actionLogin: async (form) => {
@@ -25,10 +29,11 @@ const authStore = (set, get) => ({
     },
     actionLoginLine: async (form) => {
         const res = await loginWithLine(form)
-        set({
-            token: res.data.token
-        })
-        return res
+
+        const token = res.data.token
+
+        set({ token })
+        return token
     },
     actionLoginGoogle: async (credential) => {
         const res = await loginWithGoogle(credential)

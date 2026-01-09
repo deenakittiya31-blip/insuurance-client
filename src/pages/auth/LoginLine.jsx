@@ -16,12 +16,12 @@ const LoginLine = () => {
             })
     }, [])
 
-    const hdlLogin = async (e) => {
+    const hdlLogin = async () => {
         try {
             const profile = await liff.getProfile()
 
-            await actionLoginLine(profile) // ได้ token
-            const currentUser = await actionCurrentUser()
+            const token = await actionLoginLine(profile) // ได้ token
+            const currentUser = await actionCurrentUser(token)
             console.log('CURRENT USER:', currentUser)
 
 

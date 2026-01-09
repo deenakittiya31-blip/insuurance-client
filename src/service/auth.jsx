@@ -7,8 +7,12 @@ export const login = (form) => {
     return axios.post(`${API_URL}/api/login`, form)
 }
 
-export const currentUser = () => {
-    return api.post('/api/current-user')
+export const currentUser = (token) => {
+    return api.post('/api/current-user', {}, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
 }
 
 export const loginWithLine = (form) => {
