@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { GoogleLogin } from '@react-oauth/google'
 import { Link, useNavigate } from 'react-router-dom'
-import Button from '../../component/form/Button'
 import liff from '@line/liff'
 import useInsureAuth from '../../store/auth-store'
 import toast from 'react-hot-toast'
@@ -61,8 +60,14 @@ const Login = () => {
                 ...form,
                 captcha: capVal
             })
-            await actionCurrentUser()
+            const currentUser = await actionCurrentUser()
             toast.success('ล็อกอินสำเร็จ')
+
+            if (currentUser.role === 'admin') {
+                navigate('/admin', { replace: true })
+            } else {
+                navigate('/user', { replace: true })
+            }
         } catch (err) {
             toast.error(err.response?.data?.message || 'Login failed')
         }
