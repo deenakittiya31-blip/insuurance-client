@@ -22,6 +22,11 @@ const Quotaion = () => {
     const [form, setForm] = useState(initialState)
     const [loading, setLoading] = useState(false)
     const [detail, setDetail] = useState({})
+    const [dataSuccess, setDataSuccess] = useState({
+        1: '',
+        2: '',
+        3: ''
+    })
     const [ocrByTab, setOcrByTab] = useState({
         1: {},
         2: {},
@@ -101,6 +106,11 @@ const Quotaion = () => {
             setQuotationIdByTab(prev => ({
                 ...prev,
                 [activeTab]: res.data.id
+            }))
+
+            setDataSuccess(prev => ({
+                ...prev,
+                [activeTab]: `เอกสารฉบับที่ ${activeTab} ประมวลผลสำเร็จแล้ว`
             }))
         } catch (err) {
             console.log(err)
@@ -248,6 +258,16 @@ const Quotaion = () => {
                 <button onClick={createComparePDF} className='btn bg-text-primary rounded-md px-7 text-white hover:bg-[#202b3b]'>พิมพ์ PDF</button>
             </div>
             <div>
+                <div className="flex justify-center my-5 gap-5">
+                    {Object.values(dataSuccess)
+                        .filter(msg => msg)
+                        .map((msg, index) => (
+                            <div key={index} className="flex items-center gap-2">
+                                <span className="text-green-600">✔</span>
+                                <span>{msg}</span>
+                            </div>
+                        ))}
+                </div>
                 <div role="tablist" className="tabs tabs-lift flex justify-center">
                     <a
                         role="tab"
