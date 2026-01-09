@@ -10,7 +10,7 @@ import ModalQuot from '../modal/ModalCompare';
 import useActionStore from '../../store/action-store';
 
 const initialState = {
-    to: '',
+    to_name: '',
     details: '',
     car_brand_id: '',
     car_model_id: '',
