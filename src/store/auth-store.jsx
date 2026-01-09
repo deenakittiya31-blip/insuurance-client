@@ -12,6 +12,8 @@ const authStore = (set, get) => ({
 
             const res = await currentUser(token)
             set({ user: res.data.user })
+
+            return res.data.user
         } catch (err) {
             get().actionLogout()
         }

@@ -19,24 +19,21 @@ const LoginLine = () => {
             })
     }, [])
 
-    useEffect(() => {
-        if (!user) return
-
-        if (user.role === 'admin') {
-            navigate('/admin', { replace: true })
-        } else {
-            navigate('/user', { replace: true })
-        }
-    }, [user])
-
     const hdlLogin = async () => {
         try {
             const profile = await liff.getProfile()
 
             await actionLoginLine(profile) // ได้ token
-            await actionCurrentUser()      // ได้ user + role
+            const currentUser = await actionCurrentUser()      // ได้ user + role
 
             toast.success('ลงชื่อเข้าใช้สำเร็จ')
+
+            if (currentUser.role === 'admin') {
+                navigate('/admin', { replace: true })
+            } else {
+                navigate('/user', { replace: true })
+            }
+
         } catch (err) {
             console.error(err)
             toast.error('LINE login ล้มเหลว')
