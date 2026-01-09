@@ -17,23 +17,25 @@ const LoginLine = () => {
     }, [])
 
     const hdlLogin = async (e) => {
-        e.preventDefault()
-
         try {
             const profile = await liff.getProfile()
 
             await actionLoginLine(profile) // ได้ token
             const currentUser = await actionCurrentUser()
-            toast.success('ล็อกอินสำเร็จ')
+            console.log('CURRENT USER:', currentUser)
 
-            console.log(currentUser.role)
+
+            if (!currentUser) {
+                throw new Error('ไม่พบข้อมูลผู้ใช้')
+            }
+
+            toast.success('ล็อกอินสำเร็จ')
 
             if (currentUser.role === 'admin') {
                 navigate('/admin', { replace: true })
             } else {
                 navigate('/user', { replace: true })
             }
-
         } catch (err) {
             console.log(err.response?.data?.message || 'Login failed')
             toast.error('LINE login ล้มเหลว')
