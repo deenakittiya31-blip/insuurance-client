@@ -26,11 +26,8 @@ const authStore = (set, get) => ({
     },
     actionLoginLine: async (form) => {
         const res = await loginWithLine(form)
-
-        const token = res.data.token
-
-        set({ token })
-        return token
+        set({ token: res.data.token })
+        return res.data.token
     },
     actionLoginGoogle: async (credential) => {
         const res = await loginWithGoogle(credential)
