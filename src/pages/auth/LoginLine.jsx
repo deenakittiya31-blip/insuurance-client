@@ -5,9 +5,7 @@ import useInsureAuth from '../../store/auth-store';
 import toast from 'react-hot-toast';
 
 const LoginLine = () => {
-    const actionLoginLine = useInsureAuth((s) => s.actionLoginLine)
-    const actionCurrentUser = useInsureAuth((s) => s.actionCurrentUser)
-    const user = useInsureAuth((s) => s.user)
+    const { actionLoginLine, actionCurrentUser } = useInsureAuth();
     const navigate = useNavigate()
 
     //set up & เก็บข้อมูลที่ได้
@@ -18,15 +16,17 @@ const LoginLine = () => {
             })
     }, [])
 
-    const hdlLogin = async () => {
+    const hdlLogin = async (e) => {
+        e.preventDefault()
+
         try {
             const profile = await liff.getProfile()
 
             await actionLoginLine(profile) // ได้ token
-            const currentUser = await actionCurrentUser()      // ได้ user + role
+            const currentUser = await actionCurrentUser()
+            toast.success('ล็อกอินสำเร็จ')
 
-            console.log(currentUser)
-            toast.success('ลงชื่อเข้าใช้สำเร็จ')
+            console.log(currentUser.role)
 
             if (currentUser.role === 'admin') {
                 navigate('/admin', { replace: true })
@@ -35,7 +35,7 @@ const LoginLine = () => {
             }
 
         } catch (err) {
-            console.error(err)
+            console.log(err.response?.data?.message || 'Login failed')
             toast.error('LINE login ล้มเหลว')
         }
     }

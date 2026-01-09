@@ -8,9 +8,7 @@ import TextInputAuth from '../../component/form/TextInputAuth'
 import ReCAPTCHA from 'react-google-recaptcha'
 
 const Login = () => {
-    const actionLogin = useInsureAuth((s) => s.actionLogin)
-    const actionLoginGoogle = useInsureAuth((s) => s.actionLoginGoogle)
-    const actionCurrentUser = useInsureAuth((s) => s.actionCurrentUser)
+    const { actionLogin, actionLoginGoogle, actionCurrentUser } = useInsureAuth();
     const navigate = useNavigate()
     const keyReCAPTCHA = import.meta.env.VITE_RECAPTCHA_SITE_KEY
     const [capVal, setCapVal] = useState(null)
@@ -22,17 +20,6 @@ const Login = () => {
     useEffect(() => {
         liff.init({ liffId: '2008686120-kHUafHAb' })
     }, [])
-
-    // //Redirect หลังรู้ role เท่านั้น
-    // useEffect(() => {
-    //     if (!user) return
-
-    //     if (user.role === 'admin') {
-    //         navigate('/admin', { replace: true })
-    //     } else {
-    //         navigate('/forbidden', { replace: true })
-    //     }
-    // }, [user])
 
     const hdlLoginLine = () => {
         try {
@@ -51,6 +38,7 @@ const Login = () => {
 
     const hdlSubmit = async (e) => {
         e.preventDefault()
+
         if (!capVal) {
             return toast.error('กรุณายืนยัน reCAPTCHA')
         }
