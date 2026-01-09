@@ -50,8 +50,6 @@ const Login = () => {
             const currentUser = await actionCurrentUser()
             toast.success('ล็อกอินสำเร็จ')
 
-            console.log(currentUser.role)
-
             if (currentUser.role === 'admin') {
                 navigate('/admin', { replace: true })
             } else {
@@ -65,8 +63,15 @@ const Login = () => {
     const onSuccess = async (res) => {
         try {
             await actionLoginGoogle(res.credential)
-            await actionCurrentUser()
+            const currentUser = await actionCurrentUser()
             toast.success('เข้าสู่ระบบด้วย Google สำเร็จ')
+            console.log(currentUser.role)
+
+            if (currentUser.role === 'admin') {
+                navigate('/admin', { replace: true })
+            } else {
+                navigate('/forbidden', { replace: true })
+            }
         } catch (err) {
             console.log(err)
             toast.error('Google login ล้มเหลว')
