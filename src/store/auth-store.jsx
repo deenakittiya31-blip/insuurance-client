@@ -7,10 +7,7 @@ const authStore = (set, get) => ({
     token: null,
     actionCurrentUser: async () => {
         try {
-            const token = get().token
-            if (!token) return
-
-            const res = await currentUser(token)
+            const res = await currentUser()
             set({ user: res.data.user })
 
             return res.data.user

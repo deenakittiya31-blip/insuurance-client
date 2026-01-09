@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 const LoginLine = () => {
     const actionLoginLine = useInsureAuth((s) => s.actionLoginLine)
     const actionCurrentUser = useInsureAuth((s) => s.actionCurrentUser)
+    const user = useInsureAuth((s) => s.user)
     const navigate = useNavigate()
 
     //set up & เก็บข้อมูลที่ได้

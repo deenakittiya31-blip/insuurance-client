@@ -3,26 +3,22 @@ import api from "../config/axios";
 import { API_URL } from "../config/api";
 
 
-export const login = async (form) => {
+export const login = (form) => {
     return axios.post(`${API_URL}/api/login`, form)
 }
 
-export const currentUser = async (token) => {
-    return api.post('/api/current-user', {}, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
+export const currentUser = () => {
+    return api.post('/api/current-user')
 }
 
-export const loginWithLine = async (form) => {
+export const loginWithLine = (form) => {
     return axios.post(`${API_URL}/api/login-line`, form)
 }
 
-export const loginWithGoogle = async (credential) => {
+export const loginWithGoogle = (credential) => {
     return axios.post(`${API_URL}/api/login-google`, { credential })
 }
 
-export const register = async (form) => {
+export const register = (form) => {
     return axios.post(`${API_URL}/api/register`, form)
 }
