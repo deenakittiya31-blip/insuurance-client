@@ -63,9 +63,16 @@ const Login = () => {
     const onSuccess = async (res) => {
         try {
             await actionLoginGoogle(res.credential)
+
             const currentUser = await actionCurrentUser()
+
+            if (!currentUser) {
+                toast.error('ไม่สามารถดึงข้อมูลผู้ใช้ได้')
+                return
+            }
+
             toast.success('เข้าสู่ระบบด้วย Google สำเร็จ')
-            console.log(currentUser.role)
+            console.log('User role:', currentUser.role)
 
             if (currentUser.role === 'admin') {
                 navigate('/admin', { replace: true })
