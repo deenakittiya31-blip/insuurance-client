@@ -10,7 +10,6 @@ import ReCAPTCHA from 'react-google-recaptcha'
 const Login = () => {
     const actionLogin = useInsureAuth((s) => s.actionLogin)
     const actionLoginGoogle = useInsureAuth((s) => s.actionLoginGoogle)
-    const user = useInsureAuth((s) => s.user)
     const actionCurrentUser = useInsureAuth((s) => s.actionCurrentUser)
     const navigate = useNavigate()
     const keyReCAPTCHA = import.meta.env.VITE_RECAPTCHA_SITE_KEY
@@ -24,16 +23,16 @@ const Login = () => {
         liff.init({ liffId: '2008686120-kHUafHAb' })
     }, [])
 
-    //Redirect หลังรู้ role เท่านั้น
-    useEffect(() => {
-        if (!user) return
+    // //Redirect หลังรู้ role เท่านั้น
+    // useEffect(() => {
+    //     if (!user) return
 
-        if (user.role === 'admin') {
-            navigate('/admin', { replace: true })
-        } else {
-            navigate('/forbidden', { replace: true })
-        }
-    }, [user])
+    //     if (user.role === 'admin') {
+    //         navigate('/admin', { replace: true })
+    //     } else {
+    //         navigate('/forbidden', { replace: true })
+    //     }
+    // }, [user])
 
     const hdlLoginLine = () => {
         try {
