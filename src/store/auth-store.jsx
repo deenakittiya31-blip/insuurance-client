@@ -7,9 +7,6 @@ const authStore = (set, get) => ({
     token: null,
     actionCurrentUser: async () => {
         try {
-            const token = overrideToken || get().token
-            if (!token) return null
-
             const res = await currentUser(token)
             set({ user: res.data.user })
 

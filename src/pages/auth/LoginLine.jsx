@@ -20,8 +20,8 @@ const LoginLine = () => {
         try {
             const profile = await liff.getProfile()
 
-            const token = await actionLoginLine(profile) // ได้ token
-            const currentUser = await actionCurrentUser(token)
+            await actionLoginLine(profile) // ได้ token
+            const currentUser = await actionCurrentUser()
             console.log('CURRENT USER:', currentUser)
 
 
