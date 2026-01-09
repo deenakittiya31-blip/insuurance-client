@@ -10,6 +10,8 @@ import ModalQuot from '../modal/ModalCompare';
 import useActionStore from '../../store/action-store';
 
 const initialState = {
+    to: '',
+    details: '',
     car_brand_id: '',
     car_model_id: '',
     car_year_id: '',
@@ -53,7 +55,12 @@ const Header = () => {
         e.preventDefault();
 
         try {
-            const res = await createCompare(token, form)
+            const payload = {
+                ...form,
+                offer: user.name
+            };
+
+            const res = await createCompare(token, payload)
             document.getElementById('my_modal_2').close()
             setForm(initialState)
             toast.success('สร้างใบเสนอราคาเรียบร้อย')

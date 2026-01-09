@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import useActionStore from "../../store/action-store"
 import Select from "../form/Select"
 import { listCarYearSelect } from "../../service/car/CarYear";
+import TextInput from "../form/TextInput";
 
 const ModalQuot = ({ onSubmit, onChange, form, carmodel, onClose }) => {
     const [year, setYear] = useState([])
@@ -33,6 +34,24 @@ const ModalQuot = ({ onSubmit, onChange, form, carmodel, onClose }) => {
             <dialog id="my_modal_2" className="modal">
                 <form onSubmit={onSubmit} className="modal-box w-sm flex flex-col gap-5">
                     <h3 className="font-bold text-lg text-text-primary">สร้างใบเสนอราคา</h3>
+                    <TextInput
+                        width='w-sm'
+                        title='ถึง'
+                        name='to'
+                        type='text'
+                        placeholder='ถึง...'
+                        onChange={onChange}
+                        value={form.to}
+                    />
+                    <TextInput
+                        width='w-sm'
+                        title='รายละเอียด'
+                        name='details'
+                        type='text'
+                        placeholder='กรอกรายละเอียด'
+                        onChange={onChange}
+                        value={form.details}
+                    />
                     <Select
                         text='ยี่ห้อรถยนต์'
                         data={carbrand}
