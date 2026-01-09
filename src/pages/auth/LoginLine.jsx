@@ -25,7 +25,7 @@ const LoginLine = () => {
             await actionLoginLine(profile) // ได้ token
             const currentUser = await actionCurrentUser()      // ได้ user + role
 
-            console.log(currentUser.role)
+            console.log(currentUser)
             toast.success('ลงชื่อเข้าใช้สำเร็จ')
 
             if (currentUser.role === 'admin') {

@@ -62,6 +62,8 @@ const Login = () => {
             const currentUser = await actionCurrentUser()
             toast.success('ล็อกอินสำเร็จ')
 
+            console.log(currentUser.role)
+
             if (currentUser.role === 'admin') {
                 navigate('/admin', { replace: true })
             } else {
