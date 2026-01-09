@@ -34,7 +34,7 @@ const LoginLine = () => {
             if (currentUser.role === 'admin') {
                 navigate('/admin', { replace: true })
             } else {
-                navigate('/user', { replace: true })
+                navigate('/forbidden', { replace: true })
             }
         } catch (err) {
             console.log(err.response?.data?.message || 'Login failed')

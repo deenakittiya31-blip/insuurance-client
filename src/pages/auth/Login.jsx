@@ -55,7 +55,7 @@ const Login = () => {
             if (currentUser.role === 'admin') {
                 navigate('/admin', { replace: true })
             } else {
-                navigate('/user', { replace: true })
+                navigate('/forbidden', { replace: true })
             }
         } catch (err) {
             toast.error(err.response?.data?.message || 'Login failed')
