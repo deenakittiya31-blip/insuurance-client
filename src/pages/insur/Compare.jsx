@@ -171,26 +171,29 @@ const Compare = () => {
                 <button className='btn bg-text-primary rounded-md px-7 text-white hover:bg-[#202b3b]'>พิมพ์ PDF</button>
             </div>
             <div role="tablist" className="tabs tabs-lift flex justify-center">
-                <a
+                <button
+                    type="button"
                     role="tab"
                     className={`tab font-medium ${activeTab === 1 ? "tab-active" : ""}`}
                     onClick={() => setActiveTab(1)}
                 >
                     เอกสารฉบับที่ 1
-                </a>
-                <a
+                </button>
+                <button
+                    type="button"
                     role="tab"
                     className={`tab font-medium ${activeTab === 2 ? "tab-active" : ""}`}
                     onClick={() => setActiveTab(2)}
                 >เอกสารฉบับที่ 2
-                </a>
-                <a
+                </button>
+                <button
+                    type="button"
                     role="tab"
                     className={`tab font-medium ${activeTab === 3 ? "tab-active" : ""}`}
                     onClick={() => setActiveTab(3)}
                 >
                     เอกสารฉบับที่ 3
-                </a>
+                </button>
             </div>
             <div className="flex flex-col gap-5 bg-white p-5 rounded-xl">
                 {activeTab === 1 &&
