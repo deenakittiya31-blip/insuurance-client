@@ -10,7 +10,7 @@ import { createPDF, getDetailCompare } from "../../service/compare"
 import { useEffect } from "react"
 import Swal from "sweetalert2"
 
-const initialState = {
+const initialForm = {
     company_id: '',
     image: ''
 }
@@ -19,9 +19,13 @@ const Quotaion = () => {
     const token = useInsureAuth((s) => s.token)
     const { q_id } = useParams();
     const [activeTab, setActiveTab] = useState(1)
-    const [form, setForm] = useState(initialState)
     const [loading, setLoading] = useState(false)
     const [detail, setDetail] = useState({})
+    const [formByTab, setFormByTab] = useState({
+        1: { ...initialForm },
+        2: { ...initialForm },
+        3: { ...initialForm }
+    })
     const [dataSuccess, setDataSuccess] = useState({
         1: '',
         2: '',
@@ -57,18 +61,24 @@ const Quotaion = () => {
                 reader.readAsDataURL(file)
             })
 
-            setForm(prev => ({
+            setFormByTab(prev => ({
                 ...prev,
-                image: base64
+                [activeTab]: {
+                    ...prev[activeTab],
+                    image: base64
+                }
             }))
 
             return
         }
 
         // กรณี select / input
-        setForm(prev => ({
+        setFormByTab(prev => ({
             ...prev,
-            [name]: value
+            [activeTab]: {
+                ...prev[activeTab],
+                [name]: value
+            }
         }))
     }
 
@@ -84,6 +94,9 @@ const Quotaion = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+
+        const form = formByTab[activeTab]
+
         if (!form.company_id || !form.image) {
             toast.error('ข้อมูลไม่ครบ')
         }
@@ -151,9 +164,12 @@ const Quotaion = () => {
             }))
 
             //ล้างไฟล์ที่เลือก
-            setForm(prev => ({
+            setFormByTab(prev => ({
                 ...prev,
-                image: ''
+                [activeTab]: {
+                    ...prev[activeTab],
+                    image: ''
+                }
             }))
         } catch (err) {
             console.log(err)
@@ -296,7 +312,7 @@ const Quotaion = () => {
                             onChange={hdlOnChange}
                             isLoading={loading}
                             onSubmit={handleSubmit}
-                            form={form}
+                            form={formByTab[activeTab]}
                         />
                     }
                     {activeTab === 2 &&
@@ -304,7 +320,7 @@ const Quotaion = () => {
                             onChange={hdlOnChange}
                             isLoading={loading}
                             onSubmit={handleSubmit}
-                            form={form}
+                            form={formByTab[activeTab]}
                         />
                     }
                     {activeTab === 3 &&
@@ -312,7 +328,7 @@ const Quotaion = () => {
                             onChange={hdlOnChange}
                             isLoading={loading}
                             onSubmit={handleSubmit}
-                            form={form}
+                            form={formByTab[activeTab]}
                         />
                     }
                     <hr className="border-dashed border border-border" />
