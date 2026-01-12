@@ -4,7 +4,7 @@ import Select from "../form/Select"
 import { listCarYearSelect } from "../../service/car/CarYear";
 import TextInput from "../form/TextInput";
 
-const ModalQuot = ({ onSubmit, onChange, form, carmodel, onClose }) => {
+const ModalCompare = ({ onSubmit, onChange, form, carmodel, onClose }) => {
     const [year, setYear] = useState([])
     const {
         getCarBrandSelect,
@@ -30,8 +30,8 @@ const ModalQuot = ({ onSubmit, onChange, form, carmodel, onClose }) => {
 
     return (
         <div className='font-prompt'>
-            <button className="btn bg-main px-3 rounded-md text-white font-semibold" onClick={() => document.getElementById('my_modal_2').showModal()}>สร้างใบเสนอราคา</button>
-            <dialog id="my_modal_2" className="modal">
+            <button className="btn bg-main px-3 rounded-md text-white font-semibold" onClick={() => document.getElementById('modalcompare').showModal()}>สร้างใบเสนอราคา</button>
+            <dialog id="modalcompare" className="modal">
                 <form onSubmit={onSubmit} className="modal-box w-auto gap-5">
                     <h3 className="font-bold text-lg text-text-primary">สร้างใบเสนอราคา</h3>
                     <div className="grid grid-cols-2 gap-5">
@@ -111,4 +111,4 @@ const ModalQuot = ({ onSubmit, onChange, form, carmodel, onClose }) => {
         </div>
     )
 }
-export default ModalQuot
+export default ModalCompare

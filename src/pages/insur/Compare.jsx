@@ -17,7 +17,7 @@ const initialForm = {
     image: ''
 }
 
-const Quotaion = () => {
+const Compare = () => {
     const token = useInsureAuth((s) => s.token)
     const { q_id } = useParams();
     const [activeTab, setActiveTab] = useState(1)
@@ -362,4 +362,4 @@ const Quotaion = () => {
         </div>
     )
 }
-export default Quotaion
+export default Compare

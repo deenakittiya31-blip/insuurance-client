@@ -79,7 +79,7 @@ const CarYear = () => {
         createYear(token, form)
             .then((res) => {
                 toast.success(res.data.msg)
-                document.getElementById('my_modal_2').close()
+                document.getElementById('modalcaryear').close()
                 setForm(initialState)
                 getYear(page)
             })

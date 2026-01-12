@@ -79,7 +79,7 @@ const Cartype = () => {
         }
         createCarType(token, form)
             .then((res) => {
-                document.getElementById('my_modal_2').close()
+                document.getElementById('modalcartype').close()
                 toast.success(res.data.msg)
                 setForm(initialState)
                 getCarType(page)

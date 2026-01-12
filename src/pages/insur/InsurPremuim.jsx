@@ -79,7 +79,7 @@ const InsurPremuim = () => {
 
         try {
             const res = await createPremium(token, form)
-            document.getElementById('my_modal_2').close();
+            document.getElementById('modalpremium').close();
             setForm(initialState)
             getPremium(page);
             toast.success(res.data.msg)

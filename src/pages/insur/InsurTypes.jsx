@@ -73,7 +73,7 @@ const InsurTypes = () => {
 
         try {
             const res = await creatType(token, form)
-            document.getElementById('my_modal_2').close();
+            document.getElementById('modalinsurtype').close();
             setForm(initialState)
             getTypeInsur();
             toast.success(res.data.msg)

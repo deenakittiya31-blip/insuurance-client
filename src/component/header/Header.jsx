@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { AiFillSmile } from "react-icons/ai";
 import { createCompare } from '../../service/compare';
 import { useState } from 'react';
-import ModalQuot from '../modal/ModalCompare';
 import useActionStore from '../../store/action-store';
+import ModalCompare from '../modal/ModalCompare'
 
 const initialState = {
     to_name: '',
@@ -48,7 +48,7 @@ const Header = () => {
 
     const hdlOnClose = () => {
         setForm(initialState)
-        document.getElementById('my_modal_2').close()
+        document.getElementById('modalcompare').close()
     }
 
     const hldOnSubmit = async (e) => {
@@ -61,11 +61,11 @@ const Header = () => {
             };
 
             const res = await createCompare(token, payload)
-            document.getElementById('my_modal_2').close()
+            document.getElementById('modalcompare').close()
             setForm(initialState)
             toast.success('สร้างใบเสนอราคาเรียบร้อย')
 
-            navigate(`/admin/quotaion/${res.data.q_id}`)
+            navigate(`/admin/compare/${res.data.q_id}`)
         } catch (err) {
             console.log(err)
             toast.error('สร้างใบเสนอราคาไม่สำเร็จ')
@@ -91,7 +91,7 @@ const Header = () => {
                     </div>
                 </div>
                 {/* สร้างเลขใบเสนอราคา */}
-                <ModalQuot
+                <ModalCompare
                     form={form}
                     onChange={hdlOnChange}
                     carmodel={carmodel}

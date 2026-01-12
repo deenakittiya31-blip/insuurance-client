@@ -70,7 +70,7 @@ const InsurPackage = () => {
         e.preventDefault()
         try {
             const res = await createPackage(token, form)
-            document.getElementById('my_modal_2').close();
+            document.getElementById('modalpackage').close();
             setForm(initialState)
             getPackage(page);
             toast.success(res.data.msg)

@@ -67,7 +67,7 @@ const CompulsoryCar = () => {
         e.preventDefault()
         try {
             const res = await createCompulsory(token, form)
-            document.getElementById('my_modal_2').close();
+            document.getElementById('modalcompul').close();
             getCompulsory(page);
             toast.success(res.data.msg)
         } catch (err) {

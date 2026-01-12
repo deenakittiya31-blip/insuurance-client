@@ -67,14 +67,14 @@ const InsurCompany = () => {
 
         try {
             const res = await createCompany(token, form)
-            document.getElementById('my_modal_2').close();
+            document.getElementById('modalcompany').close();
             getCompany(page);
             toast.success(res.data.msg)
             setForm(initialState)
 
         } catch (err) {
             console.log(err)
-            document.getElementById('my_modal_2').close();
+            document.getElementById('modalcompany').close();
             toast.error(err.response.data.message)
 
         }

@@ -83,7 +83,7 @@ const CarModel = () => {
 
         try {
             const res = await createCarModel(token, form)
-            document.getElementById('my_modal_2').close()
+            document.getElementById('modalcarmodel').close()
             toast.success(res.data.msg)
             setForm(initialState)
             getCarModel(page);

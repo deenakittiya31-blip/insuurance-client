@@ -80,7 +80,7 @@ const CarBrand = () => {
             toast.success(res.data.msg)
             setForm(initialState)
             getCarBrand(page)
-            document.getElementById('my_modal_2').close()
+            document.getElementById('modalcarbrand').close()
         } catch (err) {
             console.error(err)
             toast.error("เกิดข้อผิดพลาด")
