@@ -1,84 +1,90 @@
 import { useState } from "react"
+import UploadImage from "../../component/form/UploadImage"
 import useInsureAuth from "../../store/auth-store"
 import { createAkson } from "../../service/aksorn"
 import toast from "react-hot-toast"
 import { useParams } from "react-router-dom"
 import TableQuotation from "../../component/table/TableQuotation"
-import { createFieldsQuotation, deleteQuotation } from "../../service/quotation"
-import { createPDF, getDetailCompare } from "../../service/compare"
+import { createFieldsQuotation } from "../../service/quotation"
+import { getDetailCompare } from "../../service/compare"
 import { useEffect } from "react"
-import Swal from "sweetalert2"
-import UploadFormOne from "../../component/form/UploadFormOne"
-import UploadFormSecond from "../../component/form/UploadFormSecond"
-import UploadFormThree from "../../component/form/UploadFormThree"
+import UploadDataOne from '../../component/form/UploadDataOne'
+import UploadDataTwo from '../../component/form/UploadDataTwo'
+import UploadDataThree from '../../component/form/UploadDataThree'
 
-const initialForm = {
-    company_id: '',
-    image: ''
+const initialData = {
+    quotation_number: '',
+    quotation_date: '',
+    insurance_company: '',
+    repair_type: '',
+    car_brand: '',
+    car_model: '',
+    car_year: '',
+    engine_size: '',
+    insurance_type: '',
+    coverage_amount: '',
+    premium_total: '',
+    thirdparty_injury_death_per_person: '',
+    thirdparty_injury_death_per_accident: '',
+    thirdparty_property: '',
+    car_own_damage: '',
+    car_own_damage_deductible: '',
+    car_fire_theft: '',
+    additional_personal_permanent_driver_cover: '',
+    additional_medical_expense_cover: '',
+    additional_bail_bond: '',
+    additional_personal_permanent_driver_number: '',
 }
 
 const Compare = () => {
     const token = useInsureAuth((s) => s.token)
-    const { q_id } = useParams();
     const [activeTab, setActiveTab] = useState(1)
-    const [detail, setDetail] = useState({})
-    const [loadingByTab, setLoadingByTab] = useState({
-        1: false,
-        2: false,
-        3: false
-    })
-    const [formByTab, setFormByTab] = useState({
-        1: { ...initialForm },
-        2: { ...initialForm },
-        3: { ...initialForm }
-    })
-    const [dataSuccess, setDataSuccess] = useState({
-        1: '',
-        2: '',
-        3: ''
-    })
-    const [ocrByTab, setOcrByTab] = useState({
-        1: {},
-        2: {},
-        3: {}
-    })
-    const [quotationIdByTab, setQuotationIdByTab] = useState({
+    //PDF (ไม่เกี่ยวกับ create quotation)
+    const [pdfPreviewByTab, setPdfPreviewByTab] = useState({
         1: null,
         2: null,
         3: null
     })
+    //เก็บข้อมูลบริษัท
+    const [quotationByTab, setQuotationByTab] = useState({
+        1: { company_id: '' },
+        2: { company_id: '' },
+        3: { company_id: '' }
+    })
+    //เก็บข้อมูลฟอร์มที่กรอก
+    const [formByTab, setFormByTab] = useState({
+        1: { ...initialData },
+        2: { ...initialData },
+        3: { ...initialData }
+    })
+
+    const [detail, setDetail] = useState({})
+    const { q_id } = useParams();
 
     useEffect(() => {
-        if (!q_id) return;
+        if (!q_id || q_id === 'null' || q_id === 'undefined') return
         getDetail();
     }, [q_id])
 
-    const hdlOnChange = async (e) => {
-        const { name, value, files } = e.target
+    console.log(q_id)
 
-        // กรณีเลือกไฟล์
-        if (files) {
-            const file = files[0]
-            if (!file) return
+    //onChange สำหรับสร้าง quotation (บริษัท)
+    const hdlQuotationChange = (e) => {
+        const { name, value } = e.target
 
-            const base64 = await new Promise((resolve) => {
-                const reader = new FileReader()
-                reader.onloadend = () => resolve(reader.result) // มี prefix
-                reader.readAsDataURL(file)
-            })
+        setQuotationByTab(prev => ({
+            ...prev,
+            [activeTab]: {
+                ...prev[activeTab],
+                [name]: value
+            }
+        }))
+    }
 
-            setFormByTab(prev => ({
-                ...prev,
-                [activeTab]: {
-                    ...prev[activeTab],
-                    image: base64
-                }
-            }))
+    //onChange สำหรับกรอกข้อมูลรายละเอียด
+    const hdlFormChange = (e) => {
+        const { name, value } = e.target
 
-            return
-        }
-
-        // กรณี select / input
         setFormByTab(prev => ({
             ...prev,
             [activeTab]: {
@@ -88,8 +94,28 @@ const Compare = () => {
         }))
     }
 
-    console.log(formByTab)
+    //onChange สำหรับ PDF
+    const hdlPdfChange = (e) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        if (file.type !== 'application/pdf') {
+            toast.error('กรุณาเลือกไฟล์ PDF เท่านั้น')
+            return
+        }
+
+        setPdfPreviewByTab(prev => ({
+            ...prev,
+            [activeTab]: URL.createObjectURL(file)
+        }))
+    }
+
+    console.log('useParams q_id =', q_id)
+    console.log('window.location =', window.location.pathname)
+
     const getDetail = async () => {
+        if (!q_id) return
+
         try {
             const res = await getDetailCompare(token, q_id)
             setDetail(res.data.data)
@@ -98,114 +124,22 @@ const Compare = () => {
         }
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-
-        const form = formByTab[activeTab]
-
-        if (!form.company_id || !form.image) {
-            toast.error('ข้อมูลไม่ครบ')
-        }
-
-        setLoadingByTab(prev => ({
-            ...prev,
-            [activeTab]: true
-        }))
-
-        try {
-            const payload = {
-                ...form,
-                compare_id: q_id,
-                doc_id: activeTab
-            };
-            const res = await createAkson(token, payload)
-
-            setOcrByTab(prev => ({
-                ...prev,
-                [activeTab]: res.data.ocrData
-            }))
-
-            setQuotationIdByTab(prev => ({
-                ...prev,
-                [activeTab]: res.data.id
-            }))
-
-            setDataSuccess(prev => ({
-                ...prev,
-                [activeTab]: `เอกสารฉบับที่ ${activeTab} ประมวลผลสำเร็จแล้ว`
-            }))
-        } catch (err) {
-            console.log(err)
-        } finally {
-            setLoadingByTab(prev => ({
-                ...prev,
-                [activeTab]: false
-            }))
-        }
-    }
-
-    const removeQuotation = async () => {
-        const quotationId = quotationIdByTab[activeTab]
-
-        const result = await Swal.fire({
-            title: "คุณแน่ใจ ?",
-            text: "ต้องการจะเปลี่ยนจริง ๆ ใช่ไหม?",
-            icon: "question",
-            showCancelButton: true,
-            cancelButtonColor: "#E5E4E2",
-            confirmButtonColor: "#d33",
-            confirmButtonText: "ลบ",
-            cancelButtonText: 'ยกเลิก'
-        })
-
-        if (!result.isConfirmed) return
-
-        try {
-            await deleteQuotation(token, quotationId)
-
-            //ล้าง quotation ใน state
-            setQuotationIdByTab(prev => ({
-                ...prev,
-                [activeTab]: null
-            }))
-
-            //ล้างข้อมูลที่เก็บไว้
-            setOcrByTab(prev => ({
-                ...prev,
-                [activeTab]: {}
-            }))
-
-            setDataSuccess(prev => ({
-                ...prev,
-                [activeTab]: ''
-            }))
-
-            //ล้างไฟล์ที่เลือก
-            setFormByTab(prev => ({
-                ...prev,
-                [activeTab]: {
-                    ...prev[activeTab],
-                    image: ''
-                }
-            }))
-        } catch (err) {
-            console.log(err)
-        }
-
-    }
-
     const handleSaveQuotation = async (e) => {
         e.preventDefault()
+        const currentQuotation = quotationByTab[activeTab]
 
-        const quotationId = quotationIdByTab[activeTab]
-
-        if (!quotationId) {
-            toast.error('ยังไม่มี quotation_id')
+        if (!currentQuotation.company_id) {
+            toast.error('กรุณาเลือกบริษัท')
             return
         }
 
         try {
-            const res = await createFieldsQuotation(token, quotationId, ocrByTab[activeTab])
+            const res = await createFieldsQuotation(token, {
+                compare_id: q_id,
+                company_id: currentQuotation.company_id,
+                doc_id: activeTab,
+                fields: formByTab[activeTab]   // ข้อมูลจาก form ที่ผู้ใช้กรอก
+            })
 
             toast.success(res.data.msg)
         } catch (err) {
@@ -214,60 +148,8 @@ const Compare = () => {
         }
     }
 
-    const createComparePDF = async () => {
-        try {
-            const res = await createPDF(token, q_id)
-
-            // ตรวจสอบว่ามีข้อมูลหรือไม่
-            if (!res.data) {
-                throw new Error('ไม่พบข้อมูล PDF')
-            }
-
-            // สร้าง blob URL
-            const blob = new Blob([res.data], { type: 'application/pdf' })
-            const url = window.URL.createObjectURL(blob)
-
-            // เปิดในแท็บใหม่
-            const newWindow = window.open(url, '_blank')
-
-            // ตรวจสอบว่าเปิดแท็บได้หรือไม่ (กรณี popup blocker)
-            if (!newWindow) {
-                toast.error('กรุณาอนุญาตให้เปิด popup ในเบราว์เซอร์')
-
-                // สำรอง: ดาวน์โหลดแทน
-                const link = document.createElement('a')
-                link.href = url
-                link.download = `เปรียบเทียบใบเสนอราคา_${q_id}.pdf`
-                document.body.appendChild(link)
-                link.click()
-                document.body.removeChild(link)
-
-                toast.success('ดาวน์โหลด PDF สำเร็จ')
-            } else {
-                toast.success('เปิด PDF สำเร็จ')
-            }
-
-            // ลบ URL หลังจาก 1 นาที (ป้องกัน memory leak)
-            setTimeout(() => {
-                window.URL.revokeObjectURL(url)
-            }, 60000)
-
-        } catch (err) {
-            console.error('PDF Error:', err)
-
-            // แสดง error message ที่ชัดเจน
-            if (err.response) {
-                toast.error(err.response.data?.msg || 'สร้าง PDF ไม่สำเร็จ')
-            } else if (err.request) {
-                toast.error('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์')
-            } else {
-                toast.error('เกิดข้อผิดพลาด: ' + err.message)
-            }
-        }
-    }
-
     return (
-        <div className='flex flex-col p-5 gap-5 font-prompt'>
+        <div className='flex flex-col p-5 font-prompt'>
             <div className="flex justify-between bg-main p-5 rounded-xl">
                 <div className="gap-5 font-medium text-text-primary">
                     <div className="flex gap-2">
@@ -288,73 +170,77 @@ const Compare = () => {
                         </li>
                     </ul>
                 </div>
-                <button onClick={createComparePDF} className='btn bg-text-primary rounded-md px-7 text-white hover:bg-[#202b3b]'>พิมพ์ PDF</button>
+                <button className='btn bg-text-primary rounded-md px-7 text-white hover:bg-[#202b3b]'>พิมพ์ PDF</button>
             </div>
-            <div>
-                <div className="flex justify-center my-5 gap-5">
-                    {Object.values(dataSuccess)
-                        .filter(msg => msg)
-                        .map((msg, index) => (
-                            <div key={index} className="flex items-center gap-2">
-                                <span className="text-green-600">✔</span>
-                                <span>{msg}</span>
-                            </div>
-                        ))}
-                </div>
-                <div role="tablist" className="tabs tabs-lift flex justify-center">
-                    <a
-                        role="tab"
-                        className={`tab font-medium ${activeTab === 1 ? "tab-active" : ""}`}
-                        onClick={() => setActiveTab(1)}
-                    >
-                        เอกสารฉบับที่ 1
-                    </a>
-                    <a
-                        role="tab"
-                        className={`tab font-medium ${activeTab === 2 ? "tab-active" : ""}`}
-                        onClick={() => setActiveTab(2)}
-                    >เอกสารฉบับที่ 2
-                    </a>
-                    <a
-                        role="tab"
-                        className={`tab font-medium ${activeTab === 3 ? "tab-active" : ""}`}
-                        onClick={() => setActiveTab(3)}
-                    >
-                        เอกสารฉบับที่ 3
-                    </a>
-                </div>
-                <div className="flex flex-col gap-7 bg-white p-5 rounded-xl">
-                    {activeTab === 1 &&
-                        <UploadFormOne
-                            onChange={hdlOnChange}
-                            isLoading={loadingByTab[activeTab]}
-                            onSubmit={handleSubmit}
-                            form={formByTab[activeTab]}
-                        />
-                    }
-                    {activeTab === 2 &&
-                        <UploadFormSecond
-                            onChange={hdlOnChange}
-                            isLoading={loadingByTab[activeTab]}
-                            onSubmit={handleSubmit}
-                            form={formByTab[activeTab]}
-                        />
-                    }
-                    {activeTab === 3 &&
-                        <UploadFormThree
-                            onChange={hdlOnChange}
-                            isLoading={loadingByTab[activeTab]}
-                            onSubmit={handleSubmit}
-                            form={formByTab[activeTab]}
-                        />
-                    }
-                    <hr className="border-dashed border border-border" />
-                    <TableQuotation
-                        quotationID={quotationIdByTab[activeTab]}
-                        onChangData={removeQuotation}
-                        data={ocrByTab[activeTab]}
+            <div role="tablist" className="tabs tabs-lift flex justify-center">
+                <a
+                    role="tab"
+                    className={`tab font-medium ${activeTab === 1 ? "tab-active" : ""}`}
+                    onClick={() => setActiveTab(1)}
+                >
+                    เอกสารฉบับที่ 1
+                </a>
+                <a
+                    role="tab"
+                    className={`tab font-medium ${activeTab === 2 ? "tab-active" : ""}`}
+                    onClick={() => setActiveTab(2)}
+                >เอกสารฉบับที่ 2
+                </a>
+                <a
+                    role="tab"
+                    className={`tab font-medium ${activeTab === 3 ? "tab-active" : ""}`}
+                    onClick={() => setActiveTab(3)}
+                >
+                    เอกสารฉบับที่ 3
+                </a>
+            </div>
+            <div className="flex flex-col gap-5 bg-white p-5 rounded-xl">
+                {activeTab === 1 &&
+
+                    <UploadDataOne
+                        onChangeCompany={hdlQuotationChange}
+                        onChangePDF={hdlPdfChange}
                         onSubmit={handleSaveQuotation}
+                        form={quotationByTab[activeTab]}
                     />
+                }
+                {activeTab === 2 &&
+                    <UploadDataTwo
+                        onChangeCompany={hdlQuotationChange}
+                        onChangePDF={hdlPdfChange}
+                        onSubmit={handleSaveQuotation}
+                        form={quotationByTab[activeTab]}
+                    />
+                }
+                {activeTab === 3 &&
+                    <UploadDataThree
+                        onChangeCompany={hdlQuotationChange}
+                        onChangePDF={hdlPdfChange}
+                        onSubmit={handleSaveQuotation}
+                        form={quotationByTab[activeTab]}
+                    />
+                }
+                <div className="flex gap-2 h-192.5 overflow-y-clip">
+                    <div className="flex-1 overflow-auto bg-zinc-800 p-4">
+                        {pdfPreviewByTab ? (
+                            <iframe
+                                src={`${pdfPreviewByTab[activeTab]}#zoom=120`}
+                                className="w-full h-full bg-white rounded"
+                                title="PDF Preview"
+                            />
+                        ) : (
+                            <div className="flex justify-center items-center h-full text-zinc-400">
+                                กรุณาเลือกไฟล์ PDF เพื่อดูตัวอย่าง
+                            </div>
+                        )}
+                    </div>
+                    <div className="overflow-y-auto">
+                        <TableQuotation
+                            data={formByTab[activeTab]}
+                            onChange={hdlFormChange}
+                            onSubmit={handleSaveQuotation}
+                        />
+                    </div>
                 </div>
 
             </div>

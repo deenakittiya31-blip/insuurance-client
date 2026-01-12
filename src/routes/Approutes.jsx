@@ -47,7 +47,7 @@ const Approutes = () => {
                     <Route path='insurpremuim' element={<InsurPremuim />} />
                     <Route path='insurtypes' element={<InsurTypes />} />
                     <Route path='package' element={<InsurPackage />} />
-                    <Route path='quotaion/:q_id' element={<Quotaion />} />
+                    {/* <Route path='quotation/:q_id' element={<Quotaion />} /> */}
                     <Route path='compare/:q_id' element={<Compare />} />
                 </Route>
             </Routes>

@@ -1,19 +1,13 @@
 import TextInput from '../form/TextInput'
 
-const TableQuotation = ({ data, onSubmit, onChangData, quotationID }) => {
+const TableQuotation = ({ data, onSubmit, onChange }) => {
     return (
         <div className="flex flex-col gap-2 font-prompt text-text-primary">
             <div className='flex justify-between items-baseline-last'>
                 <h1 className="font-bold">📑 ข้อมูลทั้งหมด</h1>
-                {
-                    quotationID && (
-                        <button onClick={onChangData} className='btn bg-red-400 rounded-md px-7 text-white hover:bg-red-600'>เปลี่ยนไฟล์</button>
-                    )
-                }
-
             </div>
 
-            <form onSubmit={onSubmit} className='grid gap-5 items-end lg:grid-cols-2'>
+            <form onSubmit={onSubmit} className='flex flex-col gap-5 items-end lg:grid-cols-2'>
                 <TextInput
                     width='w-auto'
                     title='เลขที่ใบเสนอราคา'
@@ -21,7 +15,7 @@ const TableQuotation = ({ data, onSubmit, onChangData, quotationID }) => {
                     type='text'
                     placeholder='กรอกเลขที่ใบเสนอราคา'
                     value={data.quotation_number || ''}
-                    readOnly
+                    onChange={onChange}
                 />
                 <TextInput
                     width='w-auto'
@@ -30,7 +24,7 @@ const TableQuotation = ({ data, onSubmit, onChangData, quotationID }) => {
                     type='text'
                     placeholder='กรอกวันที่ออกใบเสนอราคา'
                     value={data.quotation_date || ''}
-                    readOnly
+                    onChange={onChange}
                 />
                 <TextInput
                     width='w-auto'
@@ -39,7 +33,7 @@ const TableQuotation = ({ data, onSubmit, onChangData, quotationID }) => {
                     type='text'
                     placeholder='กรอกประเภทซ่อม'
                     value={data.repair_type || ''}
-                    readOnly
+                    onChange={onChange}
                 />
                 <TextInput
                     width='w-auto'
@@ -48,7 +42,7 @@ const TableQuotation = ({ data, onSubmit, onChangData, quotationID }) => {
                     type='text'
                     placeholder='กรอกขนาดเครื่องยนต์ CC'
                     value={data.engine_size || ''}
-                    readOnly
+                    onChange={onChange}
                 />
                 <TextInput
                     width='w-auto'
@@ -57,7 +51,7 @@ const TableQuotation = ({ data, onSubmit, onChangData, quotationID }) => {
                     type='text'
                     placeholder='กรอกประเภทประกัน'
                     value={data.insurance_type || ''}
-                    readOnly
+                    onChange={onChange}
                 />
                 <TextInput
                     width='w-auto'
@@ -66,7 +60,7 @@ const TableQuotation = ({ data, onSubmit, onChangData, quotationID }) => {
                     type='text'
                     placeholder='กรอกทุนประกัน'
                     value={data.coverage_amount || ''}
-                    readOnly
+                    onChange={onChange}
                 />
                 <TextInput
                     width='w-auto'
@@ -75,7 +69,7 @@ const TableQuotation = ({ data, onSubmit, onChangData, quotationID }) => {
                     type='text'
                     placeholder='กรอกเบี้ยประกันรวม'
                     value={data.premium_total || ''}
-                    readOnly
+                    onChange={onChange}
                 />
                 <TextInput
                     width='w-auto'
@@ -84,7 +78,7 @@ const TableQuotation = ({ data, onSubmit, onChangData, quotationID }) => {
                     type='text'
                     placeholder='กรอกข้อมูล...'
                     value={data.thirdparty_injury_death_per_person || ''}
-                    readOnly
+                    onChange={onChange}
                 />
                 <TextInput
                     width='w-auto'
@@ -93,7 +87,7 @@ const TableQuotation = ({ data, onSubmit, onChangData, quotationID }) => {
                     type='text'
                     placeholder='กรอกข้อมูล...'
                     value={data.thirdparty_injury_death_per_accident || ''}
-                    readOnly
+                    onChange={onChange}
                 />
                 <TextInput
                     width='w-auto'
@@ -102,7 +96,7 @@ const TableQuotation = ({ data, onSubmit, onChangData, quotationID }) => {
                     type='text'
                     placeholder='กรอกข้อมูล...'
                     value={data.thirdparty_property || ''}
-                    readOnly
+                    onChange={onChange}
                 />
                 <TextInput
                     width='w-auto'
@@ -111,7 +105,7 @@ const TableQuotation = ({ data, onSubmit, onChangData, quotationID }) => {
                     type='text'
                     placeholder='กรอกข้อมูล...'
                     value={data.car_own_damage || ''}
-                    readOnly
+                    onChange={onChange}
                 />
                 <TextInput
                     width='w-auto'
@@ -120,7 +114,7 @@ const TableQuotation = ({ data, onSubmit, onChangData, quotationID }) => {
                     type='text'
                     placeholder='กรอกข้อมูล...'
                     value={data.car_own_damage_deductible || ''}
-                    readOnly
+                    onChange={onChange}
                 />
                 <TextInput
                     width='w-auto'
@@ -129,7 +123,7 @@ const TableQuotation = ({ data, onSubmit, onChangData, quotationID }) => {
                     type='text'
                     placeholder='กรอกข้อมูล...'
                     value={data.car_fire_theft || ''}
-                    readOnly
+                    onChange={onChange}
                 />
                 <TextInput
                     width='w-auto'
@@ -138,7 +132,7 @@ const TableQuotation = ({ data, onSubmit, onChangData, quotationID }) => {
                     type='text'
                     placeholder='กรอกข้อมูล...'
                     value={data.additional_personal_permanent_driver_cover || ''}
-                    readOnly
+                    onChange={onChange}
                 />
                 <TextInput
                     width='w-auto'
@@ -147,7 +141,7 @@ const TableQuotation = ({ data, onSubmit, onChangData, quotationID }) => {
                     type='text'
                     placeholder='กรอกข้อมูล...'
                     value={data.additional_medical_expense_cover || ''}
-                    readOnly
+                    onChange={onChange}
                 />
                 <TextInput
                     width='w-auto'
@@ -156,7 +150,7 @@ const TableQuotation = ({ data, onSubmit, onChangData, quotationID }) => {
                     type='text'
                     placeholder='กรอกข้อมูล...'
                     value={data.additional_bail_bond || ''}
-                    readOnly
+                    onChange={onChange}
                 />
                 <TextInput
                     width='w-auto'
@@ -165,7 +159,7 @@ const TableQuotation = ({ data, onSubmit, onChangData, quotationID }) => {
                     type='text'
                     placeholder='กรอกข้อมูล...'
                     value={data.additional_personal_permanent_driver_number || ''}
-                    readOnly
+                    onChange={onChange}
                 />
                 <div className=''>
                     <button className='btn bg-green-500 rounded-md px-7 text-white hover:bg-green-600'>บันทึก</button>
