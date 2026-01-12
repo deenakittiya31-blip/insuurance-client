@@ -1,9 +1,7 @@
 import { useState } from "react"
-import UploadImage from "../../component/form/UploadImage"
 import useInsureAuth from "../../store/auth-store"
-import { createAkson } from "../../service/aksorn"
 import toast from "react-hot-toast"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import TableQuotation from "../../component/table/TableQuotation"
 import { createFieldsQuotation } from "../../service/quotation"
 import { getDetailCompare } from "../../service/compare"
@@ -39,6 +37,7 @@ const initialData = {
 const Compare = () => {
     const token = useInsureAuth((s) => s.token)
     const [activeTab, setActiveTab] = useState(1)
+    const navigate = useNavigate();
     //PDF (ไม่เกี่ยวกับ create quotation)
     const [pdfPreviewByTab, setPdfPreviewByTab] = useState({
         1: null,
@@ -62,7 +61,7 @@ const Compare = () => {
     const { q_id } = useParams();
 
     useEffect(() => {
-        if (!q_id || q_id === 'null' || q_id === 'undefined') return
+        if (!q_id) return
         getDetail();
     }, [q_id])
 
@@ -111,7 +110,6 @@ const Compare = () => {
     }
 
     console.log('useParams q_id =', q_id)
-    console.log('window.location =', window.location.pathname)
 
     const getDetail = async () => {
         if (!q_id) return
