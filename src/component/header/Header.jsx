@@ -65,7 +65,7 @@ const Header = () => {
             setForm(initialState)
             toast.success('สร้างใบเสนอราคาเรียบร้อย')
 
-            navigate(`/admin/compare/${res.data.q_id}`)
+            navigate(`/admin/quotation/${res.data.q_id}`)
         } catch (err) {
             console.log(err)
             toast.error('สร้างใบเสนอราคาไม่สำเร็จ')

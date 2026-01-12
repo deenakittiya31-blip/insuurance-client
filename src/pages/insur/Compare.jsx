@@ -146,6 +146,9 @@ const Compare = () => {
         }
     }
 
+    console.log('pdfPreviewByTab =', pdfPreviewByTab)
+    console.log('current =', pdfPreviewByTab[activeTab])
+
     return (
         <div className='flex flex-col p-5 font-prompt'>
             <div className="flex justify-between bg-main p-5 rounded-xl">
@@ -223,9 +226,9 @@ const Compare = () => {
                 }
                 <div className="flex gap-2 h-192.5 overflow-y-clip">
                     <div className="flex-1 overflow-auto bg-zinc-800 p-4">
-                        {pdfPreviewByTab ? (
+                        {pdfPreviewByTab[activeTab] ? (
                             <iframe
-                                src={`${pdfPreviewByTab[activeTab]}#zoom=120`}
+                                src={`${pdfPreviewByTab[activeTab]}#zoom=100`}
                                 className="w-full h-full bg-white rounded"
                                 title="PDF Preview"
                             />
