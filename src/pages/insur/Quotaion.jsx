@@ -4,7 +4,7 @@ import { createAkson } from "../../service/aksorn"
 import toast from "react-hot-toast"
 import { useParams } from "react-router-dom"
 import TableQuotation from "../../component/table/TableQuotation"
-import { createFieldsQuotation, deleteQuotation } from "../../service/quotation"
+import { createQuotationFields, deleteQuotation } from "../../service/quotation"
 import { createPDF, getDetailCompare } from "../../service/compare"
 import { useEffect } from "react"
 import Swal from "sweetalert2"
@@ -22,26 +22,41 @@ const Quotaion = () => {
     const { q_id } = useParams();
     const [activeTab, setActiveTab] = useState(1)
     const [detail, setDetail] = useState({})
+    //เก็บข้อมูล PDF ของแต่ละแท็บ
+    const [pdfPreviewByTab, setPdfPreviewByTab] = useState({
+        1: null,
+        2: null,
+        3: null
+    })
+
     const [loadingByTab, setLoadingByTab] = useState({
         1: false,
         2: false,
         3: false
     })
+
+    //เก็บค่าของ form แต่ละแท็บ
     const [formByTab, setFormByTab] = useState({
         1: { ...initialForm },
         2: { ...initialForm },
         3: { ...initialForm }
     })
+
+    //เก็บข้อมูลการอัปโหลดเอกสารสำเร็จ
     const [dataSuccess, setDataSuccess] = useState({
         1: '',
         2: '',
         3: ''
     })
+
+    //เก็บข้อมูลที่ได้จาก ocr แต่ละแท็บ
     const [ocrByTab, setOcrByTab] = useState({
         1: {},
         2: {},
         3: {}
     })
+
+    //เก็บค่า quotation_id ที่ได้มาจากการอัปโหลดของแต่ละแท็บ
     const [quotationIdByTab, setQuotationIdByTab] = useState({
         1: null,
         2: null,
@@ -53,12 +68,19 @@ const Quotaion = () => {
         getDetail();
     }, [q_id])
 
+    //onChange ของข้อมูลที่ส่งไปสร้าง quotation และยิง api ocr akson
     const hdlOnChange = async (e) => {
         const { name, value, files } = e.target
 
         // กรณีเลือกไฟล์
         if (files) {
             const file = files[0]
+
+            setPdfPreviewByTab(prev => ({
+                ...prev,
+                [activeTab]: URL.createObjectURL(file)
+            }))
+
             if (!file) return
 
             const base64 = await new Promise((resolve) => {
@@ -88,7 +110,19 @@ const Quotaion = () => {
         }))
     }
 
-    console.log(formByTab)
+    //onChange ของการแก้ไขข้อมูล
+    const hdlFormChange = (e) => {
+        const { name, value } = e.target
+
+        setOcrByTab(prev => ({
+            ...prev,
+            [activeTab]: {
+                ...prev[activeTab],
+                [name]: value
+            }
+        }))
+    }
+
     const getDetail = async () => {
         try {
             const res = await getDetailCompare(token, q_id)
@@ -120,6 +154,8 @@ const Quotaion = () => {
             };
             const res = await createAkson(token, payload)
 
+            console.log(res.data.ocrData)
+
             setOcrByTab(prev => ({
                 ...prev,
                 [activeTab]: res.data.ocrData
@@ -143,6 +179,8 @@ const Quotaion = () => {
             }))
         }
     }
+
+
 
     const removeQuotation = async () => {
         const quotationId = quotationIdByTab[activeTab]
@@ -205,7 +243,7 @@ const Quotaion = () => {
         }
 
         try {
-            const res = await createFieldsQuotation(token, quotationId, ocrByTab[activeTab])
+            const res = await createQuotationFields(token, quotationId, ocrByTab[activeTab])
 
             toast.success(res.data.msg)
         } catch (err) {
@@ -267,7 +305,7 @@ const Quotaion = () => {
     }
 
     return (
-        <div className='flex flex-col p-5 gap-5 font-prompt'>
+        <div className='flex flex-col p-3 gap-5 font-prompt'>
             <div className="flex justify-between bg-main p-5 rounded-xl">
                 <div className="gap-5 font-medium text-text-primary">
                     <div className="flex gap-2">
@@ -349,12 +387,28 @@ const Quotaion = () => {
                         />
                     }
                     <hr className="border-dashed border border-border" />
-                    <TableQuotation
-                        quotationID={quotationIdByTab[activeTab]}
-                        onChangData={removeQuotation}
-                        data={ocrByTab[activeTab]}
-                        onSubmit={handleSaveQuotation}
-                    />
+                    <div className="flex gap-5 h-192.5 overflow-y-clip">
+                        <div className="flex-3 overflow-auto bg-zinc-800 p-4">
+                            {pdfPreviewByTab[activeTab] ? (
+                                <iframe
+                                    src={`${pdfPreviewByTab[activeTab]}#zoom=80`}
+                                    className="w-full h-full bg-white rounded"
+                                    title="PDF Preview"
+                                />
+                            ) : (
+                                <div className="flex justify-center items-center h-full text-zinc-400">
+                                    กรุณาเลือกไฟล์ PDF เพื่อดูตัวอย่าง
+                                </div>
+                            )}
+                        </div>
+                        <div className="flex-1/5 overflow-y-auto">
+                            <TableQuotation
+                                data={ocrByTab[activeTab]}
+                                onChange={hdlFormChange}
+                                onSubmit={handleSaveQuotation}
+                            />
+                        </div>
+                    </div>
                 </div>
 
             </div>

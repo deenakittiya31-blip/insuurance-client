@@ -1,7 +1,21 @@
 import api from '../config/axios'
 
+export const createQuotationFields = (token, quotation_id, fields) => {
+    return api.post('/api/create-quotation/fields',
+        {
+            quotation_id,
+            fields
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
+}
+
 export const createFieldsQuotation = (token, payload) => {
-    return api.post('/api/create-quotation/fields', payload,
+    return api.post('/api/create-quotationandfields', payload,
         {
             headers: {
                 Authorization: `Bearer ${token}`

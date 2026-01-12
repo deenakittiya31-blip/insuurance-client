@@ -228,7 +228,7 @@ const Compare = () => {
                     <div className="flex-1 overflow-auto bg-zinc-800 p-4">
                         {pdfPreviewByTab[activeTab] ? (
                             <iframe
-                                src={`${pdfPreviewByTab[activeTab]}#zoom=100`}
+                                src={`${pdfPreviewByTab[activeTab]}#zoom=80`}
                                 className="w-full h-full bg-white rounded"
                                 title="PDF Preview"
                             />
