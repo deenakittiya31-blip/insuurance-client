@@ -12,8 +12,12 @@ import Pagination from '../../component/paginationComponent/Pagination'
 
 const initialState = {
     car_type_id: '',
-    price: '',
-    coverage_detail: ''
+    code: '',
+    net_price: '',
+    vat: '',
+    stamp: '',
+    total: '',
+    detail: ''
 }
 
 const CompulsoryCar = () => {

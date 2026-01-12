@@ -7,8 +7,12 @@ const TableCompulsory = ({ data, page, limit, onDelete, onEdite }) => {
                 <thead>
                     <tr>
                         <th className='font-medium text-neutral-400'>ลำดับ</th>
+                        <th className='font-medium text-neutral-400'>รหัส</th>
                         <th className='font-medium text-neutral-400'>ประเภทรถ</th>
-                        <th className='font-medium text-neutral-400'>ราคา</th>
+                        <th className='font-medium text-neutral-400'>สุทธิ</th>
+                        <th className='font-medium text-neutral-400'>vat</th>
+                        <th className='font-medium text-neutral-400'>อากร</th>
+                        <th className='font-medium text-neutral-400'>รวม</th>
                         <th className='font-medium text-neutral-400'>รายละเอียด</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>

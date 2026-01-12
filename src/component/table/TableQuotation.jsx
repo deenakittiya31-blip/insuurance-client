@@ -1,10 +1,15 @@
 import TextInput from '../form/TextInput'
 
-const TableQuotation = ({ data, onSubmit, onChange }) => {
+const TableQuotation = ({ data, onSubmit, onChange, quotation_id, onDelete }) => {
     return (
         <div className="flex flex-col gap-2 font-prompt text-text-primary">
             <div className='flex justify-between items-baseline-last'>
                 <h1 className="font-bold">📑 ข้อมูลทั้งหมด</h1>
+                {
+                    quotation_id && (
+                        <button onClick={onDelete} type='button' className='btn bg-red-400 rounded-md px-7 text-white hover:bg-red-600'>เปลี่ยนไฟล์</button>
+                    )
+                }
             </div>
 
             <form onSubmit={onSubmit} className='flex flex-col gap-5 items-end lg:grid-cols-2'>

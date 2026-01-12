@@ -32,7 +32,7 @@ const ModalCompare = ({ onSubmit, onChange, form, carmodel, onClose }) => {
         <div className='font-prompt'>
             <button className="btn bg-main px-3 rounded-md text-white font-semibold" onClick={() => document.getElementById('modalcompare').showModal()}>สร้างใบเสนอราคา</button>
             <dialog id="modalcompare" className="modal">
-                <form onSubmit={onSubmit} className="modal-box w-auto gap-5">
+                <form onSubmit={onSubmit} className="modal-box w-auto flex flex-col gap-5">
                     <h3 className="font-bold text-lg text-text-primary">สร้างใบเสนอราคา</h3>
                     <div className="grid grid-cols-2 gap-5">
                         <TextInput

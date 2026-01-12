@@ -154,8 +154,6 @@ const Quotaion = () => {
             };
             const res = await createAkson(token, payload)
 
-            console.log(res.data.ocrData)
-
             setOcrByTab(prev => ({
                 ...prev,
                 [activeTab]: res.data.ocrData
@@ -179,8 +177,6 @@ const Quotaion = () => {
             }))
         }
     }
-
-
 
     const removeQuotation = async () => {
         const quotationId = quotationIdByTab[activeTab]
@@ -406,6 +402,8 @@ const Quotaion = () => {
                                 data={ocrByTab[activeTab]}
                                 onChange={hdlFormChange}
                                 onSubmit={handleSaveQuotation}
+                                quotation_id={quotationIdByTab[activeTab]}
+                                onDelete={removeQuotation}
                             />
                         </div>
                     </div>
