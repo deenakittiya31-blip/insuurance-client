@@ -59,8 +59,8 @@ const CompulsoryCar = () => {
         setForm(initialState)
     }
 
-    const getCompulsory = async () => {
-        await ListCompulsory()
+    const getCompulsory = async (page) => {
+        await ListCompulsory(page)
             .then((res) => {
                 setCompulsory(res.data.data)
                 setTotal(res.data.total)
@@ -72,6 +72,7 @@ const CompulsoryCar = () => {
         try {
             const res = await createCompulsory(token, form)
             document.getElementById('modalcompul').close();
+            setForm(initialState)
             getCompulsory(page);
             toast.success(res.data.msg)
         } catch (err) {

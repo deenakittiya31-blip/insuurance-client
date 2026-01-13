@@ -30,11 +30,11 @@ const ModalCompul = ({ form, onSubmit, onChange }) => {
                         <TextInput
                             width='w-auto'
                             title='รหัส'
-                            name='detail'
+                            name='code'
                             type='text'
                             placeholder='กรอกรหัส'
                             onChange={onChange}
-                            value={form.detail}
+                            value={form.code}
                         />
                         <TextInput
                             width='w-auto'

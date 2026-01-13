@@ -22,9 +22,13 @@ const TableCompulsory = ({ data, page, limit, onDelete, onEdite }) => {
                         data?.map((i, idx) => (
                             <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
                                 <td>{(page - 1) * limit + idx + 1}</td>
+                                <td>{i.code}</td>
                                 <td>{i.type}</td>
-                                <td>{i.price}</td>
-                                <td>{i.coverage_detail}</td>
+                                <td>{i.net_price}</td>
+                                <td>{i.vat}</td>
+                                <td>{i.stamp}</td>
+                                <td>{i.total}</td>
+                                <td>{i.detail}</td>
                                 <td className='flex gap-5 justify-center'>
                                     <button onClick={() => onEdite(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
                                     <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>

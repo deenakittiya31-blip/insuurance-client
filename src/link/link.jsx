@@ -42,6 +42,11 @@ export const adminCar = [
         link: '/admin/carmodel'
     },
     {
+        icon: <MdOutlineElectricCar className='size-4' />,
+        title: 'ประเภทรถยนต์',
+        link: '/admin/cartype'
+    },
+    {
         icon: <IoDocumentOutline className='size-4' />,
         title: 'พรบ.รถ',
         link: '/admin/compulsorycar'
@@ -55,11 +60,6 @@ export const adminCar = [
         icon: <LuCarTaxiFront className='size-4' />,
         title: 'ประเภทการใช้งาน',
         link: '/admin/usagecar'
-    },
-    {
-        icon: <MdOutlineElectricCar className='size-4' />,
-        title: 'ประเภทรถยนต์',
-        link: '/admin/cartype'
     },
     {
         icon: <FaRegCalendar className='size-4' />,

@@ -258,8 +258,7 @@ const Quotaion = () => {
             }
 
             // สร้าง blob URL
-            const blob = new Blob([res.data], { type: 'application/pdf' })
-            const url = window.URL.createObjectURL(blob)
+            const url = URL.createObjectURL(res.data)
 
             // เปิดในแท็บใหม่
             const newWindow = window.open(url, '_blank')
