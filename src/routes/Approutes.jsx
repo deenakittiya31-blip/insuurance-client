@@ -19,6 +19,7 @@ import Cartype from '../pages/car/Cartype'
 import CarYear from '../pages/car/CarYear'
 import Quotaion from '../pages/insur/Quotaion'
 import Compare from '../pages/insur/Compare'
+import Setting from '../pages/Setting'
 
 const Approutes = () => {
     return (
@@ -49,6 +50,7 @@ const Approutes = () => {
                     <Route path='package' element={<InsurPackage />} />
                     <Route path='quotation/:q_id' element={<Quotaion />} />
                     <Route path='compare/:q_id' element={<Compare />} />
+                    <Route path='setting' element={<Setting />} />
                 </Route>
             </Routes>
         </BrowserRouter>

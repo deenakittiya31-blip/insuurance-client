@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
-import { TbLogout } from "react-icons/tb";
 import useInsureAuth from '../../store/auth-store';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AiFillSmile } from "react-icons/ai";
 import { createCompare } from '../../service/compare';
 import { useState } from 'react';
 import useActionStore from '../../store/action-store';
 import ModalCompare from '../modal/ModalCompare'
+import { IoSettings } from "react-icons/io5";
 
 const initialState = {
     to_name: '',
@@ -23,14 +23,8 @@ const Header = () => {
     const user = useInsureAuth((s) => s.user)
     const navigate = useNavigate();
     const [form, setForm] = useState(initialState)
-    const actionLogOut = useInsureAuth((s) => s.actionLogout)
     const { getCarModelSelect, carmodel } = useActionStore();
 
-    const hdlLogout = () => {
-        actionLogOut()
-        navigate('/')
-        toast.success('ออกจากระบบสำเร็จ')
-    }
 
     const hdlOnChange = async (e) => {
         const { name, value } = e.target
@@ -99,20 +93,13 @@ const Header = () => {
                     onSubmit={hldOnSubmit}
                 />
                 <div>
-                    {
-                        token
-                            ? (
-                                <button onClick={hdlLogout} className='btn rounded-md'>
-                                    <TbLogout className='size-5' />
-                                </button>
-                            )
-                            : (
-                                <Link to='/' className='flex gap-5 items-center px-5 py-2 group rounded-full text-text-primary transition duration-300 ease-in-out hover:bg-main'>
-                                    <TbLogin2 size={25} className='group-hover:text-white' />
-                                    <h3 className='font-semibold lg:text-lg! group-hover:text-white'>เข้าสู่ระบบ</h3>
-                                </Link>
-                            )
-                    }
+                    <Link to='/admin/setting' >
+                        <button className='btn flex items-center gap-3 bg-white px-3 rounded-md text-main'>
+                            <IoSettings /> ตั้งค่า
+                        </button>
+
+                    </Link>
+
                 </div>
             </div>
         </header >
