@@ -121,10 +121,7 @@ const CompulsoryCar = () => {
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
             <div className='flex items-center justify-between'>
-                <Title
-                    title='ยี่ห้อรถยนต์'
-                    subtitle='ข้อมูลและรูปภาพของยี่ห้อรถยนต์'
-                />
+                <Title title='พรบ. รถยนต์' />
                 <ModalCompul
                     form={form}
                     onChange={hdlOnChange}

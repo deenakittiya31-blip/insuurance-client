@@ -1,0 +1,39 @@
+const SelectCompul = ({ onChange, value, options = [] }) => {
+
+    // console.log(options)
+    return (
+        <fieldset className="fieldset font-prompt text-text-primary p-0 w-75">
+            <legend className="fieldset-legend text-sm text-text-primary">ตัวเลือกพรบ. รถ</legend>
+            <select
+                name='car_year_id'
+                className="select w-full"
+                value={value ?? ""}
+                onChange={(e) => {
+                    if (e.target.value === "") {
+                        onChange(null)          // ยังไม่เลือก
+                    } else if (e.target.value === "NONE") {
+                        onChange(0)             // ไม่เอาพรบ.
+                    } else {
+                        onChange(Number(e.target.value)) // ค่าพรบ.
+                    }
+                }}
+            >
+                <option value="" disabled={true}>โปรดเลือก</option>
+                <option value="NONE">ไม่เอาพรบ. รถยนต์</option>
+                {
+                    options.map((i) => (
+                        <option
+                            key={i.id}
+                            value={i.id}
+                        >
+                            รหัส <span className="text-green-600">{i.code}</span>
+                            ประเภท <span className="text-blue-600">{i.type}</span>
+                            ค่าพรบ. <span className="text-orange-600">{i.total}</span>
+                        </option>
+                    ))
+                }
+            </select>
+        </fieldset>
+    )
+}
+export default SelectCompul

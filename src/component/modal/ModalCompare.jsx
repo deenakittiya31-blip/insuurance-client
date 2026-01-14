@@ -34,6 +34,7 @@ const ModalCompare = ({ onSubmit, onChange, form, carmodel, onClose }) => {
             <dialog id="modalcompare" className="modal">
                 <form onSubmit={onSubmit} className="modal-box w-auto flex flex-col gap-5">
                     <h3 className="font-bold text-lg text-text-primary">สร้างใบเสนอราคา</h3>
+
                     <div className="grid grid-cols-2 gap-5">
                         <TextInput
                             width='w-auto'

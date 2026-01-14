@@ -7,11 +7,11 @@ import useInsureAuth from '../../store/auth-store';
 import { TbLogout } from "react-icons/tb";
 
 const SidebarNew = () => {
-    const token = useInsureAuth((s) => s.token)
+    const { token, actionLogout } = useInsureAuth();
     const navigate = useNavigate();
 
     const hdlLogout = () => {
-        actionLogOut()
+        actionLogout()
         navigate('/')
         toast.success('ออกจากระบบสำเร็จ')
     }

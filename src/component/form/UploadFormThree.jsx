@@ -9,9 +9,19 @@ const UploadFormThree = ({ onChange, isLoading, onSubmit, form }) => {
         getCompanySelect();
     }, [])
 
+    const selectedCompany = company.find(
+        c => String(c.id) === String(form.company_id)
+    )
 
     return (
         <form onSubmit={onSubmit} className="flex gap-5 items-end">
+            {selectedCompany?.logo_url && (
+                <img
+                    src={selectedCompany.logo_url}
+                    className="w-14 h-14 rounded-sm object-contain"
+                    alt="logo"
+                />
+            )}
             <fieldset className="fieldset w-full font-prompt text-text-primary p-0">
                 <p className="fieldset-legend text-sm text-text-primary p-0">ชื่อบริษัท</p>
                 <select

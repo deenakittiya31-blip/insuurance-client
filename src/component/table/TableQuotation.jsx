@@ -167,7 +167,7 @@ const TableQuotation = ({ data, onSubmit, onChange, quotation_id, onDelete }) =>
                     onChange={onChange}
                 />
                 <div className=''>
-                    <button type='submit' className='btn bg-green-500 rounded-md px-7 text-white hover:bg-green-600'>บันทึก</button>
+                    <button type='submit' className='btn rounded-md px-7 text-white bg-green-500 hover:bg-green-600'>บันทึก</button>
                 </div>
             </form>
         </div>

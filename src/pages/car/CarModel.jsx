@@ -50,6 +50,8 @@ const CarModel = () => {
             .catch((err) => console.log(err))
     }
 
+    console.log(carbrand)
+
     const openModal = async (id) => {
         setOpen(true)
         setIdSelect(id)

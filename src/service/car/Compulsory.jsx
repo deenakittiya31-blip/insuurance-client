@@ -12,6 +12,10 @@ export const ListCompulsory = async (pageNumber) => {
     return api.get(`/api/list-compulsory/page?page=${pageNumber}&per_page=10`)
 }
 
+export const listOption = async (id) => {
+    return api.get(`/api/option-compulsory/${id}`)
+}
+
 export const readCompulsory = async (token, id) => {
     return api.get(`/api/read-compulsory/${id}`, {
         headers: {

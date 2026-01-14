@@ -9,15 +9,6 @@ const ModalCarModel = ({ form, carbrand, onSubmit, onChange }) => {
             <dialog id="modalcarmodel" className="modal">
                 <form onSubmit={onSubmit} className="modal-box w-auto flex flex-col gap-5">
                     <h3 className="font-bold text-lg text-text-primary">เพิ่มรุ่นรถยนต์</h3>
-                    <TextInput
-                        placeholder='กรอกรุ่นรถยนต์'
-                        title='รุ่นรถยนต์'
-                        width='w-xs'
-                        name='name'
-                        type='text'
-                        onChange={onChange}
-                        value={form.name}
-                    />
                     <Select
                         text='ยี่ห้อรถ'
                         data={carbrand}
@@ -26,6 +17,15 @@ const ModalCarModel = ({ form, carbrand, onSubmit, onChange }) => {
                         onChange={onChange}
                         valueKey='id'
                         labelKey='name'
+                    />
+                    <TextInput
+                        placeholder='กรอกรุ่นรถยนต์'
+                        title='รุ่นรถยนต์'
+                        width='w-xs'
+                        name='name'
+                        type='text'
+                        onChange={onChange}
+                        value={form.name}
                     />
                     <div className='modal-action'>
                         <button type='button' className="btn btn-soft btn-error" onClick={() => document.getElementById('modalcarmodel').close()}>ยกเลิก</button>

@@ -11,6 +11,8 @@ import Swal from "sweetalert2"
 import UploadFormOne from "../../component/form/UploadFormOne"
 import UploadFormSecond from "../../component/form/UploadFormSecond"
 import UploadFormThree from "../../component/form/UploadFormThree"
+import { listOption } from "../../service/car/Compulsory"
+import SelectCompul from "../../component/form/SelectCompul"
 
 const initialForm = {
     company_id: '',
@@ -22,8 +24,17 @@ const Quotaion = () => {
     const { q_id } = useParams();
     const [activeTab, setActiveTab] = useState(1)
     const [detail, setDetail] = useState({})
+    const [usageID, setUsageID] = useState(null)
+    const [compulsory, setCompulsory] = useState([])
     //เก็บข้อมูล PDF ของแต่ละแท็บ
     const [pdfPreviewByTab, setPdfPreviewByTab] = useState({
+        1: null,
+        2: null,
+        3: null
+    })
+
+    //เก็บค่าพรบ.
+    const [compulsoryByTab, setCompulsoryByTab] = useState({
         1: null,
         2: null,
         3: null
@@ -63,10 +74,19 @@ const Quotaion = () => {
         3: null
     })
 
+    const isSaveDisabled =
+        compulsoryByTab[activeTab] === null ||
+        compulsoryByTab[activeTab] === undefined
+
     useEffect(() => {
         if (!q_id) return;
         getDetail();
     }, [q_id])
+
+    useEffect(() => {
+        if (!usageID) return;
+        getCompulsoryOption(usageID);
+    }, [usageID])
 
     //onChange ของข้อมูลที่ส่งไปสร้าง quotation และยิง api ocr akson
     const hdlOnChange = async (e) => {
@@ -123,15 +143,30 @@ const Quotaion = () => {
         }))
     }
 
+    //ดึงข้อมูลใบเสนอราคา
     const getDetail = async () => {
         try {
             const res = await getDetailCompare(token, q_id)
-            setDetail(res.data.data)
+            const data = res.data.data
+
+            setDetail(data)
+            setUsageID(data.usageid)
         } catch (err) {
             console.log(err)
         }
     }
 
+    const getCompulsoryOption = async (id) => {
+        try {
+            const res = await listOption(id)
+            setCompulsory(res.data.data)
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    //บันทึก quotation และใช้ ocr akson
     const handleSubmit = async (e) => {
         e.preventDefault()
 
@@ -178,6 +213,7 @@ const Quotaion = () => {
         }
     }
 
+    //ลบ quotation
     const removeQuotation = async () => {
         const quotationId = quotationIdByTab[activeTab]
 
@@ -228,18 +264,61 @@ const Quotaion = () => {
 
     }
 
+    const testCompulsory = (e) => {
+        e.preventDefault()
+        const selectedId = compulsoryByTab[activeTab]
+
+        if (selectedId === null || selectedId === 0) {
+            console.log('log compul test : 0')
+            return
+        }
+
+        const list = Object.values(compulsory)
+
+        const found = list.find(
+            c => Number(c.id) === Number(selectedId)
+        )
+
+        const amount = Number(found?.total ?? 0)
+
+        console.log('log compul test :', amount)
+    }
+
     const handleSaveQuotation = async (e) => {
         e.preventDefault()
 
         const quotationId = quotationIdByTab[activeTab]
-
         if (!quotationId) {
             toast.error('ยังไม่มี quotation_id')
             return
         }
+        if (isSaveDisabled) {
+            toast.error('กรุณาเลือกพรบ.')
+            return
+        }
+
+        const selectedId = compulsoryByTab[activeTab]
+
+        if (selectedId === null || selectedId === 0) {
+            console.log('log compul test : 0')
+            return
+        }
+
+        const list = Object.values(compulsory)
+
+        const found = list.find(
+            c => Number(c.id) === Number(selectedId)
+        )
+
+        const amount = Number(found?.total ?? 0)
+
+        const payload = {
+            ...ocrByTab[activeTab],
+            compulsory_amount: amount
+        }
 
         try {
-            const res = await createQuotationFields(token, quotationId, ocrByTab[activeTab])
+            const res = await createQuotationFields(token, quotationId, payload)
 
             toast.success(res.data.msg)
         } catch (err) {
@@ -358,30 +437,66 @@ const Quotaion = () => {
                     </a>
                 </div>
                 <div className="flex flex-col gap-7 bg-white p-5 rounded-xl">
-                    {activeTab === 1 &&
-                        <UploadFormOne
-                            onChange={hdlOnChange}
-                            isLoading={loadingByTab[activeTab]}
-                            onSubmit={handleSubmit}
-                            form={formByTab[activeTab]}
-                        />
-                    }
-                    {activeTab === 2 &&
-                        <UploadFormSecond
-                            onChange={hdlOnChange}
-                            isLoading={loadingByTab[activeTab]}
-                            onSubmit={handleSubmit}
-                            form={formByTab[activeTab]}
-                        />
-                    }
-                    {activeTab === 3 &&
-                        <UploadFormThree
-                            onChange={hdlOnChange}
-                            isLoading={loadingByTab[activeTab]}
-                            onSubmit={handleSubmit}
-                            form={formByTab[activeTab]}
-                        />
-                    }
+                    {activeTab === 1 && (
+                        <div className="flex justify-between">
+                            < UploadFormOne
+                                onChange={hdlOnChange}
+                                isLoading={loadingByTab[activeTab]}
+                                onSubmit={handleSubmit}
+                                form={formByTab[activeTab]}
+                            />
+                            <SelectCompul
+                                options={compulsory}
+                                value={compulsoryByTab[activeTab]}
+                                onChange={(value) =>
+                                    setCompulsoryByTab(prev => ({
+                                        ...prev,
+                                        [activeTab]: value
+                                    }))
+                                }
+                            />
+                        </div>
+                    )}
+                    {activeTab === 2 && (
+                        <>
+                            <UploadFormSecond
+                                onChange={hdlOnChange}
+                                isLoading={loadingByTab[activeTab]}
+                                onSubmit={handleSubmit}
+                                form={formByTab[activeTab]}
+                            />
+                            <SelectCompul
+                                options={compulsory}
+                                value={compulsoryByTab[activeTab]}
+                                onChange={(value) =>
+                                    setCompulsoryByTab(prev => ({
+                                        ...prev,
+                                        [activeTab]: value
+                                    }))
+                                }
+                            />
+                        </>
+                    )}
+                    {activeTab === 3 && (
+                        <>
+                            <UploadFormThree
+                                onChange={hdlOnChange}
+                                isLoading={loadingByTab[activeTab]}
+                                onSubmit={handleSubmit}
+                                form={formByTab[activeTab]}
+                            />
+                            <SelectCompul
+                                options={compulsory}
+                                value={compulsoryByTab[activeTab]}
+                                onChange={(value) =>
+                                    setCompulsoryByTab(prev => ({
+                                        ...prev,
+                                        [activeTab]: value
+                                    }))
+                                }
+                            />
+                        </>
+                    )}
                     <hr className="border-dashed border border-border" />
                     <div className="flex gap-5 h-192.5 overflow-y-clip">
                         <div className="flex-3 overflow-auto bg-zinc-800 p-4">
@@ -404,6 +519,7 @@ const Quotaion = () => {
                                 onSubmit={handleSaveQuotation}
                                 quotation_id={quotationIdByTab[activeTab]}
                                 onDelete={removeQuotation}
+                            // disabledSave={isSaveDisabled}
                             />
                         </div>
                     </div>

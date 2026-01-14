@@ -22,14 +22,25 @@ const Setting = () => {
         }
     }
 
-    const hdlToggleStatus = async (id, currentStatus) => {
+    const hdlToggleStatus = async (id, status) => {
+        //Optimistic UI
+        setLoginWith(prev =>
+            prev.map(item =>
+                item.id === id ? { ...item, status } : item
+            )
+        )
+
         try {
-            const res = await statusLoginWith(token, id, !currentStatus)
+            const res = await statusLoginWith(token, id, status)
             toast.success(res.data.msg)
-            getStatusLogin()
         } catch (err) {
             console.log(err)
-            toast.error('อัปเดตสถานะไม่สำเร็จ')
+            toast.error('อัปเดตไม่สำเร็จ')
+            setLoginWith(prev =>
+                prev.map(item =>
+                    item.id === id ? { ...item, status: !status } : item
+                )
+            )
         }
     }
 
@@ -58,7 +69,7 @@ const Setting = () => {
                         />
                     </div>
                     <div className="mt-3 flex justify-end">
-                        <button type="submit" className="btn btn-sm bg-black font-prompt text-white">บันทึก</button>
+                        <button type="button" className="btn btn-sm bg-black font-prompt text-white">บันทึก</button>
                     </div>
                 </form>
                 <form className="text-text-primary">
@@ -71,10 +82,10 @@ const Setting = () => {
                                     <label className="label font-prompt">
                                         <input
                                             type="checkbox"
-                                            onChange={() => hdlToggleStatus(i.id, i.status)}
+                                            onChange={(e) => hdlToggleStatus(i.id, e.target.checked)}
                                             checked={i.status}
                                             className="toggle" />
-                                        {i.status ? 'เปิด' : 'ปิด'}การลงชื่อเข้าใช้ด้วย {i.login_with}
+                                        {i.status ? 'ปิด' : 'เปิด'}การลงชื่อเข้าใช้ด้วย {i.login_with}
                                     </label>
                                 </fieldset>
                             ))

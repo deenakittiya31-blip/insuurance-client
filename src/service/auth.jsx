@@ -16,7 +16,7 @@ export const statusLoginWith = (token, id, status) => {
 }
 
 export const getLoginWith = () => {
-    return api.get('/api/get-loginwith')
+    return axios.get(`${API_URL}/api/get-loginwith`)
 }
 
 export const currentUser = () => {

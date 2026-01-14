@@ -6,10 +6,12 @@ import useInsureAuth from '../../store/auth-store'
 import toast from 'react-hot-toast'
 import TextInputAuth from '../../component/form/TextInputAuth'
 import ReCAPTCHA from 'react-google-recaptcha'
+import { getLoginWith } from '../../service/auth'
 
 const Login = () => {
     const { actionLogin, actionLoginGoogle, actionCurrentUser } = useInsureAuth();
     const navigate = useNavigate()
+    const [loginWith, setLoginWith] = useState([])
     const keyReCAPTCHA = import.meta.env.VITE_RECAPTCHA_SITE_KEY
     const [capVal, setCapVal] = useState(null)
     const [form, setForm] = useState({
@@ -18,8 +20,21 @@ const Login = () => {
     })
 
     useEffect(() => {
+        getStatusLogin()
         liff.init({ liffId: '2008686120-kHUafHAb' })
     }, [])
+
+    const getStatusLogin = async () => {
+        try {
+            const res = await getLoginWith()
+            setLoginWith(res.data.data)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const googleLogin = loginWith.find(i => i.login_with === 'Google')
+    const lineLogin = loginWith.find(i => i.login_with === 'Line')
 
     const hdlLoginLine = () => {
         try {
@@ -119,14 +134,22 @@ const Login = () => {
                     <hr className='w-full' />
                 </div>
                 <div className='w-full'>
-                    <GoogleLogin
-                        onSuccess={onSuccess}
-                        onError={() => {
-                            toast.error('Google login failed')
-                        }}
-                    />
+                    {
+                        googleLogin?.status && (
+                            <GoogleLogin
+                                onSuccess={onSuccess}
+                                onError={() => {
+                                    toast.error('Google login failed')
+                                }}
+                            />
+                        )
+                    }
                 </div>
-                <button onClick={hdlLoginLine} className="btn bg-green-500 text-white w-full">เข้าสู่ระบบผ่าน Line</button>
+                {
+                    lineLogin?.status && (
+                        <button onClick={hdlLoginLine} className="btn bg-green-500 text-white w-full">เข้าสู่ระบบผ่าน Line</button>
+                    )
+                }
                 <Link to='/register' className='text-sm hover:underline underline-offset-4'>Create Account</Link>
             </div>
         </div>
