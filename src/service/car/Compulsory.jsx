@@ -25,7 +25,7 @@ export const readCompulsory = async (token, id) => {
 }
 
 export const updateCompulsory = (token, id, form) => {
-    return api.put(`/api/update-compulsory/${id}`, form, {
+    return api.patch(`/api/update-compulsory/${id}`, form, {
         headers: {
             Authorization: `Bearer ${token}`
         }

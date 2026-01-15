@@ -9,11 +9,11 @@ const TableCompulsory = ({ data, page, limit, onDelete, onEdite }) => {
                         <th className='font-medium text-neutral-400'>ลำดับ</th>
                         <th className='font-medium text-neutral-400'>รหัส</th>
                         <th className='font-medium text-neutral-400'>ประเภทรถ</th>
+                        <th className='font-medium text-neutral-400'>ประเภทการใช้งาน</th>
                         <th className='font-medium text-neutral-400'>สุทธิ</th>
                         <th className='font-medium text-neutral-400'>vat</th>
                         <th className='font-medium text-neutral-400'>อากร</th>
                         <th className='font-medium text-neutral-400'>รวม</th>
-                        <th className='font-medium text-neutral-400'>รายละเอียด</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
                 </thead>
@@ -24,11 +24,11 @@ const TableCompulsory = ({ data, page, limit, onDelete, onEdite }) => {
                                 <td>{(page - 1) * limit + idx + 1}</td>
                                 <td>{i.code}</td>
                                 <td>{i.type}</td>
+                                <td>{i.usage}</td>
                                 <td>{i.net_price}</td>
                                 <td>{i.vat}</td>
                                 <td>{i.stamp}</td>
                                 <td>{i.total}</td>
-                                <td>{i.detail}</td>
                                 <td className='flex gap-5 justify-center'>
                                     <button onClick={() => onEdite(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
                                     <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
