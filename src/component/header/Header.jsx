@@ -16,6 +16,7 @@ const initialState = {
     car_model_id: '',
     car_year_id: '',
     car_usage_id: '',
+    sub_car_model: ''
 }
 
 const Header = () => {
@@ -23,12 +24,20 @@ const Header = () => {
     const user = useInsureAuth((s) => s.user)
     const navigate = useNavigate();
     const [form, setForm] = useState(initialState)
-    const { getCarModelSelect, carmodel } = useActionStore();
+    const { getCarModelSelect } = useActionStore();
+
 
 
     const hdlOnChange = async (e) => {
         const { name, value } = e.target
 
+        setForm(prev => ({
+            ...prev,
+            [name]: value,
+        }))
+    }
+
+    const hdlSelectChange = async (name, value) => {
         setForm(prev => ({
             ...prev,
             [name]: value,
@@ -39,6 +48,7 @@ const Header = () => {
             await getCarModelSelect(value)
         }
     }
+
 
     const hdlOnClose = () => {
         setForm(initialState)
@@ -88,9 +98,10 @@ const Header = () => {
                 <ModalCompare
                     form={form}
                     onChange={hdlOnChange}
-                    carmodel={carmodel}
+                    onChangeSelect={hdlSelectChange}
                     onClose={hdlOnClose}
                     onSubmit={hldOnSubmit}
+                    setForm={setForm}
                 />
                 <div>
                     <Link to='/admin/setting' >

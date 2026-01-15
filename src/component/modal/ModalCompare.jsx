@@ -3,14 +3,17 @@ import useActionStore from "../../store/action-store"
 import Select from "../form/Select"
 import { listCarYearSelect } from "../../service/car/CarYear";
 import TextInput from "../form/TextInput";
+import SelectSearch from "../form/SelectSearch";
 
-const ModalCompare = ({ onSubmit, onChange, form, carmodel, onClose }) => {
+const ModalCompare = ({ onSubmit, onChange, onChangeSelect, form, setForm, onClose }) => {
     const [year, setYear] = useState([])
     const {
         getCarBrandSelect,
         carbrand,
         getCarUsageSelect,
-        carUsage
+        carUsage,
+        getCarModelSelect,
+        carmodel
     } = useActionStore();
 
     useEffect(() => {
@@ -32,36 +35,32 @@ const ModalCompare = ({ onSubmit, onChange, form, carmodel, onClose }) => {
         <div className='font-prompt'>
             <button className="btn bg-main px-3 rounded-md text-white font-semibold" onClick={() => document.getElementById('modalcompare').showModal()}>สร้างใบเสนอราคา</button>
             <dialog id="modalcompare" className="modal">
-                <form onSubmit={onSubmit} className="modal-box w-auto flex flex-col gap-5">
+                <form onSubmit={onSubmit} className="modal-box w-lg flex flex-col gap-5">
                     <h3 className="font-bold text-lg text-text-primary">สร้างใบเสนอราคา</h3>
-
-                    <div className="grid grid-cols-2 gap-5">
-                        <TextInput
-                            width='w-auto'
-                            title='ถึง'
-                            name='to_name'
-                            type='text'
-                            placeholder='ถึง...'
-                            onChange={onChange}
-                            value={form.to_name}
-                        />
-                        <TextInput
-                            width='w-auto'
-                            title='รายละเอียด'
-                            name='details'
-                            type='text'
-                            placeholder='กรอกรายละเอียด'
-                            onChange={onChange}
-                            value={form.details}
-                        />
-                        <Select
-                            text='ยี่ห้อรถยนต์'
-                            data={carbrand}
-                            name='car_brand_id'
+                    <TextInput
+                        width='w-auto'
+                        title='ถึง'
+                        name='to_name'
+                        type='text'
+                        placeholder='ถึง...'
+                        onChange={onChange}
+                        value={form.to_name}
+                    />
+                    <TextInput
+                        width='w-auto'
+                        title='รายละเอียด'
+                        name='details'
+                        type='text'
+                        placeholder='กรอกรายละเอียด'
+                        onChange={onChange}
+                        value={form.details}
+                    />
+                    <div className="grid lg:grid-cols-2 gap-5 items-end-safe">
+                        <SelectSearch
+                            options={carbrand}
+                            placeholder="ยี่ห้อรถยนต์"
                             value={form.car_brand_id}
-                            onChange={onChange}
-                            valueKey='id'
-                            labelKey='name'
+                            onChange={(value) => onChangeSelect('car_brand_id', value)}
                         />
                         <Select
                             text='รุ่นรถยนต์'
@@ -72,7 +71,16 @@ const ModalCompare = ({ onSubmit, onChange, form, carmodel, onClose }) => {
                             valueKey='id'
                             labelKey='name'
                         />
-                        <fieldset className="fieldset font-prompt text-text-primary">
+                        <TextInput
+                            width='w-auto'
+                            title='รุ่นย่อยรถยนต์'
+                            name='sub_car_model'
+                            type='text'
+                            placeholder='กรอกรายละเอียด'
+                            onChange={onChange}
+                            value={form.sub_car_model}
+                        />
+                        <fieldset className="fieldset font-prompt text-text-primary p-0">
                             <legend className="fieldset-legend text-sm text-text-primary">ปีรถยนต์</legend>
                             <select
                                 name='car_year_id'
@@ -93,15 +101,18 @@ const ModalCompare = ({ onSubmit, onChange, form, carmodel, onClose }) => {
                                 }
                             </select>
                         </fieldset>
-                        <Select
-                            text='ประเภทการใช้งาน'
-                            data={carUsage}
-                            name='car_usage_id'
-                            value={form.car_usage_id}
-                            onChange={onChange}
-                            valueKey='id'
-                            labelKey='usage_name'
-                        />
+                        <div className="col-span-2 ">
+                            <Select
+                                text='ประเภทการใช้งาน'
+                                data={carUsage}
+                                name='car_usage_id'
+                                value={form.car_usage_id}
+                                onChange={onChange}
+                                valueKey='id'
+                                labelKey='usage_name'
+                            />
+                        </div>
+
                     </div>
                     <div className='modal-action'>
                         <button type='button' className="btn btn-soft btn-error" onClick={onClose}>ยกเลิก</button>

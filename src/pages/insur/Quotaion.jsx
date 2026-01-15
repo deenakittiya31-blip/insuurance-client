@@ -393,7 +393,16 @@ const Quotaion = () => {
                             <p className="font-semibold"> ชื่อยี่ห้อรถยนต์ : <span className="font-medium text-sm">{detail.car_brand}</span></p>
                         </li>
                         <li>
-                            <p className="font-semibold"> ชื่อรุ่นรถยนต์ : <span className="font-medium text-sm">{detail.car_model}</span></p>
+                            {
+                                detail.car_model
+                                    ? (
+                                        <p className="font-semibold"> ชื่อรุ่นรถยนต์ : <span className="font-medium text-sm">{detail.car_model}</span></p>
+                                    )
+                                    : (
+                                        <p className="font-semibold"> ชื่อรุ่นรถยนต์ : <span className="font-medium text-sm">{detail.sub_car_model}</span></p>
+                                    )
+                            }
+
                         </li>
                         <li>
                             <p className="font-semibold"> ปีของรถยนต์ : <span className="font-medium text-sm">{detail.year_be

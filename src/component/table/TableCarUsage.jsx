@@ -48,18 +48,18 @@ const TableCarUsage = ({ data, page, limit, onDelete, onUpdate }) => {
                                                 }
                                                 if (e.key === 'Escape') cancelEdit()
                                             }}
-                                            className="text-center p-2 border rounded focus:outline-none"
+                                            className="p-2 border rounded focus:outline-none bg-white"
                                         />
                                     ) : (
                                         <span
-                                            onDoubleClick={() => startEdit(i)}
-                                            className="cursor-pointer hover:underline"
+                                            className="cursor-pointer"
                                         >
                                             {i.usage_name}
                                         </span>
                                     )}
                                 </td>
                                 <td className='flex gap-5 justify-center'>
+                                    <button onClick={() => startEdit(i)} className="btn btn-sm btn-soft btn-warning">แกไข</button>
                                     <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
                                 </td>
                             </tr>
