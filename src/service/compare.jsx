@@ -24,3 +24,12 @@ export const createPDF = (token, id) => {
         responseType: 'blob'
     })
 }
+
+export const createJPG = (token, id) => {
+    return api.get(`/api/jpg-compare/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        responseType: 'blob'
+    })
+}

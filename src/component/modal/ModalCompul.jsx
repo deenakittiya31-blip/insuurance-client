@@ -49,7 +49,7 @@ const ModalCompul = ({ form, onSubmit, onChange }) => {
                             width='w-auto'
                             title='vat'
                             name='vat'
-                            type='text'
+                            type='number'
                             placeholder='vat...'
                             onChange={onChange}
                             value={form.vat}

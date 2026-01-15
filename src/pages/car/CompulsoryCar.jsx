@@ -105,6 +105,7 @@ const CompulsoryCar = () => {
     }
 
     const handleUpdate = async (e) => {
+        console.log(form)
         e.preventDefault()
         try {
             const res = await updateCompulsory(token, idSelect, form)

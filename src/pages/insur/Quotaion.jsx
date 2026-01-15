@@ -5,7 +5,7 @@ import toast from "react-hot-toast"
 import { useParams } from "react-router-dom"
 import TableQuotation from "../../component/table/TableQuotation"
 import { createQuotationFields, deleteQuotation } from "../../service/quotation"
-import { createPDF, getDetailCompare } from "../../service/compare"
+import { createJPG, createPDF, getDetailCompare } from "../../service/compare"
 import { useEffect } from "react"
 import Swal from "sweetalert2"
 import UploadFormOne from "../../component/form/UploadFormOne"
@@ -264,26 +264,6 @@ const Quotaion = () => {
 
     }
 
-    const testCompulsory = (e) => {
-        e.preventDefault()
-        const selectedId = compulsoryByTab[activeTab]
-
-        if (selectedId === null || selectedId === 0) {
-            console.log('log compul test : 0')
-            return
-        }
-
-        const list = Object.values(compulsory)
-
-        const found = list.find(
-            c => Number(c.id) === Number(selectedId)
-        )
-
-        const amount = Number(found?.total ?? 0)
-
-        console.log('log compul test :', amount)
-    }
-
     const handleSaveQuotation = async (e) => {
         e.preventDefault()
 
@@ -379,6 +359,26 @@ const Quotaion = () => {
         }
     }
 
+    const createJPEG = async () => {
+        try {
+            const res = await createJPG(token, q_id)
+
+            const blob = new Blob([res.data], { type: 'image/jpeg' });
+            const url = window.URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `quotation_${q_id}.jpg`; // ชื่อไฟล์
+            document.body.appendChild(link);
+            link.click();
+
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     return (
         <div className='flex flex-col p-3 gap-5 font-prompt'>
             <div className="flex justify-between bg-main p-5 rounded-xl">
@@ -402,6 +402,7 @@ const Quotaion = () => {
                     </ul>
                 </div>
                 <button onClick={createComparePDF} className='btn bg-text-primary rounded-md px-7 text-white hover:bg-[#202b3b]'>พิมพ์ PDF</button>
+                <button onClick={createJPEG} className='btn bg-text-primary rounded-md px-7 text-white hover:bg-[#202b3b]'>พิมพ์ JPEG</button>
             </div>
             <div>
                 <div className="flex justify-center my-5 gap-5">
