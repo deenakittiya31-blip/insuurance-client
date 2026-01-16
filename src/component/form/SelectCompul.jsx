@@ -2,7 +2,7 @@ const SelectCompul = ({ onChange, value, options = [] }) => {
 
     // console.log(options)
     return (
-        <fieldset className="fieldset font-prompt text-text-primary p-0 w-75">
+        <fieldset className="fieldset font-prompt text-text-primary p-0 w-full">
             <legend className="fieldset-legend text-sm text-text-primary">ตัวเลือกพรบ. รถ</legend>
             <select
                 name='car_year_id'

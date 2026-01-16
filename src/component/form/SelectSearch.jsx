@@ -8,9 +8,8 @@ const SelectSearch = ({ options, value, onChange }) => {
         label: item.name
     }))
 
-    const selectedOption = formattedOptions.find(
-        opt => opt.value === value
-    )
+    const selectedOption =
+        formattedOptions.find(opt => opt.value === value) || null
 
     return (
         <div className='flex flex-col gap-1 justify-end'>
@@ -18,7 +17,9 @@ const SelectSearch = ({ options, value, onChange }) => {
             <Select
                 options={formattedOptions}
                 value={selectedOption}
-                onChange={(selected) => onChange(selected.value)}
+                onChange={(selected) =>
+                    onChange(selected ? selected.value : '')
+                }
                 placeholder="โปรดเลือก"
                 isClearable
             />

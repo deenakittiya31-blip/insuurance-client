@@ -13,6 +13,9 @@ import UploadFormSecond from "../../component/form/UploadFormSecond"
 import UploadFormThree from "../../component/form/UploadFormThree"
 import { listOption } from "../../service/car/Compulsory"
 import SelectCompul from "../../component/form/SelectCompul"
+import State from "../../component/quotation_about/State"
+import { BiSolidFilePdf, BiSolidFileJpg } from "react-icons/bi";
+import Badge from "../../component/quotation_about/Badge"
 
 const initialForm = {
     company_id: '',
@@ -148,6 +151,8 @@ const Quotaion = () => {
         try {
             const res = await getDetailCompare(token, q_id)
             const data = res.data.data
+
+            console.log(',kc]h;0hk')
 
             setDetail(data)
             setUsageID(data.usageid)
@@ -381,50 +386,25 @@ const Quotaion = () => {
 
     return (
         <div className='flex flex-col p-3 gap-5 font-prompt'>
-            <div className="flex justify-between bg-main p-5 rounded-xl">
-                <div className="gap-5 font-medium text-text-primary">
-                    <div className="flex gap-2">
-                        <p className="font-semibold">หมายเลขใบเสนอราคา : <span className="font-medium text-sm">{detail.q_id}</span></p>
-                        |
-                        <p className="font-semibold"> ประเภท : <span className="font-medium text-sm">{detail.usage}</span></p>
-                    </div>
-                    <ul>
-                        <li>
-                            <p className="font-semibold"> ชื่อยี่ห้อรถยนต์ : <span className="font-medium text-sm">{detail.car_brand}</span></p>
-                        </li>
-                        <li>
-                            {
-                                detail.car_model
-                                    ? (
-                                        <p className="font-semibold"> ชื่อรุ่นรถยนต์ : <span className="font-medium text-sm">{detail.car_model}</span></p>
-                                    )
-                                    : (
-                                        <p className="font-semibold"> ชื่อรุ่นรถยนต์ : <span className="font-medium text-sm">{detail.sub_car_model}</span></p>
-                                    )
-                            }
-
-                        </li>
-                        <li>
-                            <p className="font-semibold"> ปีของรถยนต์ : <span className="font-medium text-sm">{detail.year_be
-                            }/{detail.year_ad}</span></p>
-                        </li>
-                    </ul>
+            <div className="flex gap-5">
+                <div className="flex-1">
+                    <State data={detail} />
                 </div>
-                <button onClick={createComparePDF} className='btn bg-text-primary rounded-md px-7 text-white hover:bg-[#202b3b]'>พิมพ์ PDF</button>
-                <button onClick={createJPEG} className='btn bg-text-primary rounded-md px-7 text-white hover:bg-[#202b3b]'>พิมพ์ JPEG</button>
+                <div className="grid grid-rows-2 gap-5">
+                    <button onClick={createComparePDF} className='btn bg-text-primary rounded-md px-7 h-full text-white hover:bg-[#202b3b]'><BiSolidFilePdf size={20} /> PDF</button>
+                    <button onClick={createJPEG} className='btn bg-text-primary rounded-md px-7 h-full text-white hover:bg-[#202b3b]'><BiSolidFileJpg size={20} /> JPEG</button>
+                </div>
             </div>
-            <div>
+            <div className="w-full">
+                {/*แสดงเอกสารอัปโหลดสำเร็จ*/}
                 <div className="flex justify-center my-5 gap-5">
                     {Object.values(dataSuccess)
                         .filter(msg => msg)
                         .map((msg, index) => (
-                            <div key={index} className="flex items-center gap-2">
-                                <span className="text-green-600">✔</span>
-                                <span>{msg}</span>
-                            </div>
+                            <Badge key={index} msg={msg} />
                         ))}
                 </div>
-                <div role="tablist" className="tabs tabs-lift flex justify-center">
+                <div role="tablist" className="tabs tabs-lift flex justify-center text-text-primary">
                     <a
                         role="tab"
                         className={`tab font-medium ${activeTab === 1 ? "tab-active" : ""}`}
@@ -448,66 +428,30 @@ const Quotaion = () => {
                 </div>
                 <div className="flex flex-col gap-7 bg-white p-5 rounded-xl">
                     {activeTab === 1 && (
-                        <div className="flex justify-between">
-                            < UploadFormOne
-                                onChange={hdlOnChange}
-                                isLoading={loadingByTab[activeTab]}
-                                onSubmit={handleSubmit}
-                                form={formByTab[activeTab]}
-                            />
-                            <SelectCompul
-                                options={compulsory}
-                                value={compulsoryByTab[activeTab]}
-                                onChange={(value) =>
-                                    setCompulsoryByTab(prev => ({
-                                        ...prev,
-                                        [activeTab]: value
-                                    }))
-                                }
-                            />
-                        </div>
+                        < UploadFormOne
+                            onChange={hdlOnChange}
+                            isLoading={loadingByTab[activeTab]}
+                            onSubmit={handleSubmit}
+                            form={formByTab[activeTab]}
+                        />
                     )}
                     {activeTab === 2 && (
-                        <>
-                            <UploadFormSecond
-                                onChange={hdlOnChange}
-                                isLoading={loadingByTab[activeTab]}
-                                onSubmit={handleSubmit}
-                                form={formByTab[activeTab]}
-                            />
-                            <SelectCompul
-                                options={compulsory}
-                                value={compulsoryByTab[activeTab]}
-                                onChange={(value) =>
-                                    setCompulsoryByTab(prev => ({
-                                        ...prev,
-                                        [activeTab]: value
-                                    }))
-                                }
-                            />
-                        </>
+                        <UploadFormSecond
+                            onChange={hdlOnChange}
+                            isLoading={loadingByTab[activeTab]}
+                            onSubmit={handleSubmit}
+                            form={formByTab[activeTab]}
+                        />
                     )}
                     {activeTab === 3 && (
-                        <>
-                            <UploadFormThree
-                                onChange={hdlOnChange}
-                                isLoading={loadingByTab[activeTab]}
-                                onSubmit={handleSubmit}
-                                form={formByTab[activeTab]}
-                            />
-                            <SelectCompul
-                                options={compulsory}
-                                value={compulsoryByTab[activeTab]}
-                                onChange={(value) =>
-                                    setCompulsoryByTab(prev => ({
-                                        ...prev,
-                                        [activeTab]: value
-                                    }))
-                                }
-                            />
-                        </>
+                        <UploadFormThree
+                            onChange={hdlOnChange}
+                            isLoading={loadingByTab[activeTab]}
+                            onSubmit={handleSubmit}
+                            form={formByTab[activeTab]}
+                        />
                     )}
-                    <hr className="border-dashed border border-border" />
+                    {/* <hr className="border-dashed border border-border" /> */}
                     <div className="flex gap-5 h-192.5 overflow-y-clip">
                         <div className="flex-3 overflow-auto bg-zinc-800 p-4">
                             {pdfPreviewByTab[activeTab] ? (
@@ -522,7 +466,17 @@ const Quotaion = () => {
                                 </div>
                             )}
                         </div>
-                        <div className="flex-1/5 overflow-y-auto">
+                        <div className="flex flex-col gap-5 flex-1/5 overflow-y-auto">
+                            <SelectCompul
+                                options={compulsory}
+                                value={compulsoryByTab[activeTab]}
+                                onChange={(value) =>
+                                    setCompulsoryByTab(prev => ({
+                                        ...prev,
+                                        [activeTab]: value
+                                    }))
+                                }
+                            />
                             <TableQuotation
                                 data={ocrByTab[activeTab]}
                                 onChange={hdlFormChange}
@@ -536,7 +490,6 @@ const Quotaion = () => {
                 </div>
 
             </div>
-
         </div>
     )
 }

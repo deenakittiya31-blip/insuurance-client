@@ -67,8 +67,6 @@ const CompulsoryCar = () => {
             })
     }
 
-    console.log(compulsory)
-
     const hdlSubmit = async (e) => {
         e.preventDefault()
         try {

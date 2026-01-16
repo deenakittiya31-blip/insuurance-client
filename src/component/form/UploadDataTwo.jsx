@@ -33,7 +33,7 @@ const UploadTwo = ({ onChangeCompany, onChangePDF, form }) => {
                 </select>
             </fieldset>
             <div className='flex flex-col w-full font-prompt text-text-primary'>
-                <label className="text-sm font-semibold">เลือกไฟล์</label>
+                <label className="text-sm font-semibold">ไฟล์เอกสาร</label>
                 <input
                     onChange={onChangePDF}
                     type='file'

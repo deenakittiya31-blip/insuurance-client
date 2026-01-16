@@ -25,7 +25,6 @@ const UploadData = ({ onChangeCompany, onChangePDF, form }) => {
                                 key={i.id}
                                 value={i.id}
                             >
-                                {/* <img src={i.logo_url} className="w-5 h-5" /> */}
                                 {i.namecompany}
                             </option>
                         ))

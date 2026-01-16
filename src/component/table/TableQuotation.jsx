@@ -4,7 +4,7 @@ const TableQuotation = ({ data, onSubmit, onChange, quotation_id, onDelete }) =>
     return (
         <div className="flex flex-col gap-2 font-prompt text-text-primary">
             <div className='flex justify-between items-baseline-last'>
-                <h1 className="font-bold">📑 ข้อมูลทั้งหมด</h1>
+                <h1 className="font-bold text-xl">ข้อมูลจากเอกสาร</h1>
                 {
                     quotation_id && (
                         <button onClick={onDelete} type='button' className='btn bg-red-400 rounded-md px-7 text-white hover:bg-red-600'>เปลี่ยนไฟล์</button>

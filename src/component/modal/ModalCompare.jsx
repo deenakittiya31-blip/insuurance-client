@@ -66,7 +66,7 @@ const ModalCompare = ({ onSubmit, onChange, onChangeSelect, form, setForm, onClo
                             text='รุ่นรถยนต์'
                             data={carmodel}
                             name='car_model_id'
-                            value={form.car_model_id}
+                            value={form.car_model_id || null}
                             onChange={onChange}
                             valueKey='id'
                             labelKey='name'
@@ -78,7 +78,7 @@ const ModalCompare = ({ onSubmit, onChange, onChangeSelect, form, setForm, onClo
                             type='text'
                             placeholder='กรอกรายละเอียด'
                             onChange={onChange}
-                            value={form.sub_car_model}
+                            value={form.sub_car_model || null}
                         />
                         <fieldset className="fieldset font-prompt text-text-primary p-0">
                             <legend className="fieldset-legend text-sm text-text-primary">ปีรถยนต์</legend>

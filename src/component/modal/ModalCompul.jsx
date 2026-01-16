@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import Select from '../form/Select'
+import { TiArrowRightOutline } from "react-icons/ti";
 import TextInput from '../form/TextInput'
 import useActionStore from '../../store/action-store'
 
@@ -11,21 +11,35 @@ const ModalCompul = ({ form, onSubmit, onChange }) => {
         getCarTypeSelect();
     }, [])
 
+    console.log(cartype)
+
     return (
         <div className='font-prompt'>
             <button className="btn bg-main px-5 rounded-md text-white font-semibold" onClick={() => document.getElementById('modalcompul').showModal()}>เพิ่มข้อมูล</button>
             <dialog id="modalcompul" className="modal">
                 <form onSubmit={onSubmit} className="modal-box w-auto flex flex-col gap-5">
                     <h3 className="font-bold text-lg text-text-primary">เพิ่มข้อมูล พ.ร.บ. รถ</h3>
-                    <Select
-                        text='ประเภทรถ'
-                        data={cartype}
-                        value={form.car_type_id}
-                        name='car_type_id'
-                        onChange={onChange}
-                        valueKey='id'
-                        labelKey='type'
-                    />
+                    <fieldset className="fieldset font-prompt text-text-primary p-0">
+                        <legend className="fieldset-legend text-sm text-text-primary">ประเภทรถยนต์</legend>
+                        <select
+                            name='car_type_id'
+                            onChange={onChange}
+                            className="select w-full"
+                            value={form.car_type_id}
+                        >
+                            <option value="" disabled={true}>โปรดเลือก</option>
+                            {
+                                cartype.map((i) => (
+                                    <option
+                                        key={i.id}
+                                        value={i.id}
+                                    >
+                                        {i.type} <TiArrowRightOutline color='#FD7E14'/> {i.usage}
+                                    </option>
+                                ))
+                            }
+                        </select>
+                    </fieldset>
                     <div className="grid grid-cols-2 gap-5 items-end">
                         <TextInput
                             width='w-auto'
