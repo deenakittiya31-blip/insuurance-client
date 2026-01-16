@@ -18,7 +18,14 @@ const State = ({ data }) => {
 
             <div className="stat">
                 <div className="stat-figure">
-                    <TbCarSuv size={30} color="#314158" />
+                    <div className="avatar">
+                        <div className="w-10 rounded">
+                            <img
+                                src={data.logo_url}
+                                alt="logo car brand"
+                            />
+                        </div>
+                    </div>
                 </div>
                 <div className="stat-title">ยี่ห้อรถยนต์</div>
                 <div className="stat-value text-text-primary">{data.car_brand}</div>

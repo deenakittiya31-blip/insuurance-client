@@ -21,6 +21,7 @@ import Quotaion from '../pages/insur/Quotaion'
 import Compare from '../pages/insur/Compare'
 import Setting from '../pages/Setting'
 import CustomModel from '../pages/custom_page/CustomModel'
+import CustomModelDetail from '../pages/custom_page/CustomModelDetail'
 
 const Approutes = () => {
     return (
@@ -53,6 +54,7 @@ const Approutes = () => {
                     <Route path='compare/:q_id' element={<Compare />} />
                     <Route path='setting' element={<Setting />} />
                     <Route path='custommodel' element={<CustomModel />} />
+                    <Route path='custommodel-detail/:id' element={<CustomModelDetail />} />
                 </Route>
             </Routes>
         </BrowserRouter>
