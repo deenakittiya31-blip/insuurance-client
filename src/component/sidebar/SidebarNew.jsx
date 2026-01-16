@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom';
 import { BsLayoutTextSidebar } from "react-icons/bs";
-import { RiSettings4Line } from "react-icons/ri";
 import { IoIosArrowDown } from "react-icons/io";
-import { LuBrain } from "react-icons/lu";
-import { adminCar, adminInsur, adminSetting } from '../../link/link';
+import { adminCar, adminInsur, adminSetting } from '../../utils/link';
 import toast from 'react-hot-toast';
 import useInsureAuth from '../../store/auth-store';
 import { TbLogout } from "react-icons/tb";

@@ -3,9 +3,11 @@ import TableModelFields from "../../component/table/TableModelFields"
 import { IoIosAdd } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
-import { readFieldsModel, readModelDetail, updateFieldsModel } from "../../service/custommodel";
+import { createFieldsModel, deleteFieldModel, readFieldsModel, readModelDetail, updateFieldsModel } from "../../service/custommodel";
 import EditFieldModel from '../../component/edit/editFieldModel'
 import toast from "react-hot-toast";
+import ModalFieldModel from "../../component/modal/ModalFieldModel";
+import Swal from "sweetalert2";
 
 const initialState = {
     key_name: '',
@@ -58,10 +60,34 @@ const CustomModelDetail = () => {
         setForm(initialState)
     }
 
-    const handleUpdate = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+
+        const payload = {
+            ...form,
+            company_id: id
+        }
+
+        try {
+            const res = await createFieldsModel(payload)
+            document.getElementById('modalfieldmodel').close();
+            setForm(initialState)
+            getModelDetail();
+            toast.success(res.data.msg)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const handleUpdate = async (e) => {
+        e.preventDefault()
+
         try {
             const res = await updateFieldsModel(idSelect, form)
             toast.success(res.data.msg)
+            setForm(initialState)
+            closeForm()
+            getModelDetail()
         } catch (err) {
             console.log(err)
         }
@@ -82,13 +108,14 @@ const CustomModelDetail = () => {
         if (!result.isConfirmed) return
 
         try {
-
+            const res = await deleteFieldModel(id)
+            getModelDetail()
+            toast.success(res.data.msg)
         } catch (err) {
             console.log(err)
         }
     }
 
-    console.log(data)
     return (
         <div className='flex flex-col gap-5 h-auto p-5 font-prompt'>
             <Title
@@ -97,7 +124,11 @@ const CustomModelDetail = () => {
             <div className='bg-white rounded-2xl p-5 '>
                 <div className="flex justify-between items-center mb-5">
                     <h3 className="font-semibold text-text-primary tracking-wide">ฟิดล์ที่ต้องการดึง</h3>
-                    <button className="btn rounded-md px-3 text-white bg-main hover:bg-second"><IoIosAdd size={25} /> เพิ่ม Row</button>
+                    <ModalFieldModel
+                        value={form}
+                        onSubmit={handleSubmit}
+                        onChange={hdlOnChange}
+                    />
                 </div>
                 <TableModelFields
                     data={data}
@@ -107,7 +138,7 @@ const CustomModelDetail = () => {
             </div>
             <EditFieldModel
                 value={form}
-                onchange={hdlOnChange}
+                onChange={hdlOnChange}
                 onSubmit={handleUpdate}
                 isOpen={open}
                 onClose={closeForm}

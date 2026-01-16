@@ -8,6 +8,10 @@ export const deleteModelCompany = (company_id) => {
     return api.delete(`api/delete-model/${company_id}`)
 }
 
+export const deleteFieldModel = (id) => {
+    return api.delete(`api/delete-fieldsmodel/${id}`)
+}
+
 export const readModelDetail = (id) => {
     return api.get(`api/read-model/${id}`)
 }
@@ -18,4 +22,12 @@ export const readFieldsModel = (id) => {
 
 export const updateFieldsModel = (id, form) => {
     return api.patch(`api/update-fieldsmodel/${id}`, form)
+}
+
+export const createFieldsModel = (form) => {
+    return api.post('api/create-fieldsmodel', form)
+}
+
+export const createModel = (payload) => {
+    return api.post('api/create-model', payload)
 }

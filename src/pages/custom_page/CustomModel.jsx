@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react'
 import Title from '../../component/form/Title'
-import { deleteModelCompany, listModelCompany } from '../../service/custommodel'
+import { createModel, deleteModelCompany, listModelCompany } from '../../service/custommodel'
 import TableCompanyModel from '../../component/table/TableCompanyModel'
 import Pagination from '../../component/paginationComponent/Pagination'
 import Swal from 'sweetalert2'
 import toast from 'react-hot-toast'
+import ModalModel from '../../component/modal/ModalModel'
+import { dataQuotation } from '../../utils/data'
 
 const CustomModel = () => {
     const [data, setData] = useState([])
+    const [form, setForm] = useState({ company_id: '' })
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
     const limit = 10;
@@ -22,6 +25,19 @@ const CustomModel = () => {
             const res = await listModelCompany(page)
             setData(res.data.data)
             setTotal(res.data.total)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const handleSubmit = async () => {
+        try {
+            const res = await createModel({
+                company_id: form.company_id,
+                fields: dataQuotation
+            })
+
+            toast.success(res.data.msg)
         } catch (err) {
             console.log(err)
         }
@@ -52,7 +68,18 @@ const CustomModel = () => {
 
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
-            <Title title='ปรับแต่งโมเดลดึงข้อมูลเอกสาร' subtitle='ข้อมูลบริษัทที่มีโมเดลดึงเอกสาร' />
+            <div className='flex justify-between'>
+                <Title title='ปรับแต่งโมเดลดึงข้อมูลเอกสาร' subtitle='ข้อมูลบริษัทที่มีโมเดลดึงเอกสาร' />
+                <ModalModel
+                    value={form}
+                    onSubmit={handleSubmit}
+                    onChange={(e) =>
+                        setForm(prev => ({
+                            ...prev,
+                            company_id: e.target.value
+                        }))
+                    } />
+            </div>
             <div className='bg-white rounded-2xl p-5'>
                 <TableCompanyModel
                     data={data}
