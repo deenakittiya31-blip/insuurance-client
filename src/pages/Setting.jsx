@@ -44,6 +44,8 @@ const Setting = () => {
         }
     }
 
+
+
     return (
         <div className='flex flex-col gap-5 p-5'>
             <Title title='การตั้งค่าระบบ' />
@@ -74,10 +76,10 @@ const Setting = () => {
                 </form>
                 <form className="text-text-primary">
                     <label className='font-normal mb-2 font-prompt text-sm capitalize text-gray-400'>ตั้งค่าการล็อกอิน</label>
-                    <div className="flex gap-5">
+                    <div className="grid lg:flex gap-5">
                         {
                             loginWith.map((i) => (
-                                <fieldset key={i.id} className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
+                                <fieldset key={i.id} className="fieldset bg-base-100 border-base-300 rounded-box lg:w-64 border p-4">
                                     <legend className="fieldset-legend font-inter text-sm">Login {i.login_with}</legend>
                                     <label className="label font-prompt">
                                         <input

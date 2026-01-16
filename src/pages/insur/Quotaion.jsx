@@ -210,6 +210,13 @@ const Quotaion = () => {
             }))
         } catch (err) {
             console.log(err)
+            const message =
+                err.response?.data?.message ||
+                err.response?.data?.msg ||
+                'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง'
+
+            toast.error(message)
+
         } finally {
             setLoadingByTab(prev => ({
                 ...prev,
@@ -269,7 +276,8 @@ const Quotaion = () => {
 
     }
 
-    const handleSaveQuotation = async (e) => {
+    //บันทึกข้อมูลที่ได้มาจาก ocr
+    const handleSaveQuotationFields = async (e) => {
         e.preventDefault()
 
         const quotationId = quotationIdByTab[activeTab]
@@ -387,6 +395,7 @@ const Quotaion = () => {
     return (
         <div className='flex flex-col p-3 gap-5 font-prompt'>
             <div className="flex gap-5">
+                {/*ส่วนแสดงข้อมูลเกี่ยวกับใบเสนอราคาและปุ่มดาวน์โหลด pdf and jpeg*/}
                 <div className="flex-1">
                     <State data={detail} />
                 </div>
@@ -456,7 +465,7 @@ const Quotaion = () => {
                         <div className="flex-3 overflow-auto bg-zinc-800 p-4">
                             {pdfPreviewByTab[activeTab] ? (
                                 <iframe
-                                    src={`${pdfPreviewByTab[activeTab]}#zoom=80`}
+                                    src={`${pdfPreviewByTab[activeTab]}#zoom=85`}
                                     className="w-full h-full bg-white rounded"
                                     title="PDF Preview"
                                 />
@@ -480,7 +489,7 @@ const Quotaion = () => {
                             <TableQuotation
                                 data={ocrByTab[activeTab]}
                                 onChange={hdlFormChange}
-                                onSubmit={handleSaveQuotation}
+                                onSubmit={handleSaveQuotationFields}
                                 quotation_id={quotationIdByTab[activeTab]}
                                 onDelete={removeQuotation}
                             // disabledSave={isSaveDisabled}

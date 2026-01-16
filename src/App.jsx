@@ -11,6 +11,9 @@ function App() {
         <Toaster
           position="top-center"
           reverseOrder={false}
+          toastOptions={{
+            className: 'font-prompt'
+          }}
         />
         <Approutes />
       </GoogleOAuthProvider>

@@ -4,7 +4,7 @@ import { BsLayoutTextSidebar } from "react-icons/bs";
 import { RiSettings4Line } from "react-icons/ri";
 import { IoIosArrowDown } from "react-icons/io";
 import { LuBrain } from "react-icons/lu";
-import { adminCar, adminInsur } from '../../link/link';
+import { adminCar, adminInsur, adminSetting } from '../../link/link';
 import toast from 'react-hot-toast';
 import useInsureAuth from '../../store/auth-store';
 import { TbLogout } from "react-icons/tb";
@@ -46,37 +46,30 @@ const SidebarNew = () => {
                 ${collapsed ? 'opacity-0 -translate-x-50 pointer-events-none' : 'opacity-100 translate-x-0'}
             `}>
                 <div className='flex flex-col flex-1 gap-y-5 text-text-primary'>
+                    {/* หัวข้อหลัก 1 */}
                     <div>
                         <h1 className='font-semibold mb-5 pl-7 lg:text-lg'>ตั้งค่า</h1>
                         <div className='flex flex-col gap-4'>
-                            <NavLink
-                                to='/admin/setting'
-                                className={({ isActive }) =>
-                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                            {
+                                adminSetting.map((i, idx) => (
+                                    <NavLink
+                                        to={i.link}
+                                        key={idx}
+                                        end
+                                        className={({ isActive }) =>
+                                            `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
                                         ${isActive ? 'text-main active' : 'hover:text-main'}`
-                                }
-                            >
-                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
-                                <div className='w-full flex items-center gap-3'>
-                                    <LuBrain className='size-4' />
-                                    <p className='group-[.active]:text-current'>ปรับแต่งโมเดลเอกสาร</p>
-                                </div>
+                                        }
+                                    >
+                                        <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                        <div className='w-full flex items-center gap-3'>
+                                            {i.icon}
+                                            <p className='group-[.active]:text-current'>{i.title}</p>
+                                        </div>
 
-                            </NavLink>
-                            <NavLink
-                                to='/admin/setting'
-                                className={({ isActive }) =>
-                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
-                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
-                                }
-                            >
-                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
-                                <div className='w-full flex items-center gap-3'>
-                                    <RiSettings4Line className='size-4' />
-                                    <p className='group-[.active]:text-current'>การตั้งค่าระบบ</p>
-                                </div>
-
-                            </NavLink>
+                                    </NavLink>
+                                ))
+                            }
                         </div>
                     </div>
                     {/* หัวข้อหลัก 2 */}
@@ -113,7 +106,7 @@ const SidebarNew = () => {
                         }
 
                     </div>
-                    {/* หัวข้อหลัก 2 */}
+                    {/* หัวข้อหลัก 3 */}
                     <div>
                         <div className='flex justify-between items-center pl-7 pr-3 mb-5'>
                             <h1 className='font-semibold lg:text-lg'>รถยนต์</h1>

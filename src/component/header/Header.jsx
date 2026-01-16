@@ -110,15 +110,6 @@ const Header = () => {
                     onSubmit={hldOnSubmit}
                     setForm={setForm}
                 />
-                <div>
-                    <Link to='/admin/setting' >
-                        <button className='btn flex items-center gap-3 bg-white px-3 rounded-md text-main'>
-                            <IoSettings /> ตั้งค่า
-                        </button>
-
-                    </Link>
-
-                </div>
             </div>
         </header >
     )

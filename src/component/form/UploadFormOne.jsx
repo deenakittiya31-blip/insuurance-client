@@ -16,11 +16,11 @@ const UploadFormOne = ({ onChange, isLoading, onSubmit, form }) => {
     return (
         <form onSubmit={onSubmit} className="flex gap-5 items-end">
             {selectedCompany?.logo_url && (
-                <img
-                    src={selectedCompany.logo_url}
-                    className="w-14 h-14 rounded-sm object-contain"
-                    alt="logo"
-                />
+                <div className="avatar">
+                    <div className="w-14 rounded">
+                        <img src={selectedCompany.logo_url} className="object-contain" />
+                    </div>
+                </div>
             )}
             <fieldset className="fieldset w-full font-prompt text-text-primary p-0">
                 <p className="fieldset-legend text-sm text-text-primary p-0">ชื่อบริษัท</p>
@@ -52,13 +52,13 @@ const UploadFormOne = ({ onChange, isLoading, onSubmit, form }) => {
             <button
                 type="submit"
                 disabled={isLoading || !form}
-                className="btn btn-neutral">
+                className="btn bg-main rounded-md px-7 py-2.5 h-full text-white hover:bg-second">
                 {isLoading ? (
                     <span className="flex items-center gap-2">
-                        <span className="loading loading-spinner loading-sm"></span>
+                        <span className="loading loading-dots loading-sm"></span>
                     </span>
                 ) : (
-                    'Upload'
+                    'อัปโหลดเอกสาร'
                 )}
             </button>
         </form>
