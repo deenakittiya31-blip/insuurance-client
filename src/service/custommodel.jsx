@@ -28,6 +28,6 @@ export const createFieldsModel = (form) => {
     return api.post('api/create-fieldsmodel', form)
 }
 
-export const createModel = (payload) => {
-    return api.post('api/create-model', payload)
+export const createModel = (company_id) => {
+    return api.post('api/create-model', { company_id })
 }

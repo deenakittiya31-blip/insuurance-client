@@ -1,4 +1,4 @@
-module.exports.dataQuotation = [
+export const quotation = [
     {
         key_name: 'quotation_number',
         description: 'เลขที่ใบเสนอราคา',

@@ -6,7 +6,7 @@ import Pagination from '../../component/paginationComponent/Pagination'
 import Swal from 'sweetalert2'
 import toast from 'react-hot-toast'
 import ModalModel from '../../component/modal/ModalModel'
-import { dataQuotation } from '../../utils/data'
+import { quotation } from '../../utils/dataQuotation'
 
 const CustomModel = () => {
     const [data, setData] = useState([])
@@ -30,13 +30,13 @@ const CustomModel = () => {
         }
     }
 
-    const handleSubmit = async () => {
-        try {
-            const res = await createModel({
-                company_id: form.company_id,
-                fields: dataQuotation
-            })
+    const handleSubmit = async (e) => {
+        e.preventDefault()
 
+        try {
+            const res = await createModel(form.company_id)
+            setForm('')
+            document.getElementById('modalmodel').close()
             toast.success(res.data.msg)
         } catch (err) {
             console.log(err)
