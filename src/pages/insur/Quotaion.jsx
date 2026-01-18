@@ -4,7 +4,7 @@ import { createAkson } from "../../service/aksorn"
 import toast from "react-hot-toast"
 import { useParams } from "react-router-dom"
 import TableQuotation from "../../component/table/TableQuotation"
-import { createQuotationFields, deleteQuotation } from "../../service/quotation"
+import { createQuotationFields, deleteQuotation, readQuotationFields, updateQuotationFields } from "../../service/quotation"
 import { createJPG, createPDF, getDetailCompare } from "../../service/compare"
 import { useEffect } from "react"
 import Swal from "sweetalert2"
@@ -75,6 +75,12 @@ const Quotaion = () => {
         1: null,
         2: null,
         3: null
+    })
+
+    const [disabledButtonTab, setDisabledButton] = useState({
+        1: false,
+        2: false,
+        3: false
     })
 
     const isSaveDisabled =
@@ -151,8 +157,6 @@ const Quotaion = () => {
         try {
             const res = await getDetailCompare(token, q_id)
             const data = res.data.data
-
-            console.log(',kc]h;0hk')
 
             setDetail(data)
             setUsageID(data.usageid)
@@ -292,7 +296,7 @@ const Quotaion = () => {
 
         const selectedId = compulsoryByTab[activeTab]
 
-        if (selectedId === null || selectedId === 0) {
+        if (selectedId === null) {
             console.log('log compul test : 0')
             return
         }
@@ -312,11 +316,52 @@ const Quotaion = () => {
 
         try {
             const res = await createQuotationFields(token, quotationId, payload)
-
             toast.success(res.data.msg)
+
+            setDisabledButton(prev => ({
+                ...prev,
+                [activeTab]: true
+            }))
         } catch (err) {
             console.log(err)
             toast.error('บันทึกไม่สำเร็จ')
+        }
+    }
+    console.log(quotationIdByTab[activeTab])
+
+    const handleReadQuotationFields = async (e) => {
+        e.preventDefault()
+
+        setDisabledButton(prev => ({
+            ...prev,
+            [activeTab]: false
+        }))
+
+        console.log(quotationIdByTab[activeTab])
+
+        try {
+            //ต้องการ quotation id ไปดึงข้อมูล fields และเก็บไว้  
+            const res = await readQuotationFields(quotationIdByTab[activeTab])
+
+            setOcrByTab(prev => ({
+                ...prev,
+                [activeTab]: res.data.data
+            }))
+
+            console.log('data read', ocrByTab[activeTab])
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const handlepdateFieldQotation = async (e) => {
+        e.preventDefault()
+
+        try {
+            //รับ id ของฟิลด์ที่อัปเดต field_value
+            const res = await updateQuotationFields()
+        } catch (err) {
+            console.log(err)
         }
     }
 
@@ -492,7 +537,8 @@ const Quotaion = () => {
                                 onSubmit={handleSaveQuotationFields}
                                 quotation_id={quotationIdByTab[activeTab]}
                                 onDelete={removeQuotation}
-                            // disabledSave={isSaveDisabled}
+                                buttonDisabled={disabledButtonTab[activeTab]}
+                                onRead={handleReadQuotationFields}
                             />
                         </div>
                     </div>

@@ -12,7 +12,7 @@ export const adminInsur = [
     {
         icon: <FaRegBuilding className='size-4' />,
         title: 'บริษัทประกัน',
-        link: '/admin'
+        link: '/admin/insurance-company'
     },
     {
         icon: <LuShield className='size-4' />,

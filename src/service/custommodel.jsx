@@ -24,6 +24,10 @@ export const updateFieldsModel = (id, form) => {
     return api.patch(`api/update-fieldsmodel/${id}`, form)
 }
 
+export const updateAdditional = (id, additional) => {
+    return api.put(`api/update-additional/${id}`, { additional })
+}
+
 export const createFieldsModel = (form) => {
     return api.post('api/create-fieldsmodel', form)
 }

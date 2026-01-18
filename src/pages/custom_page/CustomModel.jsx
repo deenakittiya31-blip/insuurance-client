@@ -35,6 +35,7 @@ const CustomModel = () => {
 
         try {
             const res = await createModel(form.company_id)
+            getListModelCompany(page)
             setForm('')
             document.getElementById('modalmodel').close()
             toast.success(res.data.msg)

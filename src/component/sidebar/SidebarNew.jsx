@@ -6,6 +6,7 @@ import { adminCar, adminInsur, adminSetting } from '../../utils/link';
 import toast from 'react-hot-toast';
 import useInsureAuth from '../../store/auth-store';
 import { TbLogout } from "react-icons/tb";
+import { AiOutlineHome } from "react-icons/ai";
 
 const SidebarNew = () => {
     const { token, actionLogout } = useInsureAuth();
@@ -45,6 +46,25 @@ const SidebarNew = () => {
             `}>
                 <div className='flex flex-col flex-1 gap-y-5 text-text-primary'>
                     {/* หัวข้อหลัก 1 */}
+                    <div>
+                        <div className='flex flex-col gap-4'>
+                            <NavLink
+                                to='/admin'
+                                end
+                                className={({ isActive }) =>
+                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
+                                }
+                            >
+                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                <div className='w-full flex items-center gap-3'>
+                                    <AiOutlineHome className='size-4' />
+                                    <p className='group-[.active]:text-current'>หน้าหลัก</p>
+                                </div>
+
+                            </NavLink>
+                        </div>
+                    </div>
                     <div>
                         <h1 className='font-semibold mb-5 pl-7 lg:text-lg'>ตั้งค่า</h1>
                         <div className='flex flex-col gap-4'>

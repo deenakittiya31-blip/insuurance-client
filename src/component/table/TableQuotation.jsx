@@ -1,6 +1,7 @@
+import { numberFormat } from '../../utils/numeral'
 import TextInput from '../form/TextInput'
 
-const TableQuotation = ({ data, onSubmit, onChange, quotation_id, onDelete }) => {
+const TableQuotation = ({ data, onSubmit, onChange, quotation_id, onDelete, buttonDisabled, onRead }) => {
     return (
         <div className="flex flex-col gap-2 font-prompt text-text-primary">
             <div className='flex justify-between items-baseline-last'>
@@ -154,7 +155,7 @@ const TableQuotation = ({ data, onSubmit, onChange, quotation_id, onDelete }) =>
                     name='additional_bail_bond'
                     type='text'
                     placeholder='กรอกข้อมูล...'
-                    value={data.additional_bail_bond || ''}
+                    value={numberFormat(data.additional_bail_bond || '')}
                     onChange={onChange}
                 />
                 <TextInput
@@ -165,9 +166,15 @@ const TableQuotation = ({ data, onSubmit, onChange, quotation_id, onDelete }) =>
                     placeholder='กรอกข้อมูล...'
                     value={data.additional_personal_permanent_driver_number || ''}
                     onChange={onChange}
+                    readOnly
                 />
-                <div className=''>
-                    <button type='submit' className='btn rounded-md px-7 text-white bg-lime-500 hover:bg-lime-600'>บันทึก</button>
+                <div className='flex gap-5'>
+                    {
+                        buttonDisabled && (
+                            <button type='button' onClick={onRead} className='btn rounded-md px-7 text-white bg-yellow-400 hover:bg-yellow-600 '>แก้ไข</button>
+                        )
+                    }
+                    <button type='submit' disabled={buttonDisabled} className={`btn rounded-md px-7 text-white ${buttonDisabled ? 'bg-gray-400' : 'bg-lime-500'} hover:bg-lime-600`}>บันทึก</button>
                 </div>
             </form>
         </div>

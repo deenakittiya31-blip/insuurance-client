@@ -26,9 +26,7 @@ const SelectCompul = ({ onChange, value, options = [] }) => {
                             key={i.id}
                             value={i.id}
                         >
-                            รหัส <span className="text-green-600">{i.code}</span>
-                            ประเภท <span className="text-blue-600">{i.type}</span>
-                            ค่าพรบ. <span className="text-orange-600">{i.total}</span>
+                            รหัส {i.code} | ประเภท {i.type} | ค่าพรบ. {i.total}
                         </option>
                     ))
                 }

@@ -22,6 +22,7 @@ import Compare from '../pages/insur/Compare'
 import Setting from '../pages/Setting'
 import CustomModel from '../pages/custom_page/CustomModel'
 import CustomModelDetail from '../pages/custom_page/CustomModelDetail'
+import Home from '../pages/Home'
 
 const Approutes = () => {
     return (
@@ -39,7 +40,8 @@ const Approutes = () => {
                             <Layout />
                         </ProtectRoute>
                     }>
-                    <Route index element={<InsurCompany />} />
+                    <Route index element={<Home />} />
+                    <Route path='insurance-company' element={<InsurCompany />} />
                     <Route path='cartype' element={<Cartype />} />
                     <Route path='caryear' element={<CarYear />} />
                     <Route path='usagecar' element={<UsageCar />} />

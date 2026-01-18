@@ -1,6 +1,6 @@
 import React from 'react'
-import Select from '../form/Select'
 import TextInput from '../form/TextInput'
+import Select from '../form/Select'
 
 const ModalCarModel = ({ form, carbrand, onSubmit, onChange }) => {
     return (

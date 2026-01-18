@@ -3,11 +3,12 @@ import TableModelFields from "../../component/table/TableModelFields"
 import { IoIosAdd } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
-import { createFieldsModel, deleteFieldModel, readFieldsModel, readModelDetail, updateFieldsModel } from "../../service/custommodel";
+import { createFieldsModel, deleteFieldModel, readFieldsModel, readModelDetail, updateAdditional, updateFieldsModel } from "../../service/custommodel";
 import EditFieldModel from '../../component/edit/editFieldModel'
 import toast from "react-hot-toast";
 import ModalFieldModel from "../../component/modal/ModalFieldModel";
 import Swal from "sweetalert2";
+import TextArea from "../../component/form/TextArea";
 
 const initialState = {
     key_name: '',
@@ -17,6 +18,8 @@ const initialState = {
 
 const CustomModelDetail = () => {
     const [data, setData] = useState([])
+    const [additional, setAdditional] = useState('')
+    const [additionalId, setAdditionalId] = useState(null)
     const [form, setForm] = useState(initialState)
     const [open, setOpen] = useState(false)
     const [idSelect, setIdSelect] = useState(null)
@@ -31,11 +34,13 @@ const CustomModelDetail = () => {
         try {
             const res = await readModelDetail(id)
             setData(res.data.data)
+            setAdditional(res.data.additional.additional)
+            setAdditionalId(res.data.additional.id)
         } catch (err) {
             console.log(err)
         }
     }
-
+    console.log(additionalId)
     const hdlOnChange = (e) => {
         setForm({
             ...form,
@@ -116,12 +121,37 @@ const CustomModelDetail = () => {
         }
     }
 
+    const handleUpdateAdditional = async (e) => {
+        e.preventDefault()
+        try {
+            const res = await updateAdditional(additionalId, additional)
+            console.log('UPDATE id:', additionalId)
+            getModelDetail()
+            toast.success(res.data.msg)
+        } catch (err) {
+            console.log(err)
+            toast.error('บันทึกไม่สำเร็จ')
+        }
+    }
+
     return (
         <div className='flex flex-col gap-5 h-auto p-5 font-prompt'>
             <Title
                 title='การกำหนดค่าฟิลด์'
             />
-            <div className='bg-white rounded-2xl p-5 '>
+            <div className='flex flex-col gap-5 bg-white rounded-2xl p-5 '>
+                <div>
+                    <h3 className="font-semibold text-text-primary tracking-wide">คำแนะนำเพิ่มเติม</h3>
+                    <TextArea
+                        value={additional}
+                        onChange={(e) => setAdditional(e.target.value)}
+                    />
+                    <div className="flex justify-end">
+                        <button
+                            onClick={handleUpdateAdditional}
+                            className="btn btn-soft btn-sm btn-neutral text-white">บันทึก</button>
+                    </div>
+                </div>
                 <div className="flex justify-between items-center mb-5">
                     <h3 className="font-semibold text-text-primary tracking-wide">ฟิดล์ที่ต้องการดึง</h3>
                     <ModalFieldModel
