@@ -215,8 +215,11 @@ const Quotaion = () => {
 
             toast.error(
                 err.response?.data?.message ||
+                err.response?.data?.msg ||
                 'เกิดข้อผิดพลาด'
             )
+
+            //แก้ error
 
         } finally {
             setLoadingByTab(prev => ({
