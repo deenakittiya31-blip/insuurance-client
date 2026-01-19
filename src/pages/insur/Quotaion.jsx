@@ -405,14 +405,14 @@ const Quotaion = () => {
 
     return (
         <div className='flex flex-col p-3 gap-5 font-prompt'>
-            <div className="flex gap-5">
+            <div className="flex gap-3">
                 {/*ส่วนแสดงข้อมูลเกี่ยวกับใบเสนอราคาและปุ่มดาวน์โหลด pdf and jpeg*/}
                 <div className="flex-1">
                     <State data={detail} />
                 </div>
-                <div className="grid grid-rows-2 gap-5">
-                    <button onClick={createComparePDF} className='btn bg-text-primary rounded-md px-7 h-full text-white hover:bg-[#202b3b]'><BiSolidFilePdf size={20} /> PDF</button>
-                    <button onClick={createJPEG} className='btn bg-text-primary rounded-md px-7 h-full text-white hover:bg-[#202b3b]'><BiSolidFileJpg size={20} /> JPEG</button>
+                <div className="grid grid-rows-2 gap-3">
+                    <button onClick={createComparePDF} className='btn bg-text-primary rounded-md h-full text-white hover:bg-[#202b3b]'><BiSolidFilePdf size={20} /> PDF</button>
+                    <button onClick={createJPEG} className='btn bg-text-primary rounded-md h-full text-white hover:bg-[#202b3b]'><BiSolidFileJpg size={20} /> JPEG</button>
                 </div>
             </div>
             <div className="w-full">

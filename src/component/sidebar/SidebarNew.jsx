@@ -7,13 +7,30 @@ import toast from 'react-hot-toast';
 import useInsureAuth from '../../store/auth-store';
 import { TbLogout } from "react-icons/tb";
 import { AiOutlineHome } from "react-icons/ai";
+import ModalCompare from '../modal/ModalCompare';
+import ModalKeyInCompare from '../modal/modalKeyInCompare';
+import useActionStore from '../../store/action-store';
+import { createCompare } from '../../service/compare';
+
+const initialState = {
+    to_name: '',
+    details: '',
+    car_brand_id: '',
+    car_model_id: '',
+    car_year_id: '',
+    car_usage_id: '',
+    sub_car_model: ''
+}
 
 const SidebarNew = () => {
     const { token, actionLogout } = useInsureAuth();
+    const user = useInsureAuth((s) => s.user)
     const navigate = useNavigate();
     const [collapsed, setCollapsed] = useState(false)
     const [insure, setInsur] = useState(false)
     const [car, setCar] = useState(false)
+    const [form, setForm] = useState(initialState)
+    const { getCarModelSelect } = useActionStore();
 
     const hdlLogout = () => {
         actionLogout()
@@ -21,6 +38,79 @@ const SidebarNew = () => {
         toast.success('ออกจากระบบสำเร็จ')
     }
 
+    const hdlOnChange = async (e) => {
+        const { name, value } = e.target
+
+        setForm(prev => ({
+            ...prev,
+            [name]: value,
+        }))
+    }
+
+    const hdlSelectChange = async (name, value) => {
+        setForm(prev => ({
+            ...prev,
+            [name]: value,
+            ...(name === 'car_brand_id' && { car_model_id: '' })
+        }))
+
+        if (name === 'car_brand_id') {
+            await getCarModelSelect(value)
+        }
+    }
+
+
+    const hdlOnClose = () => {
+        setForm(initialState)
+        document.getElementById('modalcompare').close()
+    }
+
+    const hdlOnCloseKeyIn = () => {
+        setForm(initialState)
+        document.getElementById('modalcomparekeyin').close()
+    }
+
+    const hldOnSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const payload = {
+                ...form,
+                offer: user.name
+            };
+
+            const res = await createCompare(token, payload)
+            document.getElementById('modalcompare').close()
+            setForm(initialState)
+            toast.success('สร้างใบเสนอราคาเรียบร้อย')
+
+            navigate(`/admin/quotation/${res.data.q_id}`)
+        } catch (err) {
+            console.log(err)
+            toast.error('สร้างใบเสนอราคาไม่สำเร็จ')
+        }
+    }
+
+    const hldOnSubmitKeyIn = async (e) => {
+        e.preventDefault();
+
+        try {
+            const payload = {
+                ...form,
+                offer: user.name
+            };
+
+            const res = await createCompare(token, payload)
+            document.getElementById('modalcomparekeyin').close()
+            setForm(initialState)
+            toast.success('สร้างใบเสนอราคาเรียบร้อย')
+
+            navigate(`/admin/compare/${res.data.q_id}`)
+        } catch (err) {
+            console.log(err)
+            toast.error('สร้างใบเสนอราคาไม่สำเร็จ')
+        }
+    }
     return (
         <aside
             className={`
@@ -63,6 +153,31 @@ const SidebarNew = () => {
                                 </div>
 
                             </NavLink>
+                        </div>
+                    </div>
+                    <div>
+                        <h1 className='font-semibold mb-5 pl-7 lg:text-lg'>ใบเสนอราคา</h1>
+                        <div className='flex flex-col gap-4'>
+                            <div className='flex gap-5 items-center text-sm transition duration-300 ease-in-out pl-7'>
+                                <ModalCompare
+                                    form={form}
+                                    onChange={hdlOnChange}
+                                    onChangeSelect={hdlSelectChange}
+                                    onClose={hdlOnClose}
+                                    onSubmit={hldOnSubmit}
+                                    setForm={setForm}
+                                />
+                            </div>
+                            <div className='flex gap-5 items-center text-sm transition duration-300 ease-in-out pl-7'>
+                                <ModalKeyInCompare
+                                    form={form}
+                                    onChange={hdlOnChange}
+                                    onChangeSelect={hdlSelectChange}
+                                    onClose={hdlOnCloseKeyIn}
+                                    onSubmit={hldOnSubmitKeyIn}
+                                    setForm={setForm}
+                                />
+                            </div>
                         </div>
                     </div>
                     <div>

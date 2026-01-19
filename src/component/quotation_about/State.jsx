@@ -11,11 +11,10 @@ const State = ({ data }) => {
                 <div className="stat-figure">
                     <IoAttachOutline size={30} color="#314158" />
                 </div>
-                <div className="stat-title ">หมายเลขใบเสนอราคา</div>
-                <div className="stat-value text-text-primary">{data.q_id}</div>
+                <div className="stat-title">หมายเลขใบเสนอราคา</div>
+                <div className="stat-value text-text-primary text-3xl">{data.q_id}</div>
                 <div className="stat-desc">ประเภทการใช้งาน : {data.usage}</div>
             </div>
-
             <div className="stat">
                 <div className="stat-figure">
                     <div className="avatar">
@@ -28,7 +27,7 @@ const State = ({ data }) => {
                     </div>
                 </div>
                 <div className="stat-title">ยี่ห้อรถยนต์</div>
-                <div className="stat-value text-text-primary">{data.car_brand}</div>
+                <div className="stat-value text-text-primary text-3xl">{data.car_brand}</div>
                 <div className="stat-desc">รุ่นรถยนต์ :&nbsp;
                     {
                         data.car_model
@@ -40,10 +39,10 @@ const State = ({ data }) => {
 
             <div className="stat">
                 <div className="stat-figure">
-                    <FiCalendar size={30} color="#314158" />
+                    <FiCalendar size={25} color="#314158" />
                 </div>
                 <div className="stat-title">ปีของรถยนต์</div>
-                <div className="stat-value text-text-primary">{data.year_be
+                <div className="stat-value text-text-primary text-3xl">{data.year_be
                 }/{data.year_ad}</div>
                 <div className="stat-desc">รายละเอียด : {data.details}</div>
             </div>

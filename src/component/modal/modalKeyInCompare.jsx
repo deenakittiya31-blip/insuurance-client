@@ -4,9 +4,9 @@ import Select from "../form/Select"
 import { listCarYearSelect } from "../../service/car/CarYear";
 import TextInput from "../form/TextInput";
 import SelectSearch from "../form/SelectSearch";
-import { LuBrainCircuit } from "react-icons/lu";
+import { FaRegKeyboard } from "react-icons/fa";
 
-const ModalCompare = ({ onSubmit, onChange, onChangeSelect, form, setForm, onClose }) => {
+const modalKeyInCompare = ({ onSubmit, onChange, onChangeSelect, form, setForm, onClose }) => {
     const [year, setYear] = useState([])
     const {
         getCarBrandSelect,
@@ -35,10 +35,10 @@ const ModalCompare = ({ onSubmit, onChange, onChangeSelect, form, setForm, onClo
         <div className='font-prompt'>
             <button
                 className='w-full flex items-center gap-3 cursor-pointer hover:text-main'
-                onClick={() => document.getElementById('modalcompare').showModal()}>
-                <LuBrainCircuit className='size-4' />
-                <span className='group-[.active]:text-current'>สร้างใบเสนอราคา OCR</span></button>
-            <dialog id="modalcompare" className="modal">
+                onClick={() => document.getElementById('modalcomparekeyin').showModal()}>
+                <FaRegKeyboard className='size-4' />
+                <span className='group-[.active]:text-current'>สร้างใบเสนอราคา KEY-IN</span></button>
+            <dialog id="modalcomparekeyin" className="modal">
                 <form onSubmit={onSubmit} className="modal-box w-lg flex flex-col gap-5">
                     <h3 className="font-bold text-lg text-text-primary">สร้างใบเสนอราคา</h3>
                     <TextInput
@@ -127,4 +127,4 @@ const ModalCompare = ({ onSubmit, onChange, onChangeSelect, form, setForm, onClo
         </div>
     )
 }
-export default ModalCompare
+export default modalKeyInCompare
