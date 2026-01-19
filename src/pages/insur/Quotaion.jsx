@@ -4,7 +4,7 @@ import { createAkson } from "../../service/aksorn"
 import toast from "react-hot-toast"
 import { useParams } from "react-router-dom"
 import TableQuotation from "../../component/table/TableQuotation"
-import { createQuotationFields, deleteQuotation, readQuotationFields, updateQuotationFields } from "../../service/quotation"
+import { createQuotationFields, deleteQuotation } from "../../service/quotation"
 import { createJPG, createPDF, getDetailCompare } from "../../service/compare"
 import { useEffect } from "react"
 import Swal from "sweetalert2"
@@ -75,12 +75,6 @@ const Quotaion = () => {
         1: null,
         2: null,
         3: null
-    })
-
-    const [disabledButtonTab, setDisabledButton] = useState({
-        1: false,
-        2: false,
-        3: false
     })
 
     const isSaveDisabled =
@@ -214,12 +208,15 @@ const Quotaion = () => {
             }))
         } catch (err) {
             console.log(err)
-            const message =
-                err.response?.data?.message ||
-                err.response?.data?.msg ||
-                'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง'
+            if (err.response?.status === 502) {
+                toast.error('ระบบ OCR ขัดข้องชั่วคราว กรุณาลองใหม่ภายหลัง')
+                return
+            }
 
-            toast.error(message)
+            toast.error(
+                err.response?.data?.message ||
+                'เกิดข้อผิดพลาด'
+            )
 
         } finally {
             setLoadingByTab(prev => ({
@@ -267,17 +264,25 @@ const Quotaion = () => {
             }))
 
             //ล้างไฟล์ที่เลือก
+            // setFormByTab(prev => ({
+            //     ...prev,
+            //     [activeTab]: {
+            //         ...prev[activeTab],
+            //         image: ''
+            //     }
+            // }))
+            setPdfPreviewByTab(prev => ({
+                ...prev,
+                [activeTab]: null
+            }))
+
             setFormByTab(prev => ({
                 ...prev,
-                [activeTab]: {
-                    ...prev[activeTab],
-                    image: ''
-                }
+                [activeTab]: { ...initialForm }
             }))
         } catch (err) {
             console.log(err)
         }
-
     }
 
     //บันทึกข้อมูลที่ได้มาจาก ocr
@@ -317,51 +322,9 @@ const Quotaion = () => {
         try {
             const res = await createQuotationFields(token, quotationId, payload)
             toast.success(res.data.msg)
-
-            setDisabledButton(prev => ({
-                ...prev,
-                [activeTab]: true
-            }))
         } catch (err) {
             console.log(err)
             toast.error('บันทึกไม่สำเร็จ')
-        }
-    }
-    console.log(quotationIdByTab[activeTab])
-
-    const handleReadQuotationFields = async (e) => {
-        e.preventDefault()
-
-        setDisabledButton(prev => ({
-            ...prev,
-            [activeTab]: false
-        }))
-
-        console.log(quotationIdByTab[activeTab])
-
-        try {
-            //ต้องการ quotation id ไปดึงข้อมูล fields และเก็บไว้  
-            const res = await readQuotationFields(quotationIdByTab[activeTab])
-
-            setOcrByTab(prev => ({
-                ...prev,
-                [activeTab]: res.data.data
-            }))
-
-            console.log('data read', ocrByTab[activeTab])
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
-    const handlepdateFieldQotation = async (e) => {
-        e.preventDefault()
-
-        try {
-            //รับ id ของฟิลด์ที่อัปเดต field_value
-            const res = await updateQuotationFields()
-        } catch (err) {
-            console.log(err)
         }
     }
 
@@ -537,8 +500,6 @@ const Quotaion = () => {
                                 onSubmit={handleSaveQuotationFields}
                                 quotation_id={quotationIdByTab[activeTab]}
                                 onDelete={removeQuotation}
-                                buttonDisabled={disabledButtonTab[activeTab]}
-                                onRead={handleReadQuotationFields}
                             />
                         </div>
                     </div>

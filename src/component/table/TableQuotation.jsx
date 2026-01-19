@@ -1,7 +1,8 @@
-import { numberFormat } from '../../utils/numeral'
+import NumberFormat from '../form/NumberFormat'
 import TextInput from '../form/TextInput'
+import { NumericFormat } from 'react-number-format'
 
-const TableQuotation = ({ data, onSubmit, onChange, quotation_id, onDelete, buttonDisabled, onRead }) => {
+const TableQuotation = ({ data, onSubmit, onChange, quotation_id, onDelete }) => {
     return (
         <div className="flex flex-col gap-2 font-prompt text-text-primary">
             <div className='flex justify-between items-baseline-last'>
@@ -41,13 +42,11 @@ const TableQuotation = ({ data, onSubmit, onChange, quotation_id, onDelete, butt
                     value={data.repair_type || ''}
                     onChange={onChange}
                 />
-                <TextInput
-                    width='w-auto'
-                    title='ขนาดเครื่องยนต์ CC'
-                    name='engine_size'
-                    type='text'
-                    placeholder='กรอกขนาดเครื่องยนต์ CC'
+                <NumberFormat
                     value={data.engine_size || ''}
+                    name='engine_size'
+                    title='ขนาดเครื่องยนต์ CC'
+                    placeholder='กรอกขนาดเครื่องยนต์...'
                     onChange={onChange}
                 />
                 <TextInput
@@ -59,103 +58,81 @@ const TableQuotation = ({ data, onSubmit, onChange, quotation_id, onDelete, butt
                     value={data.insurance_type || ''}
                     onChange={onChange}
                 />
-                <TextInput
-                    width='w-auto'
-                    title='ทุนประกัน'
-                    name='coverage_amount'
-                    type='text'
-                    placeholder='กรอกทุนประกัน'
+                <NumberFormat
                     value={data.coverage_amount || ''}
+                    name='coverage_amount'
+                    title='ทุนประกัน'
+                    placeholder='กรอกทุนประกัน...'
                     onChange={onChange}
                 />
-                <TextInput
-                    width='w-auto'
-                    title='เบี้ยประกันรวม'
-                    name='premium_total'
-                    type='text'
-                    placeholder='กรอกเบี้ยประกันรวม'
+                <NumberFormat
                     value={data.premium_total || ''}
+                    name='premium_total'
+                    title='เบี้ยประกันรวม'
+                    placeholder='กรอกเบี้ยประกันรวม...'
                     onChange={onChange}
                 />
-                <TextInput
-                    width='w-auto'
-                    title='ความรับผิดต่อชีวิตร่างกายบุคคลภายนอก(ต่อคน)'
-                    name='thirdparty_injury_death_per_person'
-                    type='text'
-                    placeholder='กรอกข้อมูล...'
+                <NumberFormat
                     value={data.thirdparty_injury_death_per_person || ''}
+                    name='thirdparty_injury_death_per_person'
+                    title='ความรับผิดต่อชีวิตร่างกายบุคคลภายนอก(ต่อคน)'
+                    placeholder='กรอกข้อมูล...'
                     onChange={onChange}
                 />
-                <TextInput
-                    width='w-auto'
-                    title='ความรับผิดต่อชีวิตร่างกายบุคคลภายนอก(ต่อคร้ัง)'
-                    name='thirdparty_injury_death_per_accident'
-                    type='text'
-                    placeholder='กรอกข้อมูล...'
+                <NumberFormat
                     value={data.thirdparty_injury_death_per_accident || ''}
+                    name='thirdparty_injury_death_per_accident'
+                    title='ความรับผิดต่อชีวิตร่างกายบุคคลภายนอก(ต่อคร้ัง)'
+                    placeholder='กรอกข้อมูล...'
                     onChange={onChange}
                 />
-                <TextInput
-                    width='w-auto'
-                    title='ความรับผิดต่อทรัพย์สินของบุคคลภายนอก(ต่อคร้ัง)'
-                    name='thirdparty_property'
-                    type='text'
-                    placeholder='กรอกข้อมูล...'
+                <NumberFormat
                     value={data.thirdparty_property || ''}
+                    name='thirdparty_property'
+                    title='ความรับผิดต่อทรัพย์สินของบุคคลภายนอก(ต่อคร้ัง)'
+                    placeholder='กรอกข้อมูล...'
                     onChange={onChange}
                 />
-                <TextInput
-                    width='w-auto'
-                    title='ความเสียหายต่อรถยนต์'
-                    name='car_own_damage'
-                    type='text'
-                    placeholder='กรอกข้อมูล...'
+                <NumberFormat
                     value={data.car_own_damage || ''}
+                    name='car_own_damage'
+                    title='ความเสียหายต่อรถยนต์(ต่อคร้ัง)'
+                    placeholder='กรอกข้อมูล...'
                     onChange={onChange}
                 />
-                <TextInput
-                    width='w-auto'
-                    title='ค่าเสียหายส่วนแรก(ต่อคร้ัง)'
-                    name='car_own_damage_deductible'
-                    type='text'
-                    placeholder='กรอกข้อมูล...'
+                <NumberFormat
                     value={data.car_own_damage_deductible || ''}
+                    name='car_own_damage_deductible'
+                    title='ค่าเสียหายส่วนแรก(ต่อคร้ัง)'
+                    placeholder='กรอกข้อมูล...'
                     onChange={onChange}
                 />
-                <TextInput
-                    width='w-auto'
-                    title='รถยนต์สูญหาย/ ไฟไหม้'
-                    name='car_fire_theft'
-                    type='text'
-                    placeholder='กรอกข้อมูล...'
+                <NumberFormat
                     value={data.car_fire_theft || ''}
+                    name='car_fire_theft'
+                    title='รถยนต์สูญหาย/ ไฟไหม้'
+                    placeholder='กรอกข้อมูล...'
                     onChange={onChange}
                 />
-                <TextInput
-                    width='w-auto'
-                    title='อุบัติเหตุส่วนบุคคล(ต่อคน)'
-                    name='additional_personal_permanent_driver_cover'
-                    type='text'
-                    placeholder='กรอกข้อมูล...'
+                <NumberFormat
                     value={data.additional_personal_permanent_driver_cover || ''}
+                    name='additional_personal_permanent_driver_cover'
+                    title='อุบัติเหตุส่วนบุคคล(ต่อคน)'
+                    placeholder='กรอกข้อมูล...'
                     onChange={onChange}
                 />
-                <TextInput
-                    width='w-auto'
-                    title='ค่ารักษาพยาบาล(ต่อคน)'
-                    name='additional_medical_expense_cover'
-                    type='text'
-                    placeholder='กรอกข้อมูล...'
+                <NumberFormat
                     value={data.additional_medical_expense_cover || ''}
+                    name='additional_medical_expense_cover'
+                    title='ค่ารักษาพยาบาล(ต่อคน)'
+                    placeholder='กรอกข้อมูล...'
                     onChange={onChange}
                 />
-                <TextInput
-                    width='w-auto'
-                    title='การประกันตัวผู้ขับขี่(ต่อคร้ัง)'
+                <NumberFormat
+                    value={data.additional_bail_bond || ''}
                     name='additional_bail_bond'
-                    type='text'
+                    title='การประกันตัวผู้ขับขี่(ต่อคร้ัง)'
                     placeholder='กรอกข้อมูล...'
-                    value={numberFormat(data.additional_bail_bond || '')}
                     onChange={onChange}
                 />
                 <TextInput
@@ -166,15 +143,9 @@ const TableQuotation = ({ data, onSubmit, onChange, quotation_id, onDelete, butt
                     placeholder='กรอกข้อมูล...'
                     value={data.additional_personal_permanent_driver_number || ''}
                     onChange={onChange}
-                    readOnly
                 />
-                <div className='flex gap-5'>
-                    {
-                        buttonDisabled && (
-                            <button type='button' onClick={onRead} className='btn rounded-md px-7 text-white bg-yellow-400 hover:bg-yellow-600 '>แก้ไข</button>
-                        )
-                    }
-                    <button type='submit' disabled={buttonDisabled} className={`btn rounded-md px-7 text-white ${buttonDisabled ? 'bg-gray-400' : 'bg-lime-500'} hover:bg-lime-600`}>บันทึก</button>
+                <div>
+                    <button type='submit' className='btn rounded-md px-7 text-white bg-lime-600 hover:bg-lime-700'>บันทึก</button>
                 </div>
             </form>
         </div>

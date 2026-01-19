@@ -39,11 +39,3 @@ export const deleteQuotation = (token, id) => {
         }
     })
 }
-
-export const readQuotationFields = (id) => {
-    return api.get(`/api/read-quotation/fields/${id}`)
-}
-
-export const updateQuotationFields = (id, field_value) => {
-    return api.get(`/api/update-quotation/fields/${id}`, { field_value })
-}
