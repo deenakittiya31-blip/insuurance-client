@@ -5,6 +5,7 @@ import { useEffect } from "react"
 import liff from "@line/liff"
 import toast from "react-hot-toast"
 import { useState } from "react"
+import { registerMember } from "../../service/member"
 
 const MemberRegister = () => {
     const navigate = useNavigate()
