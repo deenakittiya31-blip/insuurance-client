@@ -1,5 +1,3 @@
-import { Link, useNavigate } from "react-router-dom"
-import logo from '../../assets/logo.svg'
 import Input from "../../component/form/Input"
 import { useEffect } from "react"
 import liff from "@line/liff"
@@ -8,7 +6,6 @@ import { useState } from "react"
 import { registerMember } from "../../service/member"
 
 const MemberRegister = () => {
-    const navigate = useNavigate()
     const [profile, setProfile] = useState({})
     const [form, setForm] = useState({
         first_name: '',
