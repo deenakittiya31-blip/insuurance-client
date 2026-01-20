@@ -8,8 +8,20 @@ const UploadThree = ({ onChangeCompany, onChangePDF, form }) => {
     useEffect(() => {
         getCompanySelect();
     }, [])
+
+    const selectedCompany = company.find(
+        c => String(c.id) === String(form.company_id)
+    )
+
     return (
         <div className="flex gap-5">
+            {selectedCompany?.logo_url && (
+                <div className="avatar">
+                    <div className="w-14 rounded">
+                        <img src={selectedCompany.logo_url} className="object-contain" />
+                    </div>
+                </div>
+            )}
             <fieldset className="fieldset w-full font-prompt text-text-primary p-0">
                 <p className="fieldset-legend text-sm text-text-primary p-0">ชื่อบริษัท</p>
                 <select

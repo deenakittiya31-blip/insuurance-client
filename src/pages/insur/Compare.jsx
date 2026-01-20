@@ -199,6 +199,8 @@ const Compare = () => {
                 fields: payload   // ข้อมูลจาก form ที่ผู้ใช้กรอก
             })
 
+            toast.success(res.data.msg)
+
             setQuotationIdByTab(prev => ({
                 ...prev,
                 [activeTab]: res.data.quotationId
@@ -252,6 +254,10 @@ const Compare = () => {
             setFormByTab(prev => ({
                 ...prev,
                 [activeTab]: { ...initialData }
+            }))
+            setCompulsoryByTab(prev => ({
+                ...prev,
+                [activeTab]: null
             }))
         } catch (err) {
             console.log(err)

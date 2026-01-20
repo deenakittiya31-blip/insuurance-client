@@ -23,6 +23,7 @@ import Setting from '../pages/Setting'
 import CustomModel from '../pages/custom_page/CustomModel'
 import CustomModelDetail from '../pages/custom_page/CustomModelDetail'
 import Home from '../pages/Home'
+import MemberRegister from '../pages/auth/MemberRegister'
 
 const Approutes = () => {
     return (
@@ -30,6 +31,7 @@ const Approutes = () => {
             <Routes>
                 <Route index element={<Login />} />
                 <Route path='register' element={<Register />} />
+                <Route path='member-register' element={<MemberRegister />} />
                 <Route path='line' element={<LoginLine />} />
                 <Route path='forbidden' element={<Forbidden />} />
 

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import Button from '../../component/form/Button'
 import toast from 'react-hot-toast'
 import useInsureAuth from '../../store/auth-store'
 import TextInputAuth from '../../component/form/TextInputAuth'
@@ -8,7 +7,7 @@ import ReCAPTCHA from 'react-google-recaptcha'
 
 
 const Register = () => {
-    const actionRehister = useInsureAuth((s) => s.actionRegister)
+    const actionRegister = useInsureAuth((s) => s.actionRegister)
     const navigate = useNavigate()
     const keyReCAPTCHA = import.meta.env.VITE_RECAPTCHA_SITE_KEY
     const [capVal, setCapVal] = useState(null)
@@ -32,7 +31,7 @@ const Register = () => {
             return toast.error('กรุณายืนยัน reCAPTCHA')
         }
 
-        actionRehister(form)
+        actionRegister(form)
             .then((res) => {
                 navigate('/')
                 toast.success(res.data.msg)

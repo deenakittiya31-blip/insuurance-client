@@ -68,8 +68,8 @@ const TableQuotation = ({ data, onSubmit, onChange, quotation_id, onDelete }) =>
                 <NumberFormat
                     value={data.premium_total || ''}
                     name='premium_total'
-                    title='เบี้ยประกันรวม'
-                    placeholder='กรอกเบี้ยประกันรวม...'
+                    title='เบี้ยสุทธิ'
+                    placeholder='กรอกเบี้ยสุทธิ...'
                     onChange={onChange}
                 />
                 <NumberFormat
