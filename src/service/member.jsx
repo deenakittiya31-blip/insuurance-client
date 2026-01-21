@@ -10,6 +10,6 @@ export const listMember = () => {
     return api.get('/api/list-member')
 }
 
-export const sendImageToMember = (userId, imageUrl) => {
-    return api.post('/api/sendimage-tomember', { userId, imageUrl })
+export const sendImageToMember = (members, imageUrl) => {
+    return api.post('/api/sendimage-tomember', { members, imageUrl })
 }
