@@ -77,7 +77,7 @@ const Home = () => {
                     form={form}
                     setForm={setForm}
                 />
-                <button className="px-7 btn bg-main font-medium font-prompt text-base text-white">ส่ง</button>
+                <button onClick={sendMessage} className="px-7 btn bg-main font-medium font-prompt text-base text-white">ส่ง</button>
             </div>
             <div className='bg-white rounded-2xl p-5'>
                 <TableMember
