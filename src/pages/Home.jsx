@@ -60,6 +60,11 @@ const Home = () => {
 
             const res = await sendImageToMember(memberSelected, form.image_url)
             toast.success(res.data.msg)
+            setMemberSelected([])
+            setForm({
+                image_url: '',
+                image_public_id: ''
+            })
         } catch (err) {
             console.log(err)
         }

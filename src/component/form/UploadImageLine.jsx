@@ -20,8 +20,8 @@ const UploadImageLine = ({ form, setForm }) => {
             file,
             1024,
             1024,
-            'JPEG',
-            90,
+            'PNG',
+            100,
             0,
             async (data) => {
                 const sizeInMB = data.length / 1024 / 1024
@@ -69,7 +69,7 @@ const UploadImageLine = ({ form, setForm }) => {
     return (
         <div className='flex flex-col text-text-primary'>
             <p className='font-semibold text-sm font-prompt'>รูปภาพ</p>
-            <div className='flex gap-5 mb-2'>
+            {/* <div className='flex gap-5 mb-2'>
                 {
                     isLoading && <RiLoader4Fill color='#FFBB20' size={20} className='animate-spin mb-3' />
                 }
@@ -89,7 +89,7 @@ const UploadImageLine = ({ form, setForm }) => {
                         </div>
                     )
                 }
-            </div>
+            </div> */}
             <input
                 onChange={handleOnchange}
                 type='file'
