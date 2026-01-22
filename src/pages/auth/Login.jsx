@@ -133,18 +133,17 @@ const Login = () => {
                     <span>or</span>
                     <hr className='w-full' />
                 </div>
-                <div className='w-full'>
-                    {
-                        googleLogin?.status && (
-                            <GoogleLogin
-                                onSuccess={onSuccess}
-                                onError={() => {
-                                    toast.error('Google login failed')
-                                }}
-                            />
-                        )
-                    }
-                </div>
+                {
+                    googleLogin?.status && (
+                        <GoogleLogin
+                            onSuccess={onSuccess}
+                            onError={() => {
+                                toast.error('Google login failed')
+                            }}
+                            width="100%"
+                        />
+                    )
+                }
                 {
                     lineLogin?.status && (
                         <button onClick={hdlLoginLine} className="btn bg-green-500 text-white w-full">เข้าสู่ระบบผ่าน Line</button>

@@ -9,7 +9,11 @@ import toast from "react-hot-toast"
 const Home = () => {
     const [member, setMember] = useState([])
     const [memberSelected, setMemberSelected] = useState([])
-    const [form, setForm] = useState({})
+    const [form, setForm] = useState({
+        file_url: '',
+        file_public_id: '',
+        file_type: '',
+    })
 
     useEffect(() => {
         getMember()
@@ -58,12 +62,18 @@ const Home = () => {
                 return
             }
 
-            const res = await sendImageToMember(memberSelected, form.image_url)
+            const res = await sendDocumentToMember(
+                memberSelected,
+                form.file_url,
+                form.file_type
+            )
+
             toast.success(res.data.msg)
             setMemberSelected([])
             setForm({
-                image_url: '',
-                image_public_id: ''
+                file_url: '',
+                file_public_id: '',
+                file_type: ''
             })
         } catch (err) {
             console.log(err)
