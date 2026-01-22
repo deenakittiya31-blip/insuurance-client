@@ -59,12 +59,19 @@ const MemberRegister = () => {
 
     return (
         <div className='bg-[url(/bg-member-4.jpg)] bg-cover bg-center bg-no-repeat w-full h-screen flex flex-col justify-center items-center px-7'>
-            <div className='flex flex-col gap-3 justify-center items-center p-5 bg-white/50 backdrop-blur-lg border border-white/50 rounded-xl'>
-                <div className='w-full flex flex-col items-center gap-3'>
-                    <h1 className='font-kanit font-bold text-2xl text-text-primary'>ลงทะเบียนเป็นสมาชิก</h1>
-                    <h1 className='font-kanit text-md text-text-primary text-center'>ยินดีต้อนรับ! ขอบคุณที่สมัครเป็นสมาชิกเพื่อรับข้อมูลข่าวสาร</h1>
+            <div className='flex flex-col gap-5 justify-center items-center p-5 bg-white/60 border border-white/50 rounded-xl'>
+                <div className="flex flex-col gap-3 items-center justify-center">
+                    <div className="rounded-full border border-border w-15 h-15 overflow-clip">
+                        <img src={profile.pictureUrl} className="w-full h-full object-cover" />
+                    </div>
+                    <p className="font-prompt font-semibold text-sm text-text-primary">{profile.displayName}</p>
                 </div>
-                <form onSubmit={hdlLoginLine} className='flex flex-col gap-5 font-kanit'>
+                <div className='w-full flex flex-col items-center'>
+                    <h1 className='font-kanit font-semibold text-xl text-text-primary'>ลงทะเบียนเป็นสมาชิก</h1>
+                    <h1 className='font-kanit font-light text-sm text-text-primary text-center'>ขอบคุณที่สมัครเป็นสมาชิกเพื่อรับข้อมูลข่าวสาร</h1>
+                </div>
+
+                <form className='flex flex-col gap-5 font-kanit'>
                     <Input
                         title='ชื่อ'
                         name='first_name'
@@ -89,7 +96,7 @@ const MemberRegister = () => {
                         onChange={hdlOnChange}
                         width='w-70 md:w-sm'
                     />
-                    <button className="btn bg-main hover:bg-second text-white text-lg">ลงทะเบียน</button>
+                    <button className="btn rounded-full bg-main hover:bg-second text-white text-base">ลงทะเบียน</button>
                 </form>
             </div>
         </div>

@@ -135,13 +135,15 @@ const Login = () => {
                 </div>
                 {
                     googleLogin?.status && (
-                        <GoogleLogin
-                            onSuccess={onSuccess}
-                            onError={() => {
-                                toast.error('Google login failed')
-                            }}
-                            width="100%"
-                        />
+                        <div className='w-full'>
+                            <GoogleLogin
+                                onSuccess={onSuccess}
+                                onError={() => {
+                                    toast.error('Google login failed')
+                                }}
+                                width="100%"
+                            />
+                        </div>
                     )
                 }
                 {

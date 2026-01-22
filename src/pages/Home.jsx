@@ -1,6 +1,6 @@
 import { useState } from "react"
 import Title from "../component/form/Title"
-import { listMember, sendImageToMember } from "../service/member"
+import { listMember, sendDocumentToMember } from "../service/member"
 import { useEffect } from "react"
 import TableMember from "../component/table/TableMember"
 import UploadImageLine from "../component/form/UploadImageLine"
@@ -30,30 +30,20 @@ const Home = () => {
     }
 
     const handleCheck = (e) => {
-        const inCheck = e.target.value //ค่าที่โดนเช็ค
+        const userId = e.target.value //ค่าที่โดนเช็ค
 
-        //ประการอาร์เรย์ว่าง โดยเก็บข้อมูลจาก memberSelected
-        const inState = [...memberSelected]
-
-        //ค้นหาตำแหน่ง index ของ inState ถ้าไม่เจอจะรีเทิร์นออกมาเป็น -1
-        const findIndex = inState.indexOf(inCheck)
-
-        //ถ้าได้ -1 ให้เพิ่มตัว inCheck เข้าไปใน inState
-        if (findIndex === -1) {
-            inState.push(inCheck)
-        } else {
-            //ถ้าโดนเช็คแล้วให้ลบออกทีละ 1
-            inState.splice(findIndex, 1)
-        }
-
-        setMemberSelected(inState)
+        setMemberSelected((prev) =>
+            prev.includes(userId)
+                ? prev.filter(id => id !== userId)
+                : [...prev, userId]
+        )
     }
     console.log(memberSelected)
     console.log(form)
 
     const sendMessage = async () => {
         try {
-            if (!form.image_url) {
+            if (!form.file_url) {
                 toast('กรุณาเลือกรูป')
                 return
             }
@@ -97,7 +87,8 @@ const Home = () => {
             <div className='bg-white rounded-2xl p-5'>
                 <TableMember
                     data={member}
-                    onClick={handleCheck}
+                    onChange={handleCheck}
+                    selected={memberSelected}
                 />
             </div>
         </div>

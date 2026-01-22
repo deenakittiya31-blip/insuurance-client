@@ -1,4 +1,4 @@
-const TableMember = ({ data, onClick }) => {
+const TableMember = ({ data, onChange, selected }) => {
     return (
         <div className="overflow-x-auto font-prompt">
             <table className="table">
@@ -22,7 +22,9 @@ const TableMember = ({ data, onClick }) => {
                                         <input
                                             type="checkbox"
                                             value={i.user_id}
-                                            onClick={onClick} className="checkbox" />
+                                            checked={selected.includes(i.user_id)}
+                                            onChange={onChange}
+                                            className="checkbox" />
                                     </label>
                                 </th>
                                 <td>

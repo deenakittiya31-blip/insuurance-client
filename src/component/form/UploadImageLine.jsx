@@ -12,7 +12,7 @@ const UploadImageLine = ({ form, setForm }) => {
         const file = e.target.files[0]
         if (!file) return
 
-        const sizeInMB = data.length / 1024 / 1024
+        const sizeInMB = file.length / 1024 / 1024
         if (sizeInMB > 1.5) {
             toast.error('รูปภาพยังใหญ่เกินไป กรุณาเลือกรูปใหม่')
             setLoading(false)
@@ -71,7 +71,7 @@ const UploadImageLine = ({ form, setForm }) => {
                 onChange={handleOnchange}
                 type='file'
                 className='file-input w-full'
-                accept='image/*'
+                accept='image/*,application/pdf'
             ></input>
         </div>
     )
