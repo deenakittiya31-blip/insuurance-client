@@ -18,10 +18,10 @@ const UploadImageLine = ({ form, setForm }) => {
 
         Resize.imageFileResizer(
             file,
-            720,
-            720,
+            1024,
+            1024,
             'JPEG',
-            70,
+            90,
             0,
             async (data) => {
                 const sizeInMB = data.length / 1024 / 1024
