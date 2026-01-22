@@ -3,7 +3,7 @@ import TextInput from "../component/form/TextInput"
 import Title from "../component/form/Title"
 import useInsureAuth from "../store/auth-store"
 import toast from "react-hot-toast"
-import { getLoginWith, statusLoginWith } from "../service/auth"
+import { getLoginWithSetting, statusLoginWith } from "../service/auth"
 
 const Setting = () => {
     const token = useInsureAuth((s) => s.token);
@@ -15,7 +15,7 @@ const Setting = () => {
 
     const getStatusLogin = async () => {
         try {
-            const res = await getLoginWith()
+            const res = await getLoginWithSetting()
             setLoginWith(res.data.data)
         } catch (err) {
             console.log(err)
@@ -80,7 +80,7 @@ const Setting = () => {
                         {
                             loginWith.map((i) => (
                                 <fieldset key={i.id} className="fieldset bg-base-100 border-base-300 rounded-box lg:w-64 border p-4">
-                                    <legend className="fieldset-legend font-inter text-sm">Login {i.login_with}</legend>
+                                    <legend className="fieldset-legend font-inter text-sm">{i.login_with}</legend>
                                     <label className="label font-prompt">
                                         <input
                                             type="checkbox"

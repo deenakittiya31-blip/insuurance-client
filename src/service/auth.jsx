@@ -15,6 +15,10 @@ export const statusLoginWith = (token, id, status) => {
     })
 }
 
+export const getLoginWithSetting = () => {
+    return api.put('/api/setting-loginwith')
+}
+
 export const getLoginWith = () => {
     return axios.get(`${API_URL}/api/get-loginwith`)
 }
