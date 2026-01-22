@@ -36,7 +36,7 @@ const MemberRegister = () => {
         })
     }
 
-    const hdlLoginLine = async (e) => {
+    const hdlRegiterLine = async (e) => {
         e.preventDefault()
         if (!form.first_name || !form.last_name || !form.phone) {
             return toast.error('กรุณาใส่ข้อมูลให้ครบ')
@@ -71,7 +71,7 @@ const MemberRegister = () => {
                     <h1 className='font-kanit font-light text-sm text-text-primary text-center'>ขอบคุณที่สมัครเป็นสมาชิกเพื่อรับข้อมูลข่าวสาร</h1>
                 </div>
 
-                <form className='flex flex-col gap-5 font-kanit'>
+                <form onSubmit={hdlRegiterLine} className='flex flex-col gap-5 font-kanit'>
                     <Input
                         title='ชื่อ'
                         name='first_name'
