@@ -57,8 +57,8 @@ const Approutes = () => {
                     <Route path='insurtypes' element={<InsurTypes />} />
                     <Route path='package' element={<InsurPackage />} />
                     <Route path='quotation/:q_id' element={<Quotaion />} />
-                    <Route path='quotation/:q_id' element={<QuotationDetail />} />
-                    <Route path='compare-detail/:q_id' element={<Compare />} />
+                    <Route path='compare-detail/:q_id' element={<QuotationDetail />} />
+                    <Route path='compare/:q_id' element={<Compare />} />
                     <Route path='setting' element={<Setting />} />
                     <Route path='custommodel' element={<CustomModel />} />
                     <Route path='custommodel-detail/:id' element={<CustomModelDetail />} />

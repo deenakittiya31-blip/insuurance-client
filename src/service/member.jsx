@@ -10,10 +10,9 @@ export const listMember = () => {
     return api.get('/api/list-member')
 }
 
-export const sendDocumentToMember = (members, fileUrl, fileType) => {
+export const sendDocumentToMember = (members, q_id) => {
     return api.post('/api/sendDocument-tomember', {
         members,
-        fileUrl,
-        fileType
+        q_id
     })
 }

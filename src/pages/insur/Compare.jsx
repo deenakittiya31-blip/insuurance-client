@@ -383,7 +383,6 @@ const Compare = () => {
                         <UploadDataOne
                             onChangeCompany={hdlQuotationChange}
                             onChangePDF={hdlPdfChange}
-                            onSubmit={handleSaveQuotation}
                             form={quotationByTab[activeTab]}
                         />
 
@@ -392,7 +391,6 @@ const Compare = () => {
                         <UploadDataTwo
                             onChangeCompany={hdlQuotationChange}
                             onChangePDF={hdlPdfChange}
-                            onSubmit={handleSaveQuotation}
                             form={quotationByTab[activeTab]}
                         />
 
@@ -401,7 +399,6 @@ const Compare = () => {
                         <UploadDataThree
                             onChangeCompany={hdlQuotationChange}
                             onChangePDF={hdlPdfChange}
-                            onSubmit={handleSaveQuotation}
                             form={quotationByTab[activeTab]}
                         />
 

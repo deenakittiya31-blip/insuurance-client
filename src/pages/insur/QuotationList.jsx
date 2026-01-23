@@ -1,14 +1,25 @@
 import { useEffect, useState } from "react"
 import NameTable from "../../component/form/NameTable"
 import Title from "../../component/form/Title"
-import { deleteQuotationCompare, listQuotationCompare } from '../../service/compare'
+import { createJPG, createPDF, deleteQuotationCompare, listQuotationCompare, searchText } from '../../service/compare'
 import TableQuotationList from "../../component/table/TableQuotationList"
 import Pagination from "../../component/paginationComponent/Pagination"
 import Swal from "sweetalert2"
 import toast from "react-hot-toast"
+import ModalMember from "../../component/quotation_about/ModalMember"
+import { listMember, sendDocumentToMember } from "../../service/member"
+import useInsureAuth from "../../store/auth-store"
+import SearchBox from "../../component/quotation_about/SearchBox"
 
 const QuotationList = () => {
+    const token = useInsureAuth((s) => s.token)
     const [list, setList] = useState([])
+    const [member, setMember] = useState([])
+    const [memberSelected, setMemberSelected] = useState([])
+    const [quotationId, setQuotationId] = useState(null)
+    const [loading, setLoading] = useState(false)
+    const [text, setText] = useState('')
+    const [open, setOpen] = useState(false)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
     const limit = 10;
@@ -18,11 +29,44 @@ const QuotationList = () => {
         getQuotationList(page)
     }, [page])
 
+    useEffect(() => {
+        getMember()
+    }, [])
+
+    useEffect(() => {
+        const deley = setTimeout(() => {
+            handleSearchQuotation()
+        }, 500)
+        return () => clearTimeout(deley)
+    }, [text])
+
+    const handleSearchQuotation = async () => {
+        try {
+            const res = await searchText({ search: text })
+            setList(res.data.data)
+            if (!text) {
+                getQuotationList(page)
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     const getQuotationList = async (page) => {
         try {
             const res = await listQuotationCompare(page)
             setList(res.data.data)
             setTotal(res.data.total)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const getMember = async () => {
+        try {
+            const res = await listMember()
+            setMember(res.data.data)
+
         } catch (err) {
             console.log(err)
         }
@@ -51,6 +95,122 @@ const QuotationList = () => {
         }
     }
 
+
+    const handleCheck = (e) => {
+        const userId = e.target.value //ค่าที่โดนเช็ค
+
+        setMemberSelected((prev) =>
+            prev.includes(userId)
+                ? prev.filter(id => id !== userId)
+                : [...prev, userId]
+        )
+    }
+
+    const openModal = async (id) => {
+        setOpen(true)
+        setQuotationId(id)
+    }
+
+    const closeForm = () => {
+        setOpen(false)
+        setMemberSelected([])
+        setQuotationId(null)
+    }
+
+    const sendMessage = async () => {
+        if (memberSelected.length === 0) {
+            toast('กรุณาเลือกลูกค้า')
+            return
+        }
+
+        setLoading(true)
+
+        try {
+            const res = await sendDocumentToMember(memberSelected, quotationId)
+
+            toast.success(res.data.msg)
+            setMemberSelected([])
+        } catch (error) {
+            console.log(error)
+            toast.error('ส่งไม่สำเร็จ')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const createComparePDF = async (q_id) => {
+        try {
+            const res = await createPDF(token, q_id)
+
+            // ตรวจสอบว่ามีข้อมูลหรือไม่
+            if (!res.data) {
+                throw new Error('ไม่พบข้อมูล PDF')
+            }
+
+            // สร้าง blob URL
+            const blob = new Blob([res.data], { type: 'application/pdf' })
+            const url = window.URL.createObjectURL(blob)
+
+            // เปิดในแท็บใหม่
+            const newWindow = window.open(url, '_blank')
+
+            // ตรวจสอบว่าเปิดแท็บได้หรือไม่ (กรณี popup blocker)
+            if (!newWindow) {
+                toast.error('กรุณาอนุญาตให้เปิด popup ในเบราว์เซอร์')
+
+                // สำรอง: ดาวน์โหลดแทน
+                const link = document.createElement('a')
+                link.href = url
+                link.download = `เปรียบเทียบใบเสนอราคา_${q_id}.pdf`
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+
+                toast.success('ดาวน์โหลด PDF สำเร็จ')
+            } else {
+                toast.success('เปิด PDF สำเร็จ')
+            }
+
+            // ลบ URL หลังจาก 1 นาที (ป้องกัน memory leak)
+            setTimeout(() => {
+                window.URL.revokeObjectURL(url)
+            }, 60000)
+
+        } catch (err) {
+            console.error('PDF Error:', err)
+
+            // แสดง error message ที่ชัดเจน
+            if (err.response) {
+                toast.error(err.response.data?.msg || 'สร้าง PDF ไม่สำเร็จ')
+            } else if (err.request) {
+                toast.error('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์')
+            } else {
+                toast.error('เกิดข้อผิดพลาด: ' + err.message)
+            }
+        }
+    }
+
+    const createJPEG = async (q_id) => {
+        try {
+            const res = await createJPG(token, q_id)
+
+            const blob = new Blob([res.data], { type: 'image/jpeg' });
+            const url = window.URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `quotation_${q_id}.jpg`; // ชื่อไฟล์
+            document.body.appendChild(link);
+            link.click();
+
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+
     return (
         <div className='flex flex-col gap-5 p-5'>
             <div className='flex items-center justify-between'>
@@ -60,15 +220,27 @@ const QuotationList = () => {
                 />
             </div>
             <div className='flex-1 bg-white rounded-2xl p-5'>
-                <NameTable
-                    icon='📑'
-                    name='ตารางใบเสนอราคา'
-                />
+                <div className="flex justify-between">
+                    <div className="flex-1">
+                        <NameTable
+                            icon='📑'
+                            name='ตารางใบเสนอราคา'
+                        />
+                    </div>
+                    <SearchBox
+                        width=''
+                        onChange={(e) => setText(e.target.value)}
+                    />
+                </div>
+
                 <TableQuotationList
                     data={list}
                     page={page}
                     limit={limit}
                     onDelete={hdlDelete}
+                    isOpen={openModal}
+                    pdf={createComparePDF}
+                    jpg={createJPEG}
                 />
                 <div className='flex justify-end'>
                     {
@@ -83,6 +255,15 @@ const QuotationList = () => {
                     }
                 </div>
             </div>
+            <ModalMember
+                isLoading={loading}
+                data={member}
+                onChange={handleCheck}
+                onSubmit={sendMessage}
+                isOpen={open}
+                onClose={closeForm}
+                selected={memberSelected}
+            />
         </div>
     )
 }

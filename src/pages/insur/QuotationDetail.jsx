@@ -1,9 +1,9 @@
 import { useState } from "react"
 import useInsureAuth from "../../store/auth-store"
 import toast from "react-hot-toast"
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import TableQuotation from "../../component/table/TableQuotation"
-import { createFieldsQuotation, deleteQuotation } from "../../service/quotation"
+import { createQuotationFields, deleteQuotation } from "../../service/quotation"
 import { createJPG, createPDF, getDetailCompare, getDetailCompareEdit } from "../../service/compare"
 import { useEffect } from "react"
 import UploadDataOne from '../../component/form/UploadDataOne'
@@ -88,7 +88,7 @@ const QuotationDetail = () => {
     useEffect(() => {
         if (!q_id) return
         getDetailHeader();
-        getDetailBodygetDetailBody();
+        getDetailBody();
     }, [q_id])
 
     useEffect(() => {
@@ -159,13 +159,53 @@ const QuotationDetail = () => {
             const res = await getDetailCompareEdit(q_id)
             const data = res.data.data
 
-            setFormByTab(prev => ({
-                ...prev,
-                [activeTab]: {
-                    ...prev[activeTab],
-                    ...data.fields   // หรือ data.detail แล้วแต่ชื่อจาก backend
-                }
-            }))
+            const index = activeTab - 1
+            const current = data[index]
+
+            if (!current) return
+
+            setFormByTab(prev => {
+                const updated = { ...prev }
+
+                data.forEach((item, index) => {
+                    const tab = index + 1
+                    if (!updated[tab]) return
+
+                    updated[tab] = {
+                        ...updated[tab],
+                        ...item.fields
+                    }
+                })
+
+                return updated
+            })
+
+            setQuotationIdByTab(prev => {
+                const updated = { ...prev }
+
+                data.forEach((item, index) => {
+                    const tab = index + 1
+                    updated[tab] = item.quotation_id
+                })
+
+                return updated
+            })
+
+            setQuotationByTab(prev => {
+                const updated = { ...prev }
+
+                data.forEach((item, index) => {
+                    const tab = index + 1
+                    updated[tab] = {
+                        ...updated[tab],
+                        company_id: item.company_id
+                    }
+                })
+
+                return updated
+            })
+
+            // console.log(current)
         } catch (err) {
             console.log(err)
         }
@@ -181,9 +221,15 @@ const QuotationDetail = () => {
         }
     }
 
-    const handleSaveQuotation = async (e) => {
+    const handleSaveQuotationFields = async (e) => {
         e.preventDefault()
         const currentQuotation = quotationByTab[activeTab]
+        const quotationId = quotationIdByTab[activeTab]
+
+        if (!quotationId) {
+            toast.error('ยังไม่มี quotation_id')
+            return
+        }
 
         if (!currentQuotation.company_id) {
             toast.error('กรุณาเลือกบริษัท')
@@ -210,13 +256,10 @@ const QuotationDetail = () => {
             compulsory_amount: amount
         }
 
+        console.log(payload)
+
         try {
-            const res = await createFieldsQuotation(token, {
-                compare_id: q_id,
-                company_id: currentQuotation.company_id,
-                doc_id: activeTab,
-                fields: payload   // ข้อมูลจาก form ที่ผู้ใช้กรอก
-            })
+            const res = await createQuotationFields(token, quotationId, payload)
 
             toast.success(res.data.msg)
 
@@ -226,7 +269,7 @@ const QuotationDetail = () => {
             }))
             setDataSuccess(prev => ({
                 ...prev,
-                [activeTab]: `เอกสารฉบับที่ ${activeTab} บันทึกสำเร็จแล้ว`
+                [activeTab]: `เอกสารฉบับที่ ${activeTab} แก้ไขสำเร็จแล้ว`
             }))
         } catch (err) {
             console.log(err)
@@ -403,7 +446,6 @@ const QuotationDetail = () => {
                         <UploadDataOne
                             onChangeCompany={hdlQuotationChange}
                             onChangePDF={hdlPdfChange}
-                            onSubmit={handleSaveQuotation}
                             form={quotationByTab[activeTab]}
                         />
 
@@ -412,7 +454,6 @@ const QuotationDetail = () => {
                         <UploadDataTwo
                             onChangeCompany={hdlQuotationChange}
                             onChangePDF={hdlPdfChange}
-                            onSubmit={handleSaveQuotation}
                             form={quotationByTab[activeTab]}
                         />
 
@@ -421,7 +462,6 @@ const QuotationDetail = () => {
                         <UploadDataThree
                             onChangeCompany={hdlQuotationChange}
                             onChangePDF={hdlPdfChange}
-                            onSubmit={handleSaveQuotation}
                             form={quotationByTab[activeTab]}
                         />
 
@@ -454,7 +494,7 @@ const QuotationDetail = () => {
                             <TableQuotation
                                 data={formByTab[activeTab]}
                                 onChange={hdlFormChange}
-                                onSubmit={handleSaveQuotation}
+                                onSubmit={handleSaveQuotationFields}
                                 onDelete={removeQuotation}
                                 quotation_id={quotationIdByTab[activeTab]}
                             />

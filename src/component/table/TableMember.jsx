@@ -42,11 +42,11 @@ const TableMember = ({ data, onChange, selected }) => {
                                     </div>
                                 </td>
                                 <td>
-                                    {i.first_name}
+                                    {i.first_name === null ? '-' : i.first_name}
                                 </td>
-                                <td>{i.last_name}</td>
+                                <td>{i.last_name === null ? '-' : i.last_name}</td>
                                 <td>
-                                    {i.phone}
+                                    {i.phone === null ? '-' : i.phone}
                                 </td>
                             </tr>
                         ))

@@ -45,3 +45,7 @@ export const createJPG = (token, id) => {
         responseType: 'blob'
     })
 }
+
+export const searchText = async (arg) => {
+    return api.post('/api/search-compare', arg)
+}

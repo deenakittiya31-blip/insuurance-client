@@ -52,10 +52,10 @@ const ModalCompare = ({ onSubmit, onChange, onChangeSelect, form, setForm, onClo
                     />
                     <TextInput
                         width='w-auto'
-                        title='รายละเอียด'
+                        title='ทะเบียน'
                         name='details'
                         type='text'
-                        placeholder='กรอกรายละเอียด'
+                        placeholder='กรอกรายละเอียดทะเบียน...'
                         onChange={onChange}
                         value={form.details}
                     />
