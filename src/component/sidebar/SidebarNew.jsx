@@ -6,7 +6,7 @@ import { adminCar, adminInsur, adminSetting } from '../../utils/link';
 import toast from 'react-hot-toast';
 import useInsureAuth from '../../store/auth-store';
 import { TbLogout } from "react-icons/tb";
-import { AiOutlineHome } from "react-icons/ai";
+import { IoDocumentAttachOutline } from "react-icons/io5";
 import ModalCompare from '../modal/ModalCompare';
 import ModalKeyInCompare from '../modal/modalKeyInCompare';
 import useActionStore from '../../store/action-store';
@@ -76,7 +76,8 @@ const SidebarNew = () => {
         try {
             const payload = {
                 ...form,
-                offer: user.name
+                offer: user.name,
+                import_by: 'ai'
             };
 
             const res = await createCompare(token, payload)
@@ -97,7 +98,8 @@ const SidebarNew = () => {
         try {
             const payload = {
                 ...form,
-                offer: user.name
+                offer: user.name,
+                import_by: 'key-in'
             };
 
             const res = await createCompare(token, payload)
@@ -135,8 +137,8 @@ const SidebarNew = () => {
                 ${collapsed ? 'opacity-0 -translate-x-50 pointer-events-none' : 'opacity-100 translate-x-0'}
             `}>
                 <div className='flex flex-col flex-1 gap-y-5 text-text-primary'>
-                    {/* หัวข้อหลัก 1 */}
                     <div>
+                        <h1 className='font-semibold mb-5 pl-7 lg:text-lg'>ใบเสนอราคา</h1>
                         <div className='flex flex-col gap-4'>
                             <NavLink
                                 to='/admin'
@@ -148,16 +150,11 @@ const SidebarNew = () => {
                             >
                                 <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
                                 <div className='w-full flex items-center gap-3'>
-                                    <AiOutlineHome className='size-4' />
-                                    <p className='group-[.active]:text-current'>หน้าหลัก</p>
+                                    <IoDocumentAttachOutline className='size-4' />
+                                    <p className='group-[.active]:text-current'>รายการใบเสนอราคา</p>
                                 </div>
 
                             </NavLink>
-                        </div>
-                    </div>
-                    <div>
-                        <h1 className='font-semibold mb-5 pl-7 lg:text-lg'>ใบเสนอราคา</h1>
-                        <div className='flex flex-col gap-4'>
                             <div className='flex gap-5 items-center text-sm transition duration-300 ease-in-out pl-7'>
                                 <ModalCompare
                                     form={form}

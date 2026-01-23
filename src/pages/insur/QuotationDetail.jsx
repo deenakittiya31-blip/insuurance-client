@@ -4,7 +4,7 @@ import toast from "react-hot-toast"
 import { useNavigate, useParams } from "react-router-dom"
 import TableQuotation from "../../component/table/TableQuotation"
 import { createFieldsQuotation, deleteQuotation } from "../../service/quotation"
-import { createJPG, createPDF, getDetailCompare } from "../../service/compare"
+import { createJPG, createPDF, getDetailCompare, getDetailCompareEdit } from "../../service/compare"
 import { useEffect } from "react"
 import UploadDataOne from '../../component/form/UploadDataOne'
 import UploadDataTwo from '../../component/form/UploadDataTwo'
@@ -40,7 +40,7 @@ const initialData = {
     additional_personal_permanent_driver_number: '',
 }
 
-const Compare = () => {
+const QuotationDetail = () => {
     const token = useInsureAuth((s) => s.token)
     const [activeTab, setActiveTab] = useState(1)
     const [usageID, setUsageID] = useState(null)
@@ -87,7 +87,8 @@ const Compare = () => {
 
     useEffect(() => {
         if (!q_id) return
-        getDetail();
+        getDetailHeader();
+        getDetailBodygetDetailBody();
     }, [q_id])
 
     useEffect(() => {
@@ -137,7 +138,7 @@ const Compare = () => {
         }))
     }
 
-    const getDetail = async () => {
+    const getDetailHeader = async () => {
         if (!q_id) return
 
         try {
@@ -146,6 +147,25 @@ const Compare = () => {
 
             setDetail(data)
             setUsageID(data.usageid)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const getDetailBody = async () => {
+        if (!q_id) return
+
+        try {
+            const res = await getDetailCompareEdit(q_id)
+            const data = res.data.data
+
+            setFormByTab(prev => ({
+                ...prev,
+                [activeTab]: {
+                    ...prev[activeTab],
+                    ...data.fields   // หรือ data.detail แล้วแต่ชื่อจาก backend
+                }
+            }))
         } catch (err) {
             console.log(err)
         }
@@ -446,4 +466,4 @@ const Compare = () => {
         </div>
     )
 }
-export default Compare
+export default QuotationDetail

@@ -1,5 +1,9 @@
 import api from '../config/axios'
 
+export const listQuotationCompare = (pageNumber) => {
+    return api.get(`/api/list-compare/page?page=${pageNumber}&per_page=10`)
+}
+
 export const createCompare = (token, form) => {
     return api.post('/api/create-compare', form, {
         headers: {
@@ -8,12 +12,20 @@ export const createCompare = (token, form) => {
     })
 }
 
+export const deleteQuotationCompare = (id) => {
+    return api.delete(`api/delete-compare/${id}`)
+}
+
 export const getDetailCompare = (token, id) => {
     return api.get(`/api/detail-compare/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
     })
+}
+
+export const getDetailCompareEdit = (id) => {
+    return api.get(`/api/edit-compare/${id}`)
 }
 
 export const createPDF = (token, id) => {

@@ -24,6 +24,8 @@ import CustomModel from '../pages/custom_page/CustomModel'
 import CustomModelDetail from '../pages/custom_page/CustomModelDetail'
 import Home from '../pages/Home'
 import MemberRegister from '../pages/auth/MemberRegister'
+import QuotationList from '../pages/insur/QuotationList'
+import QuotationDetail from '../pages/insur/QuotationDetail'
 
 const Approutes = () => {
     return (
@@ -42,7 +44,7 @@ const Approutes = () => {
                             <Layout />
                         </ProtectRoute>
                     }>
-                    <Route index element={<Home />} />
+                    <Route index element={<QuotationList />} />
                     <Route path='insurance-company' element={<InsurCompany />} />
                     <Route path='cartype' element={<Cartype />} />
                     <Route path='caryear' element={<CarYear />} />
@@ -55,7 +57,8 @@ const Approutes = () => {
                     <Route path='insurtypes' element={<InsurTypes />} />
                     <Route path='package' element={<InsurPackage />} />
                     <Route path='quotation/:q_id' element={<Quotaion />} />
-                    <Route path='compare/:q_id' element={<Compare />} />
+                    <Route path='quotation/:q_id' element={<QuotationDetail />} />
+                    <Route path='compare-detail/:q_id' element={<Compare />} />
                     <Route path='setting' element={<Setting />} />
                     <Route path='custommodel' element={<CustomModel />} />
                     <Route path='custommodel-detail/:id' element={<CustomModelDetail />} />
