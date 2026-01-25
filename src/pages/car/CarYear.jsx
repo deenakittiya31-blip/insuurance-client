@@ -9,6 +9,7 @@ import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
 import ModalYear from '../../component/modal/ModalYear'
 import EditYear from '../../component/edit/EditYear'
+import SelectPerPage from '../../component/form/SelectPerPage'
 
 const initialState = {
     year_be: '',
@@ -22,17 +23,17 @@ const CarYear = () => {
     const [idSelect, setIdSelect] = useState(null)
     const [open, setOpen] = useState(false)
     const [page, setPage] = useState(1)
+    const [perPage, setPerPage] = useState(10)
     const [total, setTotal] = useState(0)
-    const limit = 10;
-    const lastPage = Math.ceil(total / limit)
+    const lastPage = Math.ceil(total / perPage)
 
 
     useEffect(() => {
-        getYear(page);
-    }, [page])
+        getYear(page, perPage);
+    }, [page, perPage])
 
-    const getYear = async (page) => {
-        const res = await listYear(page)
+    const getYear = async (page, perPage) => {
+        await listYear(page, perPage)
             .then((res) => {
                 setYearData(res.data.data)
                 setTotal(res.data.total)
@@ -45,6 +46,11 @@ const CarYear = () => {
             ...form,
             [e.target.name]: e.target.value
         })
+    }
+
+    const handlePerPageChange = (e) => {
+        setPerPage(Number(e.target.value))
+        setPage(1)  //รีเซ็ตกลับไปหน้า 1
     }
 
     const openModal = async (id) => {
@@ -81,7 +87,7 @@ const CarYear = () => {
                 toast.success(res.data.msg)
                 document.getElementById('modalcaryear').close()
                 setForm(initialState)
-                getYear(page)
+                getYear(page, perPage)
             })
             .catch((err) => console.log(err))
     }
@@ -103,7 +109,7 @@ const CarYear = () => {
         try {
             const res = await removeYear(token, id)
             toast.success(res.data.msg)
-            getYear(page);
+            getYear(page, perPage);
         } catch (err) {
             console.log(err)
         }
@@ -115,11 +121,12 @@ const CarYear = () => {
             const res = await updateYear(token, idSelect, form)
             closeForm()
             toast.success(res.data.msg)
-            getYear(page)
+            getYear(page, perPage)
         } catch (err) {
             console.log(err)
         }
     }
+
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
             <div className='flex items-center justify-between'>
@@ -134,21 +141,27 @@ const CarYear = () => {
                 />
             </div>
             <div className='bg-white rounded-2xl p-5'>
-                <NameTable
-                    icon='🚗'
-                    name='ตารางประเภทการใช้งาน'
-                />
+                <div className='flex justify-between items-baseline-last'>
+                    <NameTable
+                        icon='🚗'
+                        name='ตารางประเภทการใช้งาน'
+                    />
+                    <SelectPerPage
+                        onChange={handlePerPageChange}
+                        perPage={perPage}
+                    />
+                </div>
                 <TableYear
                     data={yearData}
                     page={page}
-                    limit={limit}
+                    limit={perPage}
                     onDelete={hdlDelete}
                     onEdite={openModal}
                 />
             </div>
             <div className='flex justify-end'>
                 {
-                    total > limit && (
+                    total > perPage && (
                         <Pagination
                             disablePrev={page === 1}
                             disableNext={page === lastPage}

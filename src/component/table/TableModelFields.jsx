@@ -30,9 +30,11 @@ const TableModelFields = ({ data, onDelete, onEdite }) => {
                                 <td>
                                     {i.example_value}
                                 </td>
-                                <td className='flex gap-5 text-center'>
-                                    <button onClick={() => onEdite(i.id)} className="btn btn-sm btn-soft btn-warning hover:text-white">แก้ไข</button>
-                                    <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error hover:text-white">ลบ</button>
+                                <td>
+                                    <div className='flex gap-5 text-center'>
+                                        <button onClick={() => onEdite(i.id)} className="btn btn-sm btn-soft btn-warning hover:text-white">แก้ไข</button>
+                                        <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error hover:text-white">ลบ</button>
+                                    </div>
                                 </td>
                             </tr>
                         ))

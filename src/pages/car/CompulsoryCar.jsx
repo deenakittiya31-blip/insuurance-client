@@ -9,6 +9,7 @@ import EditCompulsory from '../../component/edit/EditCompulsory'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
+import SelectPerPage from '../../component/form/SelectPerPage'
 
 const initialState = {
     car_type_id: '',
@@ -28,18 +29,23 @@ const CompulsoryCar = () => {
     const [idSelect, setIdSelect] = useState(null)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
-    const limit = 10;
-    const lastPage = Math.ceil(total / limit)
+    const [perPage, setPerPage] = useState(10)
+    const lastPage = Math.ceil(total / perPage)
 
     useEffect(() => {
-        getCompulsory(page)
-    }, [page])
+        getCompulsory(page, perPage)
+    }, [page, perPage])
 
     const hdlOnChange = (e) => {
         setForm({
             ...form,
             [e.target.name]: e.target.value
         })
+    }
+
+    const handlePerPageChange = (e) => {
+        setPerPage(Number(e.target.value))
+        setPage(1)  //รีเซ็ตกลับไปหน้า 1
     }
 
     const openModal = async (id) => {
@@ -59,8 +65,8 @@ const CompulsoryCar = () => {
         setForm(initialState)
     }
 
-    const getCompulsory = async (page) => {
-        await ListCompulsory(page)
+    const getCompulsory = async (page, perPage) => {
+        await ListCompulsory(page, perPage)
             .then((res) => {
                 setCompulsory(res.data.data)
                 setTotal(res.data.total)
@@ -73,7 +79,7 @@ const CompulsoryCar = () => {
             const res = await createCompulsory(token, form)
             document.getElementById('modalcompul').close();
             setForm(initialState)
-            getCompulsory(page);
+            getCompulsory(page, perPage);
             toast.success(res.data.msg)
         } catch (err) {
             console.log(err)
@@ -97,7 +103,7 @@ const CompulsoryCar = () => {
 
         try {
             const res = await removeCompulsory(token, id)
-            getCompulsory(page);
+            getCompulsory(page, perPage);
             toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
@@ -111,7 +117,7 @@ const CompulsoryCar = () => {
             setForm(initialState)
             closeForm()
             toast.success(res.data.msg)
-            getCompulsory(page)
+            getCompulsory(page, perPage)
 
         } catch (err) {
             console.log(err)
@@ -129,21 +135,27 @@ const CompulsoryCar = () => {
                 />
             </div>
             <div className='bg-white rounded-2xl p-5'>
-                <NameTable
-                    icon='🚗'
-                    name='ตารางยี่ห้อ'
-                />
+                <div className='flex justify-between items-baseline-last'>
+                    <NameTable
+                        icon='🚗'
+                        name='ตารางยี่ห้อ'
+                    />
+                    <SelectPerPage
+                        onChange={handlePerPageChange}
+                        perPage={perPage}
+                    />
+                </div>
                 <TableCompulsory
                     data={compulsory}
                     onDelete={hdlDelete}
                     onEdite={openModal}
                     page={page}
-                    limit={limit}
+                    limit={perPage}
                 />
             </div>
             <div className='flex justify-end'>
                 {
-                    total > limit && (
+                    total > perPage && (
                         <Pagination
                             disablePrev={page === 1}
                             disableNext={page === lastPage}

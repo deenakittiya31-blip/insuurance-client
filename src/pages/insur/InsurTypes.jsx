@@ -9,6 +9,7 @@ import EditTypeInsur from '../../component/edit/EditTypeInsur'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
+import SelectPerPage from '../../component/form/SelectPerPage'
 
 const initialState = {
     nametype: '',
@@ -23,18 +24,23 @@ const InsurTypes = () => {
     const [idSelect, setIdSelect] = useState(null)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
-    const limit = 10;
-    const lastPage = Math.ceil(total / limit)
+    const [perPage, setPerPage] = useState(10)
+    const lastPage = Math.ceil(total / perPage)
 
     useEffect(() => {
-        getTypeInsur(page);
-    }, [page])
+        getTypeInsur(page, perPage);
+    }, [page, perPage])
 
     const hdlOnChange = (e) => {
         setForm({
             ...form,
             [e.target.name]: e.target.value
         })
+    }
+
+    const handlePerPageChange = (e) => {
+        setPerPage(Number(e.target.value))
+        setPage(1)
     }
 
     const openModal = async (id) => {
@@ -53,9 +59,9 @@ const InsurTypes = () => {
         setOpen(false)
     }
 
-    const getTypeInsur = async (page) => {
+    const getTypeInsur = async (page, perPage) => {
         try {
-            const res = await listType(page);
+            const res = await listType(page, perPage);
             setType(res.data.data)
             setTotal(res.data.total)
         } catch (err) {
@@ -75,7 +81,7 @@ const InsurTypes = () => {
             const res = await creatType(token, form)
             document.getElementById('modalinsurtype').close();
             setForm(initialState)
-            getTypeInsur();
+            getTypeInsur(page, perPage);
             toast.success(res.data.msg)
         } catch (err) {
             console.log(err)
@@ -90,7 +96,7 @@ const InsurTypes = () => {
             setForm(initialState)
             closeForm()
             toast.success(res.data.msg)
-            getTypeInsur(page)
+            getTypeInsur(page, perPage)
 
         } catch (err) {
             console.log(err)
@@ -113,7 +119,7 @@ const InsurTypes = () => {
 
         try {
             const res = await removeType(token, id)
-            getTypeInsur(page);
+            getTypeInsur(page, perPage);
             toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
@@ -123,7 +129,7 @@ const InsurTypes = () => {
     const hdlToggleActive = async (id, currentStatus) => {
         try {
             await statusType(token, id, !currentStatus)
-            getTypeInsur(page)
+            getTypeInsur(page, perPage)
             toast.success('อัปเดตสถานะสำเร็จ')
         } catch (err) {
             console.log(err)
@@ -145,21 +151,29 @@ const InsurTypes = () => {
                 />
             </div>
             <div className='flex-1 bg-white rounded-2xl p-5'>
-                <NameTable
-                    icon='🛡️'
-                    name='ตารางประกันรถยนต์'
-                />
+                <div className='flex justify-between items-baseline-last'>
+                    <NameTable
+                        icon='🛡️'
+                        name=
+                        'ตารางประกันรถยนต์'
+                    />
+                    <SelectPerPage
+                        onChange={handlePerPageChange}
+                        perPage={perPage}
+                    />
+                </div>
+
                 <TableInsurType
                     data={type}
                     onDelete={hdlDelete}
                     onEdite={openModal}
                     page={page}
-                    limit={limit}
+                    limit={perPage}
                     onToggle={hdlToggleActive}
                 />
                 <div className='flex justify-end'>
                     {
-                        total > limit && (
+                        total > perPage && (
                             <Pagination
                                 disablePrev={page === 1}
                                 disableNext={page === lastPage}

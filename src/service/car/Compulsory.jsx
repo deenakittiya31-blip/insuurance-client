@@ -8,8 +8,8 @@ export const createCompulsory = async (token, form) => {
     })
 }
 
-export const ListCompulsory = async (pageNumber) => {
-    return api.get(`/api/list-compulsory/page?page=${pageNumber}&per_page=10`)
+export const ListCompulsory = async (pageNumber, perPage) => {
+    return api.get(`/api/list-compulsory/page?page=${pageNumber}&per_page=${perPage}`)
 }
 
 export const listOption = async (id) => {

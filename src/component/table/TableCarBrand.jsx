@@ -31,9 +31,11 @@ const TableCarBrand = ({ data, page, limit, onDelete, onEdit }) => {
                                 <td>
                                     {i.name}
                                 </td>
-                                <td className='flex gap-5 justify-center'>
-                                    <button onClick={() => onEdit(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
-                                    <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
+                                <td>
+                                    <div className='flex gap-5 justify-center'>
+                                        <button onClick={() => onEdit(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
+                                        <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
+                                    </div>
                                 </td>
                             </tr>
                         ))

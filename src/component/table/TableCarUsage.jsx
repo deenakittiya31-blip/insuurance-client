@@ -58,9 +58,11 @@ const TableCarUsage = ({ data, page, limit, onDelete, onUpdate }) => {
                                         </span>
                                     )}
                                 </td>
-                                <td className='flex gap-5 justify-center'>
-                                    <button onClick={() => startEdit(i)} className="btn btn-sm btn-soft btn-warning">แกไข</button>
-                                    <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
+                                <td>
+                                    <div className='flex gap-5 justify-center'>
+                                        <button onClick={() => startEdit(i)} className="btn btn-sm btn-soft btn-warning">แกไข</button>
+                                        <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
+                                    </div>
                                 </td>
                             </tr>
                         ))

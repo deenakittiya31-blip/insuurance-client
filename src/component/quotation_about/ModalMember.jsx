@@ -2,14 +2,14 @@ import TableMember from "../table/TableMember";
 import SearchBox from "./SearchBox";
 import { LuSend } from "react-icons/lu";
 
-const ModalMember = ({ data, onChange, selected, isOpen, onClose, onSubmit, isLoading }) => {
+const ModalMember = ({ data, onChange, onChangeSearch, selected, isOpen, onClose, onSubmit, isLoading }) => {
     if (!isOpen) return null;
     return (
         <div className='mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20'>
             <div className="w-auto p-6 radius-box flex flex-col gap-5 bg-white rounded-lg">
                 <div className="flex gap-1">
                     <div className="flex-1">
-                        <SearchBox width='w-full' />
+                        <SearchBox width='w-full' onChange={onChangeSearch} />
                     </div>
                     <button
                         type='submit'

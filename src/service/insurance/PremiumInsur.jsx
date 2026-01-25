@@ -8,8 +8,8 @@ export const createPremium = (token, form) => {
     })
 }
 
-export const listPremium = (pageNumber) => {
-    return api.get(`/api/list-premium/page?page=${pageNumber}&per_page=10`)
+export const listPremium = (pageNumber, perPage) => {
+    return api.get(`/api/list-premium/page?page=${pageNumber}&per_page=${perPage}`)
 }
 
 export const readPremium = (token, id) => {

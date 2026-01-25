@@ -8,8 +8,8 @@ export const createCarUsage = async (token, usage) => {
     })
 }
 
-export const listCarUsage = async (pageNumber) => {
-    return api.get(`/api/list-carusage/page?page=${pageNumber}&per_page=10`)
+export const listCarUsage = async (pageNumber, perPage) => {
+    return api.get(`/api/list-carusage/page?page=${pageNumber}&per_page=${perPage}`)
 }
 
 export const listCarUsageSelect = () => {

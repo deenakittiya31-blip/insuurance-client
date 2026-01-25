@@ -8,8 +8,8 @@ export const creatType = (token, form) => {
     })
 }
 
-export const listType = (pageNumber) => {
-    return api.get(`/api/list-type/page?page=${pageNumber}&per_page=10`)
+export const listType = (pageNumber, perPage) => {
+    return api.get(`/api/list-type/page?page=${pageNumber}&per_page=${perPage}`)
 }
 
 export const listTypeSelect = () => {

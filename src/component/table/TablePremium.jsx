@@ -22,8 +22,8 @@ const TablePremium = ({ data, page, limit, onDelete, onEdite }) => {
                         data?.map((i, idx) => (
                             <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
                                 <td>{(page - 1) * limit + idx + 1}</td>
-                                <td>{i.package}</td>
-                                <td>{i.usage_name}</td>
+                                <td className='text-wrap'>{i.package}</td>
+                                <td className='text-wrap'>{i.usage_name}</td>
                                 <td>{i.year}</td>
                                 <td>{i.premium}</td>
                                 <td>{i.compulsory}</td>

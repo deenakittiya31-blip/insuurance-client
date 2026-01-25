@@ -11,6 +11,7 @@ import NameTable from '../../component/form/NameTable'
 import ModalCarType from '../../component/modal/ModalCarType'
 import useActionStore from '../../store/action-store'
 import EditCarType from '../../component/edit/EditCarType'
+import SelectPerPage from '../../component/form/SelectPerPage'
 
 const initialState = {
     type: '',
@@ -28,16 +29,19 @@ const Cartype = () => {
     const [idSelect, setIdSelect] = useState(null)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
-    const limit = 10;
-    const lastPage = Math.ceil(total / limit)
+    const [perPage, setPerPage] = useState(10)
+    const lastPage = Math.ceil(total / perPage)
 
     useEffect(() => {
-        getCarType(page);
-        getCarUsage();
-    }, [page])
+        getCarType(page, perPage);
+    }, [page, perPage])
 
-    const getCarType = async (page) => {
-        const res = await listCarType(page)
+    useEffect(() => {
+        getCarUsage();
+    }, [])
+
+    const getCarType = async (page, perPage) => {
+        await listCarType(page, perPage)
             .then((res) => {
                 setTypeData(res.data.data)
                 setTotal(res.data.total)
@@ -50,6 +54,11 @@ const Cartype = () => {
             ...form,
             [e.target.name]: e.target.value
         })
+    }
+
+    const handlePerPageChange = (e) => {
+        setPerPage(Number(e.target.value))
+        setPage(1)  //รีเซ็ตกลับไปหน้า 1
     }
 
     const openModal = async (id) => {
@@ -82,7 +91,7 @@ const Cartype = () => {
                 document.getElementById('modalcartype').close()
                 toast.success(res.data.msg)
                 setForm(initialState)
-                getCarType(page)
+                getCarType(page, perPage)
             })
             .catch((err) => console.log(err))
     }
@@ -103,7 +112,7 @@ const Cartype = () => {
         try {
             const res = await removeCarType(token, id)
             toast.success(res.data.msg)
-            getCarType(page);
+            getCarType(page, perPage);
         } catch (err) {
             console.log(err)
             toast.error(err.response.data.message)
@@ -118,7 +127,7 @@ const Cartype = () => {
             setForm(initialState)
             closeForm()
             toast.success(res.data.msg)
-            getCarType(page)
+            getCarType(page, perPage)
         } catch (err) {
             console.log(err)
             toast.error('อัปเดตไม่สำเร็จ')
@@ -141,21 +150,27 @@ const Cartype = () => {
                 />
             </div>
             <div className='bg-white rounded-2xl p-5'>
-                <NameTable
-                    icon='🚗'
-                    name='ตารางประเภทรถยนต์'
-                />
+                <div className='flex justify-between items-baseline-last'>
+                    <NameTable
+                        icon='🚗'
+                        name='ตารางประเภทรถยนต์'
+                    />
+                    <SelectPerPage
+                        onChange={handlePerPageChange}
+                        perPage={perPage}
+                    />
+                </div>
                 <TableCarType
                     data={typeData}
                     onDelete={hdlDeleteType}
                     onEdit={openModal}
                     page={page}
-                    limit={limit}
+                    limit={perPage}
                 />
             </div>
             <div className='flex justify-end'>
                 {
-                    total > limit && (
+                    total > perPage && (
                         <Pagination
                             disablePrev={page === 1}
                             disableNext={page === lastPage}

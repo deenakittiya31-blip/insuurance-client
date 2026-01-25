@@ -9,6 +9,7 @@ import EditPackage from '../../component/edit/EditPackage'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
+import SelectPerPage from '../../component/form/SelectPerPage'
 
 const initialState = {
     company_id: '',
@@ -25,18 +26,23 @@ const InsurPackage = () => {
     const [idSelect, setIdSelect] = useState(null)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
-    const limit = 10;
-    const lastPage = Math.ceil(total / limit)
+    const [perPage, setPerPage] = useState(10)
+    const lastPage = Math.ceil(total / perPage)
 
     useEffect(() => {
-        getPackage(page);
-    }, [page])
+        getPackage(page, perPage);
+    }, [page, perPage])
 
     const hdlOnChange = (e) => {
         setForm({
             ...form,
             [e.target.name]: e.target.value
         })
+    }
+
+    const handlePerPageChange = (e) => {
+        setPerPage(Number(e.target.value))
+        setPage(1)
     }
 
     const openModal = async (id) => {
@@ -56,9 +62,9 @@ const InsurPackage = () => {
         setForm(initialState)
     }
 
-    const getPackage = async (page) => {
+    const getPackage = async (page, perPage) => {
         try {
-            const res = await listPackage(page);
+            const res = await listPackage(page, perPage);
             setPackageData(res.data.data)
             setTotal(res.data.total)
         } catch (err) {
@@ -72,7 +78,7 @@ const InsurPackage = () => {
             const res = await createPackage(token, form)
             document.getElementById('modalpackage').close();
             setForm(initialState)
-            getPackage(page);
+            getPackage(page, perPage);
             toast.success(res.data.msg)
         } catch (err) {
             console.log(err)
@@ -87,7 +93,7 @@ const InsurPackage = () => {
             setForm(initialState)
             closeForm()
             toast.success(res.data.msg)
-            getPackage(page)
+            getPackage(page, perPage)
 
         } catch (err) {
             console.log(err)
@@ -110,7 +116,7 @@ const InsurPackage = () => {
 
         try {
             const res = await removePackage(token, id)
-            getPackage(page)
+            getPackage(page, perPage)
             toast.success(res.data.msg)
 
         } catch (err) {
@@ -133,21 +139,27 @@ const InsurPackage = () => {
                 />
             </div>
             <div className='bg-white rounded-2xl p-5'>
-                <NameTable
-                    icon='📒'
-                    name='ตารางแพ็กเกจ'
-                />
+                <div className='flex justify-between items-baseline-last'>
+                    <NameTable
+                        icon='📒'
+                        name='ตารางแพ็กเกจ'
+                    />
+                    <SelectPerPage
+                        onChange={handlePerPageChange}
+                        perPage={perPage}
+                    />
+                </div>
                 <TablePackage
                     data={packageData}
                     onDelete={hdlDelete}
                     onEdite={openModal}
                     page={page}
-                    limit={limit}
+                    limit={perPage}
                 />
             </div>
             <div className='flex justify-end'>
                 {
-                    total > limit && (
+                    total > perPage && (
                         <Pagination
                             disablePrev={page === 1}
                             disableNext={page === lastPage}

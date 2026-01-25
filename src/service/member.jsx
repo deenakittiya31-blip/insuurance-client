@@ -16,3 +16,7 @@ export const sendDocumentToMember = (members, q_id) => {
         q_id
     })
 }
+
+export const searchMember = async (arg) => {
+    return api.post('/api/search-member', arg)
+}

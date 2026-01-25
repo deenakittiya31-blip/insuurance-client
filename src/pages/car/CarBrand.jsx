@@ -11,6 +11,7 @@ import ModalCarBrand from '../../component/modal/ModalCarBrand'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
+import SelectPerPage from '../../component/form/SelectPerPage'
 
 const initialState = {
     name: '',
@@ -26,18 +27,23 @@ const CarBrand = () => {
     const [idSelect, setIdSelect] = useState(false)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
-    const limit = 10;
-    const lastPage = Math.ceil(total / limit)
+    const [perPage, setPerPage] = useState(10)
+    const lastPage = Math.ceil(total / perPage)
 
     useEffect(() => {
-        getCarBrand(page);
-    }, [page])
+        getCarBrand(page, perPage);
+    }, [page, perPage])
 
     const handleOnChange = (e) => {
         setForm({
             ...form,
             [e.target.name]: e.target.value
         })
+    }
+
+    const handlePerPageChange = (e) => {
+        setPerPage(Number(e.target.value))
+        setPage(1)  //รีเซ็ตกลับไปหน้า 1
     }
 
     const openModal = async (id) => {
@@ -58,8 +64,8 @@ const CarBrand = () => {
         setForm(initialState)
     }
 
-    const getCarBrand = async (page) => {
-        const res = await listCarBrand(page)
+    const getCarBrand = async (page, perPage) => {
+        await listCarBrand(page, perPage)
             .then((res) => {
                 setData(res.data.data)
                 setTotal(res.data.total)
@@ -79,7 +85,7 @@ const CarBrand = () => {
             const res = await createCarBrand(token, form)
             toast.success(res.data.msg)
             setForm(initialState)
-            getCarBrand(page)
+            getCarBrand(page, perPage)
             document.getElementById('modalcarbrand').close()
         } catch (err) {
             console.error(err)
@@ -103,7 +109,7 @@ const CarBrand = () => {
 
         try {
             const res = await removeCarBrand(token, id)
-            getCarBrand(page);
+            getCarBrand(page, perPage);
             toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
@@ -117,7 +123,7 @@ const CarBrand = () => {
             setForm(initialState)
             closeForm()
             toast.success(res.data.msg)
-            getCarBrand(page)
+            getCarBrand(page, perPage)
 
         } catch (err) {
             console.log(err)
@@ -139,21 +145,27 @@ const CarBrand = () => {
                 />
             </div>
             <div className='bg-white rounded-2xl p-5'>
-                <NameTable
-                    icon='🚗'
-                    name='ตารางยี่ห้อ'
-                />
+                <div className='flex justify-between items-baseline-last'>
+                    <NameTable
+                        icon='🚗'
+                        name='ตารางยี่ห้อ'
+                    />
+                    <SelectPerPage
+                        onChange={handlePerPageChange}
+                        perPage={perPage}
+                    />
+                </div>
                 <TableCarBrand
                     data={data}
                     onDelete={hdlDelete}
                     onEdit={openModal}
                     page={page}
-                    limit={limit}
+                    limit={perPage}
                 />
             </div>
             <div className='flex justify-end'>
                 {
-                    total > limit && (
+                    total > perPage && (
                         <Pagination
                             disablePrev={page === 1}
                             disableNext={page === lastPage}

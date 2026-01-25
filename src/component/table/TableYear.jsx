@@ -20,9 +20,11 @@ const TableYear = ({ data, page, limit, onDelete, onEdite }) => {
                                 <td>{(page - 1) * limit + idx + 1}</td>
                                 <td>{i.year_be}</td>
                                 <td>{i.year_ad}</td>
-                                <td className='flex gap-5 justify-center'>
-                                    <button onClick={() => onEdite(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
-                                    <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
+                                <td>
+                                    <div className='flex gap-5 justify-center'>
+                                        <button onClick={() => onEdite(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
+                                        <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
+                                    </div>
                                 </td>
                             </tr>
                         ))

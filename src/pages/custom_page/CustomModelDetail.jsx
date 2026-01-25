@@ -146,10 +146,10 @@ const CustomModelDetail = () => {
                         value={additional}
                         onChange={(e) => setAdditional(e.target.value)}
                     />
-                    <div className="flex justify-end">
+                    <div className="flex justify-end mt-3">
                         <button
                             onClick={handleUpdateAdditional}
-                            className="btn btn-soft btn-sm btn-neutral text-white">บันทึก</button>
+                            className="btn btn-sm btn-neutral text-white">บันทึก</button>
                     </div>
                 </div>
                 <div className="flex justify-between items-center mb-5">

@@ -29,7 +29,7 @@ const TableCompany = ({ data, page, limit, onDelete, onEdit }) => {
                                         />
                                     </div>
                                 </td>
-                                <td>
+                                <td className='text-wrap'>
                                     {i.namecompany}
                                 </td>
                                 <td>
@@ -38,9 +38,11 @@ const TableCompany = ({ data, page, limit, onDelete, onEdit }) => {
                                 <td>
                                     {i.phone}
                                 </td>
-                                <td className='flex gap-5 justify-center'>
-                                    <button onClick={() => onEdit(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
-                                    <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
+                                <td>
+                                    <div className='flex gap-5 justify-center'>
+                                        <button onClick={() => onEdit(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
+                                        <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
+                                    </div>
                                 </td>
                             </tr>
                         ))

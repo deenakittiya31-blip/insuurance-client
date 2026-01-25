@@ -8,8 +8,8 @@ export const createPackage = (token, form) => {
     })
 }
 
-export const listPackage = (pageNumber) => {
-    return api.get(`/api/list-package/page?page=${pageNumber}&per_page=10`)
+export const listPackage = (pageNumber, perPage) => {
+    return api.get(`/api/list-package/page?page=${pageNumber}&per_page=${perPage}`)
 }
 
 export const listPackageSelect = () => {

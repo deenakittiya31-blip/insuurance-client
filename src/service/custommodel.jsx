@@ -1,7 +1,7 @@
 import api from '../config/axios'
 
-export const listModelCompany = (pageNumber) => {
-    return api.get(`api/list-model/page?page=${pageNumber}&per_page=10`)
+export const listModelCompany = (pageNumber, perPage) => {
+    return api.get(`api/list-model/page?page=${pageNumber}&per_page=${perPage}`)
 }
 
 export const deleteModelCompany = (company_id) => {

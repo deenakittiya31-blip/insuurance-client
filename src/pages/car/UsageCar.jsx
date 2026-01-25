@@ -10,6 +10,8 @@ import Pagination from '../../component/paginationComponent/Pagination'
 import Swal from 'sweetalert2'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
+import SelectPerPage from '../../component/form/SelectPerPage'
+import TextInput from '../../component/form/TextInput'
 
 const UsageCar = () => {
     const token = useInsureAuth((s) => s.token)
@@ -17,22 +19,27 @@ const UsageCar = () => {
     const [usageData, setUsageData] = useState([])
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
-    const limit = 10;
-    const lastPage = Math.ceil(total / limit)
+    const [perPage, setPerPage] = useState(10)
+    const lastPage = Math.ceil(total / perPage)
 
     useEffect(() => {
-        getUsage(page);
-    }, [page])
+        getUsage(page, perPage);
+    }, [page, perPage])
 
 
-    const getUsage = async (page) => {
-        const res = await listCarUsage(page)
+    const getUsage = async (page, perPage) => {
+        const res = await listCarUsage(page, perPage)
             .then((res) => {
                 setUsageData(res.data.data)
                 setTotal(res.data.total)
                 setUsage('');
             })
             .catch((err) => console.log(err))
+    }
+
+    const handlePerPageChange = (e) => {
+        setPerPage(Number(e.target.value))
+        setPage(1)  //รีเซ็ตกลับไปหน้า 1
     }
 
     const handleSubmit = (e) => {
@@ -43,7 +50,7 @@ const UsageCar = () => {
         createCarUsage(token, usage)
             .then((res) => {
                 toast.success(res.data.msg)
-                getUsage(page)
+                getUsage(page, perPage)
             })
             .catch((err) => console.log(err))
     }
@@ -64,7 +71,7 @@ const UsageCar = () => {
 
         try {
             const res = await removeCarUsage(token, id)
-            getUsage(page);
+            getUsage(page, perPage);
             toast.success(res.data.msg)
 
         } catch (err) {
@@ -78,7 +85,7 @@ const UsageCar = () => {
         try {
             const res = await updateCarUsage(token, id, value)
             toast.success(res.data.msg)
-            getUsage(page)
+            getUsage(page, perPage)
         } catch (err) {
             console.log(err)
         }
@@ -91,11 +98,11 @@ const UsageCar = () => {
                     title='ประเภทการใช้งาน'
                     subtitle='ข้อมูลประเภทการใช้งานรถยนต์'
                 />
-                <form onSubmit={handleSubmit} className='flex gap-5 font-prompt'>
-                    <Input
+                <form onSubmit={handleSubmit} className='flex items-baseline-last gap-5 font-prompt'>
+                    <TextInput
                         value={usage}
                         placeholder='เพิ่มประเภทการใช้งานของรถ'
-                        width='w-xs'
+                        width='w-40 lg:w-xs'
                         name='year'
                         type='text'
                         onChange={(e) => setUsage(e.target.value)}
@@ -104,21 +111,27 @@ const UsageCar = () => {
                 </form>
             </div>
             <div className='bg-white rounded-2xl p-5'>
-                <NameTable
-                    icon='🚗'
-                    name='ตารางประเภทการใช้งาน'
-                />
+                <div className='flex justify-between items-baseline-last'>
+                    <NameTable
+                        icon='🚗'
+                        name='ตารางประเภทการใช้งาน'
+                    />
+                    <SelectPerPage
+                        onChange={handlePerPageChange}
+                        perPage={perPage}
+                    />
+                </div>
                 <TableCarUsage
                     data={usageData}
                     page={page}
-                    limit={limit}
+                    limit={perPage}
                     onDelete={hdlDelete}
                     onUpdate={hdlUpdateCarUsage}
                 />
             </div>
             <div className='flex justify-end'>
                 {
-                    total > limit && (
+                    total > perPage && (
                         <Pagination
                             disablePrev={page === 1}
                             disableNext={page === lastPage}

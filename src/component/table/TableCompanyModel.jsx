@@ -18,11 +18,14 @@ const TableCompanyModel = ({ data, page, limit, onDelete }) => {
                             <tr key={i.company_id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
                                 <td>{(page - 1) * limit + idx + 1}</td>
                                 <td>{i.namecompany}</td>
-                                <td className='flex gap-5 justify-center'>
-                                    <Link to={`/admin/custommodel-detail/${i.company_id}`} >
-                                        <button className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
-                                    </Link>
-                                    <button onClick={() => onDelete(i.company_id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
+                                <td>
+                                    <div className='flex gap-5 justify-center'>
+                                        <Link to={`/admin/custommodel-detail/${i.company_id}`} >
+                                            <button className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
+                                        </Link>
+                                        <button onClick={() => onDelete(i.company_id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
+                                    </div>
+
                                 </td>
                             </tr>
                         ))

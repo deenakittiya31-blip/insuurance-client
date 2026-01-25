@@ -8,8 +8,8 @@ export const createCompany = (token, form) => {
     })
 }
 
-export const listCompany = (pageNumber) => {
-    return api.get(`/api/list-company/page?page=${pageNumber}&per_page=10`)
+export const listCompany = (pageNumber, perPage) => {
+    return api.get(`/api/list-company/page?page=${pageNumber}&per_page=${perPage}`)
 }
 
 export const listCompanySelect = () => {

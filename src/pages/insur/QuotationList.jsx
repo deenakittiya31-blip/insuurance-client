@@ -7,7 +7,7 @@ import Pagination from "../../component/paginationComponent/Pagination"
 import Swal from "sweetalert2"
 import toast from "react-hot-toast"
 import ModalMember from "../../component/quotation_about/ModalMember"
-import { listMember, sendDocumentToMember } from "../../service/member"
+import { listMember, searchMember, sendDocumentToMember } from "../../service/member"
 import useInsureAuth from "../../store/auth-store"
 import SearchBox from "../../component/quotation_about/SearchBox"
 
@@ -19,6 +19,7 @@ const QuotationList = () => {
     const [quotationId, setQuotationId] = useState(null)
     const [loading, setLoading] = useState(false)
     const [text, setText] = useState('')
+    const [memberText, setMemberText] = useState('')
     const [open, setOpen] = useState(false)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
@@ -40,6 +41,24 @@ const QuotationList = () => {
         return () => clearTimeout(deley)
     }, [text])
 
+    useEffect(() => {
+        const deley = setTimeout(() => {
+            handleSearchMember()
+        }, 500)
+        return () => clearTimeout(deley)
+    }, [memberText])
+
+    const handleSearchMember = async () => {
+        try {
+            const res = await searchMember({ search: memberText })
+            setMember(res.data.data)
+            if (!memberText) {
+                getMember(page)
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
     const handleSearchQuotation = async () => {
         try {
             const res = await searchText({ search: text })
@@ -263,6 +282,7 @@ const QuotationList = () => {
                 isOpen={open}
                 onClose={closeForm}
                 selected={memberSelected}
+                onChangeSearch={(e) => setMemberText(e.target.value)}
             />
         </div>
     )

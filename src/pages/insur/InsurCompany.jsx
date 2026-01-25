@@ -9,6 +9,7 @@ import EditCompany from '../../component/edit/EditCompany'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
+import SelectPerPage from '../../component/form/SelectPerPage'
 
 const initialState = {
     namecompany: '',
@@ -26,18 +27,23 @@ const InsurCompany = () => {
     const [idSelect, setIdSelect] = useState(null)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
-    const limit = 10;
-    const lastPage = Math.ceil(total / limit)
+    const [perPage, setPerPage] = useState(10)
+    const lastPage = Math.ceil(total / perPage)
 
     useEffect(() => {
-        getCompany(page);
-    }, [page])
+        getCompany(page, perPage);
+    }, [page, perPage])
 
     const handleOnChange = (e) => {
         setForm({
             ...form,
             [e.target.name]: e.target.value
         })
+    }
+
+    const handlePerPageChange = (e) => {
+        setPerPage(Number(e.target.value))
+        setPage(1)  //รีเซ็ตกลับไปหน้า 1
     }
 
     const openModal = async (id) => {
@@ -68,7 +74,7 @@ const InsurCompany = () => {
         try {
             const res = await createCompany(token, form)
             document.getElementById('modalcompany').close();
-            getCompany(page);
+            getCompany(page, perPage);
             toast.success(res.data.msg)
             setForm(initialState)
 
@@ -87,16 +93,16 @@ const InsurCompany = () => {
             setForm(initialState)
             closeForm()
             toast.success(res.data.msg)
-            getCompany(page)
+            getCompany(page, perPage)
 
         } catch (err) {
             console.log(err)
         }
     }
 
-    const getCompany = async (page) => {
+    const getCompany = async (page, per_page) => {
         try {
-            const res = await listCompany(page)
+            const res = await listCompany(page, perPage)
             setCompany(res.data.data)
             setTotal(res.data.total)
         } catch (err) {
@@ -120,7 +126,7 @@ const InsurCompany = () => {
 
         try {
             const res = await removeCompany(token, id)
-            getCompany(page);
+            getCompany(page, perPage);
             toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
@@ -141,21 +147,27 @@ const InsurCompany = () => {
                 />
             </div>
             <div className='bg-white rounded-2xl p-5'>
-                <NameTable
-                    icon='🏢'
-                    name='ตารางบริษัท'
-                />
+                <div className='flex justify-between items-baseline-last'>
+                    <NameTable
+                        icon='🏢'
+                        name='ตารางบริษัท'
+                    />
+                    <SelectPerPage
+                        onChange={handlePerPageChange}
+                        perPage={perPage}
+                    />
+                </div>
                 <TableCompany
                     data={company}
                     onDelete={hdlDelete}
                     onEdit={openModal}
                     page={page}
-                    limit={limit}
+                    limit={perPage}
                 />
             </div>
             <div className='flex justify-end'>
                 {
-                    total > limit && (
+                    total > perPage && (
                         <Pagination
                             disablePrev={page === 1}
                             disableNext={page === lastPage}

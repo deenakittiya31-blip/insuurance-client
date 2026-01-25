@@ -10,6 +10,7 @@ import useActionStore from '../../store/action-store'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
 import EditCarmodel from '../../component/edit/EditCarmodel'
+import SelectPerPage from '../../component/form/SelectPerPage'
 
 const initialState = {
     brand_id: '',
@@ -26,13 +27,13 @@ const CarModel = () => {
     const [idSelect, setIdSelect] = useState(null)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
-    const limit = 10;
-    const lastPage = Math.ceil(total / limit)
+    const [perPage, setPerPage] = useState(10)
+    const lastPage = Math.ceil(total / perPage)
 
     useEffect(() => {
         getCarBrandSelect()
-        getCarModel(page)
-    }, [page])
+        getCarModel(page, perPage)
+    }, [page, perPage])
 
     const hdlOnChange = (e) => {
         setForm({
@@ -41,16 +42,19 @@ const CarModel = () => {
         })
     }
 
-    const getCarModel = async (page) => {
-        const res = await listCarModel(page)
+    const handlePerPageChange = (e) => {
+        setPerPage(Number(e.target.value))
+        setPage(1)  //รีเซ็ตกลับไปหน้า 1
+    }
+
+    const getCarModel = async (page, perPage) => {
+        await listCarModel(page, perPage)
             .then((res) => {
                 setCarModel(res.data.data)
                 setTotal(res.data.total)
             })
             .catch((err) => console.log(err))
     }
-
-    console.log(carbrand)
 
     const openModal = async (id) => {
         setOpen(true)
@@ -63,6 +67,8 @@ const CarModel = () => {
             console.log(err)
         }
     }
+
+    console.log(form)
 
     const closeForm = () => {
         setOpen(false)
@@ -88,7 +94,7 @@ const CarModel = () => {
             document.getElementById('modalcarmodel').close()
             toast.success(res.data.msg)
             setForm(initialState)
-            getCarModel(page);
+            getCarModel(page, perPage);
         } catch (err) {
             console.log(err)
             toast.error(err.response.data.message)
@@ -111,7 +117,7 @@ const CarModel = () => {
 
         try {
             const res = await removeCarModel(token, id)
-            getCarModel();
+            getCarModel(page, perPage);
             toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
@@ -125,7 +131,7 @@ const CarModel = () => {
             setForm(initialState)
             closeForm()
             toast.success('อัปเดตเรียบร้อย')
-            getCarModel(page)
+            getCarModel(page, perPage)
         } catch (err) {
             console.log(err)
             toast.error('อัปเดตไม่สำเร็จ')
@@ -147,21 +153,27 @@ const CarModel = () => {
                 />
             </div>
             <div className='bg-white rounded-2xl p-5'>
-                <NameTable
-                    icon='🚗'
-                    name='ตารางรุ่นรถ'
-                />
+                <div className='flex justify-between items-baseline-last'>
+                    <NameTable
+                        icon='🚗'
+                        name='ตารางรุ่นรถ'
+                    />
+                    <SelectPerPage
+                        onChange={handlePerPageChange}
+                        perPage={perPage}
+                    />
+                </div>
                 <TableCarModel
                     data={carModel}
                     onDelete={hdlDelete}
                     page={page}
-                    limit={limit}
+                    limit={perPage}
                     onEdit={openModal}
                 />
             </div>
             <div className='flex justify-end'>
                 {
-                    total > limit && (
+                    total > perPage && (
                         <Pagination
                             disablePrev={page === 1}
                             disableNext={page === lastPage}

@@ -8,8 +8,8 @@ export const createCarBrand = (token, form) => {
     })
 }
 
-export const listCarBrand = (pageNumber) => {
-    return api.get(`/api/list-carbrand/page?page=${pageNumber}&per_page=10`)
+export const listCarBrand = (pageNumber, perPage) => {
+    return api.get(`/api/list-carbrand/page?page=${pageNumber}&per_page=${perPage}`)
 }
 
 export const listCarBrandSelect = () => {

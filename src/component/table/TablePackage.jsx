@@ -19,13 +19,16 @@ const TablePackage = ({ data, page, limit, onDelete, onEdite }) => {
                         data?.map((i, idx) => (
                             <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
                                 <td>{(page - 1) * limit + idx + 1}</td>
-                                <td>{i.company}</td>
+                                <td><p className='line-clamp-1'>{i.company}</p></td>
                                 <td>{i.type}</td>
-                                <td>{i.package_name}</td>
+                                <td><p className='line-clamp-1'>{i.package_name}</p></td>
                                 <td>{i.coverage_amount}</td>
-                                <td className='flex gap-5 justify-center'>
-                                    <button onClick={() => onEdite(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
-                                    <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
+                                <td>
+                                    <div className='flex gap-5 justify-center'>
+                                        <button onClick={() => onEdite(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
+                                        <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
+                                    </div>
+
                                 </td>
                             </tr>
                         ))
