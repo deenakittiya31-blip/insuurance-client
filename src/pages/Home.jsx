@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import Title from "../component/form/Title"
-import { listMember } from "../service/member"
+import { listMemberPagination } from "../service/member"
 import TableMemberList from "../component/table/TableMemberList"
 import NameTable from "../component/form/NameTable"
 import SelectPerPage from "../component/form/SelectPerPage"
@@ -20,7 +20,7 @@ const Home = () => {
 
     const getMember = async (page, perPage, sortKey = 'id', sortDirection = 'DESC') => {
         try {
-            const res = await listMember(page, perPage, sortKey, sortDirection)
+            const res = await listMemberPagination(page, perPage, sortKey, sortDirection)
             setMember(res.data.data)
             setTotal(res.data.total)
 
@@ -65,6 +65,10 @@ const Home = () => {
                 </div>
                 <TableMemberList
                     data={member}
+                    page={page}
+                    limit={perPage}
+                    onSort={handleSort}
+                    sortConfig={sortConfig}
                 />
             </div>
             <div className='flex justify-end'>

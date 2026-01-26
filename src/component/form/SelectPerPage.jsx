@@ -1,6 +1,6 @@
-const SelectPerPage = ({ onChange, perPage }) => {
+const SelectPerPage = ({ width, onChange, perPage }) => {
     return (
-        <fieldset className="fieldset font-prompt text-text-primary p-0">
+        <fieldset className={`${width} fieldset font-prompt text-text-primary p-0`}>
             <legend className="fieldset-legend text-sm text-text-primary">จำนวนข้อมูล</legend>
             <select
                 onChange={onChange}

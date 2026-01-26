@@ -6,11 +6,20 @@ export const registerMember = (payload) => {
     return axios.post(`${API_URL}/api/register-member`, payload)
 }
 
-export const listMember = (page, perPage, sortKey, sortDirection) => {
-    return api.get('/api/list-member/page', {
+export const listMemberPagination = (page, perPage, sortKey, sortDirection) => {
+    return api.get('/api/list-members', {
         params: {
             page: page,
             Per_page: perPage,
+            sortKey,
+            sortDirection
+        }
+    })
+}
+
+export const listAllMember = (sortKey, sortDirection) => {
+    return api.get('/api/list-members', {
+        params: {
             sortKey,
             sortDirection
         }

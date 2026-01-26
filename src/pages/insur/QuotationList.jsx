@@ -7,9 +7,10 @@ import Pagination from "../../component/paginationComponent/Pagination"
 import Swal from "sweetalert2"
 import toast from "react-hot-toast"
 import ModalMember from "../../component/quotation_about/ModalMember"
-import { listMember, searchMember, sendDocumentToMember } from "../../service/member"
+import { sendDocumentToMember } from "../../service/member"
 import useInsureAuth from "../../store/auth-store"
 import SearchBox from "../../component/quotation_about/SearchBox"
+import SelectPerPage from "../../component/form/SelectPerPage"
 
 const QuotationList = () => {
     const token = useInsureAuth((s) => s.token)
@@ -71,10 +72,14 @@ const QuotationList = () => {
         setQuotationId(id)
     }
 
-    const closeForm = (setMemberSelected) => {
+    const closeForm = () => {
         setOpen(false)
         setQuotationId(null)
-        setMemberSelected([])
+    }
+
+    const handlePerPageChange = (e) => {
+        setPerPage(Number(e.target.value))
+        setPage(1)
     }
 
     const hdlDelete = async (id) => {
@@ -196,18 +201,25 @@ const QuotationList = () => {
                     subtitle='ข้อมูลรายการใบเสนอราคา ส่งใบเสนอราคาให้ลูกค้า'
                 />
             </div>
-            <div className='flex flex-col gap-3 flex-1 bg-white rounded-2xl p-5'>
-                <div className="flex justify-between">
-                    <div className="flex-1">
-                        <NameTable
-                            icon='📑'
-                            name='ตารางใบเสนอราคา'
+            <div className='flex-1 bg-white rounded-2xl p-5'>
+                <div className="flex justify-between items-baseline-last">
+                    <NameTable
+                        icon='📑'
+                        name='ตารางใบเสนอราคา'
+                    />
+                    <div className="flex gap-3 items-baseline-last">
+                        <SearchBox
+                            width='w-sm'
+                            placeholder='ค้นหาเลขที่ใบเสนอราคา, ชื่อ, ยี่ห้อรถยนต์...'
+                            onChange={(e) => setText(e.target.value)}
+                        />
+                        <SelectPerPage
+                            width='w-20'
+                            onChange={handlePerPageChange}
+                            perPage={perPage}
                         />
                     </div>
-                    <SearchBox
-                        width=''
-                        onChange={(e) => setText(e.target.value)}
-                    />
+
                 </div>
                 <TableQuotationList
                     data={list}
@@ -237,6 +249,7 @@ const QuotationList = () => {
                 onSubmit={sendMessage}
                 isOpen={open}
                 onClose={closeForm}
+                q_id={quotationId}
             />
         </div>
     )

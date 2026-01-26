@@ -2,14 +2,19 @@ import { useEffect, useState } from "react";
 import TableMember from "../table/TableMember";
 import SearchBox from "./SearchBox";
 import { LuSend } from "react-icons/lu";
-import { listMember, searchMember } from "../../service/member";
+import { listAllMember, searchMember } from "../../service/member";
+import { getDetailCompare } from "../../service/compare";
+import useInsureAuth from "../../store/auth-store";
+import StateDetailSend from "./StateDetailSend";
 
-const ModalMember = ({ isOpen, onClose, onSubmit }) => {
+const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
+    const token = useInsureAuth((s) => s.token)
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
     const [member, setMember] = useState([])
     const [memberSelected, setMemberSelected] = useState([])
     const [loading, setLoading] = useState(false)
     const [textSearch, setTextSearch] = useState('')
+    const [detail, setDetail] = useState({})
 
     useEffect(() => {
         if (isOpen) {
@@ -26,9 +31,25 @@ const ModalMember = ({ isOpen, onClose, onSubmit }) => {
         return () => clearTimeout(deley)
     }, [textSearch, isOpen])
 
+    useEffect(() => {
+        if (!q_id) return;
+        getDetail();
+    }, [q_id])
+
+    const getDetail = async () => {
+        try {
+            const res = await getDetailCompare(token, q_id)
+            setDetail(res.data.data)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    console.log(detail)
+
     const getMember = async (sortKey, sortDirection) => {
         try {
-            const res = await listMember(sortKey, sortDirection)
+            const res = await listAllMember(sortKey, sortDirection)
             setMember(res.data.data)
 
         } catch (err) {
@@ -104,7 +125,8 @@ const ModalMember = ({ isOpen, onClose, onSubmit }) => {
 
     return (
         <div className='mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20'>
-            <div className="w-auto p-6 radius-box flex flex-col gap-5 bg-white rounded-lg">
+            <div className="w-auto p-6 radius-box flex flex-col gap-5 bg-white rounded-lg font-prompt">
+                <StateDetailSend data={detail} />
                 <div className="flex gap-5">
                     <div className="flex-1">
                         <SearchBox
