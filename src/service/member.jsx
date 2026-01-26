@@ -6,8 +6,8 @@ export const registerMember = (payload) => {
     return axios.post(`${API_URL}/api/register-member`, payload)
 }
 
-export const listMember = () => {
-    return api.get('/api/list-member')
+export const listMember = (sortKey, sortDirection) => {
+    return api.get(`/api/list-member/sort?sortKey=${sortKey}&sortDirection=${sortDirection}`)
 }
 
 export const sendDocumentToMember = (members, q_id) => {

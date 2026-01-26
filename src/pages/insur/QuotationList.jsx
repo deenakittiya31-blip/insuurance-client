@@ -14,6 +14,7 @@ import SearchBox from "../../component/quotation_about/SearchBox"
 const QuotationList = () => {
     const token = useInsureAuth((s) => s.token)
     const [list, setList] = useState([])
+    const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
     const [member, setMember] = useState([])
     const [memberSelected, setMemberSelected] = useState([])
     const [quotationId, setQuotationId] = useState(null)
@@ -23,16 +24,16 @@ const QuotationList = () => {
     const [open, setOpen] = useState(false)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
-    const limit = 10;
-    const lastPage = Math.ceil(total / limit)
+    const [perPage, setPerPage] = useState(10)
+    const lastPage = Math.ceil(total / perPage)
 
     useEffect(() => {
-        getQuotationList(page)
-    }, [page])
+        getQuotationList(page, perPage, sortConfig.key, sortConfig.direction)
+    }, [page, perPage, sortConfig])
 
     useEffect(() => {
-        getMember()
-    }, [])
+        getMember(sortConfig.key, sortConfig.direction)
+    }, [sortConfig])
 
     useEffect(() => {
         const deley = setTimeout(() => {
@@ -47,6 +48,8 @@ const QuotationList = () => {
         }, 500)
         return () => clearTimeout(deley)
     }, [memberText])
+
+    console.log(memberSelected)
 
     const handleSearchMember = async () => {
         try {
@@ -71,9 +74,9 @@ const QuotationList = () => {
         }
     }
 
-    const getQuotationList = async (page) => {
+    const getQuotationList = async (page, perPage, sortKey = 'id', sortDirection = 'DESC') => {
         try {
-            const res = await listQuotationCompare(page)
+            const res = await listQuotationCompare(page, perPage, sortKey, sortDirection)
             setList(res.data.data)
             setTotal(res.data.total)
         } catch (err) {
@@ -81,14 +84,58 @@ const QuotationList = () => {
         }
     }
 
-    const getMember = async () => {
+    const handleSort = (keyName) => {
+        let direction = 'ASC';
+
+        if (sortConfig.key === keyName && sortConfig.direction === 'ASC') {
+            direction = 'DESC';
+        }
+
+        setSortConfig({ key: keyName, direction });
+    }
+
+    const getMember = async (sortKey, sortDirection) => {
         try {
-            const res = await listMember()
+            const res = await listMember(sortKey, sortDirection)
             setMember(res.data.data)
 
         } catch (err) {
             console.log(err)
         }
+    }
+
+    const handleCheck = (e) => {
+        const userId = e.target.value //ค่าที่โดนเช็ค
+
+        setMemberSelected((prev) =>
+            prev.includes(userId)
+                ? prev.filter(id => id !== userId)
+                : [...prev, userId]
+        )
+    }
+
+    const handleCheckAll = (e) => {
+        if (e.target.checked) {
+            const allMembers = member.map(item => item.user_id)
+            setMemberSelected(allMembers)
+        } else {
+            setMemberSelected([])
+        }
+    }
+
+    const isAllSelected = member.length > 0 && memberSelected.length === member.length
+
+    const isSomeSelected = memberSelected.length > 0 && memberSelected.length < member.length
+
+    const openModal = async (id) => {
+        setOpen(true)
+        setQuotationId(id)
+    }
+
+    const closeForm = () => {
+        setOpen(false)
+        setMemberSelected([])
+        setQuotationId(null)
     }
 
     const hdlDelete = async (id) => {
@@ -107,33 +154,11 @@ const QuotationList = () => {
 
         try {
             const res = await deleteQuotationCompare(id)
-            getQuotationList(page);
+            getQuotationList(page, perPage);
             toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
         }
-    }
-
-
-    const handleCheck = (e) => {
-        const userId = e.target.value //ค่าที่โดนเช็ค
-
-        setMemberSelected((prev) =>
-            prev.includes(userId)
-                ? prev.filter(id => id !== userId)
-                : [...prev, userId]
-        )
-    }
-
-    const openModal = async (id) => {
-        setOpen(true)
-        setQuotationId(id)
-    }
-
-    const closeForm = () => {
-        setOpen(false)
-        setMemberSelected([])
-        setQuotationId(null)
     }
 
     const sendMessage = async () => {
@@ -238,7 +263,7 @@ const QuotationList = () => {
                     subtitle='ข้อมูลรายการใบเสนอราคา ส่งใบเสนอราคาให้ลูกค้า'
                 />
             </div>
-            <div className='flex-1 bg-white rounded-2xl p-5'>
+            <div className='flex flex-col gap-3 flex-1 bg-white rounded-2xl p-5'>
                 <div className="flex justify-between">
                     <div className="flex-1">
                         <NameTable
@@ -251,19 +276,20 @@ const QuotationList = () => {
                         onChange={(e) => setText(e.target.value)}
                     />
                 </div>
-
                 <TableQuotationList
                     data={list}
                     page={page}
-                    limit={limit}
+                    limit={perPage}
                     onDelete={hdlDelete}
                     isOpen={openModal}
                     pdf={createComparePDF}
                     jpg={createJPEG}
+                    onSort={handleSort}
+                    sortConfig={sortConfig}
                 />
                 <div className='flex justify-end'>
                     {
-                        total > limit && (
+                        total > perPage && (
                             <Pagination
                                 disablePrev={page === 1}
                                 disableNext={page === lastPage}
@@ -283,6 +309,11 @@ const QuotationList = () => {
                 onClose={closeForm}
                 selected={memberSelected}
                 onChangeSearch={(e) => setMemberText(e.target.value)}
+                onSort={handleSort}
+                sortConfig={sortConfig}
+                onCheckAll={handleCheckAll}
+                isAllSelected={isAllSelected}
+                isSomeSelected={isSomeSelected}
             />
         </div>
     )

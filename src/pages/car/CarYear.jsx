@@ -20,6 +20,7 @@ const CarYear = () => {
     const token = useInsureAuth((s) => s.token)
     const [form, setForm] = useState(initialState)
     const [yearData, setYearData] = useState([])
+    const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
     const [idSelect, setIdSelect] = useState(null)
     const [open, setOpen] = useState(false)
     const [page, setPage] = useState(1)
@@ -29,16 +30,26 @@ const CarYear = () => {
 
 
     useEffect(() => {
-        getYear(page, perPage);
-    }, [page, perPage])
+        getYear(page, perPage, sortConfig.key, sortConfig.direction);
+    }, [page, perPage, sortConfig])
 
-    const getYear = async (page, perPage) => {
-        await listYear(page, perPage)
+    const getYear = async (page, perPage, sortKey = 'id', sortDirection = 'DESC') => {
+        await listYear(page, perPage, sortKey, sortDirection)
             .then((res) => {
                 setYearData(res.data.data)
                 setTotal(res.data.total)
             })
             .catch((err) => console.log(err))
+    }
+
+    const handleSort = (keyName) => {
+        let direction = 'ASC';
+
+        if (sortConfig.key === keyName && sortConfig.direction === 'ASC') {
+            direction = 'DESC';
+        }
+
+        setSortConfig({ key: keyName, direction });
     }
 
     const hdlOnChange = (e) => {
@@ -157,6 +168,8 @@ const CarYear = () => {
                     limit={perPage}
                     onDelete={hdlDelete}
                     onEdite={openModal}
+                    onSort={handleSort}
+                    sortConfig={sortConfig}
                 />
             </div>
             <div className='flex justify-end'>

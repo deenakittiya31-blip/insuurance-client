@@ -1,16 +1,72 @@
-const TableMember = ({ data, onChange, selected }) => {
+import Sort from "../sortData/Sort"
+
+const TableMember = ({ data, onChange, selected, onSort, sortConfig, onCheckAll, isAllSelected, isSomeSelected }) => {
     return (
         <div className="overflow-x-auto font-prompt">
+            <div className="flex justify-end">
+                <button className="btn btn-sm btn-soft btn-success">
+                    <Sort
+                        onSort={onSort}
+                        keyName='display_name'
+                        currentSort={sortConfig}
+                    />
+                    คุยล่าสุด</button>
+            </div>
             <table className="table">
                 {/* head */}
                 <thead>
                     <tr>
                         <th>
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    className="checkbox"
+                                    checked={isAllSelected}
+                                    onChange={onCheckAll}
+                                    ref={(el) => {
+                                        if (el) {
+                                            el.indeterminate = isSomeSelected
+                                        }
+                                    }}
+                                />
+                            </label>
                         </th>
-                        <th className='font-medium text-neutral-400'>ชื่อไลน์</th>
-                        <th className='font-medium text-neutral-400'>ชื่อ</th>
-                        <th className='font-medium text-neutral-400'>นามสกุล</th>
-                        <th className='font-medium text-neutral-400'>เบอร์โทรศัพท์</th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center  gap-3'>
+                                ชื่อไลน์<Sort
+                                    onSort={onSort}
+                                    keyName='display_name'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center  gap-3'>
+                                ชื่อ<Sort
+                                    onSort={onSort}
+                                    keyName='first_name'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center  gap-3'>
+                                นามสกุล<Sort
+                                    onSort={onSort}
+                                    keyName='last_name'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center  gap-3'>
+                                เบอร์โทรศัพท์<Sort
+                                    onSort={onSort}
+                                    keyName='phone'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>

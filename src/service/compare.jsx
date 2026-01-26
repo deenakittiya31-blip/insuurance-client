@@ -1,7 +1,14 @@
 import api from '../config/axios'
 
-export const listQuotationCompare = (pageNumber) => {
-    return api.get(`/api/list-compare/page?page=${pageNumber}&per_page=10`)
+export const listQuotationCompare = (pageNumber, perPage, sortKey, sortDirection) => {
+    return api.get('/api/list-compare/page', {
+        params: {
+            page: pageNumber,
+            per_page: perPage,
+            sortKey,
+            sortDirection
+        }
+    })
 }
 
 export const createCompare = (token, form) => {

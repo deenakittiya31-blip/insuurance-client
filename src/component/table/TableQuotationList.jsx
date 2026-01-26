@@ -4,19 +4,60 @@ import { FaRegEye } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FaLine } from "react-icons/fa";
 import { BiSolidFileJpg, BiSolidFilePdf } from "react-icons/bi";
+import Sort from "../sortData/Sort";
 
-const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg }) => {
+const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onSort, sortConfig }) => {
     return (
         <div className="overflow-x-auto font-prompt">
             <table className="table">
                 <thead>
                     <tr>
                         <th className='font-medium text-neutral-400'>ที่</th>
-                        <th className='font-medium text-neutral-400'>ใบเสนอราคา No.</th>
-                        <th className='font-medium text-neutral-400'>วันที่สร้าง</th>
-                        <th className='font-medium text-neutral-400'>ชื่อลูกค้า</th>
-                        <th className='font-medium text-neutral-400'>ทะเบียน</th>
-                        <th className='font-medium text-neutral-400'>รายละเอียดรถยนต์</th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center  gap-3'>
+                                ใบเสนอราคา No.<Sort
+                                    onSort={onSort}
+                                    keyName='id'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center  gap-3'>
+                                วันที่สร้าง<Sort
+                                    onSort={onSort}
+                                    keyName='created_at'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center  gap-3'>
+                                ชื่อลูกค้า<Sort
+                                    onSort={onSort}
+                                    keyName='to_name'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center  gap-3'>
+                                ทะเบียน<Sort
+                                    onSort={onSort}
+                                    keyName='details'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center  gap-3'>
+                                รายละเอียดรถยนต์<Sort
+                                    onSort={onSort}
+                                    keyName='car_brand'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
                         <th className='font-medium text-neutral-400 text-center'></th>
                     </tr>
                 </thead>

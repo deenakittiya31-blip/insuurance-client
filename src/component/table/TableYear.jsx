@@ -1,13 +1,21 @@
-import React, { useState } from 'react'
+import Sort from '../sortData/Sort'
 
-const TableYear = ({ data, page, limit, onDelete, onEdite }) => {
+const TableYear = ({ data, page, limit, onDelete, onEdite, onSort, sortConfig }) => {
 
     return (
         <div className="overflow-x-auto font-prompt">
             <table className="table">
                 <thead>
                     <tr>
-                        <th className='font-medium text-neutral-400'>ลำดับ</th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center  gap-3'>
+                                ลำดับ <Sort
+                                    onSort={onSort}
+                                    keyName='id'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
                         <th className='font-medium text-neutral-400'>ปี พ.ศ.</th>
                         <th className='font-medium text-neutral-400'>ปี ค.ศ.</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>

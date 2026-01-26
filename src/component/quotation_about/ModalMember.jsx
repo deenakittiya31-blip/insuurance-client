@@ -2,7 +2,7 @@ import TableMember from "../table/TableMember";
 import SearchBox from "./SearchBox";
 import { LuSend } from "react-icons/lu";
 
-const ModalMember = ({ data, onChange, onChangeSearch, selected, isOpen, onClose, onSubmit, isLoading }) => {
+const ModalMember = ({ data, onChange, onChangeSearch, selected, isOpen, onClose, onSubmit, isLoading, onSort, sortConfig, onCheckAll, isAllSelected, isSomeSelected }) => {
     if (!isOpen) return null;
     return (
         <div className='mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20'>
@@ -41,6 +41,11 @@ const ModalMember = ({ data, onChange, onChangeSearch, selected, isOpen, onClose
                     data={data}
                     onChange={onChange}
                     selected={selected}
+                    onSort={onSort}
+                    sortConfig={sortConfig}
+                    onCheckAll={onCheckAll}
+                    isAllSelected={isAllSelected}
+                    isSomeSelected={isSomeSelected}
                 />
                 <div className='modal-action'>
                     <button type='button' className="btn btn-soft btn-error" onClick={onClose}>ยกเลิก</button>
