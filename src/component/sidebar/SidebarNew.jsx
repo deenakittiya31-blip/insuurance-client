@@ -11,6 +11,7 @@ import ModalCompare from '../modal/ModalCompare';
 import ModalKeyInCompare from '../modal/modalKeyInCompare';
 import useActionStore from '../../store/action-store';
 import { createCompare } from '../../service/compare';
+import { GoHome } from "react-icons/go";
 
 const initialState = {
     to_name: '',
@@ -138,10 +139,30 @@ const SidebarNew = () => {
             `}>
                 <div className='flex flex-col flex-1 gap-y-5 text-text-primary'>
                     <div>
-                        <h1 className='font-semibold mb-5 pl-7 lg:text-lg'>ใบเสนอราคา</h1>
+                        <h1 className='font-semibold mb-5 pl-7 lg:text-lg'>ลูกค้า</h1>
                         <div className='flex flex-col gap-4'>
                             <NavLink
                                 to='/admin'
+                                end
+                                className={({ isActive }) =>
+                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
+                                }
+                            >
+                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                <div className='w-full flex items-center gap-3'>
+                                    <GoHome className='size-4' />
+                                    <p className='group-[.active]:text-current'>รายชื่อลูกค้า</p>
+                                </div>
+
+                            </NavLink>
+                        </div>
+                    </div>
+                    <div>
+                        <h1 className='font-semibold mb-5 pl-7 lg:text-lg'>ใบเสนอราคา</h1>
+                        <div className='flex flex-col gap-4'>
+                            <NavLink
+                                to='/admin/quotationlist'
                                 end
                                 className={({ isActive }) =>
                                     `flex gap-5 items-center text-sm transition duration-300 ease-in-out group

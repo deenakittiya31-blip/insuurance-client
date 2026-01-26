@@ -44,7 +44,8 @@ const Approutes = () => {
                             <Layout />
                         </ProtectRoute>
                     }>
-                    <Route index element={<QuotationList />} />
+                    <Route index element={<Home />} />
+                    <Route path='quotationlist' element={<QuotationList />} />
                     <Route path='insurance-company' element={<InsurCompany />} />
                     <Route path='cartype' element={<Cartype />} />
                     <Route path='caryear' element={<CarYear />} />

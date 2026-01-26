@@ -15,12 +15,8 @@ const QuotationList = () => {
     const token = useInsureAuth((s) => s.token)
     const [list, setList] = useState([])
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
-    const [member, setMember] = useState([])
-    const [memberSelected, setMemberSelected] = useState([])
     const [quotationId, setQuotationId] = useState(null)
-    const [loading, setLoading] = useState(false)
     const [text, setText] = useState('')
-    const [memberText, setMemberText] = useState('')
     const [open, setOpen] = useState(false)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
@@ -32,36 +28,12 @@ const QuotationList = () => {
     }, [page, perPage, sortConfig])
 
     useEffect(() => {
-        getMember(sortConfig.key, sortConfig.direction)
-    }, [sortConfig])
-
-    useEffect(() => {
         const deley = setTimeout(() => {
             handleSearchQuotation()
         }, 500)
         return () => clearTimeout(deley)
     }, [text])
 
-    useEffect(() => {
-        const deley = setTimeout(() => {
-            handleSearchMember()
-        }, 500)
-        return () => clearTimeout(deley)
-    }, [memberText])
-
-    console.log(memberSelected)
-
-    const handleSearchMember = async () => {
-        try {
-            const res = await searchMember({ search: memberText })
-            setMember(res.data.data)
-            if (!memberText) {
-                getMember(page)
-            }
-        } catch (err) {
-            console.log(err)
-        }
-    }
     const handleSearchQuotation = async () => {
         try {
             const res = await searchText({ search: text })
@@ -94,48 +66,15 @@ const QuotationList = () => {
         setSortConfig({ key: keyName, direction });
     }
 
-    const getMember = async (sortKey, sortDirection) => {
-        try {
-            const res = await listMember(sortKey, sortDirection)
-            setMember(res.data.data)
-
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
-    const handleCheck = (e) => {
-        const userId = e.target.value //ค่าที่โดนเช็ค
-
-        setMemberSelected((prev) =>
-            prev.includes(userId)
-                ? prev.filter(id => id !== userId)
-                : [...prev, userId]
-        )
-    }
-
-    const handleCheckAll = (e) => {
-        if (e.target.checked) {
-            const allMembers = member.map(item => item.user_id)
-            setMemberSelected(allMembers)
-        } else {
-            setMemberSelected([])
-        }
-    }
-
-    const isAllSelected = member.length > 0 && memberSelected.length === member.length
-
-    const isSomeSelected = memberSelected.length > 0 && memberSelected.length < member.length
-
     const openModal = async (id) => {
         setOpen(true)
         setQuotationId(id)
     }
 
-    const closeForm = () => {
+    const closeForm = (setMemberSelected) => {
         setOpen(false)
-        setMemberSelected([])
         setQuotationId(null)
+        setMemberSelected([])
     }
 
     const hdlDelete = async (id) => {
@@ -161,24 +100,18 @@ const QuotationList = () => {
         }
     }
 
-    const sendMessage = async () => {
+    const sendMessage = async (memberSelected) => {
         if (memberSelected.length === 0) {
             toast('กรุณาเลือกลูกค้า')
             return
         }
 
-        setLoading(true)
-
         try {
             const res = await sendDocumentToMember(memberSelected, quotationId)
-
             toast.success(res.data.msg)
-            setMemberSelected([])
         } catch (error) {
             console.log(error)
             toast.error('ส่งไม่สำเร็จ')
-        } finally {
-            setLoading(false)
         }
     }
 
@@ -301,19 +234,9 @@ const QuotationList = () => {
                 </div>
             </div>
             <ModalMember
-                isLoading={loading}
-                data={member}
-                onChange={handleCheck}
                 onSubmit={sendMessage}
                 isOpen={open}
                 onClose={closeForm}
-                selected={memberSelected}
-                onChangeSearch={(e) => setMemberText(e.target.value)}
-                onSort={handleSort}
-                sortConfig={sortConfig}
-                onCheckAll={handleCheckAll}
-                isAllSelected={isAllSelected}
-                isSomeSelected={isSomeSelected}
             />
         </div>
     )

@@ -1,74 +1,49 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Title from "../component/form/Title"
-import { listMember, sendDocumentToMember } from "../service/member"
-import { useEffect } from "react"
-import TableMember from "../component/table/TableMember"
-import UploadImageLine from "../component/form/UploadImageLine"
-import toast from "react-hot-toast"
+import { listMember } from "../service/member"
+import TableMemberList from "../component/table/TableMemberList"
+import NameTable from "../component/form/NameTable"
+import SelectPerPage from "../component/form/SelectPerPage"
+import Pagination from "../component/paginationComponent/Pagination"
 
 const Home = () => {
     const [member, setMember] = useState([])
-    const [memberSelected, setMemberSelected] = useState([])
-    const [form, setForm] = useState({
-        file_url: '',
-        file_public_id: '',
-        file_type: '',
-    })
+    const [page, setPage] = useState(1)
+    const [perPage, setPerPage] = useState(10)
+    const [total, setTotal] = useState(0)
+    const lastPage = Math.ceil(total / perPage)
+    const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
 
     useEffect(() => {
-        getMember()
-    }, [])
+        getMember(page, perPage, sortConfig.key, sortConfig.direction)
+    }, [page, perPage, sortConfig])
 
-    const getMember = async () => {
+    const getMember = async (page, perPage, sortKey = 'id', sortDirection = 'DESC') => {
         try {
-            const res = await listMember()
+            const res = await listMember(page, perPage, sortKey, sortDirection)
             setMember(res.data.data)
+            setTotal(res.data.total)
 
         } catch (err) {
             console.log(err)
         }
     }
 
-    const handleCheck = (e) => {
-        const userId = e.target.value //ค่าที่โดนเช็ค
-
-        setMemberSelected((prev) =>
-            prev.includes(userId)
-                ? prev.filter(id => id !== userId)
-                : [...prev, userId]
-        )
+    const handlePerPageChange = (e) => {
+        setPerPage(Number(e.target.value))
+        setPage(1)  //รีเซ็ตกลับไปหน้า 1
     }
-    console.log(memberSelected)
-    console.log(form)
 
-    const sendMessage = async () => {
-        try {
-            if (!form.file_url) {
-                toast('กรุณาเลือกรูป')
-                return
-            }
-            if (memberSelected.length === 0) {
-                toast('กรุณาเลือกลูกค้า')
-                return
-            }
+    const handleSort = (keyName) => {
+        let direction = 'ASC';
 
-            const res = await sendDocumentToMember(
-                memberSelected,
-                form.file_url,
-                form.file_type
-            )
-
-            toast.success(res.data.msg)
-            setMemberSelected([])
-            setForm({
-                file_url: '',
-                file_public_id: '',
-                file_type: ''
-            })
-        } catch (err) {
-            console.log(err)
+        if (sortConfig.key === keyName && sortConfig.direction === 'ASC') {
+            direction = 'DESC';
         }
+
+        setSortConfig({ key: keyName, direction });
     }
+
 
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
@@ -77,19 +52,32 @@ const Home = () => {
                     title='ข้อมูลลูกค้า'
                 />
             </div>
-            <div className="flex items-baseline-last">
-                <UploadImageLine
-                    form={form}
-                    setForm={setForm}
-                />
-                <button onClick={sendMessage} className="px-7 btn bg-main font-medium font-prompt text-base text-white">ส่ง</button>
-            </div>
-            <div className='bg-white rounded-2xl p-5'>
-                <TableMember
+            <div className='flex flex-col gap-3 bg-white rounded-2xl p-5'>
+                <div className='flex justify-between items-baseline-last'>
+                    <NameTable
+                        icon='👩‍🦰'
+                        name='ตารางข้อมูลลูกค้า'
+                    />
+                    <SelectPerPage
+                        onChange={handlePerPageChange}
+                        perPage={perPage}
+                    />
+                </div>
+                <TableMemberList
                     data={member}
-                    onChange={handleCheck}
-                    selected={memberSelected}
                 />
+            </div>
+            <div className='flex justify-end'>
+                {
+                    total > perPage && (
+                        <Pagination
+                            disablePrev={page === 1}
+                            disableNext={page === lastPage}
+                            onPrevious={() => setPage(page - 1)}
+                            onNext={() => setPage(page + 1)}
+                        />
+                    )
+                }
             </div>
         </div>
     )
