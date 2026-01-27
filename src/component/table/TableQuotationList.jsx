@@ -7,6 +7,7 @@ import { BiSolidFileJpg, BiSolidFilePdf } from "react-icons/bi";
 import Sort from "../sortData/Sort";
 
 const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onSort, sortConfig }) => {
+
     return (
         <div className="overflow-x-auto font-prompt">
             <table className="table">
@@ -59,13 +60,7 @@ const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onS
                             </div>
                         </th>
                         <th className='font-medium text-neutral-400'>
-                            <div className='flex items-center  gap-3'>
-                                ประวัติการส่ง<Sort
-                                    onSort={onSort}
-                                    keyName='car_brand'
-                                    currentSort={sortConfig}
-                                />
-                            </div>
+                            ประวัติการส่ง
                         </th>
                         <th className='font-medium text-neutral-400 text-center'></th>
                     </tr>
@@ -92,7 +87,24 @@ const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onS
                                         {i.year_be}/{i.year_ad} {i.usage}
                                     </div>
                                 </td>
-                                <td>{i.to_name}</td>
+                                <td>
+                                    <div className="flex justify-center -space-x-3">    {/* -space-x-3 */}
+                                        {
+                                            i.members?.map((member, index) => (
+                                                <div className="tooltip" key={index}>
+                                                    <div className="tooltip-content flex flex-col items-start">
+                                                        <span>{member.display_name}</span>
+                                                        <span>เมื่อ {dateFormat(member.created_at)}</span>
+                                                    </div>
+                                                    <div className="inline-flex align-middle w-7 h-7 border-white border-2 rounded-full overflow-hidden shrink-0"
+                                                    >
+                                                        <img src={member.picture_url} alt={member.display_name || 'Member'} className="w-full h-full object-cover" />
+                                                    </div>
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
+                                </td>
                                 <td>
                                     <div className="flex flex-col gap-1">
                                         <div className="flex gap-1">

@@ -98,7 +98,7 @@ const QuotationList = () => {
 
         try {
             const res = await deleteQuotationCompare(id)
-            getQuotationList(page, perPage);
+            getQuotationList(page, perPage, sortConfig.key, sortConfig.direction)
             toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
@@ -113,12 +113,15 @@ const QuotationList = () => {
 
         try {
             const res = await sendDocumentToMember(memberSelected, quotationId)
+            getQuotationList(page, perPage, sortConfig.key, sortConfig.direction)
             toast.success(res.data.msg)
         } catch (error) {
             console.log(error)
             toast.error('ส่งไม่สำเร็จ')
         }
     }
+
+    console.log(list)
 
     const createComparePDF = async (q_id) => {
         try {
