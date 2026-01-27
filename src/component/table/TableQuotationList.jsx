@@ -58,6 +58,15 @@ const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onS
                                 />
                             </div>
                         </th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center  gap-3'>
+                                ประวัติการส่ง<Sort
+                                    onSort={onSort}
+                                    keyName='car_brand'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
                         <th className='font-medium text-neutral-400 text-center'></th>
                     </tr>
                 </thead>
@@ -82,8 +91,8 @@ const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onS
                                     <div>
                                         {i.year_be}/{i.year_ad} {i.usage}
                                     </div>
-
                                 </td>
+                                <td>{i.to_name}</td>
                                 <td>
                                     <div className="flex flex-col gap-1">
                                         <div className="flex gap-1">

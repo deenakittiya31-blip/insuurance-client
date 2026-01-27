@@ -45,8 +45,6 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
         }
     }
 
-    console.log(detail)
-
     const getMember = async (sortKey, sortDirection) => {
         try {
             const res = await listAllMember(sortKey, sortDirection)
@@ -138,7 +136,7 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
                         type='submit'
                         onClick={handleSubmitMessage}
                         disabled={loading}
-                        className="inline-flex items-center gap-3 rounded-sm bg-info text-white font-semibold px-7 py-1 whitespace-nowrap overflow-hidden font-prompt transition-colors duration-300 cursor-pointer"
+                        className="inline-flex items-center gap-3 rounded-sm bg-success text-white font-semibold px-7 py-1 whitespace-nowrap overflow-hidden font-prompt transition-colors duration-300 cursor-pointer"
                     >
                         <span
                             className="relative shrink-0 w-6.25 h-6.25 rounded-sm text-black grid place-items-center overflow-hidden">

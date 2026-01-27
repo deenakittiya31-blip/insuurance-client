@@ -11,7 +11,7 @@ import ModalCompare from '../modal/ModalCompare';
 import ModalKeyInCompare from '../modal/modalKeyInCompare';
 import useActionStore from '../../store/action-store';
 import { createCompare } from '../../service/compare';
-import { GoHome } from "react-icons/go";
+import { GoPeople } from "react-icons/go";
 
 const initialState = {
     to_name: '',
@@ -151,10 +151,9 @@ const SidebarNew = () => {
                             >
                                 <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
                                 <div className='w-full flex items-center gap-3'>
-                                    <GoHome className='size-4' />
+                                    <GoPeople className='size-4' />
                                     <p className='group-[.active]:text-current'>รายชื่อลูกค้า</p>
                                 </div>
-
                             </NavLink>
                         </div>
                     </div>

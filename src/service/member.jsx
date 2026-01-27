@@ -6,6 +6,18 @@ export const registerMember = (payload) => {
     return axios.post(`${API_URL}/api/register-member`, payload)
 }
 
+export const readMember = (id) => {
+    return api.get(`/api/read-member/${id}`)
+}
+
+export const updateMember = (id, form) => {
+    return api.patch(`api/update-member/${id}`, form)
+}
+
+export const deleteMember = (id) => {
+    return api.delete(`api/delete-member/${id}`)
+}
+
 export const listMemberPagination = (page, perPage, sortKey, sortDirection) => {
     return api.get('/api/list-members', {
         params: {

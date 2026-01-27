@@ -1,10 +1,19 @@
 import { useState, useEffect } from "react"
 import Title from "../component/form/Title"
-import { listMemberPagination } from "../service/member"
+import { deleteMember, listMemberPagination, readMember, updateMember } from "../service/member"
 import TableMemberList from "../component/table/TableMemberList"
 import NameTable from "../component/form/NameTable"
 import SelectPerPage from "../component/form/SelectPerPage"
 import Pagination from "../component/paginationComponent/Pagination"
+import toast from "react-hot-toast"
+import Swal from "sweetalert2"
+import EditMember from "../component/edit/EditMember"
+
+const initialState = {
+    first_name: '',
+    last_name: '',
+    phone: '',
+}
 
 const Home = () => {
     const [member, setMember] = useState([])
@@ -12,7 +21,10 @@ const Home = () => {
     const [perPage, setPerPage] = useState(10)
     const [total, setTotal] = useState(0)
     const lastPage = Math.ceil(total / perPage)
+    const [isOpen, setIsOpen] = useState(false)
+    const [idUpdate, setIdUpdate] = useState(null)
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
+    const [form, setForm] = useState(initialState)
 
     useEffect(() => {
         getMember(page, perPage, sortConfig.key, sortConfig.direction)
@@ -44,6 +56,67 @@ const Home = () => {
         setSortConfig({ key: keyName, direction });
     }
 
+    const handleOnChange = (e) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    const openModal = async (id) => {
+        setIsOpen(true)
+        setIdUpdate(id)
+        try {
+            const res = await readMember(id)
+            setForm(res.data.data)
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const closeForm = () => {
+        setIsOpen(false)
+        setForm(initialState)
+    }
+
+    const handleUpdate = async (e) => {
+        e.preventDefault()
+        try {
+            const res = await updateMember(idUpdate, form)
+            setForm(initialState)
+            closeForm()
+            toast.success(res.data.msg)
+            getMember(page, perPage, sortConfig.key, sortConfig.direction)
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const handleDelete = async (id) => {
+        const result = await Swal.fire({
+            title: "คุณแน่ใจ ?",
+            text: "ต้องการจะลบจริง ๆ ใช่ไหม?",
+            icon: "question",
+            showCancelButton: true,
+            cancelButtonColor: "#E5E4E2",
+            confirmButtonColor: "#d33",
+            confirmButtonText: "ลบ",
+            cancelButtonText: 'ยกเลิก'
+        })
+
+        if (!result.isConfirmed) return
+
+        try {
+            const res = await deleteMember(id)
+            getMember(page, perPage, sortConfig.key, sortConfig.direction)
+            toast.success(res.data.msg);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
 
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
@@ -69,6 +142,8 @@ const Home = () => {
                     limit={perPage}
                     onSort={handleSort}
                     sortConfig={sortConfig}
+                    onDelete={handleDelete}
+                    onEdite={openModal}
                 />
             </div>
             <div className='flex justify-end'>
@@ -83,6 +158,13 @@ const Home = () => {
                     )
                 }
             </div>
+            <EditMember
+                isOpen={isOpen}
+                form={form}
+                onChange={handleOnChange}
+                onClose={closeForm}
+                onSubmit={handleUpdate}
+            />
         </div>
     )
 }
