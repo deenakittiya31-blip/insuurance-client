@@ -16,6 +16,10 @@ export const listCompanySelect = () => {
     return api.get('/api/list-company-select')
 }
 
+export const listCompanyTheme = () => {
+    return api.get('/api/list-company-theme')
+}
+
 export const readCompany = (token, id) => {
     return api.get(`/api/read-company/${id}`, {
         headers: {

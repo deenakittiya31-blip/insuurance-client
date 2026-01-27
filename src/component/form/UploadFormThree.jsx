@@ -2,14 +2,14 @@ import { useEffect } from "react"
 import useActionStore from "../../store/action-store"
 
 const UploadFormThree = ({ onChange, isLoading, onSubmit, form }) => {
-    const company = useActionStore((s) => s.company)
-    const getCompanySelect = useActionStore((s) => s.getCompanySelect)
+    const companyTheme = useActionStore((s) => s.companyTheme)
+    const getCompanyTheme = useActionStore((s) => s.getCompanyTheme)
 
     useEffect(() => {
-        getCompanySelect();
+        getCompanyTheme();
     }, [])
 
-    const selectedCompany = company.find(
+    const selectedCompany = companyTheme.find(
         c => String(c.id) === String(form.company_id)
     )
 
@@ -32,7 +32,7 @@ const UploadFormThree = ({ onChange, isLoading, onSubmit, form }) => {
                 >
                     <option value="" disabled={true}>โปรดเลือก</option>
                     {
-                        company.map((i) => (
+                        companyTheme.map((i) => (
                             <option key={i.id} value={i.id}>
                                 {i.namecompany}
                             </option>

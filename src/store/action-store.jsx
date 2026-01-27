@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { listCompanySelect } from '../service/insurance/CompanyInsur';
+import { listCompanySelect, listCompanyTheme } from '../service/insurance/CompanyInsur';
 import { listTypeSelect } from '../service/insurance/TypeInsur';
 import { listPackageSelect } from '../service/insurance/PackageInsur';
 import { listCarUsageSelect } from '../service/car/CarUsage';
@@ -9,6 +9,7 @@ import { listByCarModel } from '../service/car/CarModel';
 
 const useActionStore = create((set) => ({
     company: [],
+    companyTheme: [],
     typeInsur: [],
     packageSelect: [],
     carUsage: [],
@@ -43,6 +44,14 @@ const useActionStore = create((set) => ({
         try {
             const res = await listCompanySelect()
             set({ company: res.data.data })
+        } catch (err) {
+            console.log(err)
+        }
+    },
+    getCompanyTheme: async () => {
+        try {
+            const res = await listCompanyTheme()
+            set({ companyTheme: res.data.data })
         } catch (err) {
             console.log(err)
         }
