@@ -60,7 +60,7 @@ const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onS
                             </div>
                         </th>
                         <th className='font-medium text-neutral-400'>
-                            ประวัติการส่ง
+                            ประวัติ
                         </th>
                         <th className='font-medium text-neutral-400 text-center'></th>
                     </tr>

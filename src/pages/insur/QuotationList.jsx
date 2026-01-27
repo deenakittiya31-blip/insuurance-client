@@ -107,7 +107,7 @@ const QuotationList = () => {
 
     const sendMessage = async (memberSelected) => {
         if (memberSelected.length === 0) {
-            toast('กรุณาเลือกลูกค้า')
+            toast.error('กรุณาเลือกลูกค้า')
             return
         }
 
@@ -121,7 +121,6 @@ const QuotationList = () => {
         }
     }
 
-    console.log(list)
 
     const createComparePDF = async (q_id) => {
         try {

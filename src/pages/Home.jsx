@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import Title from "../component/form/Title"
-import { deleteMember, listMemberPagination, readMember, updateMember } from "../service/member"
+import { deleteMember, listMemberPagination, readMember, searchMember, updateMember } from "../service/member"
 import TableMemberList from "../component/table/TableMemberList"
 import NameTable from "../component/form/NameTable"
 import SelectPerPage from "../component/form/SelectPerPage"
@@ -8,6 +8,7 @@ import Pagination from "../component/paginationComponent/Pagination"
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
 import EditMember from "../component/edit/EditMember"
+import SearchBox from "../component/quotation_about/SearchBox"
 
 const initialState = {
     first_name: '',
@@ -23,12 +24,20 @@ const Home = () => {
     const lastPage = Math.ceil(total / perPage)
     const [isOpen, setIsOpen] = useState(false)
     const [idUpdate, setIdUpdate] = useState(null)
+    const [textSearch, setTextSearch] = useState('')
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
     const [form, setForm] = useState(initialState)
 
     useEffect(() => {
         getMember(page, perPage, sortConfig.key, sortConfig.direction)
     }, [page, perPage, sortConfig])
+
+    useEffect(() => {
+        const deley = setTimeout(() => {
+            handleSearchMember()
+        }, 500)
+        return () => clearTimeout(deley)
+    }, [textSearch])
 
     const getMember = async (page, perPage, sortKey = 'id', sortDirection = 'DESC') => {
         try {
@@ -78,6 +87,18 @@ const Home = () => {
     const closeForm = () => {
         setIsOpen(false)
         setForm(initialState)
+    }
+
+    const handleSearchMember = async () => {
+        try {
+            const res = await searchMember({ search: textSearch })
+            setMember(res.data.data)
+            if (!textSearch) {
+                getMember(sortConfig.key, sortConfig.direction)
+            }
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     const handleUpdate = async (e) => {
@@ -131,10 +152,18 @@ const Home = () => {
                         icon='👩‍🦰'
                         name='ตารางข้อมูลลูกค้า'
                     />
-                    <SelectPerPage
-                        onChange={handlePerPageChange}
-                        perPage={perPage}
-                    />
+                    <div className="flex gap-3 items-baseline-last">
+                        <SearchBox
+                            width='w-full'
+                            placeholder='ค้นหาชื่อ, นามสกุล, เบอร์โทร...'
+                            onChange={(e) => setTextSearch(e.target.value)}
+                        />
+                        <SelectPerPage
+                            width='w-30'
+                            onChange={handlePerPageChange}
+                            perPage={perPage}
+                        />
+                    </div>
                 </div>
                 <TableMemberList
                     data={member}

@@ -1,3 +1,4 @@
+import { dateFormat } from "../../utils/dateformat"
 import Sort from "../sortData/Sort"
 
 const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEdite }) => {
@@ -53,6 +54,18 @@ const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEd
                                 />
                             </div>
                         </th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center  gap-3'>
+                                วันที่เพิ่มเพื่อน<Sort
+                                    onSort={onSort}
+                                    keyName='created_at'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
+                        <th className='font-medium text-neutral-400'>
+                            หมายเหตุ
+                        </th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
                 </thead>
@@ -81,6 +94,12 @@ const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEd
                                 <td>{i.last_name === null ? '-' : i.last_name}</td>
                                 <td>
                                     {i.phone === null ? '-' : i.phone}
+                                </td>
+                                <td>
+                                    {i.created_at === null ? '-' : dateFormat(i.created_at)}
+                                </td>
+                                <td>
+                                    {i.note === null ? '-' : i.note}
                                 </td>
                                 <td>
                                     <div className='flex gap-5 justify-center'>
