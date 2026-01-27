@@ -1,3 +1,4 @@
+import TextArea from "../form/TextArea";
 import TextInput from "../form/TextInput";
 
 const EditMember = ({ isOpen, form, onSubmit, onChange, onClose }) => {
@@ -33,7 +34,7 @@ const EditMember = ({ isOpen, form, onSubmit, onChange, onClose }) => {
                     width='w-70 md:w-sm'
                     value={form.phone}
                 />
-                <TextInput
+                <TextArea
                     title='หมายเหตุ'
                     name='note'
                     type='text'
