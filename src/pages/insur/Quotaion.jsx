@@ -2,7 +2,7 @@ import { useState } from "react"
 import useInsureAuth from "../../store/auth-store"
 import { createAkson } from "../../service/aksorn"
 import toast from "react-hot-toast"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import TableQuotation from "../../component/table/TableQuotation"
 import { createQuotationFields, deleteQuotation } from "../../service/quotation"
 import { createJPG, createPDF, getDetailCompare } from "../../service/compare"
@@ -24,6 +24,7 @@ const initialForm = {
 
 const Quotaion = () => {
     const token = useInsureAuth((s) => s.token)
+    const navigate = useNavigate()
     const { q_id } = useParams();
     const [activeTab, setActiveTab] = useState(1)
     const [detail, setDetail] = useState({})
@@ -77,6 +78,12 @@ const Quotaion = () => {
         3: null
     })
 
+    const [success, setSucces] = useState({
+        1: '',
+        2: '',
+        3: ''
+    })
+
     const isSaveDisabled =
         compulsoryByTab[activeTab] === null ||
         compulsoryByTab[activeTab] === undefined
@@ -90,6 +97,29 @@ const Quotaion = () => {
         if (!usageID) return;
         getCompulsoryOption(usageID);
     }, [usageID])
+
+    useEffect(() => {
+        const allSaved = success[1] !== '' &&
+            success[2] !== '' &&
+            success[3] !== ''
+
+        if (allSaved) {
+            Swal.fire({
+                title: '🎉 บันทึกข้อมูลครบทั้ง 3 แท็บแล้ว',
+                text: 'คุณต้องการไปหน้าอื่นหรืออยู่ต่อในหน้านี้?',
+                icon: 'success',
+                showCancelButton: true,
+                confirmButtonText: 'ไปหน้ารายการ',
+                cancelButtonText: 'อยู่ต่อในหน้านี้',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#6c757d',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate('/admin/quotationlist')
+                }
+            })
+        }
+    }, [quotationIdByTab, navigate])
 
     //onChange ของข้อมูลที่ส่งไปสร้าง quotation และยิง api ocr akson
     const hdlOnChange = async (e) => {
@@ -266,14 +296,6 @@ const Quotaion = () => {
                 [activeTab]: ''
             }))
 
-            //ล้างไฟล์ที่เลือก
-            // setFormByTab(prev => ({
-            //     ...prev,
-            //     [activeTab]: {
-            //         ...prev[activeTab],
-            //         image: ''
-            //     }
-            // }))
             setPdfPreviewByTab(prev => ({
                 ...prev,
                 [activeTab]: null
@@ -325,6 +347,11 @@ const Quotaion = () => {
         try {
             const res = await createQuotationFields(token, quotationId, payload)
             toast.success(res.data.msg)
+
+            setSucces(prev => ({
+                ...prev,
+                [activeTab]: `บันทึกแล้ว`
+            }))
         } catch (err) {
             console.log(err)
             toast.error('บันทึกไม่สำเร็จ')

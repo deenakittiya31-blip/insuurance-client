@@ -14,6 +14,7 @@ const initialState = {
     first_name: '',
     last_name: '',
     phone: '',
+    note: ''
 }
 
 const Home = () => {

@@ -33,6 +33,15 @@ const EditMember = ({ isOpen, form, onSubmit, onChange, onClose }) => {
                     width='w-70 md:w-sm'
                     value={form.phone}
                 />
+                <TextInput
+                    title='หมายเหตุ'
+                    name='note'
+                    type='text'
+                    placeholder='กรอกหมายเหตุ...'
+                    onChange={onChange}
+                    width='w-70 md:w-sm'
+                    value={form.note}
+                />
                 <div className='modal-action'>
                     <button type='button' className="btn btn-soft btn-error" onClick={onClose}>ยกเลิก</button>
                     <button type="submit" className="btn btn-soft btn-primary" >บันทึก</button>

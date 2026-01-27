@@ -2,6 +2,7 @@ import { dateFormat } from "../../utils/dateformat"
 import Sort from "../sortData/Sort"
 
 const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEdite }) => {
+
     return (
         <div className="overflow-x-auto font-prompt">
             <div className="flex justify-end">

@@ -42,6 +42,7 @@ const initialData = {
 
 const Compare = () => {
     const token = useInsureAuth((s) => s.token)
+    const navigate = useNavigate()
     const [activeTab, setActiveTab] = useState(1)
     const [usageID, setUsageID] = useState(null)
     const [compulsory, setCompulsory] = useState([])
@@ -94,6 +95,29 @@ const Compare = () => {
         if (!usageID) return;
         getCompulsoryOption(usageID);
     }, [usageID])
+
+    useEffect(() => {
+        const allSaved = quotationIdByTab[1] !== null &&
+            quotationIdByTab[2] !== null &&
+            quotationIdByTab[3] !== null
+
+        if (allSaved) {
+            Swal.fire({
+                title: '🎉 บันทึกข้อมูลครบทั้ง 3 แท็บแล้ว',
+                text: 'คุณต้องการไปหน้าอื่นหรืออยู่ต่อในหน้านี้?',
+                icon: 'success',
+                showCancelButton: true,
+                confirmButtonText: 'ไปหน้ารายการ',
+                cancelButtonText: 'อยู่ต่อในหน้านี้',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#6c757d',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate('/admin/quotationlist')
+                }
+            })
+        }
+    }, [quotationIdByTab, navigate])
 
     //onChange สำหรับสร้าง quotation (บริษัท)
     const hdlQuotationChange = (e) => {
