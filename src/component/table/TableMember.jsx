@@ -3,15 +3,6 @@ import Sort from "../sortData/Sort"
 const TableMember = ({ data, onChange, selected, onSort, sortConfig, onCheckAll, isAllSelected, isSomeSelected }) => {
     return (
         <div className="overflow-x-auto font-prompt">
-            <div className="flex justify-end">
-                <button className="btn btn-sm btn-soft btn-neutral">
-                    <Sort
-                        onSort={onSort}
-                        keyName='recent_conversation'
-                        currentSort={sortConfig}
-                    />
-                    คุยล่าสุด</button>
-            </div>
             <table className="table">
                 {/* head */}
                 <thead>

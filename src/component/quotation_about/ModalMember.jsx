@@ -124,6 +124,7 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
     return (
         <div className='mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20'>
             <div className="w-auto p-6 radius-box flex flex-col gap-5 bg-white rounded-lg font-prompt">
+                {/* กล่องเสิร์ชและปุ่มส่ง */}
                 <StateDetailSend data={detail} />
                 <div className="flex gap-5">
                     <div className="flex-1">
@@ -157,18 +158,19 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
                         </span>
                     </button>
                 </div>
-
-                <TableMember
-                    data={member}
-                    onChange={handleCheck}
-                    selected={memberSelected}
-                    onSort={handleSort}
-                    sortConfig={sortConfig}
-                    onCheckAll={handleCheckAll}
-                    isAllSelected={isAllSelected}
-                    isSomeSelected={isSomeSelected}
-                />
-                <div className='modal-action'>
+                <div className="w-full h-72 overflow-y-auto">
+                    <TableMember
+                        data={member}
+                        onChange={handleCheck}
+                        selected={memberSelected}
+                        onSort={handleSort}
+                        sortConfig={sortConfig}
+                        onCheckAll={handleCheckAll}
+                        isAllSelected={isAllSelected}
+                        isSomeSelected={isSomeSelected}
+                    />
+                </div>
+                <div className='flex justify-end'>
                     <button type='button' className="btn btn-soft btn-error" onClick={onClose}>ยกเลิก</button>
                 </div>
             </div>

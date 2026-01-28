@@ -28,9 +28,11 @@ const TablePremium = ({ data, page, limit, onDelete, onEdite }) => {
                                 <td>{i.premium}</td>
                                 <td>{i.compulsory}</td>
                                 <td>{i.total}</td>
-                                <td className='flex gap-5 justify-center'>
-                                    <button onClick={() => onEdite(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
-                                    <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
+                                <td>
+                                    <div className='flex gap-5 justify-center'>
+                                        <button onClick={() => onEdite(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
+                                        <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
+                                    </div>
                                 </td>
                             </tr>
                         ))

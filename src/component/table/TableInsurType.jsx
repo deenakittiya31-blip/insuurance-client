@@ -20,7 +20,9 @@ const TableInsurType = ({ data, page, limit, onDelete, onEdite, onToggle }) => {
                             <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
                                 <td>{(page - 1) * limit + idx + 1}</td>
                                 <td>{i.nametype}</td>
-                                <td>{i.description}</td>
+                                <td>
+                                    <p className='line-clamp-2'>{i.description}</p>
+                                </td>
                                 <td>
                                     <input
                                         type="checkbox"

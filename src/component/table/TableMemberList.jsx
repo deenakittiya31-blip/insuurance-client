@@ -5,15 +5,6 @@ const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEd
 
     return (
         <div className="overflow-x-auto font-prompt">
-            <div className="flex justify-end">
-                <button className="btn btn-sm btn-soft btn-neutral">
-                    <Sort
-                        onSort={onSort}
-                        keyName='recent_conversation'
-                        currentSort={sortConfig}
-                    />
-                    คุยล่าสุด</button>
-            </div>
             <table className="table">
                 {/* head */}
                 <thead>

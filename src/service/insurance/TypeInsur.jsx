@@ -33,7 +33,7 @@ export const updateType = (token, id, form) => {
 }
 
 export const statusType = (token, id, is_active) => {
-    return api.put('/api/status-type/${id}', { is_active }, {
+    return api.put(`/api/status-type/${id}`, { is_active }, {
         headers: {
             Authorization: `Bearer ${token}`
         }
