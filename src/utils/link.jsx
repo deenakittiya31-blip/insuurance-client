@@ -20,14 +20,14 @@ export const adminInsur = [
         link: '/admin/insurtypes'
     },
     {
-        icon: <TbPremiumRights className='size-4' />,
-        title: 'เบี้ยประกัน',
-        link: '/admin/insurpremuim'
-    },
-    {
         icon: <TbPackages className='size-4' />,
         title: 'แพ็คเก็จ',
         link: '/admin/package'
+    },
+    {
+        icon: <TbPremiumRights className='size-4' />,
+        title: 'เบี้ยประกัน',
+        link: '/admin/insurpremuim'
     },
 ]
 

@@ -94,7 +94,7 @@ const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onS
                                                 <div className="tooltip" key={index}>
                                                     <div className="tooltip-content flex flex-col items-start">
                                                         <span>{member.display_name}</span>
-                                                        <span>เมื่อ {dateFormat(member.created_at)}</span>
+                                                        <span>เมื่อ {dateFormat(member.sent_at)}</span>
                                                     </div>
                                                     <div className="inline-flex align-middle w-7 h-7 border-white border-2 rounded-full overflow-hidden shrink-0"
                                                     >

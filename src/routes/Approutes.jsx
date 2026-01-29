@@ -26,6 +26,7 @@ import Home from '../pages/Home'
 import MemberRegister from '../pages/auth/MemberRegister'
 import QuotationList from '../pages/insur/QuotationList'
 import QuotationDetail from '../pages/insur/QuotationDetail'
+import PackageProduct from '../pages/PackageProduct'
 
 const Approutes = () => {
     return (
@@ -36,6 +37,7 @@ const Approutes = () => {
                 <Route path='member-register' element={<MemberRegister />} />
                 <Route path='line' element={<LoginLine />} />
                 <Route path='forbidden' element={<Forbidden />} />
+                <Route path='package-product' element={<PackageProduct />} />
 
                 <Route
                     path='/admin'

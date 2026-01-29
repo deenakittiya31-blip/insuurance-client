@@ -10,17 +10,22 @@ import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
 import SelectPerPage from '../../component/form/SelectPerPage'
+import useActionStore from '../../store/action-store'
 
 const initialState = {
     company_id: '',
-    insurance_type_id: '',
+    insur_type_id: '',
+    car_brand_id: '',
+    car_model_id: '',
+    usage_car_id: '',
+    car_year_id: '',
     package_name: '',
-    coverage_amount: ''
 }
 
 const InsurPackage = () => {
     const token = useInsureAuth((s) => s.token)
     const [packageData, setPackageData] = useState([])
+    const { getCarModelSelect } = useActionStore();
     const [form, setForm] = useState(initialState)
     const [open, setOpen] = useState(false)
     const [idSelect, setIdSelect] = useState(null)
@@ -38,6 +43,18 @@ const InsurPackage = () => {
             ...form,
             [e.target.name]: e.target.value
         })
+    }
+
+    const hdlSelectChange = async (name, value) => {
+        setForm(prev => ({
+            ...prev,
+            [name]: value,
+            ...(name === 'car_brand_id' && { car_model_id: '' })
+        }))
+
+        if (name === 'car_brand_id') {
+            await getCarModelSelect(value)
+        }
     }
 
     const handlePerPageChange = (e) => {
@@ -136,6 +153,7 @@ const InsurPackage = () => {
                     onSubmit={hdlSubmit}
                     onChange={hdlOnChange}
                     onClose={closeForm}
+                    onChangeCarmodel={hdlSelectChange}
                 />
             </div>
             <div className='bg-white rounded-2xl p-5'>
