@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom';
-import { BsLayoutTextSidebar } from "react-icons/bs";
+import { BsLayoutTextSidebar, BsPinAngle } from "react-icons/bs";
 import { IoIosArrowDown } from "react-icons/io";
 import { adminCar, adminInsur, adminSetting } from '../../utils/link';
 import toast from 'react-hot-toast';
@@ -160,6 +160,21 @@ const SidebarNew = () => {
                     <div>
                         <h1 className='font-semibold mb-5 pl-7 lg:text-lg'>ใบเสนอราคา</h1>
                         <div className='flex flex-col gap-4'>
+                            <NavLink
+                                to='/admin/pin-compare'
+                                end
+                                className={({ isActive }) =>
+                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
+                                }
+                            >
+                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                <div className='w-full flex items-center gap-3'>
+                                    <BsPinAngle className='size-4' />
+                                    <p className='group-[.active]:text-current'>เบี้ยประกันที่ใช่บ่อย</p>
+                                </div>
+
+                            </NavLink>
                             <NavLink
                                 to='/admin/quotationlist'
                                 end

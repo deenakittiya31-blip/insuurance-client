@@ -5,8 +5,9 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { FaLine } from "react-icons/fa";
 import { BiSolidFileJpg, BiSolidFilePdf } from "react-icons/bi";
 import Sort from "../sortData/Sort";
+import { BsFillPinAngleFill } from "react-icons/bs";
 
-const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onSort, sortConfig }) => {
+const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onSort, sortConfig, onPin }) => {
 
     return (
         <div className="overflow-x-auto font-prompt">
@@ -69,7 +70,15 @@ const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onS
                     {
                         data?.map((i, idx) => (
                             <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50 '>
-                                <td className="align-top">{(page - 1) * limit + idx + 1}</td>
+                                <td className="align-top">
+                                    <div className="flex items-center gap-3">
+                                        <button onClick={() => onPin(i.id)} className="flex items-center justify-center w-7 h-7 group">
+                                            <BsFillPinAngleFill className={`size-5 group-hover:text-red-600 ${i.pin ? 'text-red-600' : 'text-gray-300'}`} />
+                                        </button>
+
+                                        {(page - 1) * limit + idx + 1}
+                                    </div>
+                                </td>
                                 <td className="align-top">{i.q_id}</td>
                                 <td className="align-top">{dateFormat(i.created_at)}</td>
                                 <td className="align-top">{i.to_name}</td>

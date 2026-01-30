@@ -39,3 +39,7 @@ export const deleteQuotation = (token, id) => {
         }
     })
 }
+
+export const pinQuotation = (id) => {
+    return api.post(`/api/pin-quotation/${id}`)
+}

@@ -11,6 +11,17 @@ export const listQuotationCompare = (pageNumber, perPage, sortKey, sortDirection
     })
 }
 
+export const listPinCompare = (pageNumber, perPage, sortKey, sortDirection) => {
+    return api.get('/api/list-pin/page', {
+        params: {
+            page: pageNumber,
+            per_page: perPage,
+            sortKey,
+            sortDirection
+        }
+    })
+}
+
 export const createCompare = (token, form) => {
     return api.post('/api/create-compare', form, {
         headers: {

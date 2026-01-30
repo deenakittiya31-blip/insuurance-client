@@ -27,6 +27,7 @@ import MemberRegister from '../pages/auth/MemberRegister'
 import QuotationList from '../pages/insur/QuotationList'
 import QuotationDetail from '../pages/insur/QuotationDetail'
 import PackageProduct from '../pages/PackageProduct'
+import PinListCompare from '../pages/compare/PinListCompare'
 
 const Approutes = () => {
     return (
@@ -47,6 +48,7 @@ const Approutes = () => {
                         </ProtectRoute>
                     }>
                     <Route index element={<Home />} />
+                    <Route path='pin-compare' element={<PinListCompare />} />
                     <Route path='quotationlist' element={<QuotationList />} />
                     <Route path='insurance-company' element={<InsurCompany />} />
                     <Route path='cartype' element={<Cartype />} />

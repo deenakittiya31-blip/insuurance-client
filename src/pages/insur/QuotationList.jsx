@@ -11,6 +11,7 @@ import { sendDocumentToMember } from "../../service/member"
 import useInsureAuth from "../../store/auth-store"
 import SearchBox from "../../component/quotation_about/SearchBox"
 import SelectPerPage from "../../component/form/SelectPerPage"
+import { pinQuotation } from "../../service/quotation"
 
 const QuotationList = () => {
     const token = useInsureAuth((s) => s.token)
@@ -194,6 +195,17 @@ const QuotationList = () => {
         }
     }
 
+    const handlePinQuotation = async (id) => {
+        try {
+            const res = await pinQuotation(id)
+            toast.success(res.data.msg)
+            getQuotationList(page, perPage, sortConfig.key, sortConfig.direction)
+        } catch (err) {
+            console.log(err)
+            toast.error('ปักหมุดไม่สำเร็จ')
+        }
+    }
+
 
     return (
         <div className='flex flex-col gap-5 p-5'>
@@ -233,6 +245,7 @@ const QuotationList = () => {
                     jpg={createJPEG}
                     onSort={handleSort}
                     sortConfig={sortConfig}
+                    onPin={handlePinQuotation}
                 />
                 <div className='flex justify-end'>
                     {
