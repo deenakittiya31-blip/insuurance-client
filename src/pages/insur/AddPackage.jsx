@@ -6,11 +6,39 @@ import Select from '../../component/form/Select';
 import { useEffect, useState } from 'react';
 import SelectSearch from '../../component/form/SelectSearch';
 import { listPayment } from '../../service/payment';
+import { useSearchParams } from 'react-router-dom';
 
+const initialState = {
+    package_name: '',
+    start_date: '',
+    end_date: '',
+    repair_type: '',
+    is_active: '',
+    engine_size: '',
+    insurance_company_id: '',
+    insurance_type_id: '',
+    promotion: '',
+    car_brand_id: '',
+    car_model_id: '',
+    car_type_id: '',
+    car_sub_type: '',
+    tp_person: '',
+    tp_person_accident: '',
+    tp_property: '',
+    flood_cover: '',
+    damage_deductible: '',
+    personal_accident: '',
+    medical_expense: '',
+    bail_bond: '',
+    discount_percent: '',
+    discount_amount: '',
+    payment_id: '',
+}
 
 const AddPackage = () => {
-    const { company, getCompanySelect, typeInsur, getTypeInsurSelect, carbrand, getCarBrandSelect, cartype, getCarTypeSelect, carmodel } = useActionStore();
+    const { company, getCompanySelect, typeInsur, getTypeInsurSelect, carbrand, getCarBrandSelect, cartype, getCarTypeSelect, carmodel, getCarModelSelect } = useActionStore();
     const [payment, setPayment] = useState([])
+    const [form, setForm] = useState(initialState)
 
     useEffect(() => {
         getCompanySelect();
@@ -26,6 +54,27 @@ const AddPackage = () => {
             setPayment(res.data.data)
         } catch (err) {
             console.log(err)
+        }
+    }
+
+    const handleOnChange = (e) => {
+        const { name, value } = e.target
+
+        setForm(prev => ({
+            ...prev,
+            [name]: value
+        }))
+    }
+
+    const handleSelectChange = async (name, value) => {
+        setForm(prev => ({
+            ...prev,
+            [name]: value,
+            ...(name === 'car_brand_id' && { car_model_id: '' })
+        }))
+
+        if (name === 'car_brand_id') {
+            await getCarModelSelect(value)
         }
     }
 
@@ -262,7 +311,7 @@ const AddPackage = () => {
                         <div className='grid grid-cols-2 gap-3'>
                             {
                                 payment.map((i) => (
-                                    <label className='flex items-center gap-3 text-sm'>
+                                    <label key={i.id} className='flex items-center gap-3 text-sm'>
                                         <input type="checkbox" name="subscribe" value={i.id} />
                                         {i.name_payment}
                                     </label>

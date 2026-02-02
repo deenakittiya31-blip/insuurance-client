@@ -3,7 +3,7 @@ import useInsureAuth from '../../store/auth-store'
 import toast from 'react-hot-toast'
 import Input from '../../component/form/Input'
 import TableCarType from '../../component/table/TableCarType'
-import { createCarType, listCarType, readCarType, removeCarType, updateCarType } from '../../service/car/CarType'
+import { createCarType, listCarType, readCarType, removeCarType, statusCarType, updateCarType } from '../../service/car/CarType'
 import Pagination from '../../component/paginationComponent/Pagination'
 import Swal from 'sweetalert2'
 import Title from '../../component/form/Title'
@@ -16,7 +16,6 @@ import SelectPerPage from '../../component/form/SelectPerPage'
 const initialState = {
     type: '',
     code: '',
-    car_usage_id: ''
 }
 
 const Cartype = () => {
@@ -83,9 +82,7 @@ const Cartype = () => {
         if (!form.type) {
             return toast('กรุณากรอกประเภทรถ')
         }
-        if (!form.car_usage_id) {
-            return toast('กรุณากรอกประเภทการใช้งานรถ')
-        }
+
         createCarType(token, form)
             .then((res) => {
                 document.getElementById('modalcartype').close()
@@ -134,6 +131,17 @@ const Cartype = () => {
         }
     }
 
+    const hdlToggleActive = async (id, currentStatus) => {
+        try {
+            await statusCarType(id, !currentStatus)
+            getCarType(page, perPage)
+            toast.success('อัปเดตสถานะสำเร็จ')
+        } catch (err) {
+            console.log(err)
+            toast.error('อัปเดตสถานะไม่สำเร็จ')
+        }
+    }
+
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
             {/* หัวข้อ */}
@@ -166,6 +174,7 @@ const Cartype = () => {
                     onEdit={openModal}
                     page={page}
                     limit={perPage}
+                    onToggle={hdlToggleActive}
                 />
             </div>
             <div className='flex justify-end'>

@@ -12,13 +12,14 @@ import Pagination from '../../component/paginationComponent/Pagination'
 import SelectPerPage from '../../component/form/SelectPerPage'
 
 const initialState = {
-    car_type_id: '',
-    code: '',
+    car_type: '',
+    car_usage_type_id: '',
+    code_sub: '',
+    detail: '',
     net_price: '',
     vat: '',
     stamp: '',
     total: '',
-    detail: ''
 }
 
 const CompulsoryCar = () => {
@@ -76,7 +77,7 @@ const CompulsoryCar = () => {
     const hdlSubmit = async (e) => {
         e.preventDefault()
         try {
-            const res = await createCompulsory(token, form)
+            const res = await createCompulsory(form)
             document.getElementById('modalcompul').close();
             setForm(initialState)
             getCompulsory(page, perPage);
@@ -166,7 +167,7 @@ const CompulsoryCar = () => {
                 }
             </div>
             <EditCompulsory
-                value={form}
+                form={form}
                 onChange={hdlOnChange}
                 onSubmit={handleUpdate}
                 isOpen={open}

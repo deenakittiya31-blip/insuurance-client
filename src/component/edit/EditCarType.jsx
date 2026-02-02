@@ -11,15 +11,6 @@ const EditCarType = ({ isOpen, carUsage, onClose, onChange, onSubmit, value }) =
                 <h3 className="font-bold text-lg font-prompt text-text-primary">แก้ไขประเภทรถยนต์</h3>
                 <TextInput
                     width='w-sm'
-                    title='ประเภทรถยนต์'
-                    name='type'
-                    type='text'
-                    placeholder='กรอกประเภทรถยนต์'
-                    onChange={onChange}
-                    value={value.type}
-                />
-                <TextInput
-                    width='w-sm'
                     title='รหัสการใช้งาน'
                     name='code'
                     type='text'
@@ -27,7 +18,16 @@ const EditCarType = ({ isOpen, carUsage, onClose, onChange, onSubmit, value }) =
                     onChange={onChange}
                     value={value.code}
                 />
-                <Select
+                <TextInput
+                    width='w-sm'
+                    title='ประเภทรถยนต์'
+                    name='type'
+                    type='text'
+                    placeholder='กรอกประเภทรถยนต์'
+                    onChange={onChange}
+                    value={value.type}
+                />
+                {/* <Select
                     text='ประเภทการใช้งานรถ'
                     data={carUsage}
                     name='car_usage_id'
@@ -35,7 +35,7 @@ const EditCarType = ({ isOpen, carUsage, onClose, onChange, onSubmit, value }) =
                     onChange={onChange}
                     valueKey='id'
                     labelKey='usage_name'
-                />
+                /> */}
                 <div className='modal-action'>
                     <button type='button' className="btn btn-soft btn-error" onClick={onClose}>ยกเลิก</button>
                     <button type="submit" className="btn btn-soft btn-primary" >บันทึก</button>

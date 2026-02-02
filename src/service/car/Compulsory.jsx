@@ -1,11 +1,7 @@
 import api from '../../config/axios'
 
-export const createCompulsory = async (token, form) => {
-    return api.post('/api/create-compulsory', form, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
+export const createCompulsory = async (form) => {
+    return api.post('/api/create-compulsory', form)
 }
 
 export const ListCompulsory = async (pageNumber, perPage) => {

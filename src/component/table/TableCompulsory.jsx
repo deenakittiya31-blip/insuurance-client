@@ -7,13 +7,12 @@ const TableCompulsory = ({ data, page, limit, onDelete, onEdite }) => {
                 <thead>
                     <tr>
                         <th className='font-medium text-neutral-400'>ลำดับ</th>
-                        <th className='font-medium text-neutral-400'>รหัส</th>
-                        <th className='font-medium text-neutral-400'>ประเภทรถ</th>
-                        <th className='font-medium text-neutral-400'>ประเภทการใช้งาน</th>
-                        <th className='font-medium text-neutral-400'>สุทธิ</th>
-                        <th className='font-medium text-neutral-400'>vat</th>
-                        <th className='font-medium text-neutral-400'>อากร</th>
-                        <th className='font-medium text-neutral-400'>รวม</th>
+                        <th className='font-medium text-neutral-400 text-center'>ประเภทรถยนต์</th>
+                        <th className='font-medium text-neutral-400 text-center'>รหัสประเภทหลัก</th>
+                        <th className='font-medium text-neutral-400 text-center'>รหัสประเภทย่อย</th>
+                        <th className='font-medium text-neutral-400 text-center'>ประเภทการใช้งาน</th>
+                        <th className='font-medium text-neutral-400 text-center'>สุทธิ</th>
+                        <th className='font-medium text-neutral-400 text-center'>รวม</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
                 </thead>
@@ -22,13 +21,12 @@ const TableCompulsory = ({ data, page, limit, onDelete, onEdite }) => {
                         data?.map((i, idx) => (
                             <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
                                 <td>{(page - 1) * limit + idx + 1}</td>
-                                <td>{i.code}</td>
-                                <td><p className='line-clamp-1'>{i.type}</p></td>
-                                <td>{i.usage}</td>
-                                <td>{i.net_price}</td>
-                                <td>{i.vat}</td>
-                                <td>{i.stamp}</td>
-                                <td>{i.total}</td>
+                                <td className='text-center'>{i.car_type}</td>
+                                <td className='text-center'>{i.code_usage}</td>
+                                <td className='text-center'>{i.code_sub}</td>
+                                <td className='text-center'>{i.detail}</td>
+                                <td className='text-center'>{i.net_price}</td>
+                                <td className='text-center'>{i.total}</td>
                                 <td>
                                     <div className='flex gap-5 justify-center'>
                                         <button onClick={() => onEdite(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>

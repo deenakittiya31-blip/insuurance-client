@@ -49,8 +49,6 @@ const SidebarNew = () => {
         }))
     }
 
-    // console.log(user.user_id)
-
     const hdlSelectChange = async (name, value) => {
         setForm(prev => ({
             ...prev,

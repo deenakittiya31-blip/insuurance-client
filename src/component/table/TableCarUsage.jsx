@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const TableCarUsage = ({ data, page, limit, onDelete, onUpdate }) => {
+const TableCarUsage = ({ data, onDelete, onUpdate }) => {
     const [editingId, setEditingId] = useState(null)
     const [editValue, setEditValue] = useState('')
 
@@ -33,7 +33,7 @@ const TableCarUsage = ({ data, page, limit, onDelete, onUpdate }) => {
                     {
                         data?.map((i, idx) => (
                             <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
-                                <td>{(page - 1) * limit + idx + 1}</td>
+                                <td>{idx + 1}</td>
                                 <td>
                                     {editingId === i.id ? (
                                         <input
@@ -60,7 +60,7 @@ const TableCarUsage = ({ data, page, limit, onDelete, onUpdate }) => {
                                 </td>
                                 <td>
                                     <div className='flex gap-5 justify-center'>
-                                        <button onClick={() => startEdit(i)} className="btn btn-sm btn-soft btn-warning">แกไข</button>
+                                        <button onClick={() => startEdit(i)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
                                         <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
                                     </div>
                                 </td>

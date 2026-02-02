@@ -8,6 +8,7 @@ const TableInsurType = ({ data, page, limit, onDelete, onEdite, onToggle }) => {
                 <thead>
                     <tr>
                         <th className='font-medium text-neutral-400'>ลำดับ</th>
+                        <th className='font-medium text-neutral-400'>รหัสประเภท</th>
                         <th className='font-medium text-neutral-400'>ประเภทประกัน</th>
                         <th className='font-medium text-neutral-400'>รายละเอียด</th>
                         <th className='font-medium text-neutral-400'>สถานะ</th>
@@ -19,6 +20,7 @@ const TableInsurType = ({ data, page, limit, onDelete, onEdite, onToggle }) => {
                         data?.map((i, idx) => (
                             <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
                                 <td>{(page - 1) * limit + idx + 1}</td>
+                                <td>{i.type_code}</td>
                                 <td>{i.nametype}</td>
                                 <td>
                                     <p className='line-clamp-2'>{i.description}</p>

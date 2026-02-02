@@ -39,3 +39,7 @@ export const removeCarType = async (token, id) => {
         }
     })
 }
+
+export const statusCarType = (id, is_active) => {
+    return api.put(`/api/status-cartype/${id}`, { is_active })
+}
