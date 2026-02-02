@@ -6,8 +6,11 @@ import { FaLine } from "react-icons/fa";
 import { BiSolidFileJpg, BiSolidFilePdf } from "react-icons/bi";
 import Sort from "../sortData/Sort";
 import { BsFillPinAngleFill } from "react-icons/bs";
+import { HiOutlineDotsHorizontal } from "react-icons/hi";
+import { useState } from "react";
 
 const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onSort, sortConfig, onPin }) => {
+
 
     return (
         <div className="overflow-x-auto font-prompt">
@@ -60,7 +63,7 @@ const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onS
                                 />
                             </div>
                         </th>
-                        <th className='font-medium text-neutral-400'>
+                        <th className='font-medium text-neutral-400 text-center'>
                             ประวัติ
                         </th>
                         <th className='font-medium text-neutral-400 text-center'></th>
@@ -99,11 +102,12 @@ const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onS
                                 <td>
                                     <div className="flex justify-center -space-x-3">    {/* -space-x-3 */}
                                         {
-                                            i.members?.map((member, index) => (
+                                            i.members?.slice(0, 3).map((member, index) => (
                                                 <div className="tooltip" key={index}>
                                                     <div className="tooltip-content flex flex-col items-start">
                                                         <span>{member.display_name}</span>
                                                         <span>เมื่อ {dateFormat(member.sent_at)}</span>
+                                                        <span>ใบเสนอที่ {member.compare_no}</span>
                                                     </div>
                                                     <div className="inline-flex align-middle w-7 h-7 border-white border-2 rounded-full overflow-hidden shrink-0"
                                                     >
@@ -111,6 +115,34 @@ const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onS
                                                     </div>
                                                 </div>
                                             ))
+                                        }
+                                        {
+                                            i.members?.length > 3 && (
+                                                <div className="tooltip">
+                                                    <div className="tooltip-content flex flex-col gap-2 p-2">
+                                                        {
+                                                            i.members.map((i, idx) => (
+                                                                <div key={idx} className="bg-white rounded-xs p-1 flex gap-3">
+                                                                    <div className="w-12 h-12 border-white border-2 rounded-md overflow-hidden shrink-0"
+                                                                    >
+                                                                        <img src={i.picture_url} alt={i.display_name || 'Member'} className="w-full h-full object-cover" />
+                                                                    </div>
+                                                                    <div className="text-start text-xs">
+                                                                        <p className="font-semibold text-gray-400">{i.display_name}</p>
+                                                                        <p className="text-gray-400">เมื่อ {dateFormat(i.sent_at)}</p>
+                                                                        <p className="text-gray-400">ใบเสนอราคาที่ : {i.compare_no}</p>
+                                                                    </div>
+                                                                </div>
+                                                            ))
+                                                        }
+                                                    </div>
+                                                    <div className="avatar avatar-placeholder">
+                                                        <button className=" flex justify-center items-center bg-gray-200 text-white w-7 h-7 border-white border-2 rounded-full">
+                                                            <span><HiOutlineDotsHorizontal size={20} /></span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            )
                                         }
                                     </div>
                                 </td>
@@ -128,8 +160,8 @@ const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onS
                                             </div>
                                         </div>
                                         <div className="grid grid-cols-2 gap-1">
-                                            <button className="btn btn-sm hover:btn-accent py-1"><BiSolidFilePdf size={17} onClick={() => pdf(i.q_id)} /> PDF</button>
-                                            <button className="btn btn-sm hover:btn-accent py-1"><BiSolidFileJpg size={17} onClick={() => jpg(i.q_id)} /> JPG</button>
+                                            <button onClick={() => pdf(i.q_id)} className="btn btn-sm hover:btn-accent py-1"><BiSolidFilePdf size={17} /> PDF</button>
+                                            <button onClick={() => jpg(i.q_id)} className="btn btn-sm hover:btn-accent py-1"><BiSolidFileJpg size={17} /> JPG</button>
                                         </div>
                                     </div>
 

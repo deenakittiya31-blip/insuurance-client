@@ -46,20 +46,14 @@ export const getDetailCompareEdit = (id) => {
     return api.get(`/api/edit-compare/${id}`)
 }
 
-export const createPDF = (token, id) => {
+export const createPDF = (id) => {
     return api.get(`/api/pdf-compare/${id}`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
         responseType: 'blob'
     })
 }
 
-export const createJPG = (token, id) => {
+export const createJPG = (id) => {
     return api.get(`/api/jpg-compare/${id}`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
         responseType: 'blob'
     })
 }

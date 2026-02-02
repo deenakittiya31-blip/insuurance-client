@@ -1,5 +1,5 @@
 import { FaRegBuilding } from "react-icons/fa6";
-import { FaLayerGroup, FaRegCalendar } from "react-icons/fa";
+import { FaRegCalendar } from "react-icons/fa";
 import { LuShield, LuCarTaxiFront, LuBrain } from "react-icons/lu";
 import { TbPackages, TbPremiumRights } from "react-icons/tb";
 import { CgBmw } from "react-icons/cg";
@@ -12,22 +12,35 @@ export const adminInsur = [
     {
         icon: <FaRegBuilding className='size-4' />,
         title: 'บริษัทประกัน',
-        link: '/admin/insurance-company'
+        link: '/app/insurance-company'
     },
     {
         icon: <LuShield className='size-4' />,
         title: 'ประเภทประกัน',
-        link: '/admin/insurtypes'
+        link: '/app/insurtypes'
     },
     {
         icon: <TbPackages className='size-4' />,
         title: 'แพ็คเก็จ',
-        link: '/admin/package'
+        link: '/app/package'
     },
     {
         icon: <TbPremiumRights className='size-4' />,
         title: 'เบี้ยประกัน',
-        link: '/admin/insurpremuim'
+        link: '/app/insurpremuim'
+    },
+]
+
+export const staffInsur = [
+    {
+        icon: <TbPackages className='size-4' />,
+        title: 'แพ็คเก็จ',
+        link: '/app/package'
+    },
+    {
+        icon: <TbPremiumRights className='size-4' />,
+        title: 'เบี้ยประกัน',
+        link: '/app/insurpremuim'
     },
 ]
 
@@ -35,37 +48,37 @@ export const adminCar = [
     {
         icon: <CgBmw className='size-4' />,
         title: 'ยี่ห้อรถยนต์',
-        link: '/admin/carbrand'
+        link: '/app/carbrand'
     },
     {
         icon: <IoCarSportOutline className='size-4' />,
         title: 'รุ่นรถยนต์',
-        link: '/admin/carmodel'
+        link: '/app/carmodel'
     },
     {
         icon: <MdOutlineElectricCar className='size-4' />,
         title: 'ประเภทรถยนต์',
-        link: '/admin/cartype'
+        link: '/app/cartype'
     },
     {
         icon: <IoDocumentOutline className='size-4' />,
         title: 'พรบ.รถ',
-        link: '/admin/compulsorycar'
+        link: '/app/compulsorycar'
     },
     {
         icon: <FiBox className='size-4' />,
         title: 'กลุ่มรถยนต์',
-        link: '/admin/groupcar'
+        link: '/app/groupcar'
     },
     {
         icon: <LuCarTaxiFront className='size-4' />,
         title: 'ประเภทการใช้งาน',
-        link: '/admin/usagecar'
+        link: '/app/usagecar'
     },
     {
         icon: <FaRegCalendar className='size-4' />,
         title: 'ปีรถยนต์',
-        link: '/admin/caryear'
+        link: '/app/caryear'
     },
 ]
 
@@ -73,11 +86,11 @@ export const adminSetting = [
     {
         icon: <LuBrain className='size-4' />,
         title: 'ปรับแต่งโมเดลเอกสาร',
-        link: '/admin/custommodel'
+        link: '/app/custommodel'
     },
     {
         icon: <RiSettings4Line className='size-4' />,
         title: 'การตั้งค่าระบบ',
-        link: '/admin/setting'
+        link: '/app/setting'
     },
 ]

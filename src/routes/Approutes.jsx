@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom'
 import Login from '../pages/auth/Login'
 import Register from '../pages/auth/Register'
 import Layout from '../layout/Layout'
@@ -17,17 +17,19 @@ import ProtectRoute from './ProtectRoute'
 import Forbidden from './Forbidden'
 import Cartype from '../pages/car/Cartype'
 import CarYear from '../pages/car/CarYear'
-import Quotaion from '../pages/insur/Quotaion'
-import Compare from '../pages/insur/Compare'
-import Setting from '../pages/Setting'
 import CustomModel from '../pages/custom_page/CustomModel'
 import CustomModelDetail from '../pages/custom_page/CustomModelDetail'
-import Home from '../pages/Home'
+import MemberPage from '../pages/MemberPage'
 import MemberRegister from '../pages/auth/MemberRegister'
-import QuotationList from '../pages/insur/QuotationList'
-import QuotationDetail from '../pages/insur/QuotationDetail'
 import PackageProduct from '../pages/PackageProduct'
 import PinListCompare from '../pages/compare/PinListCompare'
+import QuotationList from '../pages/compare/QuotationList'
+import QuotationDetail from '../pages/compare/QuotationDetail'
+import Quotaion from '../pages/compare/Quotaion'
+import Setting from '../pages/Setting'
+import Compare from '../pages/insur/Compare'
+import DashBoard from '../pages/dashboard/DashBoard'
+import AddPackage from '../pages/insur/AddPackage'
 
 const Approutes = () => {
     return (
@@ -41,32 +43,44 @@ const Approutes = () => {
                 <Route path='package-product' element={<PackageProduct />} />
 
                 <Route
-                    path='/admin'
+                    path='/app'
                     element={
-                        <ProtectRoute allowRoles={['admin']} >
+                        <ProtectRoute allowRoles={['admin', 'staff']} >
                             <Layout />
                         </ProtectRoute>
                     }>
-                    <Route index element={<Home />} />
+                    <Route index element={<DashBoard />} />
+                    <Route path='member' element={<MemberPage />} />
                     <Route path='pin-compare' element={<PinListCompare />} />
                     <Route path='quotationlist' element={<QuotationList />} />
-                    <Route path='insurance-company' element={<InsurCompany />} />
-                    <Route path='cartype' element={<Cartype />} />
-                    <Route path='caryear' element={<CarYear />} />
-                    <Route path='usagecar' element={<UsageCar />} />
-                    <Route path='groupcar' element={<GroupCar />} />
-                    <Route path='compulsorycar' element={<CompulsoryCar />} />
-                    <Route path='carmodel' element={<CarModel />} />
-                    <Route path='carbrand' element={<CarBrand />} />
-                    <Route path='insurpremuim' element={<InsurPremuim />} />
-                    <Route path='insurtypes' element={<InsurTypes />} />
-                    <Route path='package' element={<InsurPackage />} />
                     <Route path='quotation/:q_id' element={<Quotaion />} />
                     <Route path='compare-detail/:q_id' element={<QuotationDetail />} />
                     <Route path='compare/:q_id' element={<Compare />} />
                     <Route path='setting' element={<Setting />} />
                     <Route path='custommodel' element={<CustomModel />} />
                     <Route path='custommodel-detail/:id' element={<CustomModelDetail />} />
+                    <Route path='package' element={<InsurPackage />} />
+                    <Route path='addpackage' element={<AddPackage />} />
+                    <Route path='insurpremuim' element={<InsurPremuim />} />
+
+                    {/*admin only */}
+                    <Route
+                        element={
+                            <ProtectRoute allowRoles={['admin']}>
+                                <Outlet />
+                            </ProtectRoute>
+                        }
+                    >
+                        <Route path='insurance-company' element={<InsurCompany />} />
+                        <Route path='cartype' element={<Cartype />} />
+                        <Route path='caryear' element={<CarYear />} />
+                        <Route path='usagecar' element={<UsageCar />} />
+                        <Route path='groupcar' element={<GroupCar />} />
+                        <Route path='compulsorycar' element={<CompulsoryCar />} />
+                        <Route path='carmodel' element={<CarModel />} />
+                        <Route path='carbrand' element={<CarBrand />} />
+                        <Route path='insurtypes' element={<InsurTypes />} />
+                    </Route>
                 </Route>
             </Routes>
         </BrowserRouter>

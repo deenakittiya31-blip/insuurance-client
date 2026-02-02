@@ -11,6 +11,7 @@ import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
 import SelectPerPage from '../../component/form/SelectPerPage'
 import useActionStore from '../../store/action-store'
+import { Link } from 'react-router-dom'
 
 const initialState = {
     company_id: '',
@@ -148,13 +149,16 @@ const InsurPackage = () => {
                     title='แพ็กเกจ'
                     subtitle='ข้อมูลของแพ็กเกจแต่ละบริษัท'
                 />
-                <ModalPackage
+                {/* <ModalPackage
                     form={form}
                     onSubmit={hdlSubmit}
                     onChange={hdlOnChange}
                     onClose={closeForm}
                     onChangeCarmodel={hdlSelectChange}
-                />
+                /> */}
+                <Link to='/app/addpackage'>
+                    <button className='btn bg-main text-white font-prompt hover:bg-second'>เพิ่มแพ็กเกจ</button>
+                </Link>
             </div>
             <div className='bg-white rounded-2xl p-5'>
                 <div className='flex justify-between items-baseline-last'>

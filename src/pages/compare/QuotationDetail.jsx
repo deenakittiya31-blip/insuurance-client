@@ -4,7 +4,7 @@ import toast from "react-hot-toast"
 import { useParams } from "react-router-dom"
 import TableQuotation from "../../component/table/TableQuotation"
 import { createQuotationFields, deleteQuotation } from "../../service/quotation"
-import { createJPG, createPDF, getDetailCompare, getDetailCompareEdit } from "../../service/compare"
+import { getDetailCompare, getDetailCompareEdit } from "../../service/compare"
 import { useEffect } from "react"
 import UploadDataOne from '../../component/form/UploadDataOne'
 import UploadDataTwo from '../../component/form/UploadDataTwo'
@@ -15,6 +15,8 @@ import State from "../../component/quotation_about/State"
 import Badge from "../../component/quotation_about/Badge"
 import { BiSolidFileJpg, BiSolidFilePdf } from "react-icons/bi"
 import Swal from "sweetalert2"
+import { createComparePDF } from "../../utils/pdf"
+import { createJPEG } from "../../utils/jpg"
 
 const initialData = {
     quotation_number: '',
@@ -326,78 +328,6 @@ const QuotationDetail = () => {
         }
     }
 
-    const createComparePDF = async () => {
-        try {
-            const res = await createPDF(token, q_id)
-
-            // ตรวจสอบว่ามีข้อมูลหรือไม่
-            if (!res.data) {
-                throw new Error('ไม่พบข้อมูล PDF')
-            }
-
-            // สร้าง blob URL
-            const blob = new Blob([res.data], { type: 'application/pdf' })
-            const url = window.URL.createObjectURL(blob)
-
-            // เปิดในแท็บใหม่
-            const newWindow = window.open(url, '_blank')
-
-            // ตรวจสอบว่าเปิดแท็บได้หรือไม่ (กรณี popup blocker)
-            if (!newWindow) {
-                toast.error('กรุณาอนุญาตให้เปิด popup ในเบราว์เซอร์')
-
-                // สำรอง: ดาวน์โหลดแทน
-                const link = document.createElement('a')
-                link.href = url
-                link.download = `เปรียบเทียบใบเสนอราคา_${q_id}.pdf`
-                document.body.appendChild(link)
-                link.click()
-                document.body.removeChild(link)
-
-                toast.success('ดาวน์โหลด PDF สำเร็จ')
-            } else {
-                toast.success('เปิด PDF สำเร็จ')
-            }
-
-            // ลบ URL หลังจาก 1 นาที (ป้องกัน memory leak)
-            setTimeout(() => {
-                window.URL.revokeObjectURL(url)
-            }, 60000)
-
-        } catch (err) {
-            console.error('PDF Error:', err)
-
-            // แสดง error message ที่ชัดเจน
-            if (err.response) {
-                toast.error(err.response.data?.msg || 'สร้าง PDF ไม่สำเร็จ')
-            } else if (err.request) {
-                toast.error('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์')
-            } else {
-                toast.error('เกิดข้อผิดพลาด: ' + err.message)
-            }
-        }
-    }
-
-    const createJPEG = async () => {
-        try {
-            const res = await createJPG(token, q_id)
-
-            const blob = new Blob([res.data], { type: 'image/jpeg' });
-            const url = window.URL.createObjectURL(blob);
-
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `quotation_${q_id}.jpg`; // ชื่อไฟล์
-            document.body.appendChild(link);
-            link.click();
-
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
     return (
         <div className='flex flex-col p-3 gap-5 font-prompt'>
             <div className="flex gap-3">
@@ -406,8 +336,8 @@ const QuotationDetail = () => {
                     <State data={detail} />
                 </div>
                 <div className="grid grid-rows-2 gap-3">
-                    <button onClick={createComparePDF} className='btn bg-text-primary rounded-md h-full text-white hover:bg-[#202b3b]'><BiSolidFilePdf size={20} /> PDF</button>
-                    <button onClick={createJPEG} className='btn bg-text-primary rounded-md h-full text-white hover:bg-[#202b3b]'><BiSolidFileJpg size={20} /> JPEG</button>
+                    <button onClick={() => createComparePDF(q_id)} className='btn bg-text-primary rounded-md h-full text-white hover:bg-[#202b3b]'><BiSolidFilePdf size={20} /> PDF</button>
+                    <button onClick={() => createJPEG(q_id)} className='btn bg-text-primary rounded-md h-full text-white hover:bg-[#202b3b]'><BiSolidFileJpg size={20} /> JPEG</button>
                 </div>
             </div>
             <div className="w-full">

@@ -66,7 +66,10 @@ const Login = () => {
             toast.success('ล็อกอินสำเร็จ')
 
             if (currentUser.role === 'admin') {
-                navigate('/admin', { replace: true })
+                navigate('/app', { replace: true })
+            }
+            else if (currentUser.role === 'staff') {
+                navigate('/app', { replace: true })
             } else {
                 navigate('/forbidden', { replace: true })
             }

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom';
 import { BsLayoutTextSidebar, BsPinAngle } from "react-icons/bs";
 import { IoIosArrowDown } from "react-icons/io";
-import { adminCar, adminInsur, adminSetting } from '../../utils/link';
+import { adminCar, adminInsur, adminSetting, staffInsur } from '../../utils/link';
 import toast from 'react-hot-toast';
 import useInsureAuth from '../../store/auth-store';
 import { TbLogout } from "react-icons/tb";
@@ -12,6 +12,7 @@ import ModalKeyInCompare from '../modal/modalKeyInCompare';
 import useActionStore from '../../store/action-store';
 import { createCompare } from '../../service/compare';
 import { GoPeople } from "react-icons/go";
+import { MdOutlineSpaceDashboard } from 'react-icons/md';
 
 const initialState = {
     to_name: '',
@@ -48,6 +49,8 @@ const SidebarNew = () => {
         }))
     }
 
+    // console.log(user.user_id)
+
     const hdlSelectChange = async (name, value) => {
         setForm(prev => ({
             ...prev,
@@ -77,7 +80,7 @@ const SidebarNew = () => {
         try {
             const payload = {
                 ...form,
-                offer: user.name,
+                offer_id: user.user_id,
                 import_by: 'ai'
             };
 
@@ -86,7 +89,7 @@ const SidebarNew = () => {
             setForm(initialState)
             toast.success('สร้างใบเสนอราคาเรียบร้อย')
 
-            navigate(`/admin/quotation/${res.data.q_id}`)
+            navigate(`/app/quotation/${res.data.q_id}`)
         } catch (err) {
             console.log(err)
             toast.error('สร้างใบเสนอราคาไม่สำเร็จ')
@@ -99,7 +102,7 @@ const SidebarNew = () => {
         try {
             const payload = {
                 ...form,
-                offer: user.name,
+                offer_id: user.user_id,
                 import_by: 'key-in'
             };
 
@@ -108,7 +111,7 @@ const SidebarNew = () => {
             setForm(initialState)
             toast.success('สร้างใบเสนอราคาเรียบร้อย')
 
-            navigate(`/admin/compare/${res.data.q_id}`)
+            navigate(`/app/compare/${res.data.q_id}`)
         } catch (err) {
             console.log(err)
             toast.error('สร้างใบเสนอราคาไม่สำเร็จ')
@@ -139,10 +142,28 @@ const SidebarNew = () => {
             `}>
                 <div className='flex flex-col flex-1 gap-y-5 text-text-primary'>
                     <div>
+                        <div className='flex flex-col gap-4'>
+                            <NavLink
+                                to='/app'
+                                end
+                                className={({ isActive }) =>
+                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
+                                }
+                            >
+                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                <div className='w-full flex items-center gap-3'>
+                                    <MdOutlineSpaceDashboard className='size-4' />
+                                    <p className='group-[.active]:text-current'>หน้าหลัก</p>
+                                </div>
+                            </NavLink>
+                        </div>
+                    </div>
+                    <div>
                         <h1 className='font-semibold mb-5 pl-7 lg:text-lg'>ลูกค้า</h1>
                         <div className='flex flex-col gap-4'>
                             <NavLink
-                                to='/admin'
+                                to='/app/member'
                                 end
                                 className={({ isActive }) =>
                                     `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
@@ -161,7 +182,7 @@ const SidebarNew = () => {
                         <h1 className='font-semibold mb-5 pl-7 lg:text-lg'>ใบเสนอราคา</h1>
                         <div className='flex flex-col gap-4'>
                             <NavLink
-                                to='/admin/pin-compare'
+                                to='/app/pin-compare'
                                 end
                                 className={({ isActive }) =>
                                     `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
@@ -171,12 +192,12 @@ const SidebarNew = () => {
                                 <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
                                 <div className='w-full flex items-center gap-3'>
                                     <BsPinAngle className='size-4' />
-                                    <p className='group-[.active]:text-current'>เบี้ยประกันที่ใช่บ่อย</p>
+                                    <p className='group-[.active]:text-current'>เบี้ยประกันที่ใช้บ่อย</p>
                                 </div>
 
                             </NavLink>
                             <NavLink
-                                to='/admin/quotationlist'
+                                to='/app/quotationlist'
                                 end
                                 className={({ isActive }) =>
                                     `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
@@ -212,6 +233,42 @@ const SidebarNew = () => {
                             </div>
                         </div>
                     </div>
+                    {
+                        user.role === 'staff' && (
+                            <div>
+                                <div className='pl-7 pr-3 mb-5'>
+                                    <h1 className='font-semibold lg:text-lg'>ประกันภัย</h1>
+                                </div>
+                                {
+                                    insure && (
+                                        <div className='flex flex-col gap-4'>
+                                            {
+                                                staffInsur.map((i, idx) => (
+                                                    <NavLink
+                                                        to={i.link}
+                                                        key={idx}
+                                                        end
+                                                        className={({ isActive }) =>
+                                                            `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
+                                                        }
+                                                    >
+                                                        <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                                        <div className='w-full flex items-center gap-3'>
+                                                            {i.icon}
+                                                            <p className='group-[.active]:text-current'>{i.title}</p>
+                                                        </div>
+
+                                                    </NavLink>
+                                                ))
+                                            }
+                                        </div>
+                                    )
+                                }
+
+                            </div>
+                        )
+                    }
                     <div>
                         <h1 className='font-semibold mb-5 pl-7 lg:text-lg'>ตั้งค่า</h1>
                         <div className='flex flex-col gap-4'>
@@ -237,72 +294,77 @@ const SidebarNew = () => {
                             }
                         </div>
                     </div>
-                    {/* หัวข้อหลัก 2 */}
-                    <div>
-                        <div className='flex justify-between items-center pl-7 pr-3 mb-5'>
-                            <h1 className='font-semibold lg:text-lg'>ประกันภัย</h1>
-                            <IoIosArrowDown onClick={() => setInsur(!insure)} />
-                        </div>
-                        {
-                            insure && (
-                                <div className='flex flex-col gap-4'>
+                    {
+                        user.role === 'admin' && (
+                            <>
+                                <div>
+                                    <div className='flex justify-between items-center pl-7 pr-3 mb-5'>
+                                        <h1 className='font-semibold lg:text-lg'>ประกันภัย</h1>
+                                        <IoIosArrowDown onClick={() => setInsur(!insure)} />
+                                    </div>
                                     {
-                                        adminInsur.map((i, idx) => (
-                                            <NavLink
-                                                to={i.link}
-                                                key={idx}
-                                                end
-                                                className={({ isActive }) =>
-                                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        insure && (
+                                            <div className='flex flex-col gap-4'>
+                                                {
+                                                    adminInsur.map((i, idx) => (
+                                                        <NavLink
+                                                            to={i.link}
+                                                            key={idx}
+                                                            end
+                                                            className={({ isActive }) =>
+                                                                `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
                                         ${isActive ? 'text-main active' : 'hover:text-main'}`
-                                                }
-                                            >
-                                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
-                                                <div className='w-full flex items-center gap-3'>
-                                                    {i.icon}
-                                                    <p className='group-[.active]:text-current'>{i.title}</p>
-                                                </div>
+                                                            }
+                                                        >
+                                                            <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                                            <div className='w-full flex items-center gap-3'>
+                                                                {i.icon}
+                                                                <p className='group-[.active]:text-current'>{i.title}</p>
+                                                            </div>
 
-                                            </NavLink>
-                                        ))
+                                                        </NavLink>
+                                                    ))
+                                                }
+                                            </div>
+                                        )
+                                    }
+
+                                </div>
+                                {/* หัวข้อหลัก 3 */}
+                                <div>
+                                    <div className='flex justify-between items-center pl-7 pr-3 mb-5'>
+                                        <h1 className='font-semibold lg:text-lg'>รถยนต์</h1>
+                                        <IoIosArrowDown onClick={() => setCar(!car)} />
+                                    </div>
+                                    {
+                                        car && (
+                                            <div className='flex flex-col gap-4'>
+                                                {
+                                                    adminCar.map((i, idx) => (
+                                                        <NavLink
+                                                            to={i.link}
+                                                            key={idx}
+                                                            className={({ isActive }) =>
+                                                                `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
+                                                            }
+                                                        >
+                                                            <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                                            <div className='w-full flex items-center gap-3'>
+                                                                {i.icon}
+                                                                <p className='group-[.active]:text-current'>{i.title}</p>
+                                                            </div>
+
+                                                        </NavLink>
+                                                    ))
+                                                }
+                                            </div>
+                                        )
                                     }
                                 </div>
-                            )
-                        }
-
-                    </div>
-                    {/* หัวข้อหลัก 3 */}
-                    <div>
-                        <div className='flex justify-between items-center pl-7 pr-3 mb-5'>
-                            <h1 className='font-semibold lg:text-lg'>รถยนต์</h1>
-                            <IoIosArrowDown onClick={() => setCar(!car)} />
-                        </div>
-                        {
-                            car && (
-                                <div className='flex flex-col gap-4'>
-                                    {
-                                        adminCar.map((i, idx) => (
-                                            <NavLink
-                                                to={i.link}
-                                                key={idx}
-                                                className={({ isActive }) =>
-                                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
-                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
-                                                }
-                                            >
-                                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
-                                                <div className='w-full flex items-center gap-3'>
-                                                    {i.icon}
-                                                    <p className='group-[.active]:text-current'>{i.title}</p>
-                                                </div>
-
-                                            </NavLink>
-                                        ))
-                                    }
-                                </div>
-                            )
-                        }
-                    </div>
+                            </>
+                        )
+                    }
                 </div>
                 <div className='flex pr-5'>
                     {

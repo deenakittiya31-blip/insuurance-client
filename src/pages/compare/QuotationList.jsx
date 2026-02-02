@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
-import NameTable from "../../component/form/NameTable"
 import Title from "../../component/form/Title"
-import { createJPG, createPDF, deleteQuotationCompare, listQuotationCompare, searchText } from '../../service/compare'
+import { createJPG, deleteQuotationCompare, listQuotationCompare, searchText } from '../../service/compare'
 import TableQuotationList from "../../component/table/TableQuotationList"
 import Pagination from "../../component/paginationComponent/Pagination"
 import Swal from "sweetalert2"
@@ -12,9 +11,12 @@ import useInsureAuth from "../../store/auth-store"
 import SearchBox from "../../component/quotation_about/SearchBox"
 import SelectPerPage from "../../component/form/SelectPerPage"
 import { pinQuotation } from "../../service/quotation"
+import { Link } from "react-router-dom"
+import { BsPinAngle } from "react-icons/bs"
+import { createComparePDF } from "../../utils/pdf"
+import { createJPEG } from "../../utils/jpg"
 
 const QuotationList = () => {
-    const token = useInsureAuth((s) => s.token)
     const [list, setList] = useState([])
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
     const [quotationId, setQuotationId] = useState(null)
@@ -41,7 +43,7 @@ const QuotationList = () => {
             const res = await searchText({ search: text })
             setList(res.data.data)
             if (!text) {
-                getQuotationList(page)
+                getQuotationList(page, perPage, sortConfig.key, sortConfig.direction)
             }
         } catch (err) {
             console.log(err)
@@ -122,79 +124,6 @@ const QuotationList = () => {
         }
     }
 
-
-    const createComparePDF = async (q_id) => {
-        try {
-            const res = await createPDF(token, q_id)
-
-            // ตรวจสอบว่ามีข้อมูลหรือไม่
-            if (!res.data) {
-                throw new Error('ไม่พบข้อมูล PDF')
-            }
-
-            // สร้าง blob URL
-            const blob = new Blob([res.data], { type: 'application/pdf' })
-            const url = window.URL.createObjectURL(blob)
-
-            // เปิดในแท็บใหม่
-            const newWindow = window.open(url, '_blank')
-
-            // ตรวจสอบว่าเปิดแท็บได้หรือไม่ (กรณี popup blocker)
-            if (!newWindow) {
-                toast.error('กรุณาอนุญาตให้เปิด popup ในเบราว์เซอร์')
-
-                // สำรอง: ดาวน์โหลดแทน
-                const link = document.createElement('a')
-                link.href = url
-                link.download = `เปรียบเทียบใบเสนอราคา_${q_id}.pdf`
-                document.body.appendChild(link)
-                link.click()
-                document.body.removeChild(link)
-
-                toast.success('ดาวน์โหลด PDF สำเร็จ')
-            } else {
-                toast.success('เปิด PDF สำเร็จ')
-            }
-
-            // ลบ URL หลังจาก 1 นาที (ป้องกัน memory leak)
-            setTimeout(() => {
-                window.URL.revokeObjectURL(url)
-            }, 60000)
-
-        } catch (err) {
-            console.error('PDF Error:', err)
-
-            // แสดง error message ที่ชัดเจน
-            if (err.response) {
-                toast.error(err.response.data?.msg || 'สร้าง PDF ไม่สำเร็จ')
-            } else if (err.request) {
-                toast.error('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์')
-            } else {
-                toast.error('เกิดข้อผิดพลาด: ' + err.message)
-            }
-        }
-    }
-
-    const createJPEG = async (q_id) => {
-        try {
-            const res = await createJPG(token, q_id)
-
-            const blob = new Blob([res.data], { type: 'image/jpeg' });
-            const url = window.URL.createObjectURL(blob);
-
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `quotation_${q_id}.jpg`; // ชื่อไฟล์
-            document.body.appendChild(link);
-            link.click();
-
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
     const handlePinQuotation = async (id) => {
         try {
             const res = await pinQuotation(id)
@@ -216,11 +145,13 @@ const QuotationList = () => {
                 />
             </div>
             <div className='flex-1 bg-white rounded-2xl p-5'>
-                <div className="flex justify-between items-baseline-last">
-                    <NameTable
-                        icon='📑'
-                        name='ตารางใบเสนอราคา'
-                    />
+                <div className="flex justify-between items-baseline-last mb-5">
+                    <Link to='/admin/pin-compare'>
+                        <button className="flex justify-center items-center gap-1 btn btn-outline btn-accent font-prompt">
+                            <BsPinAngle className='size-4' />
+                            เบี้ยประกันที่ใช้บ่อย
+                        </button>
+                    </Link>
                     <div className="flex gap-3 items-baseline-last">
                         <SearchBox
                             width='w-sm'

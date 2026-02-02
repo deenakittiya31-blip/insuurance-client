@@ -4,12 +4,17 @@ import { deleteQuotationCompare, listPinCompare } from "../../service/compare";
 import Pagination from "../../component/paginationComponent/Pagination";
 import SelectPerPage from "../../component/form/SelectPerPage";
 import SearchBox from "../../component/quotation_about/SearchBox";
-import NameTable from "../../component/form/NameTable";
 import Title from "../../component/form/Title";
 import TableQuotationList from '../../component/table/TableQuotationList'
 import { pinQuotation } from "../../service/quotation";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
+import { IoDocumentAttachOutline } from "react-icons/io5";
+import { createComparePDF } from "../../utils/pdf";
+import { createJPEG } from "../../utils/jpg";
+import { sendDocumentToMember } from "../../service/member";
+import ModalMember from "../../component/quotation_about/ModalMember";
 
 const PinListCompare = () => {
     const token = useInsureAuth((s) => s.token)
@@ -86,6 +91,32 @@ const PinListCompare = () => {
         }
     }
 
+    const openModal = async (id) => {
+        setOpen(true)
+        setQuotationId(id)
+    }
+
+    const closeForm = () => {
+        setOpen(false)
+        setQuotationId(null)
+    }
+
+    const sendMessage = async (memberSelected) => {
+        if (memberSelected.length === 0) {
+            toast.error('กรุณาเลือกลูกค้า')
+            return
+        }
+
+        try {
+            const res = await sendDocumentToMember(memberSelected, quotationId)
+            getPinList(page, perPage, sortConfig.key, sortConfig.direction)
+            toast.success(res.data.msg)
+        } catch (error) {
+            console.log(error)
+            toast.error('ส่งไม่สำเร็จ')
+        }
+    }
+
     return (
         <div className='flex flex-col gap-5 p-5'>
             <div className='flex items-center justify-between'>
@@ -94,11 +125,13 @@ const PinListCompare = () => {
                 />
             </div>
             <div className='flex-1 bg-white rounded-2xl p-5'>
-                <div className="flex justify-between items-baseline-last">
-                    <NameTable
-                        icon='📑'
-                        name='ตารางใบเสนอราคา'
-                    />
+                <div className="flex justify-between items-baseline-last mb-5">
+                    <Link to='/admin/quotationlist'>
+                        <button className="flex justify-center items-center gap-1 btn btn-outline btn-accent font-prompt">
+                            <IoDocumentAttachOutline className='size-4' />
+                            รายการใบเสนอราคา
+                        </button>
+                    </Link>
                     <div className="flex gap-3 items-baseline-last">
                         <SearchBox
                             width='w-sm'
@@ -118,9 +151,9 @@ const PinListCompare = () => {
                     page={page}
                     limit={perPage}
                     onDelete={hdlDelete}
-                    // isOpen={openModal}
-                    // pdf={createComparePDF}
-                    // jpg={createJPEG}
+                    isOpen={openModal}
+                    pdf={createComparePDF}
+                    jpg={createJPEG}
                     onSort={handleSort}
                     sortConfig={sortConfig}
                     onPin={handlePinQuotation}
@@ -138,6 +171,12 @@ const PinListCompare = () => {
                     }
                 </div>
             </div>
+            <ModalMember
+                onSubmit={sendMessage}
+                isOpen={open}
+                onClose={closeForm}
+                q_id={quotationId}
+            />
         </div>
     )
 }
