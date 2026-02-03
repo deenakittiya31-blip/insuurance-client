@@ -39,3 +39,7 @@ export const removeCarModel = async (token, id) => {
         }
     })
 }
+
+export const statusCarModel = (id, is_active) => {
+    return api.put(`/api/status-carmodel/${id}`, { is_active })
+}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import useInsureAuth from '../../store/auth-store'
-import { createCarModel, listCarModel, readCarModel, removeCarModel, updateCarModel } from '../../service/car/CarModel'
+import { createCarModel, listCarModel, readCarModel, removeCarModel, statusCarModel, updateCarModel } from '../../service/car/CarModel'
 import toast from 'react-hot-toast'
 import Swal from 'sweetalert2'
 import TableCarModel from '../../component/table/TableCarModel'
@@ -138,6 +138,17 @@ const CarModel = () => {
         }
     }
 
+    const hdlToggleActive = async (id, currentStatus) => {
+        try {
+            await statusCarModel(id, !currentStatus)
+            getCarModel(page, perPage)
+            toast.success('อัปเดตสถานะสำเร็จ')
+        } catch (err) {
+            console.log(err)
+            toast.error('อัปเดตสถานะไม่สำเร็จ')
+        }
+    }
+
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
             <div className='flex items-center justify-between'>
@@ -169,6 +180,7 @@ const CarModel = () => {
                     page={page}
                     limit={perPage}
                     onEdit={openModal}
+                    onToggle={hdlToggleActive}
                 />
             </div>
             <div className='flex justify-end'>

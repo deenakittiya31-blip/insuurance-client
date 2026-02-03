@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import ModalCompany from '../../component/modal/ModalCompany'
 import TableCompany from '../../component/table/TableCompany'
-import { createCompany, listCompany, readCompany, removeCompany, updateCompany } from '../../service/insurance/CompanyInsur'
+import { createCompany, listCompany, readCompany, removeCompany, statusCompany, updateCompany } from '../../service/insurance/CompanyInsur'
 import Swal from 'sweetalert2'
 import toast from 'react-hot-toast'
 import useInsureAuth from '../../store/auth-store'
@@ -132,6 +132,18 @@ const InsurCompany = () => {
             console.log(err)
         }
     }
+
+    const hdlToggleActive = async (id, currentStatus) => {
+        try {
+            await statusCompany(id, !currentStatus)
+            getCompany(page, perPage);
+            toast.success('อัปเดตสถานะสำเร็จ')
+        } catch (err) {
+            console.log(err)
+            toast.error('อัปเดตสถานะไม่สำเร็จ')
+        }
+    }
+
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
             <div className='flex items-center justify-between'>
@@ -163,6 +175,7 @@ const InsurCompany = () => {
                     onEdit={openModal}
                     page={page}
                     limit={perPage}
+                    onToggle={hdlToggleActive}
                 />
             </div>
             <div className='flex justify-end'>

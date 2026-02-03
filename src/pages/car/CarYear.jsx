@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import useInsureAuth from '../../store/auth-store'
-import { createYear, listYear, readYear, removeYear, updateYear } from '../../service/car/CarYear'
+import { createYear, listYear, readYear, removeYear, statusCarYear, updateYear } from '../../service/car/CarYear'
 import Swal from 'sweetalert2'
 import toast from 'react-hot-toast'
 import Title from '../../component/form/Title'
@@ -138,6 +138,17 @@ const CarYear = () => {
         }
     }
 
+    const hdlToggleActive = async (id, currentStatus) => {
+        try {
+            await statusCarYear(id, !currentStatus)
+            getYear(page, perPage)
+            toast.success('อัปเดตสถานะสำเร็จ')
+        } catch (err) {
+            console.log(err)
+            toast.error('อัปเดตสถานะไม่สำเร็จ')
+        }
+    }
+
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
             <div className='flex items-center justify-between'>
@@ -170,6 +181,7 @@ const CarYear = () => {
                     onEdite={openModal}
                     onSort={handleSort}
                     sortConfig={sortConfig}
+                    onToggle={hdlToggleActive}
                 />
             </div>
             <div className='flex justify-end'>

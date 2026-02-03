@@ -1,6 +1,6 @@
 import React from 'react'
 
-const TableCompany = ({ data, page, limit, onDelete, onEdit }) => {
+const TableCompany = ({ data, page, limit, onDelete, onEdit, onToggle }) => {
     return (
         <div className="overflow-x-auto font-prompt ">
             <table className="table">
@@ -12,6 +12,7 @@ const TableCompany = ({ data, page, limit, onDelete, onEdit }) => {
                         <th className='font-medium text-neutral-400'>บริษัท</th>
                         <th className='font-medium text-neutral-400'>รหัส</th>
                         <th className='font-medium text-neutral-400'>เบอร์โทรแจ้งเหตุ</th>
+                        <th className='font-medium text-neutral-400'>สถานะ</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
                 </thead>
@@ -37,6 +38,13 @@ const TableCompany = ({ data, page, limit, onDelete, onEdit }) => {
                                 </td>
                                 <td>
                                     {i.phone}
+                                </td>
+                                <td>
+                                    <input
+                                        type="checkbox"
+                                        onChange={() => onToggle(i.id, i.is_active)}
+                                        checked={i.is_active}
+                                        className="toggle" />
                                 </td>
                                 <td>
                                     <div className='flex gap-5 justify-center'>

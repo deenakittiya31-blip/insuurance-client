@@ -36,6 +36,10 @@ export const updateCompany = (token, id, form) => {
     })
 }
 
+export const statusCompany = (id, is_active) => {
+    return api.put(`/api/status-company/${id}`, { is_active })
+}
+
 export const removeCompany = (token, id) => {
     return api.delete(`/api/delete-company/${id}`, {
         headers: {

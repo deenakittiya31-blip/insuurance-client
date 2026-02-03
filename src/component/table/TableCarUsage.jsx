@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const TableCarUsage = ({ data, onDelete, onUpdate }) => {
+const TableCarUsage = ({ data, onDelete, onUpdate, onToggle }) => {
     const [editingId, setEditingId] = useState(null)
     const [editValue, setEditValue] = useState('')
 
@@ -26,6 +26,7 @@ const TableCarUsage = ({ data, onDelete, onUpdate }) => {
                     <tr>
                         <th className='font-medium text-neutral-400'>ลำดับ</th>
                         <th className='font-medium text-neutral-400'>ประเภท</th>
+                        <th className='font-medium text-neutral-400'>สถานะ</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
                 </thead>
@@ -57,6 +58,13 @@ const TableCarUsage = ({ data, onDelete, onUpdate }) => {
                                             {i.usage_name}
                                         </span>
                                     )}
+                                </td>
+                                <td>
+                                    <input
+                                        type="checkbox"
+                                        onChange={() => onToggle(i.id, i.is_active)}
+                                        checked={i.is_active}
+                                        className="toggle" />
                                 </td>
                                 <td>
                                     <div className='flex gap-5 justify-center'>

@@ -1,6 +1,6 @@
 import Sort from '../sortData/Sort'
 
-const TableYear = ({ data, page, limit, onDelete, onEdite, onSort, sortConfig }) => {
+const TableYear = ({ data, page, limit, onDelete, onEdite, onSort, sortConfig, onToggle }) => {
 
     return (
         <div className="overflow-x-auto font-prompt">
@@ -18,6 +18,7 @@ const TableYear = ({ data, page, limit, onDelete, onEdite, onSort, sortConfig })
                         </th>
                         <th className='font-medium text-neutral-400'>ปี พ.ศ.</th>
                         <th className='font-medium text-neutral-400'>ปี ค.ศ.</th>
+                        <th className='font-medium text-neutral-400 text-center'>สถานะ</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
                 </thead>
@@ -28,6 +29,14 @@ const TableYear = ({ data, page, limit, onDelete, onEdite, onSort, sortConfig })
                                 <td>{(page - 1) * limit + idx + 1}</td>
                                 <td>{i.year_be}</td>
                                 <td>{i.year_ad}</td>
+                                <td className='text-center'>
+                                    <input
+                                        type='checkbox'
+                                        onChange={() => onToggle(i.id, i.is_active)}
+                                        checked={i.is_active}
+                                        className='toggle'
+                                    />
+                                </td>
                                 <td>
                                     <div className='flex gap-5 justify-center'>
                                         <button onClick={() => onEdite(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>

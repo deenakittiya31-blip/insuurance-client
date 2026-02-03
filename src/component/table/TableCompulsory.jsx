@@ -1,6 +1,6 @@
 import React from 'react'
 
-const TableCompulsory = ({ data, page, limit, onDelete, onEdite }) => {
+const TableCompulsory = ({ data, page, limit, onDelete, onEdite, onToggle }) => {
     return (
         <div className="overflow-x-auto font-prompt">
             <table className="table">
@@ -13,6 +13,7 @@ const TableCompulsory = ({ data, page, limit, onDelete, onEdite }) => {
                         <th className='font-medium text-neutral-400 text-center'>ประเภทการใช้งาน</th>
                         <th className='font-medium text-neutral-400 text-center'>สุทธิ</th>
                         <th className='font-medium text-neutral-400 text-center'>รวม</th>
+                        <th className='font-medium text-neutral-400 text-center'>สถานะ</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
                 </thead>
@@ -27,6 +28,13 @@ const TableCompulsory = ({ data, page, limit, onDelete, onEdite }) => {
                                 <td className='text-center'>{i.detail}</td>
                                 <td className='text-center'>{i.net_price}</td>
                                 <td className='text-center'>{i.total}</td>
+                                <td>
+                                    <input
+                                        type="checkbox"
+                                        onChange={() => onToggle(i.id, i.is_active)}
+                                        checked={i.is_active}
+                                        className="toggle" />
+                                </td>
                                 <td>
                                     <div className='flex gap-5 justify-center'>
                                         <button onClick={() => onEdite(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>

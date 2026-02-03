@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import ModalCompul from '../../component/modal/ModalCompul'
 import TableCompulsory from '../../component/table/TableCompulsory'
-import { createCompulsory, ListCompulsory, readCompulsory, removeCompulsory, updateCompulsory } from '../../service/car/Compulsory'
+import { createCompulsory, ListCompulsory, readCompulsory, removeCompulsory, statusCompulsory, updateCompulsory } from '../../service/car/Compulsory'
 import Swal from 'sweetalert2'
 import useInsureAuth from '../../store/auth-store'
 import toast from 'react-hot-toast'
@@ -125,6 +125,18 @@ const CompulsoryCar = () => {
         }
     }
 
+    const hdlToggleActive = async (id, currentStatus) => {
+        try {
+            console.log(currentStatus)
+            await statusCompulsory(id, !currentStatus)
+            getCompulsory(page, perPage)
+            toast.success('อัปเดตสถานะสำเร็จ')
+        } catch (err) {
+            console.log(err)
+            toast.error('อัปเดตสถานะไม่สำเร็จ')
+        }
+    }
+
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
             <div className='flex items-center justify-between'>
@@ -152,6 +164,7 @@ const CompulsoryCar = () => {
                     onEdite={openModal}
                     page={page}
                     limit={perPage}
+                    onToggle={hdlToggleActive}
                 />
             </div>
             <div className='flex justify-end'>

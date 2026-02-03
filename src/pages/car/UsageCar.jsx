@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useState } from 'react'
 import useInsureAuth from '../../store/auth-store'
-import { createCarUsage, createUsageType, listCarUsage, listUsageType, readUsageType, removeCarUsage, removeUsageType, updateCarUsage, updateUsageType } from '../../service/car/CarUsage'
+import { createCarUsage, createUsageType, listCarUsage, listUsageType, readUsageType, removeCarUsage, removeUsageType, statusCarUsage, statusUsageType, updateCarUsage, updateUsageType } from '../../service/car/CarUsage'
 import TableCarUsage from '../../component/table/TableCarUsage'
 import toast from 'react-hot-toast'
 import Pagination from '../../component/paginationComponent/Pagination'
@@ -196,6 +196,28 @@ const UsageCar = () => {
         }
     }
 
+    const hdlToggleActiveCarUsage = async (id, currentStatus) => {
+        try {
+            await statusCarUsage(id, !currentStatus)
+            getUsage()
+            toast.success('อัปเดตสถานะสำเร็จ')
+        } catch (err) {
+            console.log(err)
+            toast.error('อัปเดตสถานะไม่สำเร็จ')
+        }
+    }
+
+    const hdlToggleActiveCarUsageType = async (id, currentStatus) => {
+        try {
+            await statusUsageType(id, !currentStatus)
+            getCarUsageType(page, perPage)
+            toast.success('อัปเดตสถานะสำเร็จ')
+        } catch (err) {
+            console.log(err)
+            toast.error('อัปเดตสถานะไม่สำเร็จ')
+        }
+    }
+
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
             <div className='flex justify-between items-center'>
@@ -228,6 +250,7 @@ const UsageCar = () => {
                     limit={perPage}
                     onDelete={hdlDeleteCarUsageType}
                     onEdite={openModal}
+                    onToggle={hdlToggleActiveCarUsageType}
                 />
                 <EditCarUsage
                     form={form}
@@ -271,6 +294,7 @@ const UsageCar = () => {
                     data={usageData}
                     onDelete={hdlDelete}
                     onUpdate={hdlUpdateCarUsage}
+                    onToggle={hdlToggleActiveCarUsage}
                 />
             </div>
         </div>

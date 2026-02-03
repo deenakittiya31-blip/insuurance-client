@@ -1,4 +1,4 @@
-const TableCarModel = ({ data, page, limit, onDelete, onEdit }) => {
+const TableCarModel = ({ data, page, limit, onDelete, onEdit, onToggle }) => {
 
     return (
         <div className="overflow-x-auto font-prompt">
@@ -9,6 +9,7 @@ const TableCarModel = ({ data, page, limit, onDelete, onEdit }) => {
                         <th className='font-medium text-neutral-400'>ลำดับ</th>
                         <th className='font-medium text-neutral-400'>ยี่ห้อ</th>
                         <th className='font-medium text-neutral-400 text-center'>รุ่นรถ</th>
+                        <th className='font-medium text-neutral-400 text-center'>สถานะ</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
                 </thead>
@@ -19,6 +20,14 @@ const TableCarModel = ({ data, page, limit, onDelete, onEdit }) => {
                                 <td>{(page - 1) * limit + idx + 1}</td>
                                 <td>{i.brand}</td>
                                 <td className="text-center">{i.name}</td>
+                                <td className="text-center">
+                                    <input
+                                        type="checkbox"
+                                        onChange={() => onToggle(i.id, i.is_active)}
+                                        checked={i.is_active}
+                                        className="toggle"
+                                    />
+                                </td>
                                 <td>
                                     <div className='flex gap-5 justify-center'>
                                         <button onClick={() => onEdit(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>

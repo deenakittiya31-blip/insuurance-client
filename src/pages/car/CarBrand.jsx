@@ -3,7 +3,7 @@ import TableCarBrand from '../../component/table/TableCarBrand'
 import useInsureAuth from '../../store/auth-store'
 import toast from 'react-hot-toast'
 import { useState } from 'react'
-import { createCarBrand, listCarBrand, readCarBrand, removeCarBrand, updateCarBrand } from '../../service/car/CarBrand'
+import { createCarBrand, listCarBrand, readCarBrand, removeCarBrand, statusCarBrand, updateCarBrand } from '../../service/car/CarBrand'
 import { useEffect } from 'react'
 import Swal from 'sweetalert2'
 import EditCarBrand from '../../component/edit/EditCarBrand'
@@ -130,6 +130,17 @@ const CarBrand = () => {
         }
     }
 
+    const hdlToggleActive = async (id, currentStatus) => {
+        try {
+            await statusCarBrand(id, !currentStatus)
+            getCarBrand(page, perPage)
+            toast.success('อัปเดตสถานะสำเร็จ')
+        } catch (err) {
+            console.log(err)
+            toast.error('อัปเดตสถานะไม่สำเร็จ')
+        }
+    }
+
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
             <div className='flex items-center justify-between'>
@@ -161,6 +172,7 @@ const CarBrand = () => {
                     onEdit={openModal}
                     page={page}
                     limit={perPage}
+                    onToggle={hdlToggleActive}
                 />
             </div>
             <div className='flex justify-end'>

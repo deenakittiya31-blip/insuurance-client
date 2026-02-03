@@ -153,7 +153,7 @@ const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onS
                                                 <FaLine size={13} /> ส่ง
                                             </button>
                                             <div className="join">
-                                                <Link to={`/admin/compare-detail/${i.q_id}`}>
+                                                <Link to={`/app/compare-detail/${i.q_id}`}>
                                                     <button className="join-item btn btn-soft btn-warning flex gap-1 h-7 p-1"><FaRegEye size={13} /> ดู</button>
                                                 </Link>
                                                 <button onClick={() => onDelete(i.id)} className="join-item btn btn-soft btn-error flex gap-1 h-7 p-1"><AiOutlineDelete size={13} className="shrink" /> ลบ</button>

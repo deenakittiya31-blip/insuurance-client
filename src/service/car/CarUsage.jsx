@@ -32,6 +32,10 @@ export const removeCarUsage = async (token, id) => {
     })
 }
 
+export const statusCarUsage = (id, is_active) => {
+    return api.put(`/api/status-carusage/${id}`, { is_active })
+}
+
 ////car usage type
 export const createUsageType = async (token, form) => {
     return api.post('/api/create-carusagetype', form, {
@@ -59,4 +63,8 @@ export const updateUsageType = async (id, form) => {
 
 export const removeUsageType = async (id) => {
     return api.delete(`/api/delete-carusagetype/${id}`)
+}
+
+export const statusUsageType = (id, is_active) => {
+    return api.put(`/api/status-carusagetype/${id}`, { is_active })
 }

@@ -31,6 +31,10 @@ export const readYear = async (token, id) => {
     })
 }
 
+export const statusCarYear = (id, is_active) => {
+    return api.put(`/api/status-year/${id}`, { is_active })
+}
+
 export const updateYear = async (token, id, form) => {
     return api.put(`/api/update-year/${id}`, form, {
         headers: {

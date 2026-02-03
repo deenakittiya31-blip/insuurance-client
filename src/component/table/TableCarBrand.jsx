@@ -1,6 +1,6 @@
 import React from 'react'
 
-const TableCarBrand = ({ data, page, limit, onDelete, onEdit }) => {
+const TableCarBrand = ({ data, page, limit, onDelete, onEdit, onToggle }) => {
     return (
         <div className="overflow-x-auto font-prompt">
             <table className="table">
@@ -10,6 +10,7 @@ const TableCarBrand = ({ data, page, limit, onDelete, onEdit }) => {
                         <th className='font-medium text-neutral-400'>ลำดับ</th>
                         <th className='font-medium text-neutral-400'>รูปภาพ</th>
                         <th className='font-medium text-neutral-400'>ยี่ห้อ</th>
+                        <th className='font-medium text-neutral-400 text-center'>สถานะ</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
                 </thead>
@@ -30,6 +31,14 @@ const TableCarBrand = ({ data, page, limit, onDelete, onEdit }) => {
                                 </td>
                                 <td>
                                     {i.name}
+                                </td>
+                                <td className='text-center'>
+                                    <input
+                                        type='checkbox'
+                                        onChange={() => onToggle(i.id, i.is_active)}
+                                        checked={i.is_active}
+                                        className='toggle'
+                                    />
                                 </td>
                                 <td>
                                     <div className='flex gap-5 justify-center'>

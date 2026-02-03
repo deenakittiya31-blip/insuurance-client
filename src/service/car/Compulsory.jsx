@@ -28,6 +28,10 @@ export const updateCompulsory = (token, id, form) => {
     })
 }
 
+export const statusCompulsory = (id, is_active) => {
+    return api.put(`/api/status-compulsory/${id}`, { is_active })
+}
+
 export const removeCompulsory = async (token, id) => {
     return api.delete(`/api/delete-compulsory/${id}`, {
         headers: {

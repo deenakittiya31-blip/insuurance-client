@@ -32,6 +32,10 @@ export const updateCarBrand = (token, id, form) => {
     })
 }
 
+export const statusCarBrand = (id, is_active) => {
+    return api.put(`/api/status-carbrand/${id}`, { is_active })
+}
+
 export const removeCarBrand = (token, id) => {
     return api.delete(`/api/delete-carbrand/${id}`, {
         headers: {
