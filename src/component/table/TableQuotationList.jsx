@@ -72,7 +72,7 @@ const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onS
                 <tbody>
                     {
                         data?.map((i, idx) => (
-                            <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50 '>
+                            <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
                                 <td className="align-top">
                                     <div className="flex items-center gap-3">
                                         <button onClick={() => onPin(i.id)} className="flex items-center justify-center w-7 h-7 group">

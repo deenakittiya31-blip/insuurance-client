@@ -12,6 +12,10 @@ export const listOption = async (id) => {
     return api.get(`/api/option-compulsory/${id}`)
 }
 
+export const listCompulPackage = async () => {
+    return api.get(`/api/option-compulsory-package`)
+}
+
 export const readCompulsory = async (token, id) => {
     return api.get(`/api/read-compulsory/${id}`, {
         headers: {

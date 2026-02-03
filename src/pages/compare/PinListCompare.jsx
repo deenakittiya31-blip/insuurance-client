@@ -158,7 +158,7 @@ const PinListCompare = () => {
                     sortConfig={sortConfig}
                     onPin={handlePinQuotation}
                 />
-                <div className='flex justify-end'>
+                <div className='flex justify-end mt-5'>
                     {
                         total > perPage && (
                             <Pagination
