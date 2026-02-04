@@ -2,7 +2,7 @@ import { dateFormat } from "../../utils/dateformat"
 import Sort from "../sortData/Sort"
 
 const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEdite }) => {
-
+    console.log(data)
     return (
         <div className="overflow-x-auto font-prompt">
             <table className="table">
@@ -33,6 +33,15 @@ const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEd
                                 นามสกุล<Sort
                                     onSort={onSort}
                                     keyName='last_name'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center  gap-3'>
+                                กลุ่ม<Sort
+                                    onSort={onSort}
+                                    keyName='group_id'
                                     currentSort={sortConfig}
                                 />
                             </div>
@@ -84,6 +93,7 @@ const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEd
                                     {i.first_name === null ? '-' : i.first_name}
                                 </td>
                                 <td>{i.last_name === null ? '-' : i.last_name}</td>
+                                <td>{i.group_name === null ? '-' : i.group_name}</td>
                                 <td>
                                     {i.phone === null ? '-' : i.phone}
                                 </td>

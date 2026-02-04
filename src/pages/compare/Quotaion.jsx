@@ -428,7 +428,6 @@ const Quotaion = () => {
                             form={formByTab[activeTab]}
                         />
                     )}
-                    {/* <hr className="border-dashed border border-border" /> */}
                     <div className="flex gap-5 h-192.5 overflow-y-clip">
                         <div className="flex-3 overflow-auto bg-zinc-800 p-4">
                             {pdfPreviewByTab[activeTab] ? (

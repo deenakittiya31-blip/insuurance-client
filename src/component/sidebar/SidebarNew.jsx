@@ -12,7 +12,7 @@ import ModalKeyInCompare from '../modal/modalKeyInCompare';
 import useActionStore from '../../store/action-store';
 import { createCompare } from '../../service/compare';
 import { GoPeople } from "react-icons/go";
-import { MdOutlineSpaceDashboard } from 'react-icons/md';
+import { MdOutlineSpaceDashboard, MdOutlineGroup } from 'react-icons/md';
 
 const initialState = {
     to_name: '',
@@ -172,6 +172,20 @@ const SidebarNew = () => {
                                 <div className='w-full flex items-center gap-3'>
                                     <GoPeople className='size-4' />
                                     <p className='group-[.active]:text-current'>รายชื่อลูกค้า</p>
+                                </div>
+                            </NavLink>
+                            <NavLink
+                                to='/app/member-group'
+                                end
+                                className={({ isActive }) =>
+                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
+                                }
+                            >
+                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                <div className='w-full flex items-center gap-3'>
+                                    <MdOutlineGroup className='size-4' />
+                                    <p className='group-[.active]:text-current'>กลุ่มลูกค้า</p>
                                 </div>
                             </NavLink>
                         </div>

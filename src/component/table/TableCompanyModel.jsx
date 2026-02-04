@@ -20,7 +20,7 @@ const TableCompanyModel = ({ data, page, limit, onDelete }) => {
                                 <td>{i.namecompany}</td>
                                 <td>
                                     <div className='flex gap-5 justify-center'>
-                                        <Link to={`/admin/custommodel-detail/${i.company_id}`} >
+                                        <Link to={`/app/custommodel-detail/${i.company_id}`} >
                                             <button className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
                                         </Link>
                                         <button onClick={() => onDelete(i.company_id)} className="btn btn-sm btn-soft btn-error">ลบ</button>

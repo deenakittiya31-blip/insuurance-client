@@ -30,6 +30,8 @@ import Setting from '../pages/Setting'
 import Compare from '../pages/insur/Compare'
 import DashBoard from '../pages/dashboard/DashBoard'
 import AddPackage from '../pages/insur/AddPackage'
+import EditPackage from '../pages/insur/EditPackage'
+import GroupMember from '../pages/member/GroupMember'
 
 const Approutes = () => {
     return (
@@ -51,6 +53,7 @@ const Approutes = () => {
                     }>
                     <Route index element={<DashBoard />} />
                     <Route path='member' element={<MemberPage />} />
+                    <Route path='member-group' element={<GroupMember />} />
                     <Route path='pin-compare' element={<PinListCompare />} />
                     <Route path='quotationlist' element={<QuotationList />} />
                     <Route path='quotation/:q_id' element={<Quotaion />} />
@@ -61,6 +64,7 @@ const Approutes = () => {
                     <Route path='custommodel-detail/:id' element={<CustomModelDetail />} />
                     <Route path='package' element={<InsurPackage />} />
                     <Route path='addpackage' element={<AddPackage />} />
+                    <Route path='editpackage/:id' element={<EditPackage />} />
                     <Route path='insurpremuim' element={<InsurPremuim />} />
 
                     {/*admin only */}

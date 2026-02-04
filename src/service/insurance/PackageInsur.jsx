@@ -19,12 +19,8 @@ export const listPackageSelect = () => {
     return api.get('/api/list-package-select')
 }
 
-export const readPackage = (token, id) => {
-    return api.get(`/api/read-package/${id}`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
+export const readPackage = (id) => {
+    return api.get(`/api/read-package/${id}`)
 }
 
 export const updatePackage = (token, id, form) => {
@@ -37,4 +33,8 @@ export const updatePackage = (token, id, form) => {
 
 export const removePackage = (id) => {
     return api.delete(`/api/delete-package/${id}`)
+}
+
+export const statusPackage = (id, is_active) => {
+    return api.put(`/api/status-package/${id}`, { is_active })
 }
