@@ -232,7 +232,7 @@ const AddPackage = () => {
                                 >
                                     <option value="" disabled={true}>กรุณาเลือกสถานะซ่อม</option>
                                     <option value='ซ่อมอู่'>ซ่อมอู่</option>
-                                    <option value='อู่ประกัน'>อู่ประกัน</option>
+                                    <option value='ซ่อมห้าง'>ซ่อมห้าง</option>
                                 </select>
                             </div>
                             <div>

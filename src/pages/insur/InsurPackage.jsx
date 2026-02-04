@@ -1,88 +1,37 @@
 import React, { useEffect, useState } from 'react'
-import ModalPackage from '../../component/modal/ModalPackage'
 import TablePackage from '../../component/table/TablePackage'
-import { createPackage, listPackage, readPackage, removePackage, updatePackage } from '../../service/insurance/PackageInsur'
+import { listPackage, removePackage } from '../../service/insurance/PackageInsur'
 import Swal from 'sweetalert2'
 import toast from 'react-hot-toast'
 import useInsureAuth from '../../store/auth-store'
-import EditPackage from '../../component/edit/EditPackage'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
 import SelectPerPage from '../../component/form/SelectPerPage'
-import useActionStore from '../../store/action-store'
 import { Link } from 'react-router-dom'
-
-const initialState = {
-    company_id: '',
-    insur_type_id: '',
-    car_brand_id: '',
-    car_model_id: '',
-    usage_car_id: '',
-    car_year_id: '',
-    package_name: '',
-}
 
 const InsurPackage = () => {
     const token = useInsureAuth((s) => s.token)
     const [packageData, setPackageData] = useState([])
-    const { getCarModelSelect } = useActionStore();
-    const [form, setForm] = useState(initialState)
-    const [open, setOpen] = useState(false)
-    const [idSelect, setIdSelect] = useState(null)
+    const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
+    const [isOpen, setIsOpen] = useState(false)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
     const [perPage, setPerPage] = useState(10)
     const lastPage = Math.ceil(total / perPage)
 
     useEffect(() => {
-        getPackage(page, perPage);
-    }, [page, perPage])
-
-    const hdlOnChange = (e) => {
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value
-        })
-    }
-
-    const hdlSelectChange = async (name, value) => {
-        setForm(prev => ({
-            ...prev,
-            [name]: value,
-            ...(name === 'car_brand_id' && { car_model_id: '' })
-        }))
-
-        if (name === 'car_brand_id') {
-            await getCarModelSelect(value)
-        }
-    }
+        getPackage(page, perPage, sortConfig.key, sortConfig.direction);
+    }, [page, perPage, sortConfig])
 
     const handlePerPageChange = (e) => {
         setPerPage(Number(e.target.value))
         setPage(1)
     }
 
-    const openModal = async (id) => {
-        setOpen(true)
-        setIdSelect(id)
+    const getPackage = async (page, perPage, sortKey = 'id', sortDirection = 'DESC') => {
         try {
-            const res = await readPackage(token, id)
-            setForm(res.data.data)
-
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
-    const closeForm = () => {
-        setOpen(false)
-        setForm(initialState)
-    }
-
-    const getPackage = async (page, perPage) => {
-        try {
-            const res = await listPackage(page, perPage);
+            const res = await listPackage(page, perPage, sortKey, sortDirection);
             setPackageData(res.data.data)
             setTotal(res.data.total)
         } catch (err) {
@@ -90,32 +39,14 @@ const InsurPackage = () => {
         }
     }
 
-    const hdlSubmit = async (e) => {
-        e.preventDefault()
-        try {
-            const res = await createPackage(token, form)
-            document.getElementById('modalpackage').close();
-            setForm(initialState)
-            getPackage(page, perPage);
-            toast.success(res.data.msg)
-        } catch (err) {
-            console.log(err)
-            toast.error(err.response.data.message)
-        }
-    }
+    const handleSort = (keyName) => {
+        let direction = 'ASC';
 
-    const handleUpdate = async (e) => {
-        e.preventDefault()
-        try {
-            const res = await updatePackage(token, idSelect, form)
-            setForm(initialState)
-            closeForm()
-            toast.success(res.data.msg)
-            getPackage(page, perPage)
-
-        } catch (err) {
-            console.log(err)
+        if (sortConfig.key === keyName && sortConfig.direction === 'ASC') {
+            direction = 'DESC';
         }
+
+        setSortConfig({ key: keyName, direction });
     }
 
     const hdlDelete = async (id) => {
@@ -133,8 +64,8 @@ const InsurPackage = () => {
         if (!result.isConfirmed) return
 
         try {
-            const res = await removePackage(token, id)
-            getPackage(page, perPage)
+            const res = await removePackage(id)
+            getPackage(page, perPage, sortConfig.key, sortConfig.direction)
             toast.success(res.data.msg)
 
         } catch (err) {
@@ -149,13 +80,6 @@ const InsurPackage = () => {
                     title='แพ็กเกจ'
                     subtitle='ข้อมูลของแพ็กเกจแต่ละบริษัท'
                 />
-                {/* <ModalPackage
-                    form={form}
-                    onSubmit={hdlSubmit}
-                    onChange={hdlOnChange}
-                    onClose={closeForm}
-                    onChangeCarmodel={hdlSelectChange}
-                /> */}
                 <Link to='/app/addpackage'>
                     <button className='btn bg-main text-white font-prompt hover:bg-second'>เพิ่มแพ็กเกจ</button>
                 </Link>
@@ -174,9 +98,11 @@ const InsurPackage = () => {
                 <TablePackage
                     data={packageData}
                     onDelete={hdlDelete}
-                    onEdite={openModal}
                     page={page}
                     limit={perPage}
+                    onSort={handleSort}
+                    sortConfig={sortConfig}
+                    isOpen={isOpen}
                 />
             </div>
             <div className='flex justify-end'>
@@ -191,13 +117,6 @@ const InsurPackage = () => {
                     )
                 }
             </div>
-            <EditPackage
-                value={form}
-                onchange={hdlOnChange}
-                onSubmit={handleUpdate}
-                isOpen={open}
-                onClose={closeForm}
-            />
         </div>
     )
 }

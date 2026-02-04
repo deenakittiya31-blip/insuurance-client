@@ -4,8 +4,15 @@ export const createPackage = (form) => {
     return api.post('/api/create-package', form)
 }
 
-export const listPackage = (pageNumber, perPage) => {
-    return api.get(`/api/list-package/page?page=${pageNumber}&per_page=${perPage}`)
+export const listPackage = (pageNumber, perPage, sortKey, sortDirection) => {
+    return api.get('/api/list-package/page', {
+        params: {
+            page: pageNumber,
+            per_page: perPage,
+            sortKey,
+            sortDirection
+        }
+    })
 }
 
 export const listPackageSelect = () => {
@@ -28,10 +35,6 @@ export const updatePackage = (token, id, form) => {
     })
 }
 
-export const removePackage = (token, id) => {
-    return api.delete(`/api/delete-package/${id}`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
+export const removePackage = (id) => {
+    return api.delete(`/api/delete-package/${id}`)
 }

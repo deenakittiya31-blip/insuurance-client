@@ -164,8 +164,6 @@ const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onS
                                             <button onClick={() => jpg(i.q_id)} className="btn btn-sm hover:btn-accent py-1"><BiSolidFileJpg size={17} /> JPG</button>
                                         </div>
                                     </div>
-
-
                                 </td>
                             </tr>
                         ))
