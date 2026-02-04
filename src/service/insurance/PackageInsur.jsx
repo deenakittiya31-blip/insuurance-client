@@ -1,11 +1,7 @@
 import api from '../../config/axios'
 
-export const createPackage = (token, form) => {
-    return api.post('/api/create-package', form, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
+export const createPackage = (form) => {
+    return api.post('/api/create-package', form)
 }
 
 export const listPackage = (pageNumber, perPage) => {

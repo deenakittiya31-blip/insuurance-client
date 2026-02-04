@@ -61,7 +61,6 @@ const SelectFormUsage = ({ data, value = [], onChange, name }) => {
     // ดึงข้อมูลที่เลือกแล้ว
     const selectedData = data.filter(item => value.includes(item.id))
 
-    console.log('ที่เลือก', selectedData)
     return (
         <div className="flex gap-3 font-mono text-text-primary">
             {/* box 1 */}
@@ -127,7 +126,7 @@ const SelectFormUsage = ({ data, value = [], onChange, name }) => {
                             selectedData.map((i) => (
                                 <div
                                     key={i.id}
-                                    className={`cursor-pointer p-2 hover:bg-neutral-100 ${selectedUsage === i.id ? 'bg-neutral-100 border-l-4 border-main' : ''
+                                    className={`font-prompt text-sm cursor-pointer p-2 hover:bg-neutral-100 ${selectedUsage === i.id ? 'bg-neutral-100 border-l-4 border-main' : ''
                                         }`}
                                     onClick={() => setSelectedUsage(i.id)}
                                 >

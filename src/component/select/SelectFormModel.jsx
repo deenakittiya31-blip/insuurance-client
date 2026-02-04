@@ -2,7 +2,7 @@ import { useState } from "react"
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdOutlineKeyboardDoubleArrowLeft } from "react-icons/md"
 import { RiArrowRightDoubleLine } from "react-icons/ri"
 
-const SelectFormCompulsory = ({ data, value = [], onChange, name }) => {
+const SelectFormModel = ({ data, value = [], onChange, name }) => {
     const [selectedUsage, setSelectedUsage] = useState(null)
 
     // เพิ่มทีละรายการ
@@ -92,7 +92,7 @@ const SelectFormCompulsory = ({ data, value = [], onChange, name }) => {
                                         }`}
                                     onClick={() => setSelectedUsage(i.id)}
                                 >
-                                    {i.detail} ({i.code_sub})
+                                    {i.name}
                                 </div>
                             ))
                         }
@@ -129,7 +129,7 @@ const SelectFormCompulsory = ({ data, value = [], onChange, name }) => {
                                         }`}
                                     onClick={() => setSelectedUsage(i.id)}
                                 >
-                                    {i.detail} ({i.code_sub})
+                                    {i.name}
                                 </div>
                             ))
                         }
@@ -139,4 +139,4 @@ const SelectFormCompulsory = ({ data, value = [], onChange, name }) => {
         </div>
     )
 }
-export default SelectFormCompulsory
+export default SelectFormModel

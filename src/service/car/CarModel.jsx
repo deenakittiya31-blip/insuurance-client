@@ -12,8 +12,14 @@ export const listCarModel = async (pageNumber, perPage) => {
     return api.get(`/api/list-carmodel/page?page=${pageNumber}&per_page=${perPage}`)
 }
 
-export const listByCarModel = async (brand_id) => {
-    return api.get(`/api/car-model?brand_id=${brand_id}`)
+// export const listByCarModel = async (brand_id) => {
+//     return api.get(`/api/car-model?brand_id=${brand_id}`)
+// }
+
+export const listByCarModel = async (brand_ids) => {
+    return api.post(`/api/car-model/list-by`, {
+        brand_id: brand_ids
+    })
 }
 
 export const readCarModel = (token, id) => {

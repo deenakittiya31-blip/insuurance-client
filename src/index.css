@@ -22,7 +22,7 @@ h3 {
     font-family: var(--font-prompt);
     font-weight: 700;
     font-size: large;
-    color: var(--color-text-primary);
+    color: var(--color-main);
     letter-spacing: 0.025em;
     margin-bottom: 10px;
 }
