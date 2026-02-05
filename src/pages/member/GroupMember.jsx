@@ -1,14 +1,22 @@
 import { useEffect, useState } from "react"
-import { createGroup, deleteGroup, listGroup, updateGroup } from "../../service/member/group_member"
+import { createGroup, deleteGroup, listGroup, readGroup, updateGroup } from "../../service/member/group_member"
 import Title from "../../component/form/Title"
 import toast from "react-hot-toast"
-import TextInput from "../../component/form/TextInput"
 import Swal from "sweetalert2"
+import ModalMember from "../../component/modal/ModalMember"
+import EditGroupMember from "../../component/edit/EditGroupMember"
+
+const intitailState = {
+    group_name: '',
+    head_url: '',
+    head_public_id: ''
+}
 
 const GroupMember = () => {
     const [group, setGroup] = useState([])
-    const [editingId, setEditingId] = useState(null)
-    const [group_name, setGroupName] = useState('')
+    const [open, setOpen] = useState(false)
+    const [idSelect, setIdSelect] = useState(false)
+    const [form, setForm] = useState(intitailState)
 
     useEffect(() => {
         fetchGroupMember();
@@ -23,16 +31,25 @@ const GroupMember = () => {
         }
     }
 
+    const handleOnChange = (e) => {
+        const { name, value } = e.target
+
+        setForm(prev => ({
+            ...prev,
+            [name]: value
+        }))
+    }
+
     const handleCreateGroup = async (e) => {
         e.preventDefault()
-        if (!group_name.trim()) {
+        if (!form.group_name.trim()) {
             return toast('กรุณากรอกชื่อกลุ่ม')
         }
 
         try {
-            const res = await createGroup(group_name)
+            const res = await createGroup(form)
             toast.success(res.data.msg)
-            setGroupName('')
+            document.getElementById('modalgroupmember').close()
             fetchGroupMember()
         } catch (err) {
             console.log(err)
@@ -63,22 +80,31 @@ const GroupMember = () => {
         }
     }
 
-    const startEdit = (item) => {
-        setEditingId(item.id)
-        setGroupName(item.group_name)
-    }
-
-    const cancelEdit = () => {
-        setEditingId(null)
-        setGroupName('')
-    }
-
-    const updateGroupName = async (id, value) => {
-        if (!value.trim()) return cancelEdit()
+    const openModal = async (id) => {
+        setOpen(true)
+        setIdSelect(id)
 
         try {
-            const res = await updateGroup(id, value)
-            cancelEdit()
+            const res = await readGroup(id)
+            setForm(res.data.data)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const closeForm = () => {
+        setOpen(false)
+        setForm(intitailState)
+    }
+
+    const updateGroupName = async () => {
+        if (!form.group_name.trim()) {
+            return toast.error('กรุณากรอกชื่อกลุ่ม')
+        }
+
+        try {
+            const res = await updateGroup(idSelect, form)
+            closeForm()
             toast.success(res.data.msg)
             fetchGroupMember()
         } catch (err) {
@@ -94,24 +120,20 @@ const GroupMember = () => {
                 />
             </div>
             <div className='bg-white rounded-2xl p-5'>
-                <form onSubmit={handleCreateGroup} className='flex justify-end items-baseline-last gap-3'>
-                    <div className="">
-                        <TextInput
-                            value={group_name}
-                            placeholder='กรอกข้อมูลชื่อกลุ่ม...'
-                            width='w-40 lg:w-xs'
-                            name='group_name'
-                            type='text'
-                            onChange={(e) => setGroupName(e.target.value)}
-                        />
-                    </div>
-                    <button type="submit" className="btn bg-main px-5 rounded-md text-white font-semibold">บันทึก</button>
-                </form>
+                <div onSubmit={handleCreateGroup} className='flex justify-end items-baseline-last gap-3'>
+                    <ModalMember
+                        form={form}
+                        setForm={setForm}
+                        onChange={handleOnChange}
+                        onSubmit={handleCreateGroup}
+                    />
+                </div>
                 <div className="overflow-x-auto font-prompt">
                     <table className="table">
                         <thead>
                             <tr>
                                 <th className='font-medium text-neutral-400'>ลำดับ</th>
+                                <th className='font-medium text-neutral-400'>รูปภาพ</th>
                                 <th className='font-medium text-neutral-400'>ประเภท</th>
                                 <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                             </tr>
@@ -122,32 +144,16 @@ const GroupMember = () => {
                                     <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
                                         <td>{idx + 1}</td>
                                         <td>
-                                            {editingId === i.id ? (
-                                                <input
-                                                    autoFocus
-                                                    value={group_name}
-                                                    onChange={(e) => setGroupName(e.target.value)}
-                                                    onBlur={(e) => updateGroupName(i.id, e.target.value)}
-                                                    onKeyDown={(e) => {
-                                                        if (e.key === 'Enter') {
-                                                            e.preventDefault()
-                                                            updateGroupName(i.id, e.target.value)
-                                                        }
-                                                        if (e.key === 'Escape') cancelEdit()
-                                                    }}
-                                                    className="p-2 border rounded focus:outline-none bg-white"
-                                                />
-                                            ) : (
-                                                <span
-                                                    className="cursor-pointer"
-                                                >
-                                                    {i.group_name}
-                                                </span>
-                                            )}
+                                            <div className="w-10 h-10 rounded-md">
+                                                <img src={i.logo_url} alt={i.group_name} className="w-full h-full object-cover" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {i.group_name}
                                         </td>
                                         <td>
                                             <div className='flex gap-5 justify-center'>
-                                                <button onClick={() => startEdit(i)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
+                                                <button onClick={() => openModal(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
                                                 <button onClick={() => handleDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
                                             </div>
                                         </td>
@@ -158,6 +164,14 @@ const GroupMember = () => {
                     </table>
                 </div>
             </div>
+            <EditGroupMember
+                form={form}
+                setForm={setForm}
+                onChange={handleOnChange}
+                isOpen={open}
+                onClose={closeForm}
+                onSubmit={updateGroupName}
+            />
         </div>
     )
 }
