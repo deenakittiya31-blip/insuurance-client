@@ -5,8 +5,9 @@ import { FiEdit } from "react-icons/fi";
 import { Link } from 'react-router-dom'
 import { AiOutlineDelete } from 'react-icons/ai'
 import CardPackage from '../card/CardPackage';
+import { IoMdCopy } from "react-icons/io";
 
-const TablePackage = ({ data, page, limit, onDelete, onSort, sortConfig, onToggle, onRead, readData }) => {
+const TablePackage = ({ data, page, limit, onDelete, onSort, sortConfig, onToggle, onRead, readData, onCopy }) => {
     return (
         <div className="overflow-x-auto font-prompt">
             <table className="table">
@@ -117,17 +118,18 @@ const TablePackage = ({ data, page, limit, onDelete, onSort, sortConfig, onToggl
                                 </td>
                                 <td className="align-top">
                                     <div className="flex flex-col gap-1">
-                                        <div className="flex gap-1">
+                                        <div className='flex gap-1'>
+                                            <button className='btn btn-sm btn-soft btn-success flex flex-1 gap-1 h-7' onClick={onRead}><IoMdCopy size={13} /> ลอก</button>
                                             <CardPackage
                                                 onRead={() => onRead(i.id)}
                                                 data={readData}
                                             />
-                                            <div className="join">
-                                                <Link to={`/app/editpackage/${i.id}`}>
-                                                    <button className="join-item btn btn-soft btn-warning flex gap-1 h-7 p-1"><FiEdit size={13} />แก้ไข</button>
-                                                </Link>
-                                                <button onClick={() => onDelete(i.id)} className="join-item btn btn-soft btn-error flex gap-1 h-7 p-1"><AiOutlineDelete size={13} className="shrink" /> ลบ</button>
-                                            </div>
+                                        </div>
+                                        <div className="join w-full flex">
+                                            <Link to={`/app/editpackage/${i.id}`}>
+                                                <button className="flex-1 join-item btn btn-soft btn-warning flex gap-1 h-7 p-1"><FiEdit size={13} />แก้ไข</button>
+                                            </Link>
+                                            <button onClick={() => onDelete(i.id)} className="flex-1 join-item btn btn-soft btn-error flex gap-1 h-7 p-1"><AiOutlineDelete size={13} className="shrink" /> ลบ</button>
                                         </div>
                                     </div>
                                 </td>

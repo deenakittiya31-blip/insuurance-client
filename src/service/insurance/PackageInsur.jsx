@@ -23,6 +23,10 @@ export const readPackage = (id) => {
     return api.get(`/api/read-package/${id}`)
 }
 
+export const copyPackage = (id) => {
+    return api.get(`/api/copy-package/${id}`)
+}
+
 export const readPackageEdit = (id) => {
     return api.get(`/api/readedit-package/${id}`)
 }

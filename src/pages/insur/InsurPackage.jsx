@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import TablePackage from '../../component/table/TablePackage'
-import { listPackage, readPackage, removePackage, statusPackage } from '../../service/insurance/PackageInsur'
+import { copyPackage, listPackage, readPackage, removePackage, statusPackage } from '../../service/insurance/PackageInsur'
 import Swal from 'sweetalert2'
 import toast from 'react-hot-toast'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
 import SelectPerPage from '../../component/form/SelectPerPage'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const InsurPackage = () => {
+    const navigate = useNavigate();
     const [packageData, setPackageData] = useState([])
     const [readPackageData, setReadPackageData] = useState({})
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
@@ -93,6 +94,19 @@ const InsurPackage = () => {
         }
     }
 
+    const handleCopyPackage = async (idPackage) => {
+        try {
+            const res = await copyPackage(idPackage)
+            const idReturnFromPackage = res.data.id
+
+            navigate(`app/editpackage/${idReturnFromPackage}`)
+            toast.success(res.data.msg)
+        } catch (err) {
+            console.log(err)
+            toast.error('เกิดข้อผิดพลาดไม่สามารถคัดลอกได้')
+        }
+    }
+
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
             <div className='flex items-center justify-between'>
@@ -125,6 +139,7 @@ const InsurPackage = () => {
                     onRead={openReadPackage}
                     readData={readPackageData}
                     onToggle={hdlToggleActive}
+                    onCopy={handleCopyPackage}
                 />
             </div>
             <div className='flex justify-end'>

@@ -7,13 +7,17 @@ const TablePremium = ({ data, page, limit, onDelete, onEdite }) => {
             <table className="table">
                 <thead>
                     <tr>
-                        <th className='font-medium text-neutral-400'>ลำดับ</th>
-                        <th className='font-medium text-neutral-400'>แพ็กเกจ</th>
-                        <th className='font-medium text-neutral-400'>การใช้งาน</th>
-                        <th className='font-medium text-neutral-400'>ปี</th>
-                        <th className='font-medium text-neutral-400'>ราคาเบี้ยประกัน</th>
-                        <th className='font-medium text-neutral-400'>ราคาค่าคุ้มครอง</th>
-                        <th className='font-medium text-neutral-400'>ราคารวม</th>
+                        <th className='font-medium text-neutral-400 text-center'>ลำดับ</th>
+                        <th className='font-medium text-neutral-400 text-center'>รหัสเบี้ย</th>
+                        <th className='font-medium text-neutral-400 text-center'>ชื่อเบี้ย</th>
+                        <th className='font-medium text-neutral-400 text-center'>บริษัทประกันภัย</th>
+                        <th className='font-medium text-neutral-400 text-center'>ประเภทประกันภัย</th>
+                        <th className='font-medium text-neutral-400 text-center'>ประเภทรถ</th>
+                        <th className='font-medium text-neutral-400 text-center'>ทุนเริ่มต้น</th>
+                        <th className='font-medium text-neutral-400 text-center'>ทุนสูงสุด</th>
+                        <th className='font-medium text-neutral-400 text-center'>ราคาขาย</th>
+                        <th className='font-medium text-neutral-400 text-center'>วันเริ่มต้น-สิ้นสุด</th>
+                        <th className='font-medium text-neutral-400 text-center'>สถานะ</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
                 </thead>
@@ -27,6 +31,10 @@ const TablePremium = ({ data, page, limit, onDelete, onEdite }) => {
                                 <td>{i.year}</td>
                                 <td>{i.premium}</td>
                                 <td>{i.compulsory}</td>
+                                <td>{i.total}</td>
+                                <td>{i.total}</td>
+                                <td>{i.total}</td>
+                                <td>{i.total}</td>
                                 <td>{i.total}</td>
                                 <td>
                                     <div className='flex gap-5 justify-center'>
