@@ -9,16 +9,19 @@ import toast from "react-hot-toast"
 import Swal from "sweetalert2"
 import EditMember from "../component/edit/EditMember"
 import SearchBox from "../component/quotation_about/SearchBox"
+import { listGroup } from "../service/member/group_member"
 
 const initialState = {
     first_name: '',
     last_name: '',
+    group_id: '',
     phone: '',
     note: ''
 }
 
 const Home = () => {
     const [member, setMember] = useState([])
+    const [group, setGroup] = useState([])
     const [page, setPage] = useState(1)
     const [perPage, setPerPage] = useState(10)
     const [total, setTotal] = useState(0)
@@ -34,6 +37,10 @@ const Home = () => {
     }, [page, perPage, sortConfig])
 
     useEffect(() => {
+        fetchGroupMember();
+    }, [isOpen])
+
+    useEffect(() => {
         const deley = setTimeout(() => {
             handleSearchMember()
         }, 500)
@@ -46,6 +53,15 @@ const Home = () => {
             setMember(res.data.data)
             setTotal(res.data.total)
 
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const fetchGroupMember = async () => {
+        try {
+            const res = await listGroup()
+            setGroup(res.data.data)
         } catch (err) {
             console.log(err)
         }
@@ -194,6 +210,7 @@ const Home = () => {
                 onChange={handleOnChange}
                 onClose={closeForm}
                 onSubmit={handleUpdate}
+                group={group}
             />
         </div>
     )

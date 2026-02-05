@@ -23,12 +23,12 @@ export const readPackage = (id) => {
     return api.get(`/api/read-package/${id}`)
 }
 
-export const updatePackage = (token, id, form) => {
-    return api.put(`/api/update-package/${id}`, form, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
+export const readPackageEdit = (id) => {
+    return api.get(`/api/readedit-package/${id}`)
+}
+
+export const updatePackage = (id, form) => {
+    return api.patch(`/api/update-package/${id}`, form)
 }
 
 export const removePackage = (id) => {

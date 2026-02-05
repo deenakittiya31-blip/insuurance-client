@@ -27,15 +27,6 @@ const EditCarType = ({ isOpen, carUsage, onClose, onChange, onSubmit, value }) =
                     onChange={onChange}
                     value={value.type}
                 />
-                {/* <Select
-                    text='ประเภทการใช้งานรถ'
-                    data={carUsage}
-                    name='car_usage_id'
-                    value={value.car_usage_id}
-                    onChange={onChange}
-                    valueKey='id'
-                    labelKey='usage_name'
-                /> */}
                 <div className='modal-action'>
                     <button type='button' className="btn btn-soft btn-error" onClick={onClose}>ยกเลิก</button>
                     <button type="submit" className="btn btn-soft btn-primary" >บันทึก</button>

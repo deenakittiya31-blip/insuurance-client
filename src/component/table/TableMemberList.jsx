@@ -41,7 +41,7 @@ const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEd
                             <div className='flex items-center  gap-3'>
                                 กลุ่ม<Sort
                                     onSort={onSort}
-                                    keyName='group_id'
+                                    keyName='group_name'
                                     currentSort={sortConfig}
                                 />
                             </div>

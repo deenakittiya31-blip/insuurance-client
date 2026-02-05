@@ -13,7 +13,7 @@ import { listCompulPackage } from '../../service/car/Compulsory';
 import { listByCarModel } from '../../service/car/CarModel';
 import SelectFormModel from '../../component/select/SelectFormModel';
 import toast from 'react-hot-toast';
-import { createPackage, readPackage } from '../../service/insurance/PackageInsur';
+import { createPackage, readPackageEdit, updatePackage } from '../../service/insurance/PackageInsur';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const initialState = {
@@ -78,7 +78,7 @@ const EditPackage = () => {
 
     const fetchPackageDetail = async () => {
         try {
-            const res = await readPackage(id)
+            const res = await readPackageEdit(id)
             setForm(res.data.data)
         } catch (err) {
             console.log(err)
@@ -131,17 +131,17 @@ const EditPackage = () => {
         }))
     }
 
-    const handleSubmitPackage = async (e) => {
+    const handleUpdatePackage = async (e) => {
         e.preventDefault()
         console.log(form)
         try {
-            const res = await createPackage(form)
+            const res = await updatePackage(id, form)
             setForm(initialState)
-            toast.success('สร้างแพ็กเกจสำเร็จ')
+            toast.success('แก้ไขแพ็กเกจสำเร็จ')
             navigate('/app/package')
         } catch (err) {
             console.log(err)
-            toast.error('สร้างแพ็กเกจไม่สำเร็จ')
+            toast.error('แก้ไขแพ็กเกจไม่สำเร็จ')
         }
     }
 
@@ -195,7 +195,7 @@ const EditPackage = () => {
                 title='แก้ไขแพ็กเกจ'
                 subtitle='กรุณากรอกข้อมูลให้ครบ'
             />
-            <form onSubmit={handleSubmitPackage} className='bg-white rounded-2xl p-5 flex flex-col gap-15 font-prompt text-text-primary'>
+            <form onSubmit={handleUpdatePackage} className='bg-white rounded-2xl p-5 flex flex-col gap-15 font-prompt text-text-primary'>
                 <div>
                     <h1 className='title text-main'>แพ็กเกจ</h1>
                     <div className='grid grid-cols-2 gap-3'>
@@ -218,7 +218,7 @@ const EditPackage = () => {
                                     className="input"
                                     name='start_date'
                                     onChange={handleOnChange}
-                                    value={form.start_date}
+                                    value={form.start_date ? new Date(form.start_date).toISOString().split('T')[0] : ''}
                                 />
                             </div>
                             <div>
@@ -228,7 +228,7 @@ const EditPackage = () => {
                                     className="input"
                                     name='end_date'
                                     onChange={handleOnChange}
-                                    value={form.end_date}
+                                    value={form.end_date ? new Date(form.end_date).toISOString().split('T')[0] : ''}
                                 />
                             </div>
                         </div>

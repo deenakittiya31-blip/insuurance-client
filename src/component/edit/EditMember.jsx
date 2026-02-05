@@ -1,7 +1,8 @@
+import Select from "../form/Select";
 import TextArea from "../form/TextArea";
 import TextInput from "../form/TextInput";
 
-const EditMember = ({ isOpen, form, onSubmit, onChange, onClose }) => {
+const EditMember = ({ isOpen, form, onSubmit, onChange, onClose, group }) => {
     if (!isOpen) return null;
     return (
         <div className='mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20'>
@@ -24,6 +25,15 @@ const EditMember = ({ isOpen, form, onSubmit, onChange, onClose }) => {
                     onChange={onChange}
                     width='w-70 md:w-sm'
                     value={form.last_name}
+                />
+                <Select
+                    text='กลุ่มลูกค้า'
+                    data={group}
+                    name='group_id'
+                    value={form.group_id}
+                    onChange={onChange}
+                    valueKey='id'
+                    labelKey='group_name'
                 />
                 <TextInput
                     title='เบอร์โทรศัพท์'

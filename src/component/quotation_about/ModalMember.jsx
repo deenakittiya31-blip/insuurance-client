@@ -54,6 +54,7 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
             console.log(err)
         }
     }
+    console.log(member)
 
     const handleSearchMember = async () => {
         try {
