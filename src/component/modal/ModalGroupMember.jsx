@@ -1,7 +1,7 @@
 import TextInput from "../form/TextInput"
 import UploadFile from "../form/UploadFile"
 
-const ModalMember = ({ form, setForm, onSubmit, onChange }) => {
+const ModalGroupMember = ({ form, setForm, onChange, onSubmit }) => {
     return (
         <div className='font-prompt'>
             <button className="btn bg-main px-5 rounded-md text-white font-semibold" onClick={() => document.getElementById('modalgroupmember').showModal()}>เพิ่มข้อมูล</button>
@@ -30,4 +30,4 @@ const ModalMember = ({ form, setForm, onSubmit, onChange }) => {
         </div>
     )
 }
-export default ModalMember
+export default ModalGroupMember

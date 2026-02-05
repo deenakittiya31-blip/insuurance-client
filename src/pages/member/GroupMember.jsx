@@ -3,8 +3,8 @@ import { createGroup, deleteGroup, listGroup, readGroup, updateGroup } from "../
 import Title from "../../component/form/Title"
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
-import ModalMember from "../../component/modal/ModalMember"
 import EditGroupMember from "../../component/edit/EditGroupMember"
+import ModalGroupMember from "../../component/modal/ModalGroupMember"
 
 const intitailState = {
     group_name: '',
@@ -49,6 +49,7 @@ const GroupMember = () => {
         try {
             const res = await createGroup(form)
             toast.success(res.data.msg)
+            setForm(intitailState)
             document.getElementById('modalgroupmember').close()
             fetchGroupMember()
         } catch (err) {
@@ -97,7 +98,8 @@ const GroupMember = () => {
         setForm(intitailState)
     }
 
-    const updateGroupName = async () => {
+    const updateGroupName = async (e) => {
+        e.preventDefault()
         if (!form.group_name.trim()) {
             return toast.error('กรุณากรอกชื่อกลุ่ม')
         }
@@ -120,8 +122,8 @@ const GroupMember = () => {
                 />
             </div>
             <div className='bg-white rounded-2xl p-5'>
-                <div onSubmit={handleCreateGroup} className='flex justify-end items-baseline-last gap-3'>
-                    <ModalMember
+                <div className='flex justify-end items-baseline-last gap-3'>
+                    <ModalGroupMember
                         form={form}
                         setForm={setForm}
                         onChange={handleOnChange}
