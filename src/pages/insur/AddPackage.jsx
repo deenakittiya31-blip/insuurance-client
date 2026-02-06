@@ -114,10 +114,24 @@ const AddPackage = () => {
     const handleOnChange = (e) => {
         const { name, value } = e.target
 
-        setForm(prev => ({
-            ...prev,
-            [name]: value
-        }))
+        setForm(prev => {
+            const updated = {
+                ...prev,
+                [name]: value
+            }
+
+            // ถ้าเปลี่ยน start_date ให้คำนวณ end_date อัตโนมัติ
+            if (name === 'start_date' && value) {
+                const startDate = new Date(value)
+                const endDate = new Date(startDate)
+                endDate.setFullYear(endDate.getFullYear() + 1)
+
+                // แปลงเป็นรูปแบบ YYYY-MM-DD
+                updated.end_date = endDate.toISOString().split('T')[0]
+            }
+
+            return updated
+        })
     }
 
     const handleSubmitPackage = async (e) => {

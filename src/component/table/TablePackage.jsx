@@ -110,8 +110,8 @@ const TablePackage = ({ data, page, limit, onDelete, onSort, sortConfig, onToggl
                                 </td>
                                 <td className="align-top">
                                     <div className='flex items-center gap-3'>
-                                        <button className='w-5 h-5 rounded-full bg-gray-300'>
-                                            0
+                                        <button className='w-5 h-5 rounded-full bg-gray-300 text-white'>
+                                            {i.premium_count}
                                         </button>
                                         เบี้ย
                                     </div>
@@ -119,7 +119,7 @@ const TablePackage = ({ data, page, limit, onDelete, onSort, sortConfig, onToggl
                                 <td className="align-top">
                                     <div className="flex flex-col gap-1">
                                         <div className='flex gap-1'>
-                                            <button className='btn btn-sm btn-soft btn-success flex flex-1 gap-1 h-7' onClick={onRead}><IoMdCopy size={13} /> ลอก</button>
+                                            <button className='btn btn-sm btn-soft btn-success flex flex-1 gap-1 h-7' onClick={() => onCopy(i.id)}><IoMdCopy size={13} /> ลอก</button>
                                             <CardPackage
                                                 onRead={() => onRead(i.id)}
                                                 data={readData}

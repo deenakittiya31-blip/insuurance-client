@@ -99,7 +99,7 @@ const InsurPackage = () => {
             const res = await copyPackage(idPackage)
             const idReturnFromPackage = res.data.id
 
-            navigate(`app/editpackage/${idReturnFromPackage}`)
+            navigate(`/app/editpackage/${idReturnFromPackage}`)
             toast.success(res.data.msg)
         } catch (err) {
             console.log(err)

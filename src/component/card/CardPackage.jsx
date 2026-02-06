@@ -2,8 +2,6 @@ import { FaRegEye } from "react-icons/fa6"
 import { dateFormatNoTime } from "../../utils/dateformat"
 
 const CardPackage = ({ data, onRead }) => {
-    console.log(data)
-
     const getPaymentColor = (paymentId) => {
         switch (paymentId) {
             case 1: return 'bg-green-500'   // เงินสด
@@ -26,7 +24,7 @@ const CardPackage = ({ data, onRead }) => {
                             <div className="grid grid-cols-2 gap-y-3">
                                 <p>ชื่อแพ็กเกจ : <span className="font-medium">{data.package_name}</span></p>
                                 <p>วันเริ่มต้นและสิ้นสุด : <span className="font-medium">{dateFormatNoTime(data.start_date)} ถึง {dateFormatNoTime(data.end_date)}</span></p>
-                                <div>เบี้ยในแพ็กเกจ : <button className="w-5 h-5 rounded-xs text-white bg-gray-300">0</button> รายการ</div>
+                                <div>เบี้ยในแพ็กเกจ : <button className="w-5 h-5 rounded-xs text-white bg-gray-300">{data.premium_count}</button> รายการ</div>
 
                                 <p>สถานะแพ็กเกจ : {data.is_active ? <span className="bg-green-500 font-medium text-xs px-1 rounded-sm text-white">การใช้งานปกติ</span> : <span className="bg-red-500 font-medium text-xs px-1 rounded-sm text-white">ปิดการใช้งาน</span>}</p>
 

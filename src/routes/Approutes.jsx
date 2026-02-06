@@ -8,7 +8,6 @@ import GroupCar from '../pages/car/GroupCar'
 import CarModel from '../pages/car/CarModel'
 import CarBrand from '../pages/car/CarBrand'
 import InsurCompany from '../pages/insur/InsurCompany'
-import InsurPremuim from '../pages/insur/InsurPremuim'
 import InsurTypes from '../pages/insur/InsurTypes'
 import LoginLine from '../pages/auth/LoginLine'
 import CompulsoryCar from '../pages/car/CompulsoryCar'
@@ -32,6 +31,8 @@ import DashBoard from '../pages/dashboard/DashBoard'
 import AddPackage from '../pages/insur/AddPackage'
 import EditPackage from '../pages/insur/EditPackage'
 import GroupMember from '../pages/member/GroupMember'
+import AddPremium from '../pages/insur/AddPremium'
+import InsurPremium from '../pages/insur/InsurPremium'
 
 const Approutes = () => {
     return (
@@ -65,7 +66,8 @@ const Approutes = () => {
                     <Route path='package' element={<InsurPackage />} />
                     <Route path='addpackage' element={<AddPackage />} />
                     <Route path='editpackage/:id' element={<EditPackage />} />
-                    <Route path='insurpremuim' element={<InsurPremuim />} />
+                    <Route path='insurpremium' element={<InsurPremium />} />
+                    <Route path='add-premium' element={<AddPremium />} />
 
                     {/*admin only */}
                     <Route

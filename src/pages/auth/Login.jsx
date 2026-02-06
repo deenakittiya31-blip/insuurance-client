@@ -131,7 +131,7 @@ const Login = () => {
                     />
                     <button type='submit' className="btn btn-neutral w-full">เข้าสู่ระบบ</button>
                 </form>
-                <div className='flex items-center gap-5 w-full text-neutral-400'>
+                {/* <div className='flex items-center gap-5 w-full text-neutral-400'>
                     <hr className='w-full' />
                     <span>or</span>
                     <hr className='w-full' />
@@ -154,7 +154,7 @@ const Login = () => {
                         <button onClick={hdlLoginLine} className="btn bg-green-500 text-white w-full">เข้าสู่ระบบผ่าน Line</button>
                     )
                 }
-                <Link to='/register' className='text-sm hover:underline underline-offset-4'>Create Account</Link>
+                <Link to='/register' className='text-sm hover:underline underline-offset-4'>Create Account</Link> */}
             </div>
         </div>
     )

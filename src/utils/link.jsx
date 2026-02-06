@@ -27,7 +27,7 @@ export const adminInsur = [
     {
         icon: <TbPremiumRights className='size-4' />,
         title: 'เบี้ยประกัน',
-        link: '/app/insurpremuim'
+        link: '/app/insurpremium'
     },
 ]
 
@@ -40,7 +40,7 @@ export const staffInsur = [
     {
         icon: <TbPremiumRights className='size-4' />,
         title: 'เบี้ยประกัน',
-        link: '/app/insurpremuim'
+        link: '/app/insurpremium'
     },
 ]
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import useInsureAuth from '../../store/auth-store'
 import ModalPremium from '../../component/modal/ModalPremium'
 import TablePremium from '../../component/table/TablePremium'
-import { createPremium, listPremium, readPremium, removePremium, updatePremium } from '../../service/insurance/PremiumInsur'
+import { createPremium, listPremium, readPremium, removePremium, statusPremium, updatePremium } from '../../service/insurance/PremiumInsur'
 import Swal from 'sweetalert2'
 import toast from 'react-hot-toast'
 import EditPremium from '../../component/edit/EditPremium'
@@ -10,6 +10,7 @@ import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
 import SelectPerPage from '../../component/form/SelectPerPage'
+import { Link } from 'react-router-dom'
 
 const initialState = {
     package_id: '',
@@ -19,10 +20,11 @@ const initialState = {
     compulsory_price: '',
 }
 
-const InsurPremuim = () => {
+const InsurPremium = () => {
     const token = useInsureAuth((s) => s.token)
     const [premium, setPremium] = useState([])
     const [form, setForm] = useState(initialState)
+    const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
     const [open, setOpen] = useState(false)
     const [idSelect, setIdSelect] = useState(null)
     const [page, setPage] = useState(1)
@@ -31,8 +33,8 @@ const InsurPremuim = () => {
     const lastPage = Math.ceil(total / perPage)
 
     useEffect(() => {
-        getPremium(page, perPage);
-    }, [page, perPage])
+        getPremium(page, perPage, sortConfig.key, sortConfig.direction);
+    }, [page, perPage, sortConfig])
 
     const hdlOnChange = (e) => {
         setForm({
@@ -62,9 +64,9 @@ const InsurPremuim = () => {
         setOpen(false)
     }
 
-    const getPremium = async (page, perPage) => {
+    const getPremium = async (page, perPage, sortKey = 'id', sortDirection = 'DESC') => {
         try {
-            const res = await listPremium(page, perPage)
+            const res = await listPremium(page, perPage, sortKey, sortDirection)
             setPremium(res.data.data)
             setTotal(res.data.total)
         } catch (err) {
@@ -72,28 +74,17 @@ const InsurPremuim = () => {
         }
     }
 
-    const hdlSubmit = async (e) => {
-        e.preventDefault()
-        if (!form.package_id) {
-            toast.error('กรุณาเลือกแพ็กเกจ')
-            return
-        }
-        if (!form.car_usage_id) {
-            toast.error('กรุณาเลือกการใช้งาน')
-            return
+    const handleSort = (keyName) => {
+        let direction = 'ASC';
+
+        if (sortConfig.key === keyName && sortConfig.direction === 'ASC') {
+            direction = 'DESC';
         }
 
-        try {
-            const res = await createPremium(token, form)
-            document.getElementById('modalpremium').close();
-            setForm(initialState)
-            getPremium(page, perPage);
-            toast.success(res.data.msg)
-        } catch (err) {
-            console.log(err)
-            toast.error(err.response.data.message)
-        }
+        setSortConfig({ key: keyName, direction });
     }
+
+    console.log(premium)
 
     const handleUpdate = async (e) => {
         e.preventDefault()
@@ -102,7 +93,7 @@ const InsurPremuim = () => {
             setForm(initialState)
             closeForm()
             toast.success(res.data.msg)
-            getPremium(page, perPage)
+            getPremium(page, perPage, sortConfig.key, sortConfig.direction)
 
         } catch (err) {
             console.log(err)
@@ -124,11 +115,21 @@ const InsurPremuim = () => {
         if (!result.isConfirmed) return
 
         try {
-            const res = await removePremium(token, id)
-            getPremium(page, perPage)
+            getPremium(page, perPage, sortConfig.key, sortConfig.direction)
             toast.success(res.data.msg)
         } catch (err) {
             console.log(err)
+        }
+    }
+
+    const hdlToggleActive = async (id, currentStatus) => {
+        try {
+            await statusPremium(id, !currentStatus)
+            getPremium(page, perPage, sortConfig.key, sortConfig.direction)
+            toast.success('อัปเดตสถานะสำเร็จ')
+        } catch (err) {
+            console.log(err)
+            toast.error('อัปเดตสถานะไม่สำเร็จ')
         }
     }
 
@@ -139,11 +140,9 @@ const InsurPremuim = () => {
                     title='เบี้ยประกัน'
                     subtitle='ข้อมูลของเบี้ยประกัน ชื่อแพ็กเกจ และราคารวม'
                 />
-                <ModalPremium
-                    form={form}
-                    onSubmit={hdlSubmit}
-                    onChange={hdlOnChange}
-                />
+                <Link to='/app/add-premium'>
+                    <button className='btn bg-main text-white font-prompt hover:bg-second'>เพิ่มเบี้ยแพ็กเกจ</button>
+                </Link>
             </div>
             <div className='bg-white rounded-2xl p-5'>
                 <div className='flex justify-between items-baseline-last'>
@@ -162,6 +161,9 @@ const InsurPremuim = () => {
                     onEdite={openModal}
                     page={page}
                     limit={perPage}
+                    onToggle={hdlToggleActive}
+                    onSort={handleSort}
+                    sortConfig={sortConfig}
                 />
             </div>
             <div className='flex justify-end'>
@@ -187,4 +189,4 @@ const InsurPremuim = () => {
     )
 }
 
-export default InsurPremuim
+export default InsurPremium
