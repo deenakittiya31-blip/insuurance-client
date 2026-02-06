@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import useInsureAuth from '../../store/auth-store'
-import ModalPremium from '../../component/modal/ModalPremium'
 import TablePremium from '../../component/table/TablePremium'
-import { createPremium, listPremium, readPremium, removePremium, statusPremium, updatePremium } from '../../service/insurance/PremiumInsur'
+import { listPremium, removePremium, statusPremium } from '../../service/insurance/PremiumInsur'
 import Swal from 'sweetalert2'
 import toast from 'react-hot-toast'
-import EditPremium from '../../component/edit/EditPremium'
 import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
@@ -21,12 +18,9 @@ const initialState = {
 }
 
 const InsurPremium = () => {
-    const token = useInsureAuth((s) => s.token)
     const [premium, setPremium] = useState([])
     const [form, setForm] = useState(initialState)
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
-    const [open, setOpen] = useState(false)
-    const [idSelect, setIdSelect] = useState(null)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
     const [perPage, setPerPage] = useState(10)
@@ -46,22 +40,6 @@ const InsurPremium = () => {
     const handlePerPageChange = (e) => {
         setPerPage(Number(e.target.value))
         setPage(1)
-    }
-
-    const openModal = async (id) => {
-        setOpen(true)
-        setIdSelect(id)
-        try {
-            const res = await readPremium(token, id)
-            setForm(res.data.data)
-
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
-    const closeForm = () => {
-        setOpen(false)
     }
 
     const getPremium = async (page, perPage, sortKey = 'id', sortDirection = 'DESC') => {
@@ -84,22 +62,6 @@ const InsurPremium = () => {
         setSortConfig({ key: keyName, direction });
     }
 
-    console.log(premium)
-
-    const handleUpdate = async (e) => {
-        e.preventDefault()
-        try {
-            const res = await updatePremium(token, idSelect, form)
-            setForm(initialState)
-            closeForm()
-            toast.success(res.data.msg)
-            getPremium(page, perPage, sortConfig.key, sortConfig.direction)
-
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
     const hdlDelete = async (id) => {
         const result = await Swal.fire({
             title: "คุณแน่ใจ ?",
@@ -115,6 +77,7 @@ const InsurPremium = () => {
         if (!result.isConfirmed) return
 
         try {
+            const res = await removePremium(id)
             getPremium(page, perPage, sortConfig.key, sortConfig.direction)
             toast.success(res.data.msg)
         } catch (err) {
@@ -158,7 +121,6 @@ const InsurPremium = () => {
                 <TablePremium
                     data={premium}
                     onDelete={hdlDelete}
-                    onEdite={openModal}
                     page={page}
                     limit={perPage}
                     onToggle={hdlToggleActive}
@@ -178,13 +140,6 @@ const InsurPremium = () => {
                     )
                 }
             </div>
-            <EditPremium
-                value={form}
-                onchange={hdlOnChange}
-                onSubmit={handleUpdate}
-                isOpen={open}
-                onClose={closeForm}
-            />
         </div>
     )
 }

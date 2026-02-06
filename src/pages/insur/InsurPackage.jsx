@@ -85,9 +85,9 @@ const InsurPackage = () => {
 
     const hdlToggleActive = async (id, currentStatus) => {
         try {
-            await statusPackage(id, !currentStatus)
+            const res = await statusPackage(id, !currentStatus)
             getPackage(page, perPage, sortConfig.key, sortConfig.direction)
-            toast.success('อัปเดตสถานะสำเร็จ')
+            toast.success(res.data.msg)
         } catch (err) {
             console.log(err)
             toast.error('อัปเดตสถานะไม่สำเร็จ')

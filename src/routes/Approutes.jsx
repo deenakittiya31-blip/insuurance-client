@@ -33,6 +33,7 @@ import EditPackage from '../pages/insur/EditPackage'
 import GroupMember from '../pages/member/GroupMember'
 import AddPremium from '../pages/insur/AddPremium'
 import InsurPremium from '../pages/insur/InsurPremium'
+import EditPremium from '../pages/insur/EditPremium'
 
 const Approutes = () => {
     return (
@@ -68,6 +69,7 @@ const Approutes = () => {
                     <Route path='editpackage/:id' element={<EditPackage />} />
                     <Route path='insurpremium' element={<InsurPremium />} />
                     <Route path='add-premium' element={<AddPremium />} />
+                    <Route path='edit-premium/:id' element={<EditPremium />} />
 
                     {/*admin only */}
                     <Route

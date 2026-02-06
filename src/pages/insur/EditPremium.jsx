@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react"
-import { FaCircleMinus, FaCirclePlus } from "react-icons/fa6"
 import Title from "../../component/form/Title"
 import toast from "react-hot-toast"
 import useActionStore from "../../store/action-store"
 import Select from "../../component/form/Select"
 import TextInput from "../../component/form/TextInput"
-import { createPremium } from "../../service/insurance/PremiumInsur"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
+import { readPremium, updatePremium } from "../../service/insurance/PremiumInsur"
 
 const premiumInitial = {
     premium_name: '',
@@ -20,8 +19,9 @@ const premiumInitial = {
     selling_price: ''
 }
 
-const AddPremium = () => {
+const EditPremium = () => {
     const navigate = useNavigate()
+    const { id } = useParams()
     const [form, setFrom] = useState({
         package_id: '',
         premium_discount: '',
@@ -31,7 +31,17 @@ const AddPremium = () => {
 
     useEffect(() => {
         getPackageSelect();
+        fetchPackageDetail();
     }, [])
+
+    const fetchPackageDetail = async () => {
+        try {
+            const res = await readPremium(id)
+            setFrom(res.data.data)
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     const handleOnChange = (index, e) => {
         const { name, value } = e.target
@@ -46,8 +56,9 @@ const AddPremium = () => {
             }
 
             // คำนวณราคาขายอัตโนมัติ
-            if (name === 'total_premium') {
+            if (name === 'total_premium' || name === 'net_income') {
                 const premium = parseFloat(premiums[index].total_premium) || 0
+
                 const net_total = premium * 0.9309
 
                 premiums[index].net_income = net_total.toFixed(2)
@@ -89,29 +100,7 @@ const AddPremium = () => {
         })
     }
 
-    const addFormPremium = () => {
-        setFrom(prev => ({
-            ...prev,
-            premiums: [
-                ...prev.premiums,
-                { ...premiumInitial } // clone ใหม่ทุกครั้ง
-            ]
-        }))
-    }
-
-    const removeFormPremium = (index) => {
-        if (form.premiums.length <= 1) {
-            return toast.error('ไม่สามารถลบแบบฟอร์มนี้ได้')
-        }
-
-        //เก็บข้อมูลตำแหน่งที่ไม่เท่ากับ index ที่ส่งเข้ามา
-        setFrom(prev => ({
-            ...prev,
-            premiums: prev.premiums.filter((_, i) => i !== index)
-        }))
-    }
-
-    const handleCreatePremium = async (e) => {
+    const handleUpdatePremium = async (e) => {
         e.preventDefault()
         if (!form.package_id) {
             return toast.error('กรุณาเลือกแพ็กเกจ')
@@ -128,23 +117,23 @@ const AddPremium = () => {
         console.log('ข้อมูลพร้อมส่ง', form)
 
         try {
-            const res = await createPremium(form)
+            const res = await updatePremium(id, form)
             toast.success(res.data.msg)
             navigate('/app/insurpremium')
         } catch (err) {
             console.log(err)
-            toast.error('เกิดข้อผิดพลาดไม่สามารถสร้างเบี้ยได้')
+            toast.error('เกิดข้อผิดพลาดไม่สามารถแก้ไขเบี้ยได้')
         }
     }
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
             <Title
-                title='สร้างเบี้ยประกัน'
+                title='แก้ไขเบี้ยประกัน'
                 subtitle='กรุณากรอกข้อมูลให้ครบ'
             />
-            <form onSubmit={handleCreatePremium} className="bg-white rounded-2xl p-5 flex flex-col gap-5 font-prompt text-text-primary">
+            <form onSubmit={handleUpdatePremium} className="bg-white rounded-2xl p-5 flex flex-col gap-5 font-prompt text-text-primary">
                 <div className='flex justify-between'>
-                    <h1 className='font-semibold text-lg text-accent'>สร้างข้อมูลเบี้ยประกัน</h1>
+                    <h1 className='font-semibold text-lg text-accent'>แก้ไขข้อมูลเบี้ยประกัน</h1>
                     <button type="submit" className="btn btn-sm btn-neutral px-10">บันทึก</button>
                 </div>
                 <div className="grid grid-cols-2 gap-3 items-end">
@@ -160,7 +149,7 @@ const AddPremium = () => {
                     />
                     <TextInput
                         width='w-full'
-                        title='ส่วนลด'
+                        title='ส่วนลด (%)'
                         name='premium_discount'
                         type='text'
                         placeholder='0%'
@@ -168,23 +157,13 @@ const AddPremium = () => {
                         value={form.premium_discount}
                     />
                 </div>
-                <div className='flex gap-3'>
-                    <button type='button' onClick={addFormPremium} className='btn btn-sm btn-accent text-white'><FaCirclePlus /> เพิ่มแบบฟอร์ม </button>
-                </div>
                 <div className='w-full h-px bg-border' />
-                <div className='grid lg:grid-cols-2 gap-5'>
+                <div className='grid gap-5'>
                     {
                         form.premiums?.map((item, idx) => (
                             <div key={idx} className='w-full rounded-md shadow border border-border/30 text-text-primary'>
                                 <div className='flex justify-between p-3'>
-                                    <h2 className='font-semibold text-sm'>แบบฟอร์มสร้างเบี้ยประกันภัย ({idx + 1})</h2>
-                                    <button
-                                        type="button"
-                                        onClick={() => removeFormPremium(idx)}
-                                        className="btn btn-sm btn-error text-white"
-                                    >
-                                        <FaCircleMinus /> ลบแบบฟอร์ม
-                                    </button>
+                                    <h2 className='font-semibold text-sm'>แบบฟอร์มแก้ไขเบี้ยประกันภัย ({idx + 1})</h2>
                                 </div>
                                 <div className='w-full h-px bg-border/30' />
                                 <div className='grid grid-cols-4 gap-3 p-3'>
@@ -266,15 +245,15 @@ const AddPremium = () => {
                                         className='input flex-1'
                                     />
                                     <div className='col-span-4 grid grid-cols-subgrid gap-4'>
-                                        <div className="col-start-3"><p className='font-semibold text-sm'>ราคาขาย</p></div>
+                                        <div className="col-start-3"><p className='font-semibold text-sm'>ราคาขาย แสดง  ui lbo8hk</p></div>
                                         <div className="col-start-4">
                                             <input
                                                 type='number'
                                                 name='selling_price'
                                                 placeholder='0.00'
-                                                value={item.selling_price || 0}
+                                                value={item.selling_price}
                                                 className='input flex-1'
-                                                readOnly
+                                                onChange={(e) => handleOnChange(idx, e)}
                                             />
                                         </div>
                                     </div>
@@ -287,4 +266,4 @@ const AddPremium = () => {
         </div >
     )
 }
-export default AddPremium
+export default EditPremium
