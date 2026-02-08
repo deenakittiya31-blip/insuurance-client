@@ -18,7 +18,6 @@ import Cartype from '../pages/car/Cartype'
 import CarYear from '../pages/car/CarYear'
 import CustomModel from '../pages/custom_page/CustomModel'
 import CustomModelDetail from '../pages/custom_page/CustomModelDetail'
-import MemberPage from '../pages/MemberPage'
 import MemberRegister from '../pages/auth/MemberRegister'
 import PackageProduct from '../pages/PackageProduct'
 import PinListCompare from '../pages/compare/PinListCompare'
@@ -34,6 +33,8 @@ import GroupMember from '../pages/member/GroupMember'
 import AddPremium from '../pages/insur/AddPremium'
 import InsurPremium from '../pages/insur/InsurPremium'
 import EditPremium from '../pages/insur/EditPremium'
+import MemberPage from '../pages/member/MemberPage'
+import MessageApi from '../pages/member/MessageApi'
 
 const Approutes = () => {
     return (
@@ -55,6 +56,7 @@ const Approutes = () => {
                     }>
                     <Route index element={<DashBoard />} />
                     <Route path='member' element={<MemberPage />} />
+                    <Route path='message-api' element={<MessageApi />} />
                     <Route path='member-group' element={<GroupMember />} />
                     <Route path='pin-compare' element={<PinListCompare />} />
                     <Route path='quotationlist' element={<QuotationList />} />

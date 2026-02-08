@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom';
-import { BsLayoutTextSidebar, BsPinAngle } from "react-icons/bs";
+import { BsLayoutTextSidebar, BsPerson, BsPinAngle } from "react-icons/bs";
 import { IoIosArrowDown } from "react-icons/io";
 import { adminCar, adminInsur, adminSetting, staffInsur } from '../../utils/link';
 import toast from 'react-hot-toast';
 import useInsureAuth from '../../store/auth-store';
 import { TbLogout } from "react-icons/tb";
-import { IoDocumentAttachOutline } from "react-icons/io5";
+import { IoDocumentAttachOutline, IoPeopleOutline } from "react-icons/io5";
 import ModalCompare from '../modal/ModalCompare';
 import ModalKeyInCompare from '../modal/modalKeyInCompare';
 import useActionStore from '../../store/action-store';
 import { createCompare } from '../../service/compare';
-import { GoPeople } from "react-icons/go";
-import { MdOutlineSpaceDashboard, MdOutlineGroup } from 'react-icons/md';
+import { MdOutlineSpaceDashboard, MdOutlineTag } from 'react-icons/md';
+import { FiMessageCircle } from "react-icons/fi";
 
 const initialState = {
     to_name: '',
@@ -170,7 +170,7 @@ const SidebarNew = () => {
                             >
                                 <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
                                 <div className='w-full flex items-center gap-3'>
-                                    <GoPeople className='size-4' />
+                                    <BsPerson className='size-4' />
                                     <p className='group-[.active]:text-current'>รายชื่อลูกค้า</p>
                                 </div>
                             </NavLink>
@@ -184,12 +184,12 @@ const SidebarNew = () => {
                             >
                                 <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
                                 <div className='w-full flex items-center gap-3'>
-                                    <MdOutlineGroup className='size-4' />
+                                    <IoPeopleOutline className='size-4' />
                                     <p className='group-[.active]:text-current'>กลุ่มลูกค้า</p>
                                 </div>
                             </NavLink>
                             <NavLink
-                                to='/app/member-group'
+                                to='/app/message-api'
                                 end
                                 className={({ isActive }) =>
                                     `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
@@ -198,7 +198,7 @@ const SidebarNew = () => {
                             >
                                 <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
                                 <div className='w-full flex items-center gap-3'>
-                                    <MdOutlineGroup className='size-4' />
+                                    <FiMessageCircle className='size-4' />
                                     <p className='group-[.active]:text-current'>ส่งข้อความ Line</p>
                                 </div>
                             </NavLink>
@@ -212,7 +212,7 @@ const SidebarNew = () => {
                             >
                                 <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
                                 <div className='w-full flex items-center gap-3'>
-                                    <MdOutlineGroup className='size-4' />
+                                    <MdOutlineTag className='size-4' />
                                     <p className='group-[.active]:text-current'>ป้ายกำกับลูกค้า</p>
                                 </div>
                             </NavLink>

@@ -30,3 +30,7 @@ export const removePremium = (id) => {
 export const statusPremium = (id, is_active) => {
     return api.put(`/api/status-premium/${id}`, { is_active })
 }
+
+export const searchPremium = async (arg) => {
+    return api.post('/api/search-premium', arg)
+}

@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react"
-import Title from "../component/form/Title"
-import { deleteMember, listMemberPagination, readMember, searchMember, updateMember } from "../service/member"
-import TableMemberList from "../component/table/TableMemberList"
-import NameTable from "../component/form/NameTable"
-import SelectPerPage from "../component/form/SelectPerPage"
-import Pagination from "../component/paginationComponent/Pagination"
+import { deleteMember, listMemberPagination, readMember, searchMember, updateMember } from "../../service/member"
+import TableMemberList from '../../component/table/TableMemberList'
+import NameTable from "../../component/form/NameTable"
+import SelectPerPage from "../../component/form/SelectPerPage"
+import Pagination from "../../component/paginationComponent/Pagination"
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
-import EditMember from "../component/edit/EditMember"
-import SearchBox from "../component/quotation_about/SearchBox"
-import { listGroup } from "../service/member/group_member"
+import EditMember from "../../component/edit/EditMember"
+import SearchBox from "../../component/quotation_about/SearchBox"
+import { listGroup } from "../../service/member/group_member"
+import Title from "../../component/form/Title"
 
 const initialState = {
     first_name: '',
@@ -111,7 +111,7 @@ const Home = () => {
             const res = await searchMember({ search: textSearch })
             setMember(res.data.data)
             if (!textSearch) {
-                getMember(sortConfig.key, sortConfig.direction)
+                getMember(page, perPage, sortConfig.key, sortConfig.direction)
             }
         } catch (err) {
             console.log(err)

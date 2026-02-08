@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import TableMember from "../table/TableMember";
 import SearchBox from "./SearchBox";
 import { LuSend } from "react-icons/lu";
-import { listAllMember, searchMember } from "../../service/member";
+import { listForMessage, searchMember } from "../../service/member";
+import { listGroup } from "../../service/member/group_member";
 import { getDetailCompare } from "../../service/compare";
 import useInsureAuth from "../../store/auth-store";
 import StateDetailSend from "./StateDetailSend";
@@ -10,31 +11,43 @@ import StateDetailSend from "./StateDetailSend";
 const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
     const token = useInsureAuth((s) => s.token)
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
+    const [groupId, setGroupId] = useState([])
     const [member, setMember] = useState([])
     const [memberSelected, setMemberSelected] = useState([])
+    const [GroupData, setGroupData] = useState([])
     const [loading, setLoading] = useState(false)
     const [textSearch, setTextSearch] = useState('')
     const [detail, setDetail] = useState({})
 
     useEffect(() => {
-        if (isOpen) {
-            getMember(sortConfig.key, sortConfig.direction)
-        }
-    }, [isOpen, sortConfig])
-
-    useEffect(() => {
         if (!isOpen) return;
 
-        const deley = setTimeout(() => {
+        if (textSearch) {
             handleSearchMember()
-        }, 500)
-        return () => clearTimeout(deley)
-    }, [textSearch, isOpen])
+        } else {
+            getMember(sortConfig.key, sortConfig.direction, groupId)
+            getGroup()
+        }
+
+    }, [isOpen, sortConfig, groupId, textSearch])
 
     useEffect(() => {
         if (!q_id) return;
         getDetail();
     }, [q_id])
+
+    useEffect(() => {
+        console.log('groupId updated:', groupId)
+    }, [groupId])
+
+    const getGroup = async () => {
+        try {
+            const res = await listGroup()
+            setGroupData(res.data.data)
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     const getDetail = async () => {
         try {
@@ -45,23 +58,22 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
         }
     }
 
-    const getMember = async (sortKey, sortDirection) => {
+    const getMember = async (sortKey, sortDirection, group_id) => {
         try {
-            const res = await listAllMember(sortKey, sortDirection)
+            const res = await listForMessage(sortKey, sortDirection, group_id)
             setMember(res.data.data)
 
         } catch (err) {
             console.log(err)
         }
     }
-    console.log(member)
 
     const handleSearchMember = async () => {
         try {
             const res = await searchMember({ search: textSearch })
             setMember(res.data.data)
             if (!textSearch) {
-                getMember(sortConfig.key, sortConfig.direction)
+                getMember(sortConfig.key, sortConfig.direction, groupId)
             }
         } catch (err) {
             console.log(err)
@@ -80,6 +92,7 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
 
     const handleCheck = (e) => {
         const userId = e.target.value //ค่าที่โดนเช็ค
+        const id = e.target.value
 
         setMemberSelected((prev) =>
             prev.includes(userId)
@@ -88,10 +101,21 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
         )
     }
 
+    const handleCheckFilter = (e) => {
+        const idGroup = Number(e.target.value)
+
+        setGroupId((prev) =>
+            prev.includes(idGroup)
+                ? prev.filter(id => id !== idGroup)
+                : [...prev, idGroup]
+        )
+    }
+
     const handleCheckAll = (e) => {
         if (e.target.checked) {
             const allMembers = member.map(item => item.user_id)
             setMemberSelected(allMembers)
+
         } else {
             setMemberSelected([])
         }
@@ -116,6 +140,7 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
 
     const handleClose = () => {
         setMemberSelected([])
+        setGroupId([])
         setTextSearch('')
         onClose(setMemberSelected);
     }
@@ -158,6 +183,21 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
                             />
                         </span>
                     </button>
+                </div>
+                <div className="flex gap-3 justify-end">
+                    {
+                        GroupData.map((i) => (
+                            <label key={i.id} className='flex items-center gap-3 text-sm'>
+                                <input
+                                    value={i.id}
+                                    type="checkbox"
+                                    onChange={handleCheckFilter}
+                                    checked={groupId.includes(i.id)}
+                                />
+                                {i.group_name}
+                            </label>
+                        ))
+                    }
                 </div>
                 <div className="w-full h-72 overflow-y-auto">
                     <TableMember

@@ -136,6 +136,8 @@ const AddPremium = () => {
             toast.error('เกิดข้อผิดพลาดไม่สามารถสร้างเบี้ยได้')
         }
     }
+
+    console.log(packageSelect)
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
             <Title
@@ -148,16 +150,27 @@ const AddPremium = () => {
                     <button type="submit" className="btn btn-sm btn-neutral px-10">บันทึก</button>
                 </div>
                 <div className="grid grid-cols-2 gap-3 items-end">
-                    <Select
-                        text='ชื่อแพ็กเกจ'
-                        data={packageSelect}
-                        name='package_id'
-                        value={form.package_id}
-                        onChange={handleChangeHead}
-                        valueKey='id'
-                        labelKey='package_name'
-                        required
-                    />
+                    <fieldset className="fieldset font-prompt text-text-primary p-0">
+                        <legend className="fieldset-legend text-sm text-text-primary">ชื่อแพ็กเกจ</legend>
+                        <select
+                            name='package_id'
+                            onChange={handleChangeHead}
+                            className="select w-full"
+                            value={form.package_id}
+                        >
+                            <option value="" disabled={true}>โปรดเลือก</option>
+                            {
+                                packageSelect.map((i) => (
+                                    <option
+                                        key={i.id}
+                                        value={i.id}
+                                    >
+                                        {i.package_id} / {i.package_name}
+                                    </option>
+                                ))
+                            }
+                        </select>
+                    </fieldset>
                     <TextInput
                         width='w-full'
                         title='ส่วนลด'

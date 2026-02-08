@@ -200,7 +200,10 @@ const AddPackage = () => {
             />
             <form onSubmit={handleSubmitPackage} className='bg-white rounded-2xl p-5 flex flex-col gap-15 font-prompt text-text-primary'>
                 <div>
-                    <h1 className='title text-main'>แพ็กเกจ</h1>
+                    <div className='flex justify-between'>
+                        <h1 className='title text-main'>สร้างแพ็กเกจ</h1>
+                        <button type="submit" className="btn btn-sm btn-neutral px-10">บันทึก</button>
+                    </div>
                     <div className='grid grid-cols-2 gap-3'>
                         <div className='col-span-2'>
                             <TextInput
@@ -608,9 +611,6 @@ const AddPackage = () => {
                             </>
                         )}
                     </div>
-                </div>
-                <div className='flex justify-end'>
-                    <button type="submit" className="btn bg-main px-15 text-white">บันทึก</button>
                 </div>
             </form >
         </div >

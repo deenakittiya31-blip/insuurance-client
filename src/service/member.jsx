@@ -22,18 +22,23 @@ export const listMemberPagination = (page, perPage, sortKey, sortDirection) => {
     return api.get('/api/list-members', {
         params: {
             page: page,
-            Per_page: perPage,
+            per_page: perPage,
             sortKey,
             sortDirection
         }
     })
 }
 
-export const listAllMember = (sortKey, sortDirection) => {
-    return api.get('/api/list-members', {
+export const listForMessage = (sortKey, sortDirection, group_id) => {
+    const groupIdParams = Array.isArray(group_id) && group_id.length > 0
+        ? group_id.join(',')
+        : undefined
+
+    return api.get('/api/list-members/message', {
         params: {
             sortKey,
-            sortDirection
+            sortDirection,
+            ...(groupIdParams && { group_id: groupIdParams })
         }
     })
 }

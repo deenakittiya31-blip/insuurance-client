@@ -3,7 +3,6 @@ import { dateFormat } from "../../utils/dateformat"
 import Sort from "../sortData/Sort"
 
 const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEdite }) => {
-    console.log(data)
     return (
         <div className="overflow-x-auto font-prompt">
             <table className="table">

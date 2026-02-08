@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import TablePackage from '../../component/table/TablePackage'
-import { copyPackage, listPackage, readPackage, removePackage, statusPackage } from '../../service/insurance/PackageInsur'
+import { copyPackage, listPackage, readPackage, removePackage, searchPackage, statusPackage } from '../../service/insurance/PackageInsur'
 import Swal from 'sweetalert2'
 import toast from 'react-hot-toast'
 import Title from '../../component/form/Title'
@@ -8,20 +8,29 @@ import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
 import SelectPerPage from '../../component/form/SelectPerPage'
 import { Link, useNavigate } from 'react-router-dom'
+import SearchBox from '../../component/quotation_about/SearchBox'
 
 const InsurPackage = () => {
     const navigate = useNavigate();
     const [packageData, setPackageData] = useState([])
     const [readPackageData, setReadPackageData] = useState({})
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
+    const [textSearch, setTextSearch] = useState('')
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
     const [perPage, setPerPage] = useState(10)
     const lastPage = Math.ceil(total / perPage)
 
     useEffect(() => {
-        getPackage(page, perPage, sortConfig.key, sortConfig.direction);
-    }, [page, perPage, sortConfig])
+        const deley = setTimeout(() => {
+            if (textSearch.trim()) {
+                handleSearchPackage()
+            } else {
+                getPackage(page, perPage, sortConfig.key, sortConfig.direction)
+            }
+        }, 500)
+        return () => clearTimeout(deley)
+    }, [page, perPage, sortConfig, textSearch])
 
     const handlePerPageChange = (e) => {
         setPerPage(Number(e.target.value))
@@ -33,6 +42,15 @@ const InsurPackage = () => {
             const res = await listPackage(page, perPage, sortKey, sortDirection);
             setPackageData(res.data.data)
             setTotal(res.data.total)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const handleSearchPackage = async () => {
+        try {
+            const res = await searchPackage({ search: textSearch })
+            setPackageData(res.data.data)
         } catch (err) {
             console.log(err)
         }
@@ -85,11 +103,14 @@ const InsurPackage = () => {
 
     const hdlToggleActive = async (id, currentStatus) => {
         try {
+            console.log('Toggling:', { id, newStatus: !currentStatus })
             const res = await statusPackage(id, !currentStatus)
+
+            console.log('Success response:', res.data)
             getPackage(page, perPage, sortConfig.key, sortConfig.direction)
             toast.success(res.data.msg)
         } catch (err) {
-            console.log(err)
+            console.log('Error response:', err.response)
             toast.error('อัปเดตสถานะไม่สำเร็จ')
         }
     }
@@ -124,10 +145,17 @@ const InsurPackage = () => {
                         icon='📒'
                         name='ตารางแพ็กเกจ'
                     />
-                    <SelectPerPage
-                        onChange={handlePerPageChange}
-                        perPage={perPage}
-                    />
+                    <div className="flex gap-3 items-baseline-last">
+                        <SearchBox
+                            width='w-full'
+                            placeholder='ค้นหาชื่อ, รหัส, ซ่อม, โปรโมชั่น...'
+                            onChange={(e) => setTextSearch(e.target.value)}
+                        />
+                        <SelectPerPage
+                            onChange={handlePerPageChange}
+                            perPage={perPage}
+                        />
+                    </div>
                 </div>
                 <TablePackage
                     data={packageData}

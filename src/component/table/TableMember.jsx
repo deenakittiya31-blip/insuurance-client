@@ -1,3 +1,4 @@
+import { AiFillSmile } from "react-icons/ai"
 import Sort from "../sortData/Sort"
 
 const TableMember = ({ data, onChange, selected, onSort, sortConfig, onCheckAll, isAllSelected, isSomeSelected }) => {
@@ -76,13 +77,17 @@ const TableMember = ({ data, onChange, selected, onSort, sortConfig, onCheckAll,
                                 </th>
                                 <td>
                                     <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle h-12 w-12">
-                                                <img
-                                                    src={i.picture_url}
-                                                    alt="Avatar member" />
-                                            </div>
-                                        </div>
+                                        {
+                                            i.picture_url
+                                                ? <div className="avatar">
+                                                    <div className="mask mask-squircle h-12 w-12">
+                                                        <img
+                                                            src={i.picture_url}
+                                                            alt="Avatar member" />
+                                                    </div>
+                                                </div>
+                                                : <div className='flex justify-center items-center rounded-lg bg-main w-10 h-10 overflow-hidden'><AiFillSmile className='fill-white size-6' /></div>
+                                        }
                                         <div>
                                             <p className="font-semibold capitalize">{i.display_name}</p>
                                         </div>

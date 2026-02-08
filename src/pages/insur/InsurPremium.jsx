@@ -87,11 +87,14 @@ const InsurPremium = () => {
 
     const hdlToggleActive = async (id, currentStatus) => {
         try {
-            await statusPremium(id, !currentStatus)
+            console.log('Toggling:', { id, newStatus: !currentStatus })
+            const res = await statusPremium(id, !currentStatus)
+
+            console.log('Success response:', res.data)
             getPremium(page, perPage, sortConfig.key, sortConfig.direction)
-            toast.success('อัปเดตสถานะสำเร็จ')
+            toast.success(res.data.msg)
         } catch (err) {
-            console.log(err)
+            console.log('Error response:', err.response)
             toast.error('อัปเดตสถานะไม่สำเร็จ')
         }
     }

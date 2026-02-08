@@ -42,3 +42,7 @@ export const removePackage = (id) => {
 export const statusPackage = (id, is_active) => {
     return api.put(`/api/status-package/${id}`, { is_active })
 }
+
+export const searchPackage = async (arg) => {
+    return api.post('/api/search-package', arg)
+}
