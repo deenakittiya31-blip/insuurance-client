@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import TablePremium from '../../component/table/TablePremium'
-import { listPremium, removePremium, statusPremium } from '../../service/insurance/PremiumInsur'
+import { listPremium, removePremium, searchPremium, statusPremium } from '../../service/insurance/PremiumInsur'
 import Swal from 'sweetalert2'
 import toast from 'react-hot-toast'
 import Title from '../../component/form/Title'
@@ -8,34 +8,27 @@ import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
 import SelectPerPage from '../../component/form/SelectPerPage'
 import { Link } from 'react-router-dom'
-
-const initialState = {
-    package_id: '',
-    car_usage_id: '',
-    car_year: '',
-    premium_price: '',
-    compulsory_price: '',
-}
+import SearchBox from '../../component/quotation_about/SearchBox'
 
 const InsurPremium = () => {
     const [premium, setPremium] = useState([])
-    const [form, setForm] = useState(initialState)
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
+    const [textSearch, setTextSearch] = useState('')
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
     const [perPage, setPerPage] = useState(10)
     const lastPage = Math.ceil(total / perPage)
 
     useEffect(() => {
-        getPremium(page, perPage, sortConfig.key, sortConfig.direction);
-    }, [page, perPage, sortConfig])
-
-    const hdlOnChange = (e) => {
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value
-        })
-    }
+        const deley = setTimeout(() => {
+            if (textSearch.trim()) {
+                handleSearchPremium()
+            } else {
+                getPremium(page, perPage, sortConfig.key, sortConfig.direction);
+            }
+        }, 500)
+        return () => clearTimeout(deley)
+    }, [page, perPage, sortConfig, textSearch])
 
     const handlePerPageChange = (e) => {
         setPerPage(Number(e.target.value))
@@ -47,6 +40,15 @@ const InsurPremium = () => {
             const res = await listPremium(page, perPage, sortKey, sortDirection)
             setPremium(res.data.data)
             setTotal(res.data.total)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const handleSearchPremium = async () => {
+        try {
+            const res = await searchPremium({ search: textSearch })
+            setPremium(res.data.data)
         } catch (err) {
             console.log(err)
         }
@@ -107,7 +109,7 @@ const InsurPremium = () => {
                     subtitle='ข้อมูลของเบี้ยประกัน ชื่อแพ็กเกจ และราคารวม'
                 />
                 <Link to='/app/add-premium'>
-                    <button className='btn bg-main text-white font-prompt hover:bg-second'>เพิ่มเบี้ยแพ็กเกจ</button>
+                    <button className='btn bg-main text-white font-prompt hover:bg-second'>สร้างเบี้ยแพ็กเกจ</button>
                 </Link>
             </div>
             <div className='bg-white rounded-2xl p-5'>
@@ -116,10 +118,17 @@ const InsurPremium = () => {
                         icon='🪙'
                         name='ตารางเบี้ยประกัน'
                     />
-                    <SelectPerPage
-                        onChange={handlePerPageChange}
-                        perPage={perPage}
-                    />
+                    <div className="flex gap-3 items-baseline-last">
+                        <SearchBox
+                            width='w-full'
+                            placeholder='ค้นหาชื่อเบี้ย, รหัสเบี้ย...'
+                            onChange={(e) => setTextSearch(e.target.value)}
+                        />
+                        <SelectPerPage
+                            onChange={handlePerPageChange}
+                            perPage={perPage}
+                        />
+                    </div>
                 </div>
                 <TablePremium
                     data={premium}
