@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { deleteMember, listMemberPagination, readMember, searchMember, updateMember } from "../../service/member"
+import { deleteMember, listMemberPagination, readMember, searchMember, statusMember, updateMember } from "../../service/member"
 import TableMemberList from '../../component/table/TableMemberList'
 import NameTable from "../../component/form/NameTable"
 import SelectPerPage from "../../component/form/SelectPerPage"
@@ -8,15 +8,17 @@ import toast from "react-hot-toast"
 import Swal from "sweetalert2"
 import EditMember from "../../component/edit/EditMember"
 import SearchBox from "../../component/quotation_about/SearchBox"
-import { listGroup } from "../../service/member/group_member"
+import { listSelectGroup } from "../../service/member/group_member"
 import Title from "../../component/form/Title"
+import { removeTagFromMember } from "../../service/member/tag"
 
 const initialState = {
     first_name: '',
     last_name: '',
     group_id: '',
     phone: '',
-    note: ''
+    note: '',
+    tags: []
 }
 
 const Home = () => {
@@ -60,7 +62,7 @@ const Home = () => {
 
     const fetchGroupMember = async () => {
         try {
-            const res = await listGroup()
+            const res = await listSelectGroup()
             setGroup(res.data.data)
         } catch (err) {
             console.log(err)
@@ -155,6 +157,32 @@ const Home = () => {
         }
     }
 
+    const handleDeleteTag = async (id) => {
+        try {
+            const res = await removeTagFromMember(id)
+            setForm(prev => ({
+                ...prev,
+                tags: prev.tags.filter(tag => tag.tag_member_id !== id)
+            }))
+
+            toast.success(res.data.msg);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const handleOnToggle = async (id, currentStatus) => {
+        try {
+            await statusMember(id, !currentStatus)
+            getMember(page, perPage, sortConfig.key, sortConfig.direction)
+            toast.success('อัปเดตสถานะสำเร็จ')
+
+        } catch (err) {
+            console.log(err)
+            toast.error('อัปเดตสถานะไม่สำเร็จ')
+        }
+    }
+
 
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
@@ -190,6 +218,7 @@ const Home = () => {
                     sortConfig={sortConfig}
                     onDelete={handleDelete}
                     onEdite={openModal}
+                    onToggle={handleOnToggle}
                 />
             </div>
             <div className='flex justify-end'>
@@ -205,6 +234,7 @@ const Home = () => {
                 }
             </div>
             <EditMember
+                removeTag={handleDeleteTag}
                 isOpen={isOpen}
                 form={form}
                 onChange={handleOnChange}

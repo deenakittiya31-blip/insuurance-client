@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { createGroup, deleteGroup, listGroup, readGroup, updateGroup } from "../../service/member/group_member"
+import { createGroup, deleteGroup, listGroup, readGroup, statusGroup, updateGroup } from "../../service/member/group_member"
 import Title from "../../component/form/Title"
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
@@ -114,6 +114,18 @@ const GroupMember = () => {
             toast.error('แก้ไขกลุ่มไม่สำเร็จ')
         }
     }
+
+    const hdlToggleActive = async (id, currentStatus) => {
+        try {
+            await statusGroup(id, !currentStatus)
+            fetchGroupMember()
+            toast.success('อัปเดตสถานะกลุ่มสำเร็จ')
+        } catch (err) {
+            console.log(err)
+            toast.error('อัปเดตสถานะไม่สำเร็จ')
+        }
+    }
+
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
             <div className='flex items-center justify-between'>
@@ -137,6 +149,7 @@ const GroupMember = () => {
                                 <th className='font-medium text-neutral-400'>ลำดับ</th>
                                 <th className='font-medium text-neutral-400'>รูปภาพ</th>
                                 <th className='font-medium text-neutral-400'>ประเภท</th>
+                                <th className='font-medium text-neutral-400'>สถานะ</th>
                                 <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                             </tr>
                         </thead>
@@ -152,6 +165,14 @@ const GroupMember = () => {
                                         </td>
                                         <td>
                                             {i.group_name}
+                                        </td>
+                                        <td className='text-center'>
+                                            <input
+                                                type='checkbox'
+                                                onChange={() => hdlToggleActive(i.id, i.is_active)}
+                                                checked={i.is_active}
+                                                className='toggle'
+                                            />
                                         </td>
                                         <td>
                                             <div className='flex gap-5 justify-center'>

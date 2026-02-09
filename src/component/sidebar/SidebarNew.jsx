@@ -203,7 +203,7 @@ const SidebarNew = () => {
                                 </div>
                             </NavLink>
                             <NavLink
-                                to='/app/member-group'
+                                to='/app/member-tag'
                                 end
                                 className={({ isActive }) =>
                                     `flex gap-5 items-center text-sm transition duration-300 ease-in-out group

@@ -35,6 +35,8 @@ import InsurPremium from '../pages/insur/InsurPremium'
 import EditPremium from '../pages/insur/EditPremium'
 import MemberPage from '../pages/member/MemberPage'
 import MessageApi from '../pages/member/MessageApi'
+import TagPage from '../pages/member/TagPage'
+
 
 const Approutes = () => {
     return (
@@ -58,6 +60,7 @@ const Approutes = () => {
                     <Route path='member' element={<MemberPage />} />
                     <Route path='message-api' element={<MessageApi />} />
                     <Route path='member-group' element={<GroupMember />} />
+                    <Route path='member-tag' element={<TagPage />} />
                     <Route path='pin-compare' element={<PinListCompare />} />
                     <Route path='quotationlist' element={<QuotationList />} />
                     <Route path='quotation/:q_id' element={<Quotaion />} />

@@ -52,6 +52,15 @@ const TableMember = ({ data, onChange, selected, onSort, sortConfig, onCheckAll,
                         </th>
                         <th className='font-medium text-neutral-400'>
                             <div className='flex items-center  gap-3'>
+                                กลุ่ม<Sort
+                                    onSort={onSort}
+                                    keyName='group_name'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center  gap-3'>
                                 เบอร์โทรศัพท์<Sort
                                     onSort={onSort}
                                     keyName='phone'
@@ -97,6 +106,7 @@ const TableMember = ({ data, onChange, selected, onSort, sortConfig, onCheckAll,
                                     {i.first_name === null ? '-' : i.first_name}
                                 </td>
                                 <td>{i.last_name === null ? '-' : i.last_name}</td>
+                                <td>{i.group_name === null ? '-' : i.group_name}</td>
                                 <td>
                                     {i.phone === null ? '-' : i.phone}
                                 </td>

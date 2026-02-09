@@ -2,7 +2,7 @@ import { AiFillSmile } from "react-icons/ai"
 import { dateFormat } from "../../utils/dateformat"
 import Sort from "../sortData/Sort"
 
-const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEdite }) => {
+const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEdite, onToggle }) => {
     return (
         <div className="overflow-x-auto font-prompt">
             <table className="table">
@@ -67,6 +67,9 @@ const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEd
                         <th className='font-medium text-neutral-400'>
                             หมายเหตุ
                         </th>
+                        <th className='font-medium text-neutral-400'>
+                            สถานะ
+                        </th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
                 </thead>
@@ -106,6 +109,14 @@ const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEd
                                 </td>
                                 <td>
                                     {i.note === null ? '-' : i.note}
+                                </td>
+                                <td className='text-center'>
+                                    <input
+                                        type='checkbox'
+                                        onChange={() => onToggle(i.id, i.is_active)}
+                                        checked={!!i.is_active}
+                                        className='toggle'
+                                    />
                                 </td>
                                 <td>
                                     <div className='flex gap-5 justify-center'>

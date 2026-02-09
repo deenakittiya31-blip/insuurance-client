@@ -8,6 +8,10 @@ export const listGroup = () => {
     return api.get('/api/list-groupmember')
 }
 
+export const listSelectGroup = () => {
+    return api.get('/api/select-groupmember')
+}
+
 export const updateGroup = (id, form) => {
     return api.put(`/api/update-groupmember/${id}`, form)
 }
@@ -18,4 +22,8 @@ export const readGroup = (id) => {
 
 export const deleteGroup = (id) => {
     return api.delete(`/api/delete-groupmember/${id}`)
+}
+
+export const statusGroup = (id, is_active) => {
+    return api.put(`/api/status-groupmember/${id}`, { is_active })
 }

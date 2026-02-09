@@ -53,3 +53,7 @@ export const sendDocumentToMember = (members, q_id) => {
 export const searchMember = async (arg) => {
     return api.post('/api/search-member', arg)
 }
+
+export const statusMember = (id, is_active) => {
+    return api.put(`/api/status-member/${id}`, { is_active })
+}
