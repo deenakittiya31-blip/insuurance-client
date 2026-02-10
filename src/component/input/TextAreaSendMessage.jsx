@@ -1,6 +1,6 @@
 import UploadImageLine from "../form/UploadImageLine";
 
-const TextAreaSendMessage = ({ onChange, value, form, setForm }) => {
+const TextAreaSendMessage = ({ onChange, value, form, setForm, loading }) => {
     const handleChange = (e) => {
         e.target.style.height = 'auto'
         e.target.style.height = e.target.scrollHeight + 'px'
@@ -19,7 +19,12 @@ const TextAreaSendMessage = ({ onChange, value, form, setForm }) => {
             </textarea>
             <div className="w-full flex justify-between items-end h-auto">
                 <UploadImageLine form={form} setForm={setForm} />
-                <button type="submit" className="btn btn-sm px-10 rounded-full btn-accent">ส่ง</button>
+                <button type="submit" className="btn btn-sm px-10 rounded-full btn-accent">
+                    {loading
+                        ? <span className="loading loading-spinner loading-xs" />
+                        : 'ส่ง'
+                    }
+                </button>
             </div>
         </div>
     )

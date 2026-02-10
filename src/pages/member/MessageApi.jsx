@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import TextAreaSendMessage from "../../component/input/TextAreaSendMessage";
 import SearchBox from "../../component/form/SearchBox";
 import { IoFilter } from "react-icons/io5";
+import { listTagSelect } from "../../service/member/tag";
 
 const intitailState = {
     text: '',
@@ -19,17 +20,20 @@ const MessageApi = () => {
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
     const [groupId, setGroupId] = useState([])
     const [member, setMember] = useState([])
+    const [tagData, setTagData] = useState([])
     const [memberSelected, setMemberSelected] = useState([])
+    const [tagsSelected, setTagsSelected] = useState([])
     const [GroupData, setGroupData] = useState([])
-    const [loading, setLoading] = useState(false)
     const [textSearch, setTextSearch] = useState('')
     const [form, setForm] = useState(intitailState)
     const [open, setOpen] = useState(false)
+    const [loading, setLoading] = useState(false)
     const trigger = useRef(null);
     const dropdown = useRef(null);
 
     useEffect(() => {
         getGroup()
+        getTagSelect()
     }, [])
 
     useEffect(() => {
@@ -77,6 +81,15 @@ const MessageApi = () => {
         }
     }
 
+    const getTagSelect = async () => {
+        try {
+            const res = await listTagSelect()
+            setTagData(res.data.data)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     const handleSearchMember = async () => {
         try {
             const res = await searchMember({ search: textSearch })
@@ -96,9 +109,9 @@ const MessageApi = () => {
         setSortConfig({ key: keyName, direction });
     }
 
+    //เลือกสมาชิก
     const handleCheck = (e) => {
         const userId = e.target.value //ค่าที่โดนเช็ค
-        const id = e.target.value
 
         setMemberSelected((prev) =>
             prev.includes(userId)
@@ -107,6 +120,18 @@ const MessageApi = () => {
         )
     }
 
+    //เลือกป้ายกำกับ
+    const handleCheckTags = (e) => {
+        const tagId = Number(e.target.value)
+
+        setTagsSelected((prev =>
+            prev.includes(tagId)
+                ? prev.filter(id => id !== tagId)
+                : [...prev, tagId]
+        ))
+    }
+
+    //กรองข้อมูลกลุ่ม
     const handleCheckFilter = (e) => {
         const idGroup = Number(e.target.value)
 
@@ -117,6 +142,7 @@ const MessageApi = () => {
         )
     }
 
+    //เลือกสมาชิกทั้งหมด
     const handleCheckAll = (e) => {
         if (e.target.checked) {
             const allMembers = member.map(item => item.user_id)
@@ -142,7 +168,9 @@ const MessageApi = () => {
     const handleSubmitMessage = async (e) => {
         e.preventDefault();
         setLoading(true)
-        if (memberSelected.length <= 0) {
+
+        if (memberSelected.length === 0 && tagsSelected.length === 0) {
+            setLoading(false)
             return toast.error('กรุณาเลือกสมาชิก')
         }
 
@@ -150,13 +178,14 @@ const MessageApi = () => {
             const res = await sendMessage({
                 members: memberSelected,
                 text: form.text,
-                image: form.logo_url
+                image: form.logo_url,
+                tags: tagsSelected
             })
-            console.log('success~')
             toast.success(res.data.msg)
             setForm(intitailState)
             setGroupId([])
             setMemberSelected([])
+            setTagsSelected([])
             setTextSearch('')
         } catch (error) {
             console.log(error)
@@ -165,19 +194,42 @@ const MessageApi = () => {
         }
     }
 
-    console.log(form)
 
     return (
         <div className='flex flex-col gap-5 h-auto p-5 font-prompt'>
             <div className='grid  gap-5 bg-white rounded-2xl p-5'>
-                <form onSubmit={handleSubmitMessage} className="">
-                    <TextAreaSendMessage
-                        onChange={handleOnChange}
-                        value={form.text}
-                        form={form}
-                        setForm={setForm}
-                    />
-                </form>
+                <div className="flex gap-5">
+                    <div className="flex-1">
+                        <form onSubmit={handleSubmitMessage} className="">
+                            <TextAreaSendMessage
+                                onChange={handleOnChange}
+                                value={form.text}
+                                form={form}
+                                setForm={setForm}
+                                loading={loading}
+                            />
+                        </form>
+                    </div>
+                    <div className="bg-white shadow rounded-xl p-3 text-text-primary h-auto">
+                        <p className="font-bold mb-2">ส่งตามป้ายกำกับ</p>
+                        <div className="space-y-2">
+                            {
+                                tagData.map((i) => (
+                                    <label key={i.id} className='flex items-center gap-2 text-sm text font-medium text-text-primary hover:bg-secondary-content'>
+                                        <input
+                                            value={i.id}
+                                            type="checkbox"
+                                            onChange={handleCheckTags}
+                                            checked={tagsSelected.includes(i.id)}
+                                            className="checkbox bg-white"
+                                        />
+                                        {i.tag_name}
+                                    </label>
+                                ))
+                            }
+                        </div>
+                    </div>
+                </div>
                 <div className="grid gap-5">
                     <div className="flex gap-5">
                         <div className="flex-1">
@@ -197,7 +249,7 @@ const MessageApi = () => {
                                     ref={dropdown}
                                     onFocus={() => setOpen(true)}
                                     onBlur={() => setOpen(false)}
-                                    className={`${open ? 'block' : 'hidden'} absolute top-10 right-0 bg-white border border-border/25 shadow-md rounded-xl w-45 h-auto z-50`}
+                                    className={`${open ? 'block' : 'hidden'} absolute top-12 right-0 bg-white border border-border/25 shadow-md rounded-xl w-45 h-auto z-50 overflow-clip`}
                                 >
                                     <div className="flex flex-col">
                                         {
@@ -208,7 +260,7 @@ const MessageApi = () => {
                                                         type="checkbox"
                                                         onChange={handleCheckFilter}
                                                         checked={groupId.includes(i.id)}
-                                                        className="checkbox"
+                                                        className="checkbox bg-white"
                                                     />
                                                     {i.group_name}
                                                 </label>
