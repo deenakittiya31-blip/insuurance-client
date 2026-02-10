@@ -245,7 +245,7 @@ const EditPremium = () => {
                                         className='input flex-1'
                                     />
                                     <div className='col-span-4 grid grid-cols-subgrid gap-4'>
-                                        <div className="col-start-3"><p className='font-semibold text-sm'>ราคาขาย แสดง  ui lbo8hk</p></div>
+                                        <div className="col-start-3"><p className='font-semibold text-sm'>ราคาขาย</p></div>
                                         <div className="col-start-4">
                                             <input
                                                 type='number'

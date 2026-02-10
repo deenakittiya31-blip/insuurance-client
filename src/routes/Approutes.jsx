@@ -36,6 +36,7 @@ import EditPremium from '../pages/insur/EditPremium'
 import MemberPage from '../pages/member/MemberPage'
 import MessageApi from '../pages/member/MessageApi'
 import TagPage from '../pages/member/TagPage'
+import SearchPremium from '../pages/insur/SearchPremium'
 
 
 const Approutes = () => {
@@ -75,6 +76,7 @@ const Approutes = () => {
                     <Route path='insurpremium' element={<InsurPremium />} />
                     <Route path='add-premium' element={<AddPremium />} />
                     <Route path='edit-premium/:id' element={<EditPremium />} />
+                    <Route path='search-premium' element={<SearchPremium />} />
 
                     {/*admin only */}
                     <Route

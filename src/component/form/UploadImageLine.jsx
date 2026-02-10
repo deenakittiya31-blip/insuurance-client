@@ -6,7 +6,7 @@ import { removeImage, uploadImages } from '../../service/Image';
 import useInsureAuth from '../../store/auth-store';
 import toast from 'react-hot-toast';
 
-const UploadImage = ({ form, setForm }) => {
+const UploadImageLine = ({ form, setForm }) => {
     const [isLoading, setLoading] = useState(false)
     const token = useInsureAuth((s) => s.token)
 
@@ -106,4 +106,4 @@ const UploadImage = ({ form, setForm }) => {
     )
 }
 
-export default UploadImage
+export default UploadImageLine

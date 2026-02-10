@@ -13,6 +13,7 @@ import useActionStore from '../../store/action-store';
 import { createCompare } from '../../service/compare';
 import { MdOutlineSpaceDashboard, MdOutlineTag } from 'react-icons/md';
 import { FiMessageCircle } from "react-icons/fi";
+import { LuTableProperties } from "react-icons/lu";
 
 const initialState = {
     to_name: '',
@@ -271,6 +272,21 @@ const SidebarNew = () => {
                                     setForm={setForm}
                                 />
                             </div>
+                            <NavLink
+                                to='/app/search-premium'
+                                end
+                                className={({ isActive }) =>
+                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
+                                }
+                            >
+                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                <div className='w-full flex items-center gap-3'>
+                                    <LuTableProperties className='size-4' />
+                                    <p className='group-[.active]:text-current'>สร้างใบเสนอแพ็กเกจ</p>
+                                </div>
+
+                            </NavLink>
                         </div>
                     </div>
                     {
