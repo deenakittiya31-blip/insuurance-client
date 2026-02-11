@@ -34,3 +34,7 @@ export const statusPremium = (id, is_active) => {
 export const searchPremium = async (arg) => {
     return api.post('/api/search-premium', arg)
 }
+
+export const searchPremiumToCompare = async (arg) => {
+    return api.post('/api/search-premiumtocompare', arg)
+}

@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
+import { Link, useNavigate } from 'react-router-dom'
 import Title from "../../component/form/Title"
 import { listByCarModel } from "../../service/car/CarModel";
 import useActionStore from "../../store/action-store";
 import { listCarYearSelect } from "../../service/car/CarYear";
 import Select from "../../component/form/Select";
 import SelectSearch from "../../component/form/SelectSearch";
-import { GoInfo } from "react-icons/go";
 import SelectPerPage from "../../component/form/SelectPerPage";
 import SearchBox from "../../component/quotation_about/SearchBox";
-import TableSelectPackage from "../../component/table/TableSelectPackage";
+import TableSelectPremium from "../../component/table/TableSelectPremium"
+import toast from "react-hot-toast";
+import { searchPremiumToCompare } from "../../service/insurance/PremiumInsur";
+import TextInput from "../../component/form/TextInput";
+import CardPremium from "../../component/card/CardPremium";
 
 const initialStateSearch = {
     insurance_type_id: '',
@@ -17,18 +21,24 @@ const initialStateSearch = {
 }
 
 const initialStateCompare = {
+    to_name: '',
+    details: '',
     car_brand_id: '',
     car_model_id: '',
-    car_year_id: ''
+    car_year_id: '',
+    car_usage_id: '',
+    sub_car_model: ''
 }
 
 const SearchPremium = () => {
-    const { typeInsur, getTypeInsurSelect, carbrand, getCarBrandSelect, carUsage, getCarUsageSelect, cartype, getCarTypeSelect } = useActionStore();
+    const { typeInsur, getTypeInsurSelect, carbrand, getCarBrandSelect, carUsage, getCarUsageSelect, cartype, getCarTypeSelect } = useActionStore()
+    const navigate = useNavigate()
     const [year, setYear] = useState([])
     const [carModel, setCarModel] = useState([])
     const [search, setSearch] = useState(initialStateSearch)
     const [compare, setCompare] = useState(initialStateCompare)
-    const [packageSelected, setPackageSelected] = useState([])
+    const [premiumSelected, setPremiumSelected] = useState([])
+    const [premiumData, setPremiumData] = useState([])
 
     useEffect(() => {
         getTypeInsurSelect();
@@ -62,7 +72,7 @@ const SearchPremium = () => {
 
         setCompare(prev => ({
             ...prev,
-            [name]: Number(value)
+            [name]: value
         }))
     }
     const handleOnChangeSearch = (e) => {
@@ -72,6 +82,13 @@ const SearchPremium = () => {
             ...prev,
             [name]: Number(value)
         }))
+
+        if (name === 'car_usage_id' && value) {
+            setCompare(prev => ({
+                ...prev,
+                car_usage_id: Number(value)
+            }))
+        }
     }
 
     const hdlSelectChange = async (value) => {
@@ -83,18 +100,106 @@ const SearchPremium = () => {
         await fetchCarModels(value)
     }
 
-    // console.log(compare)
-    console.log(search)
+    console.log(compare)
+    // console.log(search)
+
+    const handleSubmitSearch = async (e) => {
+        e.preventDefault()
+
+        try {
+            const res = await searchPremiumToCompare(search)
+            setPremiumData(res.data.data)
+        } catch (err) {
+            console.log(err)
+            toast.error(err.response?.data?.message)
+            setPremiumData([])
+        }
+    }
+
+    const handleClearSearch = () => {
+        setSearch(initialStateSearch)
+        setPremiumData([])
+    }
+
+    const handleOpenFormKeyIn = () => {
+        navigate('/app/quotationlist')
+        document.getElementById('modalcomparekeyin').showModal()
+    }
+
+    const addPremiumToState = (e) => {
+        const indexPremium = parseInt(e.target.value)
+
+        setPremiumSelected((prev) => {
+            //ตรวจสอบว่ามีอยู่แล้วหรือไม่
+            const isExist = prev.some(item => item.index_premium === indexPremium)
+
+            if (isExist) {
+                //ถ้ามีลบออก
+                return prev.filter(item => item.index_premium !== indexPremium)
+            } else {
+                //ตรวจสอบจำนวนก่อนเพิ่ม
+                if (prev.length >= 3) {
+                    toast.error('เลือกได้สูงสุด 3 รายการเท่านั้น')
+                    return prev
+                }
+
+                //ถ้ายังไม่มีให้เพิ่มเข้าไป
+                //หาจาก premiumData
+                const selectedPremium = premiumData.find(item => item.index_premium === indexPremium)
+
+                return [...prev, selectedPremium]
+            }
+        })
+    }
+
+    // ฟังก์ชันตรวจสอบว่า checkbox ถูกเลือกหรือไม่
+    const isChecked = (indexPremium) => {
+        return premiumSelected.some(item => item.index_premium === indexPremium)
+    }
+
+    //ลบออกจาก state
+    const deletePremiuminState = (indexPremium) => {
+        setPremiumSelected(prev => prev.filter(item => item.index_premium !== indexPremium))
+    }
+
+    console.log(premiumSelected)
+
+    const handleCreateQuotation = async (e) => {
+        e.preventDefault()
+        if (!compare.to_name || !compare.car_brand_id || !compare.car_model_id || !compare.car_usage_id) {
+            return toast.error('กรุณากรอกข้อมูลด้านบนให้ครบ')
+        }
+
+        toast.success('ข้อมูลครบ')
+    }
     return (
-        <div className='flex flex-col gap-5 h-auto p-5'>
+        <div className='flex flex-col gap-3 h-auto p-5'>
             <Title
                 title='ค้นหาเบี้ยประกัน'
             />
             {/* section 1 */}
-            <div className="grid lg:grid-cols-2 gap-3">
+            <div className="grid auto-rows-[minmax(100px,auto)] gap-3">
                 {/* box search */}
                 <div className="bg-white rounded-2xl p-5 flex flex-col gap-5 font-prompt text-text-primary">
-                    <div className="grid grid-cols-2 gap-x-3 items-end-safe">
+                    <form className="grid grid-cols-2 gap-3 items-end-safe">
+                        <TextInput
+                            width='w-auto'
+                            title='ถึง'
+                            name='to_name'
+                            type='text'
+                            placeholder='ถึง...'
+                            onChange={handleOnChangeCompare}
+                            value={compare.to_name}
+                        />
+                        <TextInput
+                            width='w-auto'
+                            title='ทะเบียน'
+                            name='details'
+                            type='text'
+                            placeholder='กรอกรายละเอียดทะเบียน...'
+                            onChange={handleOnChangeCompare}
+                            value={compare.details}
+                        />
                         <SelectSearch
                             options={carbrand}
                             placeholder="ยี่ห้อรถยนต์"
@@ -105,10 +210,19 @@ const SearchPremium = () => {
                             text='รุ่นรถยนต์'
                             data={carModel}
                             name='car_model_id'
-                            value={compare.car_model_id || null}
+                            value={compare.car_model_id}
                             onChange={handleOnChangeCompare}
                             valueKey='id'
                             labelKey='name'
+                        />
+                        <TextInput
+                            width='w-auto'
+                            title='รุ่นย่อยรถยนต์'
+                            name='sub_car_model'
+                            type='text'
+                            placeholder='กรอกรายละเอียด'
+                            onChange={handleOnChangeCompare}
+                            value={compare.sub_car_model || null}
                         />
                         <fieldset className="fieldset font-prompt text-text-primary p-0">
                             <legend className="fieldset-legend text-sm text-text-primary">ปีรถยนต์</legend>
@@ -131,8 +245,8 @@ const SearchPremium = () => {
                                 }
                             </select>
                         </fieldset>
-                    </div>
-                    <form className="grid gap-3">
+                    </form>
+                    <form onSubmit={handleSubmitSearch} className="grid gap-5">
                         <Select
                             text='ประเภทประกัน'
                             data={typeInsur}
@@ -180,48 +294,59 @@ const SearchPremium = () => {
                                 }
                             </div>
                         </div>
-                        <div className="grid gap-3">
-                            <button className="btn btn-info text-white">ค้นหา</button>
-                            <button className="btn btn-warning text-white">ล้างข้อมูล</button>
-                            <button className="btn btn-error text-white">แบบฟอร์มปล่าว</button>
-                            <div className="grid grid-cols-2 gap-3">
-                                <button className="btn btn-success text-white">ใบเสนอราคา</button>
-                                <button className="btn btn-secondary text-white">ใบเสนอราคาที่ใช้บ่อย</button>
-                            </div>
+                        <div className="grid grid-cols-5 gap-3">
+                            <button type="submit" className="btn btn-info text-white">ค้นหา</button>
+                            <button onClick={handleClearSearch} type="button" className="btn btn-warning text-white">ล้างข้อมูล</button>
+                            <button onClick={handleOpenFormKeyIn} type="button" className="btn btn-error text-white">แบบฟอร์มปล่าว</button>
+                            <Link to='/app/quotationlist'>
+                                <button type="button" className="w-full btn btn-success text-white">ใบเสนอราคา</button>
+                            </Link>
+                            <Link to='/app/pin-compare'>
+                                <button type="button" className="w-full btn btn-secondary text-white">ใบเสนอราคาที่ใช้บ่อย</button>
+                            </Link>
                         </div>
                     </form >
                 </div>
                 {/* box selected product */}
                 <div className="bg-white rounded-2xl p-5 flex flex-col gap-5 font-prompt text-text-primary">
-                    <p className="text-sm text-text-primary my-3">จำนวนรายการปัจจุบัน 0 รายการ</p>
-                    {
-                        packageSelected?.map((i, idx) => (
-                            <span key={idx}>{i}</span>
-                        ))
-                    }
-                </div>
-            </div>
-            {/* section 2 package table*/}
-            <div className="bg-white rounded-2xl p-5 flex flex-col gap-3 font-prompt text-text-primary">
-                <div class="bg-info rounded-xl p-2 w-full flex justify-between">
-                    <div className="inline-flex items-center gap-2">
-                        <svg class="size-[1em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor" stroke-linejoin="miter" stroke-linecap="butt"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></circle><path d="m12,17v-5.5c0-.276-.224-.5-.5-.5h-1.5" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></path><circle cx="12" cy="7.25" r="1.25" fill="currentColor" stroke-width="2"></circle></g></svg>
-                        <p className="text-xs">ติ๊กเลือกแล้วกด "เพิ่มที่เลือก" เพิ่มได้อีก 3 / 3 (ตอนนี้มี 0)</p>
+                    <div className="flex justify-between">
+                        <p className="text-sm text-text-primary my-3">จำนวนรายการปัจจุบัน {premiumSelected.length} รายการ</p>
+                        <button type="submit" onClick={handleCreateQuotation} className="btn btn-neutral">สร้างใบเสนอราคา</button>
                     </div>
-                    <div className="space-x-2">
-                        <button className="btn btn-xs btn-success text-xs">เพิ่ม (0)</button>
-                        <button className="btn btn-xs btn-error text-xs">ลบทั้งหมด</button>
+
+                    <div className="flex gap-5">
+                        {
+                            premiumSelected?.map((i) => (
+                                <CardPremium key={i.index_premium} data={i} onDelete={deletePremiuminState} />
+                            ))
+                        }
                     </div>
                 </div>
-                {/* table package */}
-                <div className="flex justify-between">
-                    <SelectPerPage />
-                    <SearchBox
-                        placeholder='ค้นหาแพ็คเกจ...'
-                    />
-                </div>
-                <div>
-                    <TableSelectPackage />
+                {/* section 2 package table*/}
+                <div className="bg-white rounded-2xl p-5 flex flex-col gap-3 font-prompt text-text-primary">
+                    <div class="bg-info rounded-xl p-2 w-full flex justify-between">
+                        <div className="inline-flex items-center gap-2">
+                            <svg className="size-[1em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor" strokeLinejoin="miter" strokeLinecap="butt"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeLinecap="square" strokeMiterlimit="10" strokeWidth="2"></circle><path d="m12,17v-5.5c0-.276-.224-.5-.5-.5h-1.5" fill="none" stroke="currentColor" strokeLinecap="square" strokeMiterlimit="10" strokeWidth="2"></path><circle cx="12" cy="7.25" r="1.25" fill="currentColor" strokeWidth="2"></circle></g></svg>
+                            <p className="text-xs">ติ๊กเลือกแล้วกด "เพิ่มที่เลือก" เพิ่มได้อีก {3 - premiumSelected.length} / 3 (ตอนนี้มี {premiumSelected.length})</p>
+                        </div>
+                        <div>
+                            <button onClick={() => setPremiumSelected([])} className="btn btn-xs rounded-lg btn-error text-xs">ลบทั้งหมด</button>
+                        </div>
+                    </div>
+                    {/* table package */}
+                    <div className="flex justify-between items-end">
+                        <SelectPerPage />
+                        <SearchBox
+                            placeholder='ค้นหาแพ็คเกจ...'
+                        />
+                    </div>
+                    <div>
+                        <TableSelectPremium
+                            data={premiumData}
+                            isChecked={isChecked}
+                            onChange={addPremiumToState}
+                        />
+                    </div>
                 </div>
             </div>
         </div >

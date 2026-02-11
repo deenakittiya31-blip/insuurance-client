@@ -23,22 +23,22 @@ const initialState = {
     repair_type: '',
     is_active: '',
     engine_size: '',
-    insurance_company_id: '',
-    insurance_type_id: '',
+    insurance_company: '',
+    insurance_type: '',
     promotion: '',
     car_brand_id: [],
     car_model_id: [],
     car_usage_type_id: [],
     compulsory_id: [],
-    tp_person: '',
-    tp_person_accident: '',
-    tp_property: '',
+    thirdparty_injury_death_per_person: '',
+    thirdparty_injury_death_per_accident: '',
+    thirdparty_property: '',
     flood_cover: '',
-    damage_deductible: '',
-    personal_accident: '',
-    medical_expense: '',
-    bail_bond: '',
-    seat_count: '',
+    car_own_damage_deductible: '',
+    additional_personal_permanent_driver_cover: '',
+    additional_medical_expense_cover: '',
+    additional_bail_bond: '',
+    additional_personal_permanent_driver_number: '',
     payments: [],
 }
 
@@ -146,7 +146,7 @@ const EditPackage = () => {
     }
 
     const selectedCompany = company.find(
-        c => String(c.id) === String(form.insurance_company_id)
+        c => String(c.id) === String(form.insurance_company)
     )
 
     const handlePaymentToggle = (paymentId, checked) => {
@@ -286,8 +286,8 @@ const EditPackage = () => {
                                 <Select
                                     text='ชื่อบริษัท'
                                     data={company}
-                                    name='insurance_company_id'
-                                    value={form.insurance_company_id}
+                                    name='insurance_company'
+                                    value={form.insurance_company}
                                     onChange={handleOnChange}
                                     valueKey='id'
                                     labelKey='namecompany'
@@ -297,8 +297,8 @@ const EditPackage = () => {
                         <Select
                             text='ประเภทประกัน'
                             data={typeInsur}
-                            name='insurance_type_id'
-                            value={form.insurance_type_id}
+                            name='insurance_type'
+                            value={form.insurance_type}
                             onChange={handleOnChange}
                             valueKey='id'
                             labelKey='nametype'
@@ -356,28 +356,28 @@ const EditPackage = () => {
                             </div>
                             <TextInput
                                 width='w-full'
-                                name='tp_person'
+                                name='thirdparty_injury_death_per_person'
                                 title='บาดเจ็บ เสียชีวิต(ต่อคน)'
                                 type='number'
                                 onChange={handleOnChange}
-                                value={form.tp_person}
+                                value={form.thirdparty_injury_death_per_person}
                             />
                             <TextInput
                                 width='w-full'
-                                name='tp_person_accident'
+                                name='thirdparty_injury_death_per_accident'
                                 title='บาดเจ็บ เสียชีวิตสูงสุด(ต่อคร้ัง)'
                                 type='number'
                                 onChange={handleOnChange}
-                                value={form.tp_person_accident}
+                                value={form.thirdparty_injury_death_per_accident}
                             />
                             <div className='col-span-2'>
                                 <TextInput
                                     width='w-full'
-                                    name='tp_property'
+                                    name='thirdparty_property'
                                     title='ความรับผิดต่อทรัพย์สิน'
                                     type='number'
                                     onChange={handleOnChange}
-                                    value={form.tp_property}
+                                    value={form.thirdparty_property}
                                 />
                             </div>
                         </div>
@@ -395,11 +395,11 @@ const EditPackage = () => {
                                 />
                                 <TextInput
                                     width='w-full'
-                                    name='damage_deductible'
+                                    name='car_own_damage_deductible'
                                     title='ค่าเสียหายส่วนแรก'
                                     type='number'
                                     onChange={handleOnChange}
-                                    value={form.damage_deductible}
+                                    value={form.car_own_damage_deductible}
                                 />
                             </div>
                         </div>
@@ -409,35 +409,35 @@ const EditPackage = () => {
                             <div className='grid grid-cols-2 gap-x-3 gap-y-5'>
                                 <TextInput
                                     width='w-full'
-                                    name='personal_accident'
+                                    name='additional_personal_permanent_driver_cover'
                                     title='อุบัติเหตุส่วนบุคคล'
                                     type='number'
                                     onChange={handleOnChange}
-                                    value={form.personal_accident}
+                                    value={form.additional_personal_permanent_driver_cover}
                                 />
                                 <TextInput
                                     width='w-full'
-                                    name='medical_expense'
+                                    name='additional_medical_expense_cover'
                                     title='ค่ารักษาพยาบาล'
                                     type='number'
                                     onChange={handleOnChange}
-                                    value={form.medical_expense}
+                                    value={form.additional_medical_expense_cover}
                                 />
                                 <TextInput
                                     width='w-full'
-                                    name='bail_bond'
+                                    name='additional_bail_bond'
                                     title='ประกันตัวผู้ขับขี่'
                                     type='number'
                                     onChange={handleOnChange}
-                                    value={form.bail_bond}
+                                    value={form.additional_bail_bond}
                                 />
                                 <TextInput
                                     width='w-full'
-                                    name='seat_count'
+                                    name='additional_personal_permanent_driver_number'
                                     title='จำนวนที่นั่ง'
                                     type='number'
                                     onChange={handleOnChange}
-                                    value={form.seat_count}
+                                    value={form.additional_personal_permanent_driver_number}
                                 />
                             </div>
                         </div>

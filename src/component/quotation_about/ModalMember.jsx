@@ -92,7 +92,6 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
 
     const handleCheck = (e) => {
         const userId = e.target.value //ค่าที่โดนเช็ค
-        const id = e.target.value
 
         setMemberSelected((prev) =>
             prev.includes(userId)
