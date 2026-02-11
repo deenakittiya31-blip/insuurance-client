@@ -75,15 +75,15 @@ const CardPackage = ({ data, onRead }) => {
                             <h3 className="font-bold text-lg tracking-wide">ความคุ้มครอง</h3>
                             <div className="w-full h-px bg-border my-3" />
                             <div className="grid grid-cols-3 gap-y-3">
-                                <p>บาดเจ็บ เสียชีวิต : <span className="font-semibold">{data.tp_person}</span></p>
-                                <p>บาดเจ็บ เสียชีวิตสูงสุด : <span className="font-semibold">{data.tp_person_accident}</span></p>
-                                <p>ทรัพย์สินคู่กรณี : <span className="font-semibold">{data.tp_property}</span></p>
+                                <p>บาดเจ็บ เสียชีวิต : <span className="font-semibold">{data.thirdparty_injury_death_per_person}</span></p>
+                                <p>บาดเจ็บ เสียชีวิตสูงสุด : <span className="font-semibold">{data.thirdparty_injury_death_per_accident}</span></p>
+                                <p>ทรัพย์สินคู่กรณี : <span className="font-semibold">{data.thirdparty_property}</span></p>
                                 <p>คุ้มครองน้ำท่วม : <span className="font-semibold">{data.flood_cover}</span></p>
-                                <p>ค่าเสียหายส่วนแรก : <span className="font-semibold">{data.damage_deductible}</span></p>
-                                <p>อุบัติเหตุส่วนบุคคล : <span className="font-semibold">{data.personal_accident}</span></p>
-                                <p>ค่ารักษาพยาบาล : <span className="font-semibold">{data.medical_expense}</span></p>
-                                <p>ประกันตัวผู้ขับขี่ : <span className="font-semibold">{data.bail_bond}</span></p>
-                                <p >จำนวนที่นั่ง : <span className="font-semibold">{data.seat_count}</span></p>
+                                <p>ค่าเสียหายส่วนแรก : <span className="font-semibold">{data.car_own_damage_deductible}</span></p>
+                                <p>อุบัติเหตุส่วนบุคคล : <span className="font-semibold">{data.additional_personal_permanent_driver_cover}</span></p>
+                                <p>ค่ารักษาพยาบาล : <span className="font-semibold">{data.additional_medical_expense_cover}</span></p>
+                                <p>ประกันตัวผู้ขับขี่ : <span className="font-semibold">{data.additional_bail_bond}</span></p>
+                                <p >จำนวนที่นั่ง : <span className="font-semibold">{data.additional_personal_permanent_driver_number}</span></p>
                             </div>
                         </div>
                         <div>
@@ -96,8 +96,8 @@ const CardPackage = ({ data, onRead }) => {
                                 )}
                             </div>
                             <div className="flex flex-col gap-3">
-                                {data.payments?.map((i) => (
-                                    <div>
+                                {data.payments?.map((i, idx) => (
+                                    <div key={idx}>
                                         <p className="font-semibold">{i.payment_name}</p>
                                         <div className="grid grid-cols-2">
                                             <p>ส่วนลดเปอร์เซนต์ : <span className="font-semibold">{i.discount_percent}</span></p>

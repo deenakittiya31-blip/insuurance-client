@@ -13,7 +13,7 @@ import { listCompulPackage } from '../../service/car/Compulsory';
 import { listByCarModel } from '../../service/car/CarModel';
 import SelectFormModel from '../../component/select/SelectFormModel';
 import toast from 'react-hot-toast';
-import { createPackage, readPackageEdit, updatePackage } from '../../service/insurance/PackageInsur';
+import { readPackageEdit, updatePackage } from '../../service/insurance/PackageInsur';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const initialState = {

@@ -4,6 +4,10 @@ export const createPremium = (form) => {
     return api.post('/api/create-premium', form)
 }
 
+export const createPremiumToCompare = (form) => {
+    return api.post('/api/create-premiumtocompare', form)
+}
+
 export const listPremium = (pageNumber, perPage, sortKey, sortDirection) => {
     return api.get(`/api/list-premium/page`, {
         params: {

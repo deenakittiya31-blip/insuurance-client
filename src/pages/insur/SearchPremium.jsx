@@ -10,9 +10,10 @@ import SelectPerPage from "../../component/form/SelectPerPage";
 import SearchBox from "../../component/quotation_about/SearchBox";
 import TableSelectPremium from "../../component/table/TableSelectPremium"
 import toast from "react-hot-toast";
-import { searchPremiumToCompare } from "../../service/insurance/PremiumInsur";
+import { createPremiumToCompare, searchPremiumToCompare } from "../../service/insurance/PremiumInsur";
 import TextInput from "../../component/form/TextInput";
 import CardPremium from "../../component/card/CardPremium";
+import useInsureAuth from "../../store/auth-store";
 
 const initialStateSearch = {
     insurance_type_id: '',
@@ -31,8 +32,10 @@ const initialStateCompare = {
 }
 
 const SearchPremium = () => {
+    const user = useInsureAuth((s) => s.user)
     const { typeInsur, getTypeInsurSelect, carbrand, getCarBrandSelect, carUsage, getCarUsageSelect, cartype, getCarTypeSelect } = useActionStore()
     const navigate = useNavigate()
+    const [loading, setLoading] = useState(false)
     const [year, setYear] = useState([])
     const [carModel, setCarModel] = useState([])
     const [search, setSearch] = useState(initialStateSearch)
@@ -170,8 +173,37 @@ const SearchPremium = () => {
             return toast.error('กรุณากรอกข้อมูลด้านบนให้ครบ')
         }
 
-        toast.success('ข้อมูลครบ')
+        if (premiumSelected.length < 3) {
+            return toast.error('กรุณาเลือกแพ็กเกจให้ครบ 3 รายการ')
+        }
+
+        setLoading(true)
+
+        try {
+            const res = await createPremiumToCompare({
+                ...compare,
+                offer_id: user.user_id,
+                import_by: 'package',
+                premiums: premiumSelected
+            })
+
+            toast.success(res.data.msg)
+
+            setCompare(initialStateCompare)
+            setPremiumSelected([])
+
+            navigate('/app/quotationlist')
+
+        } catch (err) {
+            console.error('Error:', err)
+
+            const errorMessage = err.response?.data?.message || 'เกิดข้อผิดพลาด'
+            toast.error(errorMessage)
+        } finally {
+            setLoading(false)
+        }
     }
+
     return (
         <div className='flex flex-col gap-3 h-auto p-5'>
             <Title
@@ -311,7 +343,14 @@ const SearchPremium = () => {
                 <div className="bg-white rounded-2xl p-5 flex flex-col gap-5 font-prompt text-text-primary">
                     <div className="flex justify-between">
                         <p className="text-sm text-text-primary my-3">จำนวนรายการปัจจุบัน {premiumSelected.length} รายการ</p>
-                        <button type="submit" onClick={handleCreateQuotation} className="btn btn-neutral">สร้างใบเสนอราคา</button>
+                        <button type="submit" onClick={handleCreateQuotation} className="btn btn-neutral">{loading ? (
+                            <>
+                                <span className="loading loading-spinner"></span>
+                                กำลังสร้าง...
+                            </>
+                        ) : (
+                            'สร้างใบเสนอราคา'
+                        )}</button>
                     </div>
 
                     <div className="flex gap-5">
