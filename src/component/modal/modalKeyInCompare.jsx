@@ -6,8 +6,9 @@ import TextInput from "../form/TextInput";
 import SelectSearch from "../form/SelectSearch";
 import { FaRegKeyboard } from "react-icons/fa";
 
-const modalKeyInCompare = ({ onSubmit, onChange, onChangeSelect, form, setForm, onClose }) => {
+const modalKeyInCompare = ({ onSubmit, onChange, onChangeSelect, form, onClose }) => {
     const [year, setYear] = useState([])
+    const [isLoaded, setIsLoaded] = useState(false)
     const {
         getCarBrandSelect,
         carbrand,
@@ -15,12 +16,6 @@ const modalKeyInCompare = ({ onSubmit, onChange, onChangeSelect, form, setForm, 
         carUsage,
         carmodel
     } = useActionStore();
-
-    useEffect(() => {
-        getCarBrandSelect();
-        getCarUsageSelect();
-        getCarYear();
-    }, [])
 
     const getCarYear = async () => {
         try {
@@ -31,11 +26,21 @@ const modalKeyInCompare = ({ onSubmit, onChange, onChangeSelect, form, setForm, 
         }
     }
 
+    const handleOpenModal = async () => {
+        if (!isLoaded) {  // เรียกครั้งเดียว
+            await getCarBrandSelect();
+            await getCarUsageSelect();
+            await getCarYear();
+            setIsLoaded(true);
+        }
+        document.getElementById('modalcomparekeyin').showModal();
+    }
+
     return (
         <div className='font-prompt'>
             <button
                 className='w-full flex items-center gap-3 cursor-pointer hover:text-main'
-                onClick={() => document.getElementById('modalcomparekeyin').showModal()}>
+                onClick={handleOpenModal}>
                 <FaRegKeyboard className='size-4' />
                 <span className='group-[.active]:text-current'>สร้างใบเสนอราคา KEY-IN</span></button>
             <dialog id="modalcomparekeyin" className="modal">

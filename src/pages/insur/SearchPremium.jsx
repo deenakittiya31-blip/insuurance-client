@@ -70,15 +70,19 @@ const SearchPremium = () => {
         }
     }
 
-    const handleOnChangeCompare = (e) => {
+    const handleOnChangeCompare = async (e) => {
         const { name, value } = e.target
 
         setCompare(prev => ({
             ...prev,
             [name]: value
         }))
+
+        if (name === 'car_brand_id') {
+            await fetchCarModels(value)
+        }
     }
-    const handleOnChangeSearch = (e) => {
+    const handleOnChangeSearch = async (e) => {
         const { name, value } = e.target
 
         setSearch(prev => ({
@@ -86,10 +90,11 @@ const SearchPremium = () => {
             [name]: Number(value)
         }))
 
-        if (name === 'car_usage_id' && value) {
+
+        if (name === 'car_usage_id') {
             setCompare(prev => ({
                 ...prev,
-                car_usage_id: Number(value)
+                car_usage_id: value
             }))
         }
     }
@@ -239,7 +244,8 @@ const SearchPremium = () => {
                             options={carbrand}
                             placeholder="ยี่ห้อรถยนต์"
                             value={compare.car_brand_id}
-                            onChange={hdlSelectChange}
+                            onChange={handleOnChangeCompare}
+                            name='car_brand_id'
                         />
                         <Select
                             text='รุ่นรถยนต์'

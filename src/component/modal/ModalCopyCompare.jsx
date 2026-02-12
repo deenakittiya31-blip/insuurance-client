@@ -5,9 +5,6 @@ import { listCarYearSelect } from "../../service/car/CarYear";
 import TextInput from "../form/TextInput";
 import SelectSearch from "../form/SelectSearch";
 import { IoMdCopy } from "react-icons/io";
-import { listByCarModel } from "../../service/car/CarModel";
-import { getDetailCompare } from "../../service/compare";
-
 
 
 const ModalCopyCompare = ({ onSubmit, form, onChange }) => {

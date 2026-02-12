@@ -6,8 +6,9 @@ import TextInput from "../form/TextInput";
 import SelectSearch from "../form/SelectSearch";
 import { LuBrainCircuit } from "react-icons/lu";
 
-const ModalCompare = ({ onSubmit, onChange, onChangeSelect, form, setForm, onClose }) => {
+const ModalCompare = ({ onSubmit, onChange, onChangeSelect, form, onClose }) => {
     const [year, setYear] = useState([])
+    const [isLoaded, setIsLoaded] = useState(false)
     const {
         getCarBrandSelect,
         carbrand,
@@ -15,12 +16,6 @@ const ModalCompare = ({ onSubmit, onChange, onChangeSelect, form, setForm, onClo
         carUsage,
         carmodel
     } = useActionStore();
-
-    useEffect(() => {
-        getCarBrandSelect();
-        getCarUsageSelect();
-        getCarYear();
-    }, [])
 
     const getCarYear = async () => {
         try {
@@ -31,11 +26,21 @@ const ModalCompare = ({ onSubmit, onChange, onChangeSelect, form, setForm, onClo
         }
     }
 
+    const handleOpenModal = async () => {
+        if (!isLoaded) {  // เรียกครั้งเดียว
+            await getCarBrandSelect();
+            await getCarUsageSelect();
+            await getCarYear();
+            setIsLoaded(true);
+        }
+        document.getElementById('modalcompare').showModal();
+    }
+
     return (
         <div className='font-prompt'>
             <button
                 className='w-full flex items-center gap-3 cursor-pointer hover:text-main'
-                onClick={() => document.getElementById('modalcompare').showModal()}>
+                onClick={handleOpenModal}>
                 <LuBrainCircuit className='size-4' />
                 <span className='group-[.active]:text-current'>สร้างใบเสนอราคา OCR</span></button>
             <dialog id="modalcompare" className="modal">

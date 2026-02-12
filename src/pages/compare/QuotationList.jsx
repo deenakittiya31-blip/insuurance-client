@@ -17,6 +17,7 @@ import { createJPEG } from "../../utils/jpg"
 import EditCopyCompare from "../../component/edit/EditCopyCompare"
 import { listByCarModel } from "../../service/car/CarModel"
 import useInsureAuth from "../../store/auth-store"
+import Compare from "../insur/Compare"
 
 const initialState = {
     to_name: '',
@@ -216,6 +217,8 @@ const QuotationList = () => {
         }
     }
 
+
+    console.log(Compare)
     const handleCopyCompare = async (e) => {
         e.preventDefault()
         console.log({

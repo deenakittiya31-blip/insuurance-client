@@ -35,22 +35,41 @@ const MessageApi = () => {
     const [page, setPage] = useState(1)
     const [limit, setLimit] = useState(10)
     const [pagination, setPagination] = useState({})
+    const [isStaticDataLoaded, setIsStaticDataLoaded] = useState(false)
+    const [debouncedSearch, setDebouncedSearch] = useState('')
 
+    // useEffect ใหม่ที่โหลดครั้งเดียว
     useEffect(() => {
-        getGroup()
-        getTagSelect()
-    }, [])
+        if (isStaticDataLoaded) return // ⭐ ไม่โหลดซ้ำ
 
+        const fetchStaticData = async () => {
+            const [groupRes, tagRes] = await Promise.all([
+                listGroup(),
+                listTagSelect()
+            ])
+            setGroupData(groupRes.data.data)
+            setTagData(tagRes.data.data)
+            setIsStaticDataLoaded(true)
+        }
+
+        fetchStaticData()
+    }, [isStaticDataLoaded])
+
+    // useEffect สำหรับ debounce
     useEffect(() => {
-        const deley = setTimeout(() => {
-            if (textSearch.trim()) {
-                handleSearchMember()
-            } else {
-                getMember(sortConfig.key, sortConfig.direction, page, limit, groupId)
-            }
+        const timer = setTimeout(() => {
+            setDebouncedSearch(textSearch)
         }, 500)
-        return () => clearTimeout(deley)
-    }, [page, limit, sortConfig, textSearch, groupId])
+        return () => clearTimeout(timer)
+    }, [textSearch])
+
+    useEffect(() => {
+        if (debouncedSearch.trim()) {
+            handleSearchMember()
+        } else {
+            getMember(sortConfig.key, sortConfig.direction, page, limit, groupId)
+        }
+    }, [page, limit, sortConfig, debouncedSearch, groupId])
 
     useEffect(() => {
         const clickHandler = ({ target }) => {
@@ -67,29 +86,11 @@ const MessageApi = () => {
         return () => document.removeEventListener("click", clickHandler);
     });
 
-    const getGroup = async () => {
-        try {
-            const res = await listGroup()
-            setGroupData(res.data.data)
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
     const getMember = async (sortKey, sortDirection, page, limit, group_id) => {
         try {
             const res = await listForMessage(sortKey, sortDirection, page, limit, group_id)
             setMember(res.data.data)
             setPagination(res.data.pagination)
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
-    const getTagSelect = async () => {
-        try {
-            const res = await listTagSelect()
-            setTagData(res.data.data)
         } catch (err) {
             console.log(err)
         }
