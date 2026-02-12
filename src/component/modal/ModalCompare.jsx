@@ -6,7 +6,7 @@ import TextInput from "../form/TextInput";
 import SelectSearch from "../form/SelectSearch";
 import { LuBrainCircuit } from "react-icons/lu";
 
-const ModalCompare = ({ onSubmit, onChange, onChangeSelect, form, onClose }) => {
+const ModalCompare = ({ onSubmit, onChange, carmodel, form, onClose }) => {
     const [year, setYear] = useState([])
     const [isLoaded, setIsLoaded] = useState(false)
     const {
@@ -14,7 +14,6 @@ const ModalCompare = ({ onSubmit, onChange, onChangeSelect, form, onClose }) => 
         carbrand,
         getCarUsageSelect,
         carUsage,
-        carmodel
     } = useActionStore();
 
     const getCarYear = async () => {
@@ -69,7 +68,8 @@ const ModalCompare = ({ onSubmit, onChange, onChangeSelect, form, onClose }) => 
                             options={carbrand}
                             placeholder="ยี่ห้อรถยนต์"
                             value={form.car_brand_id}
-                            onChange={(value) => onChangeSelect('car_brand_id', value)}
+                            onChange={onChange}
+                            name='car_brand_id'
                         />
                         <Select
                             text='รุ่นรถยนต์'

@@ -14,6 +14,7 @@ import { createCompare } from '../../service/compare';
 import { MdOutlineSpaceDashboard, MdOutlineTag } from 'react-icons/md';
 import { FiMessageCircle } from "react-icons/fi";
 import { LuTableProperties } from "react-icons/lu";
+import { listByCarModel } from '../../service/car/CarModel';
 
 const initialState = {
     to_name: '',
@@ -33,7 +34,7 @@ const SidebarNew = () => {
     const [insure, setInsur] = useState(false)
     const [car, setCar] = useState(false)
     const [form, setForm] = useState(initialState)
-    const { getCarModelSelect } = useActionStore();
+    const [carModel, setCarModel] = useState([])
 
     const hdlLogout = () => {
         actionLogout()
@@ -48,17 +49,19 @@ const SidebarNew = () => {
             ...prev,
             [name]: value,
         }))
-    }
-
-    const hdlSelectChange = async (name, value) => {
-        setForm(prev => ({
-            ...prev,
-            [name]: value,
-            ...(name === 'car_brand_id' && { car_model_id: '' })
-        }))
 
         if (name === 'car_brand_id') {
-            await getCarModelSelect(value)
+            await fetchCarModels(value)
+        }
+    }
+
+    const fetchCarModels = async (brandId) => {
+        try {
+            const res = await listByCarModel(brandId)
+            setCarModel(res.data.data)
+        } catch (err) {
+            console.log(err)
+            setCarModel([])
         }
     }
 
@@ -66,11 +69,13 @@ const SidebarNew = () => {
     const hdlOnClose = () => {
         setForm(initialState)
         document.getElementById('modalcompare').close()
+        setCarModel([])
     }
 
     const hdlOnCloseKeyIn = () => {
         setForm(initialState)
         document.getElementById('modalcomparekeyin').close()
+        setCarModel([])
     }
 
     const hldOnSubmit = async (e) => {
@@ -86,6 +91,7 @@ const SidebarNew = () => {
             const res = await createCompare(token, payload)
             document.getElementById('modalcompare').close()
             setForm(initialState)
+            setCarModel([])
             toast.success('สร้างใบเสนอราคาเรียบร้อย')
 
             navigate(`/app/quotation/${res.data.q_id}`)
@@ -116,6 +122,8 @@ const SidebarNew = () => {
             toast.error('สร้างใบเสนอราคาไม่สำเร็จ')
         }
     }
+
+    console.log(form)
     return (
         <aside
             className={`
@@ -256,7 +264,7 @@ const SidebarNew = () => {
                                 <ModalCompare
                                     form={form}
                                     onChange={hdlOnChange}
-                                    onChangeSelect={hdlSelectChange}
+                                    carmodel={carModel}
                                     onClose={hdlOnClose}
                                     onSubmit={hldOnSubmit}
                                     setForm={setForm}
@@ -266,7 +274,7 @@ const SidebarNew = () => {
                                 <ModalKeyInCompare
                                     form={form}
                                     onChange={hdlOnChange}
-                                    onChangeSelect={hdlSelectChange}
+                                    carmodel={carModel}
                                     onClose={hdlOnCloseKeyIn}
                                     onSubmit={hldOnSubmitKeyIn}
                                     setForm={setForm}

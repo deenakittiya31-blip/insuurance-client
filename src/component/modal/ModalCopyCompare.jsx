@@ -65,7 +65,8 @@ const ModalCopyCompare = ({ onSubmit, form, onChange }) => {
                             options={carbrand}
                             placeholder="ยี่ห้อรถยนต์"
                             value={form.car_brand_id}
-                            onChange={hdlSelectChange}
+                            onChange={onChange}
+                            name='car_brand_id'
                         />
                         <Select
                             text='รุ่นรถยนต์'

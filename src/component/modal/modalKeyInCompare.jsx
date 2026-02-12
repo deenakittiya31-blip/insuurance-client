@@ -6,7 +6,7 @@ import TextInput from "../form/TextInput";
 import SelectSearch from "../form/SelectSearch";
 import { FaRegKeyboard } from "react-icons/fa";
 
-const modalKeyInCompare = ({ onSubmit, onChange, onChangeSelect, form, onClose }) => {
+const modalKeyInCompare = ({ onSubmit, onChange, carmodel, form, onClose }) => {
     const [year, setYear] = useState([])
     const [isLoaded, setIsLoaded] = useState(false)
     const {
@@ -14,7 +14,6 @@ const modalKeyInCompare = ({ onSubmit, onChange, onChangeSelect, form, onClose }
         carbrand,
         getCarUsageSelect,
         carUsage,
-        carmodel
     } = useActionStore();
 
     const getCarYear = async () => {
@@ -45,7 +44,7 @@ const modalKeyInCompare = ({ onSubmit, onChange, onChangeSelect, form, onClose }
                 <span className='group-[.active]:text-current'>สร้างใบเสนอราคา KEY-IN</span></button>
             <dialog id="modalcomparekeyin" className="modal">
                 <form onSubmit={onSubmit} className="modal-box w-lg flex flex-col gap-5">
-                    <h3 className="font-bold text-lg text-text-primary">สร้างใบเสนอราคา</h3>
+                    <h3 className="font-bold text-lg text-text-primary">สร้างใบเสนอราคา key-in</h3>
                     <TextInput
                         width='w-auto'
                         title='ถึง'
@@ -69,7 +68,8 @@ const modalKeyInCompare = ({ onSubmit, onChange, onChangeSelect, form, onClose }
                             options={carbrand}
                             placeholder="ยี่ห้อรถยนต์"
                             value={form.car_brand_id}
-                            onChange={(value) => onChangeSelect('car_brand_id', value)}
+                            onChange={onChange}
+                            name='car_brand_id'
                         />
                         <Select
                             text='รุ่นรถยนต์'

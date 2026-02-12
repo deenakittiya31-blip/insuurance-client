@@ -10,6 +10,8 @@ const TableCarUsageType = ({ data, page, limit, onDelete, onEdite, onToggle }) =
                         <th className='font-medium text-neutral-400 text-center'>ประเภทการใช้งาน</th>
                         <th className='font-medium text-neutral-400 text-center'>รหัสประเภทการใช้งาน</th>
                         <th className='font-medium text-neutral-400'>สถานะ</th>
+                        <th className='font-medium text-neutral-400'>เปิด-ปิดลูกค้า</th>
+                        <th className='font-medium text-neutral-400'>ลำดับการมองเห็น</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
                 </thead>
@@ -29,6 +31,14 @@ const TableCarUsageType = ({ data, page, limit, onDelete, onEdite, onToggle }) =
                                         checked={i.is_active}
                                         className="toggle" />
                                 </td>
+                                <td>
+                                    <input
+                                        type="checkbox"
+                                        onChange={() => onToggle(i.id, i.is_active)}
+                                        checked={i.is_active}
+                                        className="toggle" />
+                                </td>
+                                <td className="text-center">1</td>
                                 <td>
                                     <div className='flex gap-5 justify-center'>
                                         <button onClick={() => onEdite(i.id)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>

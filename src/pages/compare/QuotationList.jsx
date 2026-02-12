@@ -219,6 +219,7 @@ const QuotationList = () => {
 
 
     console.log(Compare)
+
     const handleCopyCompare = async (e) => {
         e.preventDefault()
         console.log({
@@ -241,6 +242,7 @@ const QuotationList = () => {
                     duration: 3000,
                 }
             );
+            getQuotationList(page, perPage, sortConfig.key, sortConfig.direction)
         } catch (err) {
             console.log(err)
             toast.error(err.response.data.message)
