@@ -34,12 +34,8 @@ export const deleteQuotationCompare = (id) => {
     return api.delete(`api/delete-compare/${id}`)
 }
 
-export const getDetailCompare = (token, id) => {
-    return api.get(`/api/detail-compare/${id}`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
+export const getDetailCompare = (id) => {
+    return api.get(`/api/detail-compare/${id}`)
 }
 
 export const getDetailCompareEdit = (id) => {
@@ -60,4 +56,8 @@ export const createJPG = (id) => {
 
 export const searchText = async (arg) => {
     return api.post('/api/search-compare', arg)
+}
+
+export const copyCompare = async (form) => {
+    return api.post('/api/copy-compare', form)
 }

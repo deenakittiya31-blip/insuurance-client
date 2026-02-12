@@ -1,6 +1,6 @@
 import Select from 'react-select'
 
-const SelectSearch = ({ options, value, onChange }) => {
+const SelectSearch = ({ options, value, onChange, name }) => {
 
     //map สร้าง array ใหม่
     const formattedOptions = options.map(item => ({
@@ -18,7 +18,12 @@ const SelectSearch = ({ options, value, onChange }) => {
                 options={formattedOptions}
                 value={selectedOption}
                 onChange={(selected) =>
-                    onChange(selected ? selected.value : '')
+                    onChange({
+                        target: {
+                            name: name,
+                            value: selected ? selected.value : ''
+                        }
+                    })
                 }
                 placeholder="โปรดเลือก"
                 isClearable

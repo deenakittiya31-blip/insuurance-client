@@ -181,11 +181,11 @@ const Quotaion = () => {
     //ดึงข้อมูลใบเสนอราคา
     const getDetail = async () => {
         try {
-            const res = await getDetailCompare(token, q_id)
+            const res = await getDetailCompare(q_id)
             const data = res.data.data
 
             setDetail(data)
-            setUsageID(data.usageid)
+            setUsageID(data.car_usage_id)
         } catch (err) {
             console.log(err)
         }

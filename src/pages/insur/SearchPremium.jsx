@@ -51,9 +51,9 @@ const SearchPremium = () => {
         getCarYear();
     }, [])
 
-    const fetchCarModels = async () => {
+    const fetchCarModels = async (brandId) => {
         try {
-            const res = await listByCarModel(compare.car_brand_id)
+            const res = await listByCarModel(brandId)
             setCarModel(res.data.data)
         } catch (err) {
             console.log(err)
@@ -97,10 +97,15 @@ const SearchPremium = () => {
     const hdlSelectChange = async (value) => {
         setCompare(prev => ({
             ...prev,
-            car_brand_id: value
+            car_brand_id: value,
+            car_model_id: ''
         }))
 
-        await fetchCarModels(value)
+        if (value) {
+            await fetchCarModels(value) // ส่ง value ไปเลย ไม่ใช้จาก state
+        } else {
+            setCarModel([]) // ถ้า clear ให้เคลียร์ car_model ด้วย
+        }
     }
 
     console.log(compare)
@@ -164,8 +169,6 @@ const SearchPremium = () => {
     const deletePremiuminState = (indexPremium) => {
         setPremiumSelected(prev => prev.filter(item => item.index_premium !== indexPremium))
     }
-
-    console.log(premiumSelected)
 
     const handleCreateQuotation = async (e) => {
         e.preventDefault()
@@ -363,7 +366,7 @@ const SearchPremium = () => {
                 </div>
                 {/* section 2 package table*/}
                 <div className="bg-white rounded-2xl p-5 flex flex-col gap-3 font-prompt text-text-primary">
-                    <div class="bg-info rounded-xl p-2 w-full flex justify-between">
+                    <div className="bg-info rounded-xl p-2 w-full flex justify-between">
                         <div className="inline-flex items-center gap-2">
                             <svg className="size-[1em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor" strokeLinejoin="miter" strokeLinecap="butt"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeLinecap="square" strokeMiterlimit="10" strokeWidth="2"></circle><path d="m12,17v-5.5c0-.276-.224-.5-.5-.5h-1.5" fill="none" stroke="currentColor" strokeLinecap="square" strokeMiterlimit="10" strokeWidth="2"></path><circle cx="12" cy="7.25" r="1.25" fill="currentColor" strokeWidth="2"></circle></g></svg>
                             <p className="text-xs">ติ๊กเลือกแล้วกด "เพิ่มที่เลือก" เพิ่มได้อีก {3 - premiumSelected.length} / 3 (ตอนนี้มี {premiumSelected.length})</p>

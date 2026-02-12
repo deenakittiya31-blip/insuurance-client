@@ -7,9 +7,9 @@ import { BiSolidFileJpg, BiSolidFilePdf } from "react-icons/bi";
 import Sort from "../sortData/Sort";
 import { BsFillPinAngleFill } from "react-icons/bs";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { useState } from "react";
+import { IoMdCopy } from "react-icons/io";
 
-const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onSort, sortConfig, onPin }) => {
+const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onSort, sortConfig, onPin, onCopy }) => {
 
 
     return (
@@ -148,20 +148,23 @@ const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onS
                                 </td>
                                 <td>
                                     <div className="flex flex-col gap-1">
-                                        <div className="flex gap-1">
-                                            <button className='btn btn-sm btn-soft btn-info flex  flex-1 gap-1 h-7' onClick={() => isOpen(i.q_id)}>
+                                        <div className="grid grid-cols-2 gap-1">
+                                            <button className='btn btn-xs btn-soft btn-info py-1' onClick={() => isOpen(i.q_id)}>
                                                 <FaLine size={13} /> ส่ง
                                             </button>
-                                            <div className="join">
-                                                <Link to={`/app/compare-detail/${i.q_id}`}>
-                                                    <button className="join-item btn btn-soft btn-warning flex gap-1 h-7 p-1"><FaRegEye size={13} /> ดู</button>
-                                                </Link>
-                                                <button onClick={() => onDelete(i.id)} className="join-item btn btn-soft btn-error flex gap-1 h-7 p-1"><AiOutlineDelete size={13} className="shrink" /> ลบ</button>
-                                            </div>
+                                            <button className='btn btn-xs btn-soft btn-accent py-1' onClick={() => onCopy(i.q_id)}>
+                                                <IoMdCopy size={13} /> ลอก
+                                            </button>
+                                        </div>
+                                        <div className="join flex w-full">
+                                            <Link to={`/app/compare-detail/${i.q_id}`} className="flex-1">
+                                                <button className="join-item  btn btn-soft btn-warning flex gap-1 h-6"><FaRegEye size={13} /> ดู</button>
+                                            </Link>
+                                            <button onClick={() => onDelete(i.id)} className="join-item btn btn-soft btn-error flex flex-1 gap-1 h-6"><AiOutlineDelete size={13} className="shrink" /> ลบ</button>
                                         </div>
                                         <div className="grid grid-cols-2 gap-1">
-                                            <button onClick={() => pdf(i.q_id)} className="btn btn-sm hover:btn-accent py-1"><BiSolidFilePdf size={17} /> PDF</button>
-                                            <button onClick={() => jpg(i.q_id)} className="btn btn-sm hover:btn-accent py-1"><BiSolidFileJpg size={17} /> JPG</button>
+                                            <button onClick={() => pdf(i.q_id)} className="btn btn-xs hover:btn-accent py-1"><BiSolidFilePdf size={20} /> PDF</button>
+                                            <button onClick={() => jpg(i.q_id)} className="btn btn-xs hover:btn-accent py-1"><BiSolidFileJpg size={20} /> JPG</button>
                                         </div>
                                     </div>
                                 </td>

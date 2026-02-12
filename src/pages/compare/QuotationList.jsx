@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import Title from "../../component/form/Title"
-import { createJPG, deleteQuotationCompare, listQuotationCompare, searchText } from '../../service/compare'
+import { copyCompare, deleteQuotationCompare, getDetailCompare, listQuotationCompare, searchText } from '../../service/compare'
 import TableQuotationList from "../../component/table/TableQuotationList"
 import Pagination from "../../component/paginationComponent/Pagination"
 import Swal from "sweetalert2"
@@ -14,13 +14,31 @@ import { Link } from "react-router-dom"
 import { BsPinAngle } from "react-icons/bs"
 import { createComparePDF } from "../../utils/pdf"
 import { createJPEG } from "../../utils/jpg"
+import EditCopyCompare from "../../component/edit/EditCopyCompare"
+import { listByCarModel } from "../../service/car/CarModel"
+import useInsureAuth from "../../store/auth-store"
+
+const initialState = {
+    to_name: '',
+    details: '',
+    car_brand_id: '',
+    car_model_id: '',
+    car_year_id: '',
+    car_usage_id: '',
+    sub_car_model: ''
+}
 
 const QuotationList = () => {
+    const user = useInsureAuth((s) => s.user)
     const [list, setList] = useState([])
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
+    const [carModel, setCarModel] = useState([])
     const [quotationId, setQuotationId] = useState(null)
+    const [compareId, setCompareId] = useState(null)
     const [text, setText] = useState('')
     const [open, setOpen] = useState(false)
+    const [openCopy, setOpenCopy] = useState(false)
+    const [form, setForm] = useState(initialState)
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
     const [perPage, setPerPage] = useState(10)
@@ -134,6 +152,97 @@ const QuotationList = () => {
         }
     }
 
+    //Copy Section
+    const openModalCopy = async (id) => {
+        setOpenCopy(true)
+        setCompareId(id)
+        try {
+            const res = await getDetailCompare(id)
+            const {
+                to_name,
+                details,
+                car_brand_id,
+                car_model_id,
+                car_year_id,
+                car_usage_id,
+                sub_car_model
+            } = res.data.data
+
+            setForm({
+                to_name,
+                details,
+                car_brand_id,
+                car_model_id,
+                car_year_id,
+                car_usage_id,
+                sub_car_model
+            })
+
+            if (car_brand_id) {
+                fetchCarModels(car_brand_id)
+            }
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const closeFormCopy = () => {
+        setOpenCopy(false)
+        setForm(initialState)
+        setCompareId(null)
+    }
+
+    const fetchCarModels = async (brandId) => {
+        try {
+            const res = await listByCarModel(brandId)
+            setCarModel(res.data.data)
+        } catch (err) {
+            console.log(err)
+            setCarModel([])
+        }
+    }
+
+    const handleOnChange = async (e) => {
+        const { name, value } = e.target
+
+        setForm(prev => ({
+            ...prev,
+            [name]: value,
+        }))
+
+        if (name === 'car_brand_id') {
+            await fetchCarModels(value)
+        }
+    }
+
+    const handleCopyCompare = async (e) => {
+        e.preventDefault()
+        console.log({
+            ...form,
+            offer_id: user.user_id,
+            import_by: 'key-in',
+            qIdOld: compareId
+        })
+
+        try {
+            const res = await copyCompare({
+                ...form,
+                offer_id: user.user_id,
+                import_by: 'key-in',
+                qIdOld: compareId
+            })
+            closeFormCopy()
+            toast(`${res.data.msg} รหัสใบเสนอราคาที่ ${res.data.qIdNew}`,
+                {
+                    duration: 3000,
+                }
+            );
+        } catch (err) {
+            console.log(err)
+            toast.error(err.response.data.message)
+        }
+    }
 
     return (
         <div className='flex flex-col gap-5 p-5'>
@@ -146,7 +255,7 @@ const QuotationList = () => {
             <div className='flex-1 bg-white rounded-2xl p-5'>
                 <div className="flex justify-between items-baseline-last mb-5">
                     <Link to='/admin/pin-compare'>
-                        <button className="flex justify-center items-center gap-1 btn btn-outline btn-accent font-prompt">
+                        <button className="flex justify-center items-center gap-1 btn btn-outline btn-secondary font-prompt">
                             <BsPinAngle className='size-4' />
                             เบี้ยประกันที่ใช้บ่อย
                         </button>
@@ -176,6 +285,7 @@ const QuotationList = () => {
                     onSort={handleSort}
                     sortConfig={sortConfig}
                     onPin={handlePinQuotation}
+                    onCopy={openModalCopy}
                 />
                 <div className='flex justify-end mt-5'>
                     {
@@ -195,6 +305,16 @@ const QuotationList = () => {
                 isOpen={open}
                 onClose={closeForm}
                 q_id={quotationId}
+            />
+            <EditCopyCompare
+                isOpen={openCopy}
+                form={form}
+                setForm={setForm}
+                onSubmit={handleCopyCompare}
+                onChange={handleOnChange}
+                // onChangeSelect={hdlSelectChange}
+                onClose={closeFormCopy}
+                carmodel={carModel}
             />
         </div>
     )

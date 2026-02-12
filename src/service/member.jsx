@@ -29,7 +29,8 @@ export const listMemberPagination = (page, perPage, sortKey, sortDirection) => {
     })
 }
 
-export const listForMessage = (sortKey, sortDirection, group_id) => {
+export const listForMessage = (sortKey, sortDirection, page,
+    limit, group_id) => {
     const groupIdParams = Array.isArray(group_id) && group_id.length > 0
         ? group_id.join(',')
         : undefined
@@ -38,6 +39,8 @@ export const listForMessage = (sortKey, sortDirection, group_id) => {
         params: {
             sortKey,
             sortDirection,
+            page,
+            limit,
             ...(groupIdParams && { group_id: groupIdParams })
         }
     })

@@ -9,6 +9,8 @@ import TextAreaSendMessage from "../../component/input/TextAreaSendMessage";
 import SearchBox from "../../component/form/SearchBox";
 import { IoFilter } from "react-icons/io5";
 import { listTagSelect } from "../../service/member/tag";
+import SelectPerPage from "../../component/form/SelectPerPage";
+import Pagination from "../../component/paginationComponent/Pagination";
 
 const intitailState = {
     text: '',
@@ -30,6 +32,9 @@ const MessageApi = () => {
     const [loading, setLoading] = useState(false)
     const trigger = useRef(null);
     const dropdown = useRef(null);
+    const [page, setPage] = useState(1)
+    const [limit, setLimit] = useState(10)
+    const [pagination, setPagination] = useState({})
 
     useEffect(() => {
         getGroup()
@@ -41,11 +46,11 @@ const MessageApi = () => {
             if (textSearch.trim()) {
                 handleSearchMember()
             } else {
-                getMember(sortConfig.key, sortConfig.direction, groupId)
+                getMember(sortConfig.key, sortConfig.direction, page, limit, groupId)
             }
         }, 500)
         return () => clearTimeout(deley)
-    }, [sortConfig, textSearch, groupId])
+    }, [page, limit, sortConfig, textSearch, groupId])
 
     useEffect(() => {
         const clickHandler = ({ target }) => {
@@ -71,11 +76,11 @@ const MessageApi = () => {
         }
     }
 
-    const getMember = async (sortKey, sortDirection, group_id) => {
+    const getMember = async (sortKey, sortDirection, page, limit, group_id) => {
         try {
-            const res = await listForMessage(sortKey, sortDirection, group_id)
+            const res = await listForMessage(sortKey, sortDirection, page, limit, group_id)
             setMember(res.data.data)
-
+            setPagination(res.data.pagination)
         } catch (err) {
             console.log(err)
         }
@@ -88,6 +93,11 @@ const MessageApi = () => {
         } catch (err) {
             console.log(err)
         }
+    }
+
+    const handlePerPageChange = (e) => {
+        setLimit(Number(e.target.value))
+        setPage(1)  //รีเซ็ตกลับไปหน้า 1
     }
 
     const handleSearchMember = async () => {
@@ -242,6 +252,10 @@ const MessageApi = () => {
                                 />
                             </div>
                         </div>
+                        <SelectPerPage
+                            onChange={handlePerPageChange}
+                            perPage={limit}
+                        />
                         <div className="flex gap-3 items-end">
                             <div className="relative">
                                 <button ref={trigger} onClick={() => setOpen(!open)} className="btn btn-soft btn-secondary px-7 rounded-full"><IoFilter /> กรองข้อมูล</button>
@@ -282,6 +296,23 @@ const MessageApi = () => {
                             isAllSelected={isAllSelected}
                             isSomeSelected={isSomeSelected}
                         />
+                    </div>
+                    <div className='flex justify-end'>
+                        {
+                            pagination.totalItems > limit && (
+                                <Pagination
+                                    disablePrev={!pagination.hasPrevPage}
+                                    disableNext={!pagination.hasNextPage}
+                                    onPrevious={() => setPage(prev => prev - 1)}
+                                    onNext={() => setPage(prev => prev + 1)}
+                                />
+                            )
+                        }
+                        {/* แสดงข้อมูลเพิ่มเติม */}
+                        <div className="text-sm text-gray-600">
+                            แสดง {member.length} จาก {pagination.totalItems || 0} รายการ
+                            (หน้า {pagination.page || 1} / {pagination.totalPages || 1})
+                        </div>
                     </div>
                 </div>
             </div>

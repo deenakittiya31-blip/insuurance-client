@@ -16,7 +16,7 @@ const EditMember = ({ isOpen, form, onSubmit, onChange, onClose, group, removeTa
                         type='text'
                         placeholder='กรอกชื่อจริง...'
                         onChange={onChange}
-                        width='w-70 md:w-sm'
+                        width='w-full'
                         value={form.first_name}
                     />
                     <TextInput
@@ -25,7 +25,7 @@ const EditMember = ({ isOpen, form, onSubmit, onChange, onClose, group, removeTa
                         type='text'
                         placeholder='กรอกนามสกุล...'
                         onChange={onChange}
-                        width='w-70 md:w-sm'
+                        width='w-full'
                         value={form.last_name}
                     />
                     <Select
@@ -43,7 +43,7 @@ const EditMember = ({ isOpen, form, onSubmit, onChange, onClose, group, removeTa
                         type='text'
                         placeholder='กรอกเบอร์โทรศัพท์...'
                         onChange={onChange}
-                        width='w-70 md:w-sm'
+                        width='w-full'
                         value={form.phone}
                     />
                 </div>

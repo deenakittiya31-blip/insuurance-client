@@ -36,10 +36,6 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
         getDetail();
     }, [q_id])
 
-    useEffect(() => {
-        console.log('groupId updated:', groupId)
-    }, [groupId])
-
     const getGroup = async () => {
         try {
             const res = await listGroup()
@@ -51,7 +47,7 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
 
     const getDetail = async () => {
         try {
-            const res = await getDetailCompare(token, q_id)
+            const res = await getDetailCompare(q_id)
             setDetail(res.data.data)
         } catch (err) {
             console.log(err)
