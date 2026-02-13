@@ -16,16 +16,25 @@ const ModalCarUsage = ({ form, onSubmit, onChange }) => {
             <dialog id="modalcarusagetype" className="modal">
                 <form onSubmit={onSubmit} className="modal-box w-md flex flex-col gap-5">
                     <h3 className="font-bold text-lg text-text-primary">ประเภทการใช้งานรถยนต์</h3>
-                    <TextInput
-                        width='w-auto'
-                        title='รหัส'
-                        name='code'
-                        type='text'
-                        placeholder='กรอกรหัส'
-                        onChange={onChange}
-                        value={form.code}
-                    />
                     <div className="grid grid-cols-2 gap-5 items-end">
+                        <TextInput
+                            width='w-auto'
+                            title='ลำดับการมองเห็น'
+                            name='code'
+                            type='text'
+                            placeholder='ลำดับ'
+                            onChange={onChange}
+                            value={form.code}
+                        />
+                        <TextInput
+                            width='w-auto'
+                            title='รหัส'
+                            name='code'
+                            type='text'
+                            placeholder='กรอกรหัส'
+                            onChange={onChange}
+                            value={form.code}
+                        />
                         <fieldset className="fieldset font-prompt text-text-primary p-0">
                             <legend className="fieldset-legend text-sm text-text-primary">ประเภทรถยนต์</legend>
                             <select

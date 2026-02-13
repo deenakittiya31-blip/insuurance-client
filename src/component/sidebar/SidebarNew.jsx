@@ -123,7 +123,6 @@ const SidebarNew = () => {
         }
     }
 
-    console.log(form)
     return (
         <aside
             className={`

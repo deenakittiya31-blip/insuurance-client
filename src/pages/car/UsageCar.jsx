@@ -18,7 +18,8 @@ const initialState = {
     code: '',
     car_type_id: '',
     car_usage_id: '',
-    code_usage: ''
+    code_usage: '',
+    visibility_no: ''
 }
 
 const UsageCar = () => {

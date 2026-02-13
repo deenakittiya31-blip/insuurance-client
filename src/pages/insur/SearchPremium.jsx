@@ -18,7 +18,8 @@ import useInsureAuth from "../../store/auth-store";
 const initialStateSearch = {
     insurance_type_id: '',
     car_type_id: '',
-    car_usage_id: ''
+    car_usage_id: '',
+    repair_type: ''
 }
 
 const initialStateCompare = {
@@ -87,7 +88,7 @@ const SearchPremium = () => {
 
         setSearch(prev => ({
             ...prev,
-            [name]: Number(value)
+            [name]: value
         }))
 
 
@@ -99,21 +100,7 @@ const SearchPremium = () => {
         }
     }
 
-    const hdlSelectChange = async (value) => {
-        setCompare(prev => ({
-            ...prev,
-            car_brand_id: value,
-            car_model_id: ''
-        }))
-
-        if (value) {
-            await fetchCarModels(value) // ส่ง value ไปเลย ไม่ใช้จาก state
-        } else {
-            setCarModel([]) // ถ้า clear ให้เคลียร์ car_model ด้วย
-        }
-    }
-
-    console.log(compare)
+    console.log(search)
     // console.log(search)
 
     const handleSubmitSearch = async (e) => {
@@ -177,7 +164,7 @@ const SearchPremium = () => {
 
     const handleCreateQuotation = async (e) => {
         e.preventDefault()
-        if (!compare.to_name || !compare.car_brand_id || !compare.car_model_id || !compare.car_usage_id) {
+        if (!compare.to_name || !compare.car_brand_id || !compare.car_usage_id) {
             return toast.error('กรุณากรอกข้อมูลด้านบนให้ครบ')
         }
 
@@ -297,6 +284,62 @@ const SearchPremium = () => {
                             valueKey='id'
                             labelKey='nametype'
                         />
+                        <div className="flex flex-wrap gap-5">
+                            <div>
+                                <p className="font-semibold text-sm text-text-primary mb-1">ประเภทการใช้งาน</p>
+                                <div className="flex flex-wrap items-center gap-3">
+                                    {
+                                        carUsage.map((i) => (
+                                            <label key={i.id} className="font-normal text-sm flex gap-3 items-center">
+                                                <input
+                                                    type="radio"
+                                                    name='car_usage_id'
+                                                    value={i.id}
+                                                    onChange={handleOnChangeSearch}
+                                                    checked={search.car_usage_id == i.id}
+                                                    className="radio radio-xs radio-success" />
+                                                {i.usage_name}
+                                            </label>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+                            <div>
+                                <p className="font-semibold text-sm text-text-primary mb-1">ประเภทซ่อม</p>
+                                <div className="flex flex-wrap items-center gap-3">
+                                    <label className="font-normal text-sm flex gap-3 items-center">
+                                        <input
+                                            type="radio"
+                                            name='repair_type'
+                                            value=''
+                                            onChange={handleOnChangeSearch}
+                                            // checked={search.repair_type === ''}
+                                            className="radio radio-xs radio-success" />
+                                        ทั้งหมด
+                                    </label>
+                                    <label className="font-normal text-sm flex gap-3 items-center">
+                                        <input
+                                            type="radio"
+                                            name='repair_type'
+                                            value='ซ่อมห้าง'
+                                            onChange={handleOnChangeSearch}
+                                            checked={search.repair_type === 'ซ่อมห้าง'}
+                                            className="radio radio-xs radio-success" />
+                                        ซ่อมห้าง
+                                    </label>
+                                    <label className="font-normal text-sm flex gap-3 items-center">
+                                        <input
+                                            type="radio"
+                                            name='repair_type'
+                                            value='ซ่อมอู่'
+                                            onChange={handleOnChangeSearch}
+                                            checked={search.repair_type === 'ซ่อมอู่'}
+                                            className="radio radio-xs radio-success" />
+                                        ซ่อมอู่
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                         <div>
                             <p className="font-semibold text-sm text-text-primary mb-1">ประเภทรถยนต์</p>
                             <div className="flex flex-wrap items-center gap-3">
@@ -308,28 +351,9 @@ const SearchPremium = () => {
                                                 name='car_type_id'
                                                 value={i.id}
                                                 onChange={handleOnChangeSearch}
-                                                checked={search.car_type_id === i.id}
+                                                checked={search.car_type_id == i.id}
                                                 className="radio radio-xs radio-success" />
                                             {i.type}
-                                        </label>
-                                    ))
-                                }
-                            </div>
-                        </div>
-                        <div>
-                            <p className="font-semibold text-sm text-text-primary mb-1">ประเภทการใช้งาน</p>
-                            <div className="flex flex-wrap items-center gap-3">
-                                {
-                                    carUsage.map((i) => (
-                                        <label key={i.id} className="font-normal text-sm flex gap-3 items-center">
-                                            <input
-                                                type="radio"
-                                                name='car_usage_id'
-                                                value={i.id}
-                                                onChange={handleOnChangeSearch}
-                                                checked={search.car_usage_id === i.id}
-                                                className="radio radio-xs radio-success" />
-                                            {i.usage_name}
                                         </label>
                                     ))
                                 }

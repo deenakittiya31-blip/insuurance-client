@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import TableMember from "../table/TableMember";
 import SearchBox from "./SearchBox";
 import { LuSend } from "react-icons/lu";
-import { listForMessage, searchMember } from "../../service/member";
+import { listMember } from "../../service/member";
 import { listGroup } from "../../service/member/group_member";
 import { getDetailCompare } from "../../service/compare";
-import useInsureAuth from "../../store/auth-store";
 import StateDetailSend from "./StateDetailSend";
+import SelectPerPage from "../form/SelectPerPage";
+import Pagination from "../paginationComponent/Pagination";
 
 const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
-    const token = useInsureAuth((s) => s.token)
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
     const [groupId, setGroupId] = useState([])
     const [member, setMember] = useState([])
@@ -18,22 +18,26 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
     const [loading, setLoading] = useState(false)
     const [textSearch, setTextSearch] = useState('')
     const [detail, setDetail] = useState({})
+    const [pagination, setPagination] = useState({})
+    const [page, setPage] = useState(1)
+    const [perPage, setPerPage] = useState(20)
+    const [debouncedSearch, setDebouncedSearch] = useState('')
 
     useEffect(() => {
-        if (!isOpen) return;
+        const delay = setTimeout(() => {
+            setDebouncedSearch(textSearch)
+        }, 500)
+        return () => clearTimeout(delay)
+    }, [textSearch])
 
-        if (textSearch) {
-            handleSearchMember()
-        } else {
-            getMember(sortConfig.key, sortConfig.direction, groupId)
-            getGroup()
-        }
-
-    }, [isOpen, sortConfig, groupId, textSearch])
+    useEffect(() => {
+        getMember()
+    }, [page, perPage, sortConfig, debouncedSearch, groupId])
 
     useEffect(() => {
         if (!q_id) return;
         getDetail();
+        getGroup()
     }, [q_id])
 
     const getGroup = async () => {
@@ -54,26 +58,27 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
         }
     }
 
-    const getMember = async (sortKey, sortDirection, group_id) => {
+    const getMember = async () => {
         try {
-            const res = await listForMessage(sortKey, sortDirection, group_id)
+            const res = await listMember({
+                page,
+                limit: perPage,
+                sortKey: sortConfig.key,
+                sortDirection: sortConfig.direction,
+                search: textSearch,
+                group_id: groupId
+            })
             setMember(res.data.data)
+            setPagination(res.data.pagination)
 
         } catch (err) {
             console.log(err)
         }
     }
 
-    const handleSearchMember = async () => {
-        try {
-            const res = await searchMember({ search: textSearch })
-            setMember(res.data.data)
-            if (!textSearch) {
-                getMember(sortConfig.key, sortConfig.direction, groupId)
-            }
-        } catch (err) {
-            console.log(err)
-        }
+    const handlePerPageChange = (e) => {
+        setPerPage(Number(e.target.value))
+        setPage(1)  //รีเซ็ตกลับไปหน้า 1
     }
 
     const handleSort = (keyName) => {
@@ -144,10 +149,10 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
 
     return (
         <div className='mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20'>
-            <div className="w-auto p-6 radius-box flex flex-col gap-5 bg-white rounded-lg font-prompt">
+            <div className="w-auto p-6 radius-box flex flex-col gap-3 bg-white rounded-lg font-prompt">
                 {/* กล่องเสิร์ชและปุ่มส่ง */}
                 <StateDetailSend data={detail} />
-                <div className="flex gap-5">
+                <div className="flex gap-3">
                     <div className="flex-1">
                         <SearchBox
                             width='w-full'
@@ -179,20 +184,27 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
                         </span>
                     </button>
                 </div>
-                <div className="flex gap-3 justify-end">
-                    {
-                        GroupData.map((i) => (
-                            <label key={i.id} className='flex items-center gap-3 text-sm'>
-                                <input
-                                    value={i.id}
-                                    type="checkbox"
-                                    onChange={handleCheckFilter}
-                                    checked={groupId.includes(i.id)}
-                                />
-                                {i.group_name}
-                            </label>
-                        ))
-                    }
+                <div className="flex justify-between">
+                    <SelectPerPage
+                        onChange={handlePerPageChange}
+                        perPage={perPage}
+                    />
+                    <div className="flex items-end gap-3">
+                        {
+                            GroupData.map((i) => (
+                                <label key={i.id} className='flex items-center gap-3 text-sm font-medium'>
+                                    <input
+                                        value={i.id}
+                                        type="checkbox"
+                                        onChange={handleCheckFilter}
+                                        checked={groupId.includes(i.id)}
+                                        className="checkbox checkbox-success"
+                                    />
+                                    {i.group_name}
+                                </label>
+                            ))
+                        }
+                    </div>
                 </div>
                 <div className="w-full h-72 overflow-y-auto">
                     <TableMember
@@ -205,6 +217,23 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
                         isAllSelected={isAllSelected}
                         isSomeSelected={isSomeSelected}
                     />
+                </div>
+                <div className='flex justify-between'>
+                    {/* แสดงข้อมูลเพิ่มเติม */}
+                    <div className="text-sm text-gray-600">
+                        แสดง {member.length} จาก {pagination.totalItems || 0} รายการ
+                        (หน้า {pagination.page || 1} / {pagination.totalPages || 1})
+                    </div>
+                    {
+                        pagination.totalItems > perPage && (
+                            <Pagination
+                                disablePrev={!pagination.hasPrevPage}
+                                disableNext={!pagination.hasNextPage}
+                                onPrevious={() => setPage(prev => prev - 1)}
+                                onNext={() => setPage(prev => prev + 1)}
+                            />
+                        )
+                    }
                 </div>
                 <div className='flex justify-end'>
                     <button type='button' className="btn btn-soft btn-error" onClick={onClose}>ยกเลิก</button>

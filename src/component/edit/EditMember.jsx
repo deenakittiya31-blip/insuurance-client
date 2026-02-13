@@ -2,12 +2,13 @@ import { FaMarker, FaXmark } from "react-icons/fa6";
 import Select from "../form/Select";
 import TextArea from "../form/TextArea";
 import TextInput from "../form/TextInput";
+import { Link } from "react-router-dom";
 
 const EditMember = ({ isOpen, form, onSubmit, onChange, onClose, group, removeTag }) => {
     if (!isOpen) return null;
     return (
-        <div className='mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20'>
-            <form onSubmit={onSubmit} className="max-w-2xl p-5 radius-box flex flex-col gap-3 bg-white rounded-lg">
+        <div id="modalEditMember" className='mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20'>
+            <form onSubmit={onSubmit} className="max-w-2xl p-5 radius-box flex flex-col gap-3 bg-white rounded-lg font-prompt">
                 <h3 className="font-bold text-lg font-prompt text-text-primary">แก้ไขข้อมูลลูกค้า</h3>
                 <div className="grid grid-cols-2 gap-3 items-end">
                     <TextInput
@@ -75,6 +76,9 @@ const EditMember = ({ isOpen, form, onSubmit, onChange, onClose, group, removeTa
                     value={form.note}
                 />
                 <div className='flex justify-end gap-3'>
+                    <Link to='/app/member-tag'>
+                        <button type='button' className="btn btn-soft btn-info">ไปที่ป้ายกำกับ</button>
+                    </Link>
                     <button type='button' className="btn btn-soft btn-error" onClick={onClose}>ยกเลิก</button>
                     <button type="submit" className="btn btn-soft btn-primary" >บันทึก</button>
                 </div>

@@ -3,10 +3,12 @@ import Select from "../form/Select"
 import { addMembers, listTagSelect } from "../../service/member/tag"
 import { useEffect } from "react"
 import toast from "react-hot-toast"
-import { listForMessage, searchMember } from "../../service/member"
+import { listMember } from "../../service/member"
 import TableMember from "../table/TableMember"
 import { listSelectGroup } from "../../service/member/group_member"
 import SearchBox from "../quotation_about/SearchBox"
+import SelectPerPage from "../form/SelectPerPage"
+import Pagination from "../paginationComponent/Pagination"
 
 const ModalAddTagMember = () => {
     const [form, setForm] = useState({ tag_id: '' })
@@ -17,17 +19,26 @@ const ModalAddTagMember = () => {
     const [memberSelected, setMemberSelected] = useState([])
     const [groupData, setGroupData] = useState([])
     const [textSearch, setTextSearch] = useState('')
+    const [debouncedSearch, setDebouncedSearch] = useState('')
+    const [pagination, setPagination] = useState({})
+    const [page, setPage] = useState(1)
+    const [perPage, setPerPage] = useState(20)
 
     useEffect(() => {
-        if (textSearch) {
-            handleSearchMember()
-        } else {
-            fetchTag()
-            getGroup()
-            getMember(sortConfig.key, sortConfig.direction, groupId)
-        }
+        fetchTag()
+        getGroup()
+    }, [])
 
-    }, [sortConfig, groupId, textSearch])
+    useEffect(() => {
+        const delay = setTimeout(() => {
+            setDebouncedSearch(textSearch)
+        }, 500)
+        return () => clearTimeout(delay)
+    }, [textSearch])
+
+    useEffect(() => {
+        getMember()
+    }, [page, perPage, sortConfig, debouncedSearch, groupId])
 
     const fetchTag = async () => {
         try {
@@ -38,10 +49,18 @@ const ModalAddTagMember = () => {
         }
     }
 
-    const getMember = async (sortKey, sortDirection, group_id) => {
+    const getMember = async () => {
         try {
-            const res = await listForMessage(sortKey, sortDirection, group_id)
+            const res = await listMember({
+                page,
+                limit: perPage,
+                sortKey: sortConfig.key,
+                sortDirection: sortConfig.direction,
+                search: textSearch,
+                group_id: groupId
+            })
             setMember(res.data.data)
+            setPagination(res.data.pagination)
 
         } catch (err) {
             console.log(err)
@@ -57,15 +76,6 @@ const ModalAddTagMember = () => {
         }
     }
 
-    const handleSearchMember = async () => {
-        try {
-            const res = await searchMember({ search: textSearch })
-            setMember(res.data.data)
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
     const handleSort = (keyName) => {
         let direction = 'ASC';
 
@@ -74,6 +84,11 @@ const ModalAddTagMember = () => {
         }
 
         setSortConfig({ key: keyName, direction });
+    }
+
+    const handlePerPageChange = (e) => {
+        setPerPage(Number(e.target.value))
+        setPage(1)  //รีเซ็ตกลับไปหน้า 1
     }
 
     const handleCheck = (e) => {
@@ -149,7 +164,7 @@ const ModalAddTagMember = () => {
         <div className='font-prompt'>
             <button className="btn btn-soft btn-success" onClick={() => document.getElementById('modalAddTag').showModal()}>เพิ่มสมาชิก</button>
             <dialog id="modalAddTag" className="modal">
-                <form onSubmit={handleSubmit} className="modal-box max-w-3xl flex flex-col gap-5">
+                <form onSubmit={handleSubmit} className="modal-box max-w-3xl flex flex-col gap-3">
                     <h3 className="font-bold text-lg text-text-primary">เพิ่มสมาชิกเข้าป้ายกำกับ</h3>
                     <Select
                         text='ป้ายกำกับ'
@@ -160,11 +175,19 @@ const ModalAddTagMember = () => {
                         valueKey='id'
                         labelKey='tag_name'
                     />
-                    <SearchBox
-                        width='w-full'
-                        placeholder='ค้นหาชื่อ, นามสกุล, เบอร์โทร...'
-                        onChange={(e) => setTextSearch(e.target.value)}
-                    />
+                    <div className="flex items-end gap-5">
+                        <SearchBox
+                            width='w-full'
+                            placeholder='ค้นหาชื่อ, นามสกุล, เบอร์โทร...'
+                            onChange={(e) => setTextSearch(e.target.value)}
+                        />
+                        <SelectPerPage
+                            onChange={handlePerPageChange}
+                            perPage={perPage}
+                            width='w-25'
+                        />
+                    </div>
+
                     <div className="flex gap-3 justify-end">
                         {
                             groupData.map((i) => (
@@ -180,16 +203,35 @@ const ModalAddTagMember = () => {
                             ))
                         }
                     </div>
-                    <TableMember
-                        data={member}
-                        onChange={handleCheck}
-                        selected={memberSelected}
-                        onSort={handleSort}
-                        sortConfig={sortConfig}
-                        onCheckAll={handleCheckAll}
-                        isAllSelected={isAllSelected}
-                        isSomeSelected={isSomeSelected}
-                    />
+                    <div className="w-full h-72 overflow-y-auto">
+                        <TableMember
+                            data={member}
+                            onChange={handleCheck}
+                            selected={memberSelected}
+                            onSort={handleSort}
+                            sortConfig={sortConfig}
+                            onCheckAll={handleCheckAll}
+                            isAllSelected={isAllSelected}
+                            isSomeSelected={isSomeSelected}
+                        />
+                    </div>
+                    <div className='flex justify-between'>
+                        {/* แสดงข้อมูลเพิ่มเติม */}
+                        <div className="text-sm text-gray-600">
+                            แสดง {member.length} จาก {pagination.totalItems || 0} รายการ
+                            (หน้า {pagination.page || 1} / {pagination.totalPages || 1})
+                        </div>
+                        {
+                            pagination.totalItems > perPage && (
+                                <Pagination
+                                    disablePrev={!pagination.hasPrevPage}
+                                    disableNext={!pagination.hasNextPage}
+                                    onPrevious={() => setPage(prev => prev - 1)}
+                                    onNext={() => setPage(prev => prev + 1)}
+                                />
+                            )
+                        }
+                    </div>
                     <div className='flex justify-end gap-3'>
                         <button type='button' className="btn btn-soft btn-error" onClick={handleClose}>ยกเลิก</button>
                         <button type="submit" className="btn btn-soft btn-primary">บันทึก</button>

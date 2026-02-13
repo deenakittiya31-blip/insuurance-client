@@ -1,16 +1,16 @@
 import { useRef, useState } from "react"
 import TableMember from "../../component/table/TableMember";
 import { useEffect } from "react";
-import { listForMessage, searchMember } from "../../service/member";
+import { listMember } from "../../service/member";
 import { listGroup } from "../../service/member/group_member";
 import { sendMessage } from "../../service/member/messageApi";
 import toast from "react-hot-toast";
 import TextAreaSendMessage from "../../component/input/TextAreaSendMessage";
-import SearchBox from "../../component/form/SearchBox";
 import { IoFilter } from "react-icons/io5";
 import { listTagSelect } from "../../service/member/tag";
 import SelectPerPage from "../../component/form/SelectPerPage";
 import Pagination from "../../component/paginationComponent/Pagination";
+import SearchBox from "../../component/quotation_about/SearchBox";
 
 const intitailState = {
     text: '',
@@ -33,7 +33,7 @@ const MessageApi = () => {
     const trigger = useRef(null);
     const dropdown = useRef(null);
     const [page, setPage] = useState(1)
-    const [limit, setLimit] = useState(10)
+    const [perPage, setPerPage] = useState(10)
     const [pagination, setPagination] = useState({})
     const [isStaticDataLoaded, setIsStaticDataLoaded] = useState(false)
     const [debouncedSearch, setDebouncedSearch] = useState('')
@@ -55,21 +55,17 @@ const MessageApi = () => {
         fetchStaticData()
     }, [isStaticDataLoaded])
 
-    // useEffect สำหรับ debounce
+    // Debounce เฉพาะ search
     useEffect(() => {
-        const timer = setTimeout(() => {
+        const delay = setTimeout(() => {
             setDebouncedSearch(textSearch)
         }, 500)
-        return () => clearTimeout(timer)
+        return () => clearTimeout(delay)
     }, [textSearch])
 
     useEffect(() => {
-        if (debouncedSearch.trim()) {
-            handleSearchMember()
-        } else {
-            getMember(sortConfig.key, sortConfig.direction, page, limit, groupId)
-        }
-    }, [page, limit, sortConfig, debouncedSearch, groupId])
+        getMember()
+    }, [page, perPage, sortConfig, debouncedSearch, groupId])
 
     useEffect(() => {
         const clickHandler = ({ target }) => {
@@ -84,30 +80,29 @@ const MessageApi = () => {
         };
         document.addEventListener("click", clickHandler);
         return () => document.removeEventListener("click", clickHandler);
-    });
+    }, []);
 
-    const getMember = async (sortKey, sortDirection, page, limit, group_id) => {
+    const getMember = async () => {
         try {
-            const res = await listForMessage(sortKey, sortDirection, page, limit, group_id)
+            const res = await listMember({
+                page,
+                limit: perPage,
+                sortKey: sortConfig.key,
+                sortDirection: sortConfig.direction,
+                search: textSearch,
+                group_id: groupId
+            })
             setMember(res.data.data)
             setPagination(res.data.pagination)
+
         } catch (err) {
             console.log(err)
         }
     }
 
     const handlePerPageChange = (e) => {
-        setLimit(Number(e.target.value))
+        setPerPage(Number(e.target.value))
         setPage(1)  //รีเซ็ตกลับไปหน้า 1
-    }
-
-    const handleSearchMember = async () => {
-        try {
-            const res = await searchMember({ search: textSearch })
-            setMember(res.data.data)
-        } catch (err) {
-            console.log(err)
-        }
     }
 
     const handleSort = (keyName) => {
@@ -242,20 +237,18 @@ const MessageApi = () => {
                     </div>
                 </div>
                 <div className="grid gap-5">
-                    <div className="flex gap-5">
+                    <div className="flex items-end gap-5">
                         <div className="flex-1">
-                            <div>
-                                <span className="font-bold text-lg text-text-primary tracking-wide ">รายชื่อลูกค้า</span>
-                                <SearchBox
-                                    width='w-full'
-                                    placeholder='ค้นหาชื่อ, นามสกุล, เบอร์โทร...'
-                                    onChange={(e) => setTextSearch(e.target.value)}
-                                />
-                            </div>
+                            <span className="font-bold text-lg text-text-primary tracking-wide ">รายชื่อลูกค้า</span>
+                            <SearchBox
+                                width='w-full'
+                                placeholder='ค้นหาชื่อ, นามสกุล, เบอร์โทร...'
+                                onChange={(e) => setTextSearch(e.target.value)}
+                            />
                         </div>
                         <SelectPerPage
                             onChange={handlePerPageChange}
-                            perPage={limit}
+                            perPage={perPage}
                         />
                         <div className="flex gap-3 items-end">
                             <div className="relative">
@@ -298,9 +291,14 @@ const MessageApi = () => {
                             isSomeSelected={isSomeSelected}
                         />
                     </div>
-                    <div className='flex justify-end'>
+                    <div className='flex justify-between'>
+                        {/* แสดงข้อมูลเพิ่มเติม */}
+                        <div className="text-sm text-gray-600">
+                            แสดง {member.length} จาก {pagination.totalItems || 0} รายการ
+                            (หน้า {pagination.page || 1} / {pagination.totalPages || 1})
+                        </div>
                         {
-                            pagination.totalItems > limit && (
+                            pagination.totalItems > perPage && (
                                 <Pagination
                                     disablePrev={!pagination.hasPrevPage}
                                     disableNext={!pagination.hasNextPage}
@@ -309,11 +307,6 @@ const MessageApi = () => {
                                 />
                             )
                         }
-                        {/* แสดงข้อมูลเพิ่มเติม */}
-                        <div className="text-sm text-gray-600">
-                            แสดง {member.length} จาก {pagination.totalItems || 0} รายการ
-                            (หน้า {pagination.page || 1} / {pagination.totalPages || 1})
-                        </div>
                     </div>
                 </div>
             </div>

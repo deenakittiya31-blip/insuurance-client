@@ -8,13 +8,20 @@ export const addMembers = async (form) => {
     return api.post('/api/add-membertotag', form)
 }
 
-export const listTag = async (pageNumber, perPage, sortKey, sortDirection) => {
-    return api.get('/api/list-tag/page', {
+export const listTag = async ({
+    page = 1,
+    limit = 10,
+    sortKey = 'id',
+    sortDirection = 'DESC',
+    search = ''
+}) => {
+    return api.get('/api/list-tag', {
         params: {
-            page: pageNumber,
-            per_page: perPage,
+            page,
+            limit,
             sortKey,
-            sortDirection
+            sortDirection,
+            search: search || undefined,
         }
     })
 }
@@ -37,4 +44,10 @@ export const removeTag = async (id) => {
 
 export const removeTagFromMember = async (id) => {
     return api.delete(`/api/delete-tagfrommember/${id}`)
+}
+
+export const listMemberByTag = (id, search) => {
+    return api.get(`/api/list-memberByTag/${id}`, {
+        params: search ? { search } : {}
+    })
 }

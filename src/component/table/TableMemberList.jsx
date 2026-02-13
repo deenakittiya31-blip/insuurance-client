@@ -3,6 +3,8 @@ import { dateFormat } from "../../utils/dateformat"
 import Sort from "../sortData/Sort"
 
 const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEdite, onToggle }) => {
+
+    console.log(data)
     return (
         <div className="overflow-x-auto font-prompt">
             <table className="table">
@@ -56,6 +58,9 @@ const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEd
                             </div>
                         </th>
                         <th className='font-medium text-neutral-400'>
+                            แท็ก
+                        </th>
+                        <th className='font-medium text-neutral-400'>
                             <div className='flex items-center  gap-3'>
                                 วันที่เพิ่มเพื่อน<Sort
                                     onSort={onSort}
@@ -105,10 +110,20 @@ const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEd
                                     {i.phone === null ? '-' : i.phone}
                                 </td>
                                 <td>
+                                    {i.note === null ? '-' : i.note}
+                                </td>
+                                <td>
                                     {i.created_at === null ? '-' : dateFormat(i.created_at)}
                                 </td>
                                 <td>
-                                    {i.note === null ? '-' : i.note}
+                                    {i.tags.slice(0, 1).map((t, idx) => (
+                                        <button
+                                            key={idx}
+                                            type="button"
+                                            className="w-full btn btn-sm bg-main rounded-full font-prompt text-text-primary "
+                                        >{t}</button>
+                                    ))
+                                    }
                                 </td>
                                 <td className='text-center'>
                                     <input

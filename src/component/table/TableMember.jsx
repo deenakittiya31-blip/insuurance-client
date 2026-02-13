@@ -42,7 +42,7 @@ const TableMember = ({ data, onChange, selected, onSort, sortConfig, onCheckAll,
                             </div>
                         </th>
                         <th className='font-medium text-neutral-400'>
-                            <div className='flex items-center  gap-3'>
+                            <div className='flex items-center gap-3'>
                                 นามสกุล<Sort
                                     onSort={onSort}
                                     keyName='last_name'
@@ -50,8 +50,8 @@ const TableMember = ({ data, onChange, selected, onSort, sortConfig, onCheckAll,
                                 />
                             </div>
                         </th>
-                        <th className='font-medium text-neutral-400'>
-                            <div className='flex items-center  gap-3'>
+                        <th className='font-medium text-neutral-400 '>
+                            <div className='flex items-center justify-center gap-3'>
                                 กลุ่ม<Sort
                                     onSort={onSort}
                                     keyName='group_name'
@@ -60,13 +60,16 @@ const TableMember = ({ data, onChange, selected, onSort, sortConfig, onCheckAll,
                             </div>
                         </th>
                         <th className='font-medium text-neutral-400'>
-                            <div className='flex items-center  gap-3'>
+                            <div className='flex items-center justify-center gap-3'>
                                 เบอร์โทรศัพท์<Sort
                                     onSort={onSort}
                                     keyName='phone'
                                     currentSort={sortConfig}
                                 />
                             </div>
+                        </th>
+                        <th className='font-medium text-neutral-400 text-center'>
+                            แท็ก
                         </th>
                     </tr>
                 </thead>
@@ -106,9 +109,17 @@ const TableMember = ({ data, onChange, selected, onSort, sortConfig, onCheckAll,
                                     {i.first_name === null ? '-' : i.first_name}
                                 </td>
                                 <td>{i.last_name === null ? '-' : i.last_name}</td>
-                                <td>{i.group_name === null ? '-' : i.group_name}</td>
-                                <td>
-                                    {i.phone === null ? '-' : i.phone}
+                                <td className="text-center">{i.group_name === null ? '-' : i.group_name}</td>
+                                <td className="text-center">{i.phone === null ? '-' : i.phone}</td>
+                                <td className="text-center">
+                                    {i.tags.slice(0, 1).map((t, idx) => (
+                                        <button
+                                            key={idx}
+                                            type="button"
+                                            className="w-full btn btn-sm bg-main rounded-full font-prompt text-text-primary "
+                                        >{t}</button>
+                                    ))
+                                    }
                                 </td>
                             </tr>
                         ))

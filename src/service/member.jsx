@@ -18,43 +18,34 @@ export const deleteMember = (id) => {
     return api.delete(`api/delete-member/${id}`)
 }
 
-export const listMemberPagination = (page, perPage, sortKey, sortDirection) => {
+export const listMember = ({
+    page = 1,
+    limit = 10,
+    sortKey = 'id',
+    sortDirection = 'DESC',
+    search = '',
+    group_id = []
+}) => {
     return api.get('/api/list-members', {
         params: {
-            page: page,
-            per_page: perPage,
-            sortKey,
-            sortDirection
-        }
-    })
-}
-
-export const listForMessage = (sortKey, sortDirection, page,
-    limit, group_id) => {
-    const groupIdParams = Array.isArray(group_id) && group_id.length > 0
-        ? group_id.join(',')
-        : undefined
-
-    return api.get('/api/list-members/message', {
-        params: {
-            sortKey,
-            sortDirection,
             page,
             limit,
-            ...(groupIdParams && { group_id: groupIdParams })
+            sortKey,
+            sortDirection,
+            search: search || undefined,
+            group_id: group_id.length > 0
+                ? group_id.join(',')
+                : undefined
         }
     })
 }
+
 
 export const sendDocumentToMember = (members, q_id) => {
     return api.post('/api/sendDocument-tomember', {
         members,
         q_id
     })
-}
-
-export const searchMember = async (arg) => {
-    return api.post('/api/search-member', arg)
 }
 
 export const statusMember = (id, is_active) => {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { deleteMember, listMemberPagination, readMember, searchMember, statusMember, updateMember } from "../../service/member"
+import { deleteMember, listMember, readMember, statusMember, updateMember } from "../../service/member"
 import TableMemberList from '../../component/table/TableMemberList'
 import NameTable from "../../component/form/NameTable"
 import SelectPerPage from "../../component/form/SelectPerPage"
@@ -11,6 +11,7 @@ import SearchBox from "../../component/quotation_about/SearchBox"
 import { listSelectGroup } from "../../service/member/group_member"
 import Title from "../../component/form/Title"
 import { removeTagFromMember } from "../../service/member/tag"
+import { useNavigate, useSearchParams } from "react-router-dom"
 
 const initialState = {
     first_name: '',
@@ -22,38 +23,50 @@ const initialState = {
 }
 
 const Home = () => {
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+    const editId = searchParams.get("edit");
     const [member, setMember] = useState([])
     const [group, setGroup] = useState([])
     const [page, setPage] = useState(1)
     const [perPage, setPerPage] = useState(10)
-    const [total, setTotal] = useState(0)
-    const lastPage = Math.ceil(total / perPage)
     const [isOpen, setIsOpen] = useState(false)
     const [idUpdate, setIdUpdate] = useState(null)
     const [textSearch, setTextSearch] = useState('')
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
     const [form, setForm] = useState(initialState)
+    const [pagination, setPagination] = useState({})
 
     useEffect(() => {
-        getMember(page, perPage, sortConfig.key, sortConfig.direction)
-    }, [page, perPage, sortConfig])
+        if (editId) {
+            openModal(editId);
+            navigate('/app/member', { replace: true });
+        }
+    }, [editId]);
+
+    useEffect(() => {
+        const delay = setTimeout(() => {
+            getMember()
+        }, 500)
+
+        return () => clearTimeout(delay)
+    }, [page, perPage, sortConfig, textSearch])
 
     useEffect(() => {
         fetchGroupMember();
     }, [isOpen])
 
-    useEffect(() => {
-        const deley = setTimeout(() => {
-            handleSearchMember()
-        }, 500)
-        return () => clearTimeout(deley)
-    }, [textSearch])
-
-    const getMember = async (page, perPage, sortKey = 'id', sortDirection = 'DESC') => {
+    const getMember = async () => {
         try {
-            const res = await listMemberPagination(page, perPage, sortKey, sortDirection)
+            const res = await listMember({
+                page,
+                limit: perPage,
+                sortKey: sortConfig.key,
+                sortDirection: sortConfig.direction,
+                search: textSearch
+            })
             setMember(res.data.data)
-            setTotal(res.data.total)
+            setPagination(res.data.pagination)
 
         } catch (err) {
             console.log(err)
@@ -108,18 +121,6 @@ const Home = () => {
         setForm(initialState)
     }
 
-    const handleSearchMember = async () => {
-        try {
-            const res = await searchMember({ search: textSearch })
-            setMember(res.data.data)
-            if (!textSearch) {
-                getMember(page, perPage, sortConfig.key, sortConfig.direction)
-            }
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
     const handleUpdate = async (e) => {
         e.preventDefault()
         try {
@@ -127,7 +128,7 @@ const Home = () => {
             setForm(initialState)
             closeForm()
             toast.success(res.data.msg)
-            getMember(page, perPage, sortConfig.key, sortConfig.direction)
+            getMember()
 
         } catch (err) {
             console.log(err)
@@ -150,7 +151,7 @@ const Home = () => {
 
         try {
             const res = await deleteMember(id)
-            getMember(page, perPage, sortConfig.key, sortConfig.direction)
+            getMember()
             toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
@@ -174,7 +175,7 @@ const Home = () => {
     const handleOnToggle = async (id, currentStatus) => {
         try {
             await statusMember(id, !currentStatus)
-            getMember(page, perPage, sortConfig.key, sortConfig.direction)
+            getMember()
             toast.success('อัปเดตสถานะสำเร็จ')
 
         } catch (err) {
@@ -221,14 +222,18 @@ const Home = () => {
                     onToggle={handleOnToggle}
                 />
             </div>
-            <div className='flex justify-end'>
+            <div className='flex justify-between'>
+                <div className="font-prompt text-sm text-gray-600">
+                    แสดง {member.length} จาก {pagination.totalItems || 0} รายการ
+                    (หน้า {pagination.page || 1} / {pagination.totalPages || 1})
+                </div>
                 {
-                    total > perPage && (
+                    pagination.totalItems > perPage && (
                         <Pagination
-                            disablePrev={page === 1}
-                            disableNext={page === lastPage}
-                            onPrevious={() => setPage(page - 1)}
-                            onNext={() => setPage(page + 1)}
+                            disablePrev={!pagination.hasPrevPage}
+                            disableNext={!pagination.hasNextPage}
+                            onPrevious={() => setPage(prev => prev - 1)}
+                            onNext={() => setPage(prev => prev + 1)}
                         />
                     )
                 }

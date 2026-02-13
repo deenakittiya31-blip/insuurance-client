@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import Sort from '../sortData/Sort'
-import ModalAddTagMember from '../modal/ModalAddTagMember'
 
-const TableTag = ({ data, onDelete, onUpdate, onToggle, onSort, sortConfig }) => {
+const TableTag = ({ data, onDelete, onUpdate, onToggle, onSort, sortConfig, onRead }) => {
     const [editingId, setEditingId] = useState(null)
     const [editValue, setEditValue] = useState('')
 
@@ -78,6 +77,7 @@ const TableTag = ({ data, onDelete, onUpdate, onToggle, onSort, sortConfig }) =>
                                 </td>
                                 <td>
                                     <div className='flex gap-5 justify-center'>
+                                        <button onClick={() => onRead(i.id)} className="btn btn-sm btn-soft btn-info">ดูสมาชิก</button>
                                         <button onClick={() => startEdit(i)} className="btn btn-sm btn-soft btn-warning">แก้ไข</button>
                                         <button onClick={() => onDelete(i.id)} className="btn btn-sm btn-soft btn-error">ลบ</button>
                                     </div>
