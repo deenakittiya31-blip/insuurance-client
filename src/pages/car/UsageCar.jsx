@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useState } from 'react'
 import useInsureAuth from '../../store/auth-store'
-import { createCarUsage, createUsageType, listCarUsage, listUsageType, readUsageType, removeCarUsage, removeUsageType, statusCarUsage, statusUsageType, updateCarUsage, updateUsageType } from '../../service/car/CarUsage'
+import { createCarUsage, createUsageType, listCarUsage, listUsageType, readUsageType, removeCarUsage, removeUsageType, statusCarUsage, statusIsSee, statusUsageType, updateCarUsage, updateUsageType } from '../../service/car/CarUsage'
 import TableCarUsage from '../../component/table/TableCarUsage'
 import toast from 'react-hot-toast'
 import Pagination from '../../component/paginationComponent/Pagination'
@@ -13,6 +13,7 @@ import TextInput from '../../component/form/TextInput'
 import ModalCarUsage from '../../component/modal/ModalCarUsage'
 import TableCarUsageType from '../../component/table/TableCarUsageType'
 import EditCarUsage from '../../component/edit/EditCarUsage'
+import SearchBox from '../../component/quotation_about/SearchBox'
 
 const initialState = {
     code: '',
@@ -31,14 +32,26 @@ const UsageCar = () => {
     const [open, setOpen] = useState(false)
     const [idSelect, setIdSelect] = useState(null)
     const [page, setPage] = useState(1)
-    const [total, setTotal] = useState(0)
     const [perPage, setPerPage] = useState(10)
-    const lastPage = Math.ceil(total / perPage)
+    const [pagination, setPagination] = useState({})
+    const [textSearch, setTextSearch] = useState('')
+    const [debouncedSearch, setDebouncedSearch] = useState('')
+    const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
 
     useEffect(() => {
         getUsage();
-        getCarUsageType(page, perPage);
-    }, [page, perPage])
+    }, [])
+
+    useEffect(() => {
+        const delay = setTimeout(() => {
+            setDebouncedSearch(textSearch)
+        }, 500)
+        return () => clearTimeout(delay)
+    }, [textSearch])
+
+    useEffect(() => {
+        getCarUsageType();
+    }, [page, perPage, sortConfig, debouncedSearch])
 
 
     const getUsage = async () => {
@@ -114,13 +127,31 @@ const UsageCar = () => {
     }
 
     //car usage type
-    const getCarUsageType = async (page, perPage) => {
-        const res = await listUsageType(page, perPage)
-            .then((res) => {
-                setUsageType(res.data.data)
-                setTotal(res.data.total)
+    const getCarUsageType = async () => {
+        try {
+            const res = await listUsageType({
+                page,
+                limit: perPage,
+                sortKey: sortConfig.key,
+                sortDirection: sortConfig.direction,
+                search: textSearch
             })
-            .catch((err) => console.log(err))
+
+            setUsageType(res.data.data)
+            setPagination(res.data.pagination)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const handleSort = (keyName) => {
+        let direction = 'ASC';
+
+        if (sortConfig.key === keyName && sortConfig.direction === 'ASC') {
+            direction = 'DESC';
+        }
+
+        setSortConfig({ key: keyName, direction });
     }
 
     const submitCarUsageType = (e) => {
@@ -191,7 +222,7 @@ const UsageCar = () => {
             toast.success(res.data.msg)
             closeForm()
             setForm(initialState)
-            getCarUsageType(page, perPage)
+            getCarUsageType()
         } catch (err) {
             console.log(err)
         }
@@ -211,7 +242,18 @@ const UsageCar = () => {
     const hdlToggleActiveCarUsageType = async (id, currentStatus) => {
         try {
             await statusUsageType(id, !currentStatus)
-            getCarUsageType(page, perPage)
+            getCarUsageType()
+            toast.success('อัปเดตสถานะสำเร็จ')
+        } catch (err) {
+            console.log(err)
+            toast.error('อัปเดตสถานะไม่สำเร็จ')
+        }
+    }
+
+    const hdlToggleIsSee = async (id, currentStatus) => {
+        try {
+            await statusIsSee(id, !currentStatus)
+            getCarUsageType()
             toast.success('อัปเดตสถานะสำเร็จ')
         } catch (err) {
             console.log(err)
@@ -233,17 +275,22 @@ const UsageCar = () => {
                         icon='🚗'
                         name='ตารางประเภทการใช้งานรถยนต์'
                     />
-                    <div className='flex items-baseline gap-3'>
-                        <ModalCarUsage
-                            form={form}
-                            onChange={handleOnChange}
-                            onSubmit={submitCarUsageType}
-                        />
-                        <SelectPerPage
-                            onChange={handlePerPageChange}
-                            perPage={perPage}
-                        />
-                    </div>
+                    <ModalCarUsage
+                        form={form}
+                        onChange={handleOnChange}
+                        onSubmit={submitCarUsageType}
+                    />
+                </div>
+                <div className='flex justify-between items-end gap-3'>
+                    <SelectPerPage
+                        onChange={handlePerPageChange}
+                        perPage={perPage}
+                    />
+                    <SearchBox
+                        width='md:w-sm'
+                        placeholder='ค้นหา...'
+                        onChange={(e) => setTextSearch(e.target.value)}
+                    />
                 </div>
                 <TableCarUsageType
                     data={usageType}
@@ -252,6 +299,9 @@ const UsageCar = () => {
                     onDelete={hdlDeleteCarUsageType}
                     onEdite={openModal}
                     onToggle={hdlToggleActiveCarUsageType}
+                    onSort={handleSort}
+                    sortConfig={sortConfig}
+                    isSee={hdlToggleIsSee}
                 />
                 <EditCarUsage
                     form={form}
@@ -261,14 +311,18 @@ const UsageCar = () => {
                     onClose={closeForm}
                 />
             </div>
-            <div className='flex justify-end'>
+            <div className='flex justify-between'>
+                <div className="font-prompt text-sm text-gray-600">
+                    แสดง {usageType.length} จาก {pagination.totalItems || 0} รายการ
+                    (หน้า {pagination.page || 1} / {pagination.totalPages || 1})
+                </div>
                 {
-                    total > perPage && (
+                    pagination.totalItems > perPage && (
                         <Pagination
-                            disablePrev={page === 1}
-                            disableNext={page === lastPage}
-                            onPrevious={() => setPage(page - 1)}
-                            onNext={() => setPage(page + 1)}
+                            disablePrev={!pagination.hasPrevPage}
+                            disableNext={!pagination.hasNextPage}
+                            onPrevious={() => setPage(prev => prev - 1)}
+                            onNext={() => setPage(prev => prev + 1)}
                         />
                     )
                 }

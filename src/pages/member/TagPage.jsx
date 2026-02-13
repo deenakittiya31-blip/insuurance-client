@@ -12,6 +12,7 @@ import Pagination from "../../component/paginationComponent/Pagination"
 import ModalAddTagMember from "../../component/modal/ModalAddTagMember"
 import CardTag from "../../component/card/CardTag"
 import { useNavigate } from "react-router-dom"
+import SearchBox from "../../component/quotation_about/SearchBox"
 
 const tagPage = () => {
     const navigate = useNavigate()
@@ -21,7 +22,7 @@ const tagPage = () => {
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
     const [page, setPage] = useState(1)
     const [pagination, setPagination] = useState({})
-    const [perPage, setPerPage] = useState(20)
+    const [perPage, setPerPage] = useState(10)
     const [debouncedSearch, setDebouncedSearch] = useState('')
     const [textSearch, setTextSearch] = useState('')
     const [searchMember, setSearchMember] = useState('')
@@ -173,25 +174,30 @@ const tagPage = () => {
                 />
             </div>
             <div className='bg-white rounded-2xl p-5'>
+                <div className="flex justify-between items-end gap-1">
+                    <form onSubmit={handleSubmit} className='flex items-baseline-last gap-1 font-prompt'>
+                        <TextInput
+                            value={textSearch}
+                            placeholder='เพิ่มป้ายกำกับ...'
+                            width='w-40 lg:w-xs'
+                            name='tag_name'
+                            type='text'
+                            onChange={(e) => setTextSearch(e.target.value)}
+                        />
+                        <button className="btn bg-main px-5 rounded-md text-white font-semibold">บันทึก</button>
+                    </form>
+                    <ModalAddTagMember />
+                </div>
                 <div className='flex justify-between items-end gap-3'>
                     <SelectPerPage
                         onChange={handlePerPageChange}
                         perPage={perPage}
                     />
-                    <div className="flex items-end gap-1">
-                        <form onSubmit={handleSubmit} className='flex items-baseline-last gap-1 font-prompt'>
-                            <TextInput
-                                value={textSearch}
-                                placeholder='เพิ่มป้ายกำกับ...'
-                                width='w-40 lg:w-xs'
-                                name='tag_name'
-                                type='text'
-                                onChange={(e) => setTextSearch(e.target.value)}
-                            />
-                            <button className="btn bg-main px-5 rounded-md text-white font-semibold">บันทึก</button>
-                        </form>
-                        <ModalAddTagMember />
-                    </div>
+                    <SearchBox
+                        width='w-full lg:w-70'
+                        placeholder='ค้นหา...'
+                        onChange={(e) => setTextSearch(e.target.value)}
+                    />
                 </div>
                 <TableTag
                     data={tagData}

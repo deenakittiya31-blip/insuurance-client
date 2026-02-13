@@ -20,11 +20,11 @@ const ModalCarUsage = ({ form, onSubmit, onChange }) => {
                         <TextInput
                             width='w-auto'
                             title='ลำดับการมองเห็น'
-                            name='code'
-                            type='text'
+                            name='visibility_no'
+                            type='number'
                             placeholder='ลำดับ'
                             onChange={onChange}
-                            value={form.code}
+                            value={form.visibility_no}
                         />
                         <TextInput
                             width='w-auto'

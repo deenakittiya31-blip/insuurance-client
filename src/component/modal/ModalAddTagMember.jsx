@@ -162,7 +162,7 @@ const ModalAddTagMember = () => {
     }
     return (
         <div className='font-prompt'>
-            <button className="btn btn-soft btn-success" onClick={() => document.getElementById('modalAddTag').showModal()}>เพิ่มสมาชิก</button>
+            <button className="btn btn-success" onClick={() => document.getElementById('modalAddTag').showModal()}>เพิ่มสมาชิก</button>
             <dialog id="modalAddTag" className="modal">
                 <form onSubmit={handleSubmit} className="modal-box max-w-3xl flex flex-col gap-3">
                     <h3 className="font-bold text-lg text-text-primary">เพิ่มสมาชิกเข้าป้ายกำกับ</h3>

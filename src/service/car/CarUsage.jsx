@@ -49,8 +49,22 @@ export const listUsageTypeSelect = async () => {
     return api.get(`/api/select-carusagetype`)
 }
 
-export const listUsageType = async (pageNumber, perPage) => {
-    return api.get(`/api/list-carusagetype/page?page=${pageNumber}&per_page=${perPage}`)
+export const listUsageType = async ({
+    page = 1,
+    limit = 10,
+    sortKey = 'id',
+    sortDirection = 'DESC',
+    search = ''
+}) => {
+    return api.get(`/api/list-carusagetype`, {
+        params: {
+            page,
+            limit,
+            sortKey,
+            sortDirection,
+            search: search || undefined,
+        }
+    })
 }
 
 export const readUsageType = (id) => {
@@ -67,4 +81,8 @@ export const removeUsageType = async (id) => {
 
 export const statusUsageType = (id, is_active) => {
     return api.put(`/api/status-carusagetype/${id}`, { is_active })
+}
+
+export const statusIsSee = (id, is_see) => {
+    return api.put(`/api/status-issee/${id}`, { is_see })
 }
