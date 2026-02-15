@@ -2,7 +2,7 @@ import React from 'react'
 import Select from '../form/Select'
 import TextInput from '../form/TextInput'
 
-const ModalCarType = ({ form, carUsage, onSubmit, onChange }) => {
+const ModalCarType = ({ form, onSubmit, onChange }) => {
     return (
         <div className='font-prompt'>
             <button className="btn bg-main px-5 rounded-md text-white font-semibold" onClick={() => document.getElementById('modalcartype').showModal()}>เพิ่มข้อมูล</button>
@@ -27,15 +27,6 @@ const ModalCarType = ({ form, carUsage, onSubmit, onChange }) => {
                         onChange={onChange}
                         value={form.type}
                     />
-                    {/* <Select
-                        text='ประเภทการใช้งานรถ'
-                        data={carUsage}
-                        name='car_usage_id'
-                        value={form.car_usage_id}
-                        onChange={onChange}
-                        valueKey='id'
-                        labelKey='usage_name'
-                    /> */}
                     <div className='modal-action'>
                         <button type='button' className="btn btn-soft btn-error" onClick={() => document.getElementById('modalcartype').close()}>ยกเลิก</button>
                         <button type="submit" className="btn btn-soft btn-primary">บันทึก</button>

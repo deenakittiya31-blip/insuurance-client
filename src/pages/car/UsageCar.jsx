@@ -164,7 +164,7 @@ const UsageCar = () => {
                 toast.success(res.data.msg)
                 document.getElementById('modalcarusagetype').close()
                 setForm(initialState)
-                getCarUsageType(page, perPage)
+                getCarUsageType()
             })
             .catch((err) => console.log(err))
     }
@@ -186,7 +186,7 @@ const UsageCar = () => {
         try {
             const res = await removeUsageType(id)
 
-            getCarUsageType(page, perPage)
+            getCarUsageType()
             toast.success(res.data.msg)
         } catch (err) {
             console.log(err)

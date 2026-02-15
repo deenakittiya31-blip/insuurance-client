@@ -8,13 +8,20 @@ export const createYear = async (token, form) => {
     })
 }
 
-export const listYear = async (pageNumber, perPage, sortKey, sortDirection) => {
-    return api.get('/api/list-year/page', {
+export const listYear = async ({
+    page = 1,
+    limit = 10,
+    sortKey = 'id',
+    sortDirection = 'DESC',
+    search = ''
+}) => {
+    return api.get('/api/list-year', {
         params: {
-            page: pageNumber,
-            per_page: perPage,
+            page,
+            limit,
             sortKey,
-            sortDirection
+            sortDirection,
+            search: search || undefined
         }
     })
 }

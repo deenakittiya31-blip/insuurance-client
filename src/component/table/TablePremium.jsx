@@ -17,7 +17,7 @@ const TablePremium = ({ data, page, limit, onDelete, onSort, sortConfig, onToggl
                             <div className='flex items-center  gap-3'>
                                 รหัสเบี้ย<Sort
                                     onSort={onSort}
-                                    keyName='id'
+                                    keyName='premium_id'
                                     currentSort={sortConfig}
                                 />
                             </div>
@@ -87,7 +87,7 @@ const TablePremium = ({ data, page, limit, onDelete, onSort, sortConfig, onToggl
                         </th>
                         <th className='font-medium text-neutral-400 text-center'>
                             <div className='flex items-center  gap-3'>
-                                ประเภทประกันภัย<Sort
+                                วันเริ่มต้น-สิ้นสุด<Sort
                                     onSort={onSort}
                                     keyName='start_date'
                                     currentSort={sortConfig}

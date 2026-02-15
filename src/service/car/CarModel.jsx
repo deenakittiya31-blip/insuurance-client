@@ -8,8 +8,22 @@ export const createCarModel = async (token, form) => {
     })
 }
 
-export const listCarModel = async (pageNumber, perPage) => {
-    return api.get(`/api/list-carmodel/page?page=${pageNumber}&per_page=${perPage}`)
+export const listCarModel = async ({
+    page,
+    limit,
+    sortKey,
+    sortDirection,
+    search
+}) => {
+    return api.get(`/api/list-carmodel`, {
+        params: {
+            page,
+            limit,
+            sortKey,
+            sortDirection,
+            search: search || undefined
+        }
+    })
 }
 
 // export const listByCarModel = async (brand_id) => {

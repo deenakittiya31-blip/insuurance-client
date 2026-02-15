@@ -1,4 +1,6 @@
-const TableCarModel = ({ data, page, limit, onDelete, onEdit, onToggle }) => {
+import Sort from "../sortData/Sort"
+
+const TableCarModel = ({ data, page, limit, onDelete, onEdit, onToggle, onSort, sortConfig }) => {
 
     return (
         <div className="overflow-x-auto font-prompt">
@@ -7,8 +9,24 @@ const TableCarModel = ({ data, page, limit, onDelete, onEdit, onToggle }) => {
                 <thead>
                     <tr>
                         <th className='font-medium text-neutral-400'>ลำดับ</th>
-                        <th className='font-medium text-neutral-400'>ยี่ห้อ</th>
-                        <th className='font-medium text-neutral-400 text-center'>รุ่นรถ</th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center gap-3'>
+                                ยี่ห้อ <Sort
+                                    onSort={onSort}
+                                    keyName='brand'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
+                        <th className='font-medium text-neutral-400 text-center'>
+                            <div className='flex items-center justify-center gap-3'>
+                                รุ่นรถ <Sort
+                                    onSort={onSort}
+                                    keyName='name'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
                         <th className='font-medium text-neutral-400 text-center'>สถานะ</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>

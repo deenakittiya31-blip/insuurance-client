@@ -8,8 +8,22 @@ export const createCarType = async (token, type) => {
     })
 }
 
-export const listCarType = async (pageNumber, perPage) => {
-    return api.get(`/api/list-cartype/page?page=${pageNumber}&per_page=${perPage}`)
+export const listCarType = async ({
+    page,
+    limit,
+    sortKey,
+    sortDirection,
+    search
+}) => {
+    return api.get(`/api/list-cartype`, {
+        params: {
+            page,
+            limit,
+            sortKey,
+            sortDirection,
+            search: search || undefined
+        }
+    })
 }
 
 export const listCarTypeSelect = () => {

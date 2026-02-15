@@ -10,6 +10,7 @@ import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
 import SelectPerPage from '../../component/form/SelectPerPage'
+import SearchBox from '../../component/quotation_about/SearchBox'
 
 const initialState = {
     car_type: '',
@@ -29,13 +30,22 @@ const CompulsoryCar = () => {
     const [open, setOpen] = useState(false)
     const [idSelect, setIdSelect] = useState(null)
     const [page, setPage] = useState(1)
-    const [total, setTotal] = useState(0)
     const [perPage, setPerPage] = useState(10)
-    const lastPage = Math.ceil(total / perPage)
+    const [pagination, setPagination] = useState({})
+    const [textSearch, setTextSearch] = useState('')
+    const [debouncedSearch, setDebouncedSearch] = useState('')
+    const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
+
+    useEffect(() => {
+        const delay = setTimeout(() => {
+            setDebouncedSearch(textSearch)
+        }, 500)
+        return () => clearTimeout(delay)
+    }, [textSearch])
 
     useEffect(() => {
         getCompulsory(page, perPage)
-    }, [page, perPage])
+    }, [page, perPage, sortConfig, debouncedSearch])
 
     const hdlOnChange = (e) => {
         setForm({
@@ -61,17 +71,35 @@ const CompulsoryCar = () => {
         }
     }
 
+    const handleSort = (keyName) => {
+        let direction = 'ASC';
+
+        if (sortConfig.key === keyName && sortConfig.direction === 'ASC') {
+            direction = 'DESC';
+        }
+
+        setSortConfig({ key: keyName, direction });
+    }
+
     const closeForm = () => {
         setOpen(false)
         setForm(initialState)
     }
 
-    const getCompulsory = async (page, perPage) => {
-        await ListCompulsory(page, perPage)
-            .then((res) => {
-                setCompulsory(res.data.data)
-                setTotal(res.data.total)
+    const getCompulsory = async () => {
+        try {
+            const res = await ListCompulsory({
+                page,
+                limit: perPage,
+                sortKey: sortConfig.key,
+                sortDirection: sortConfig.direction,
+                search: debouncedSearch
             })
+            setCompulsory(res.data.data)
+            setPagination(res.data.pagination)
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     const hdlSubmit = async (e) => {
@@ -80,7 +108,7 @@ const CompulsoryCar = () => {
             const res = await createCompulsory(form)
             document.getElementById('modalcompul').close();
             setForm(initialState)
-            getCompulsory(page, perPage);
+            getCompulsory();
             toast.success(res.data.msg)
         } catch (err) {
             console.log(err)
@@ -104,7 +132,7 @@ const CompulsoryCar = () => {
 
         try {
             const res = await removeCompulsory(token, id)
-            getCompulsory(page, perPage);
+            getCompulsory();
             toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
@@ -118,7 +146,7 @@ const CompulsoryCar = () => {
             setForm(initialState)
             closeForm()
             toast.success(res.data.msg)
-            getCompulsory(page, perPage)
+            getCompulsory()
 
         } catch (err) {
             console.log(err)
@@ -129,7 +157,7 @@ const CompulsoryCar = () => {
         try {
             console.log(currentStatus)
             await statusCompulsory(id, !currentStatus)
-            getCompulsory(page, perPage)
+            getCompulsory()
             toast.success('อัปเดตสถานะสำเร็จ')
         } catch (err) {
             console.log(err)
@@ -151,12 +179,19 @@ const CompulsoryCar = () => {
                 <div className='flex justify-between items-baseline-last'>
                     <NameTable
                         icon='🚗'
-                        name='ตารางยี่ห้อ'
+                        name='ตารางพ.ร.บ. รถยนต์'
                     />
-                    <SelectPerPage
-                        onChange={handlePerPageChange}
-                        perPage={perPage}
-                    />
+                    <div className='flex items-end gap-5'>
+                        <SearchBox
+                            width='md:w-sm'
+                            placeholder='ค้นหา...'
+                            onChange={(e) => setTextSearch(e.target.value)}
+                        />
+                        <SelectPerPage
+                            onChange={handlePerPageChange}
+                            perPage={perPage}
+                        />
+                    </div>
                 </div>
                 <TableCompulsory
                     data={compulsory}
@@ -164,17 +199,23 @@ const CompulsoryCar = () => {
                     onEdite={openModal}
                     page={page}
                     limit={perPage}
+                    onSort={handleSort}
+                    sortConfig={sortConfig}
                     onToggle={hdlToggleActive}
                 />
             </div>
-            <div className='flex justify-end'>
+            <div className='flex justify-between'>
+                <div className="font-prompt text-sm text-gray-600">
+                    แสดง {compulsory.length} จาก {pagination.totalItems || 0} รายการ
+                    (หน้า {pagination.page || 1} / {pagination.totalPages || 1})
+                </div>
                 {
-                    total > perPage && (
+                    pagination.totalItems > perPage && (
                         <Pagination
-                            disablePrev={page === 1}
-                            disableNext={page === lastPage}
-                            onPrevious={() => setPage(page - 1)}
-                            onNext={() => setPage(page + 1)}
+                            disablePrev={!pagination.hasPrevPage}
+                            disableNext={!pagination.hasNextPage}
+                            onPrevious={() => setPage(prev => prev - 1)}
+                            onNext={() => setPage(prev => prev + 1)}
                         />
                     )
                 }

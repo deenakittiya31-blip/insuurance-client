@@ -2,7 +2,7 @@ import React from 'react'
 import TextInput from '../form/TextInput';
 import Select from '../form/Select';
 
-const EditCarType = ({ isOpen, carUsage, onClose, onChange, onSubmit, value }) => {
+const EditCarType = ({ isOpen, onClose, onChange, onSubmit, value }) => {
 
     if (!isOpen) return null;
     return (

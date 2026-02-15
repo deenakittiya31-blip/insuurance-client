@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import Sort from '../sortData/Sort'
 
-const TableCarType = ({ data, page, limit, onDelete, onEdit, onToggle }) => {
+const TableCarType = ({ data, page, limit, onDelete, onEdit, onToggle, onSort, sortConfig }) => {
 
     return (
         <div className="overflow-x-auto font-prompt">
@@ -9,8 +9,24 @@ const TableCarType = ({ data, page, limit, onDelete, onEdit, onToggle }) => {
                 <thead>
                     <tr>
                         <th className='font-medium text-neutral-400'>ลำดับ</th>
-                        <th className='font-medium text-neutral-400'>รหัสประเภท</th>
-                        <th className='font-medium text-neutral-400'>ชื่อประเภทรถยนต์</th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center gap-3'>
+                                รหัสประเภท <Sort
+                                    onSort={onSort}
+                                    keyName='code'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center gap-3'>
+                                ชื่อประเภทรถยนต์ <Sort
+                                    onSort={onSort}
+                                    keyName='type'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
                         <th className='font-medium text-neutral-400'>สถานะ</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>

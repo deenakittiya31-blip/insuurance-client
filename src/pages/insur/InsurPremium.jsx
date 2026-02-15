@@ -15,40 +15,37 @@ const InsurPremium = () => {
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
     const [textSearch, setTextSearch] = useState('')
     const [page, setPage] = useState(1)
-    const [total, setTotal] = useState(0)
     const [perPage, setPerPage] = useState(10)
-    const lastPage = Math.ceil(total / perPage)
+    const [pagination, setPagination] = useState({})
+    const [debouncedSearch, setDebouncedSearch] = useState('')
 
     useEffect(() => {
-        const deley = setTimeout(() => {
-            if (textSearch.trim()) {
-                handleSearchPremium()
-            } else {
-                getPremium(page, perPage, sortConfig.key, sortConfig.direction);
-            }
+        const delay = setTimeout(() => {
+            setDebouncedSearch(textSearch)
         }, 500)
-        return () => clearTimeout(deley)
-    }, [page, perPage, sortConfig, textSearch])
+        return () => clearTimeout(delay)
+    }, [textSearch])
+
+    useEffect(() => {
+        getPremium();
+    }, [page, perPage, sortConfig, debouncedSearch])
 
     const handlePerPageChange = (e) => {
         setPerPage(Number(e.target.value))
         setPage(1)
     }
 
-    const getPremium = async (page, perPage, sortKey = 'id', sortDirection = 'DESC') => {
+    const getPremium = async () => {
         try {
-            const res = await listPremium(page, perPage, sortKey, sortDirection)
+            const res = await listPremium({
+                page,
+                limit: perPage,
+                sortKey: sortConfig.key,
+                sortDirection: sortConfig.direction,
+                search: debouncedSearch
+            })
             setPremium(res.data.data)
-            setTotal(res.data.total)
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
-    const handleSearchPremium = async () => {
-        try {
-            const res = await searchPremium({ search: textSearch })
-            setPremium(res.data.data)
+            setPagination(res.data.pagination)
         } catch (err) {
             console.log(err)
         }
@@ -80,7 +77,7 @@ const InsurPremium = () => {
 
         try {
             const res = await removePremium(id)
-            getPremium(page, perPage, sortConfig.key, sortConfig.direction)
+            getPremium()
             toast.success(res.data.msg)
         } catch (err) {
             console.log(err)
@@ -93,7 +90,7 @@ const InsurPremium = () => {
             const res = await statusPremium(id, !currentStatus)
 
             console.log('Success response:', res.data)
-            getPremium(page, perPage, sortConfig.key, sortConfig.direction)
+            getPremium()
             toast.success(res.data.msg)
         } catch (err) {
             console.log('Error response:', err.response)
@@ -140,14 +137,18 @@ const InsurPremium = () => {
                     sortConfig={sortConfig}
                 />
             </div>
-            <div className='flex justify-end'>
+            <div className='flex justify-between'>
+                <div className="font-prompt text-sm text-gray-600">
+                    แสดง {premium.length} จาก {pagination.totalItems || 0} รายการ
+                    (หน้า {pagination.page || 1} / {pagination.totalPages || 1})
+                </div>
                 {
-                    total > perPage && (
+                    pagination.totalItems > perPage && (
                         <Pagination
-                            disablePrev={page === 1}
-                            disableNext={page === lastPage}
-                            onPrevious={() => setPage(page - 1)}
-                            onNext={() => setPage(page + 1)}
+                            disablePrev={!pagination.hasPrevPage}
+                            disableNext={!pagination.hasNextPage}
+                            onPrevious={() => setPage(prev => prev - 1)}
+                            onNext={() => setPage(prev => prev + 1)}
                         />
                     )
                 }

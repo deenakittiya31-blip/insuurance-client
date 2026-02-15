@@ -10,6 +10,7 @@ import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
 import SelectPerPage from '../../component/form/SelectPerPage'
+import SearchBox from '../../component/quotation_about/SearchBox'
 
 const initialState = {
     namecompany: '',
@@ -26,13 +27,22 @@ const InsurCompany = () => {
     const [open, setOpen] = useState(false)
     const [idSelect, setIdSelect] = useState(null)
     const [page, setPage] = useState(1)
-    const [total, setTotal] = useState(0)
     const [perPage, setPerPage] = useState(10)
-    const lastPage = Math.ceil(total / perPage)
+    const [pagination, setPagination] = useState({})
+    const [textSearch, setTextSearch] = useState('')
+    const [debouncedSearch, setDebouncedSearch] = useState('')
+    const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
 
     useEffect(() => {
-        getCompany(page, perPage);
-    }, [page, perPage])
+        const delay = setTimeout(() => {
+            setDebouncedSearch(textSearch)
+        }, 500)
+        return () => clearTimeout(delay)
+    }, [textSearch])
+
+    useEffect(() => {
+        getCompany();
+    }, [page, perPage, sortConfig, debouncedSearch])
 
     const handleOnChange = (e) => {
         setForm({
@@ -58,6 +68,16 @@ const InsurCompany = () => {
         }
     }
 
+    const handleSort = (keyName) => {
+        let direction = 'ASC';
+
+        if (sortConfig.key === keyName && sortConfig.direction === 'ASC') {
+            direction = 'DESC';
+        }
+
+        setSortConfig({ key: keyName, direction });
+    }
+
     const closeForm = () => {
         setOpen(false)
         setForm(initialState)
@@ -74,7 +94,7 @@ const InsurCompany = () => {
         try {
             const res = await createCompany(token, form)
             document.getElementById('modalcompany').close();
-            getCompany(page, perPage);
+            getCompany();
             toast.success(res.data.msg)
             setForm(initialState)
 
@@ -93,18 +113,24 @@ const InsurCompany = () => {
             setForm(initialState)
             closeForm()
             toast.success(res.data.msg)
-            getCompany(page, perPage)
+            getCompany()
 
         } catch (err) {
             console.log(err)
         }
     }
 
-    const getCompany = async (page, per_page) => {
+    const getCompany = async () => {
         try {
-            const res = await listCompany(page, perPage)
+            const res = await listCompany({
+                page,
+                limit: perPage,
+                sortKey: sortConfig.key,
+                sortDirection: sortConfig.direction,
+                search: debouncedSearch
+            })
             setCompany(res.data.data)
-            setTotal(res.data.total)
+            setPagination(res.data.pagination)
         } catch (err) {
             console.log(err)
         }
@@ -126,7 +152,7 @@ const InsurCompany = () => {
 
         try {
             const res = await removeCompany(token, id)
-            getCompany(page, perPage);
+            getCompany();
             toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
@@ -136,7 +162,7 @@ const InsurCompany = () => {
     const hdlToggleActive = async (id, currentStatus) => {
         try {
             await statusCompany(id, !currentStatus)
-            getCompany(page, perPage);
+            getCompany();
             toast.success('อัปเดตสถานะสำเร็จ')
         } catch (err) {
             console.log(err)
@@ -164,10 +190,17 @@ const InsurCompany = () => {
                         icon='🏢'
                         name='ตารางบริษัท'
                     />
-                    <SelectPerPage
-                        onChange={handlePerPageChange}
-                        perPage={perPage}
-                    />
+                    <div className='flex items-end gap-5'>
+                        <SearchBox
+                            width='md:w-sm'
+                            placeholder='ค้นหา...'
+                            onChange={(e) => setTextSearch(e.target.value)}
+                        />
+                        <SelectPerPage
+                            onChange={handlePerPageChange}
+                            perPage={perPage}
+                        />
+                    </div>
                 </div>
                 <TableCompany
                     data={company}
@@ -175,17 +208,23 @@ const InsurCompany = () => {
                     onEdit={openModal}
                     page={page}
                     limit={perPage}
+                    onSort={handleSort}
+                    sortConfig={sortConfig}
                     onToggle={hdlToggleActive}
                 />
             </div>
-            <div className='flex justify-end'>
+            <div className='flex justify-between'>
+                <div className="font-prompt text-sm text-gray-600">
+                    แสดง {company.length} จาก {pagination.totalItems || 0} รายการ
+                    (หน้า {pagination.page || 1} / {pagination.totalPages || 1})
+                </div>
                 {
-                    total > perPage && (
+                    pagination.totalItems > perPage && (
                         <Pagination
-                            disablePrev={page === 1}
-                            disableNext={page === lastPage}
-                            onPrevious={() => setPage(page - 1)}
-                            onNext={() => setPage(page + 1)}
+                            disablePrev={!pagination.hasPrevPage}
+                            disableNext={!pagination.hasNextPage}
+                            onPrevious={() => setPage(prev => prev - 1)}
+                            onNext={() => setPage(prev => prev + 1)}
                         />
                     )
                 }

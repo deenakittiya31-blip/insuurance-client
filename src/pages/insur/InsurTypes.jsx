@@ -10,6 +10,7 @@ import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
 import SelectPerPage from '../../component/form/SelectPerPage'
+import SearchBox from '../../component/quotation_about/SearchBox'
 
 const initialState = {
     nametype: '',
@@ -23,13 +24,22 @@ const InsurTypes = () => {
     const [open, setOpen] = useState(false)
     const [idSelect, setIdSelect] = useState(null)
     const [page, setPage] = useState(1)
-    const [total, setTotal] = useState(0)
     const [perPage, setPerPage] = useState(10)
-    const lastPage = Math.ceil(total / perPage)
+    const [pagination, setPagination] = useState({})
+    const [textSearch, setTextSearch] = useState('')
+    const [debouncedSearch, setDebouncedSearch] = useState('')
+    const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
 
     useEffect(() => {
-        getTypeInsur(page, perPage);
-    }, [page, perPage])
+        const delay = setTimeout(() => {
+            setDebouncedSearch(textSearch)
+        }, 500)
+        return () => clearTimeout(delay)
+    }, [textSearch])
+
+    useEffect(() => {
+        getTypeInsur();
+    }, [page, perPage, sortConfig, debouncedSearch])
 
     const hdlOnChange = (e) => {
         setForm({
@@ -57,16 +67,33 @@ const InsurTypes = () => {
 
     const closeForm = () => {
         setOpen(false)
+        setForm(initialState)
     }
 
-    const getTypeInsur = async (page, perPage) => {
+    const getTypeInsur = async () => {
         try {
-            const res = await listType(page, perPage);
+            const res = await listType({
+                page,
+                limit: perPage,
+                sortKey: sortConfig.key,
+                sortDirection: sortConfig.direction,
+                search: debouncedSearch
+            });
             setType(res.data.data)
-            setTotal(res.data.total)
+            setPagination(res.data.pagination)
         } catch (err) {
             console.log(err)
         }
+    }
+
+    const handleSort = (keyName) => {
+        let direction = 'ASC';
+
+        if (sortConfig.key === keyName && sortConfig.direction === 'ASC') {
+            direction = 'DESC';
+        }
+
+        setSortConfig({ key: keyName, direction });
     }
 
     const hdlSubmit = async (e) => {
@@ -81,7 +108,7 @@ const InsurTypes = () => {
             const res = await creatType(token, form)
             document.getElementById('modalinsurtype').close();
             setForm(initialState)
-            getTypeInsur(page, perPage);
+            getTypeInsur();
             toast.success(res.data.msg)
         } catch (err) {
             console.log(err)
@@ -96,7 +123,7 @@ const InsurTypes = () => {
             setForm(initialState)
             closeForm()
             toast.success(res.data.msg)
-            getTypeInsur(page, perPage)
+            getTypeInsur()
 
         } catch (err) {
             console.log(err)
@@ -129,7 +156,7 @@ const InsurTypes = () => {
     const hdlToggleActive = async (id, currentStatus) => {
         try {
             await statusType(token, id, !currentStatus)
-            getTypeInsur(page, perPage)
+            getTypeInsur()
             toast.success('อัปเดตสถานะสำเร็จ')
         } catch (err) {
             console.log(err)
@@ -157,10 +184,17 @@ const InsurTypes = () => {
                         name=
                         'ตารางประกันรถยนต์'
                     />
-                    <SelectPerPage
-                        onChange={handlePerPageChange}
-                        perPage={perPage}
-                    />
+                    <div className='flex items-end gap-5'>
+                        <SearchBox
+                            width='md:w-sm'
+                            placeholder='ค้นหา...'
+                            onChange={(e) => setTextSearch(e.target.value)}
+                        />
+                        <SelectPerPage
+                            onChange={handlePerPageChange}
+                            perPage={perPage}
+                        />
+                    </div>
                 </div>
 
                 <TableInsurType
@@ -169,28 +203,34 @@ const InsurTypes = () => {
                     onEdite={openModal}
                     page={page}
                     limit={perPage}
+                    onSort={handleSort}
+                    sortConfig={sortConfig}
                     onToggle={hdlToggleActive}
                 />
-                <div className='flex justify-end'>
-                    {
-                        total > perPage && (
-                            <Pagination
-                                disablePrev={page === 1}
-                                disableNext={page === lastPage}
-                                onPrevious={() => setPage(page - 1)}
-                                onNext={() => setPage(page + 1)}
-                            />
-                        )
-                    }
-                </div>
-                <EditTypeInsur
-                    value={form}
-                    onChange={hdlOnChange}
-                    onSubmit={handleUpdate}
-                    isOpen={open}
-                    onClose={closeForm}
-                />
             </div>
+            <div className='flex justify-between'>
+                <div className="font-prompt text-sm text-gray-600">
+                    แสดง {type.length} จาก {pagination.totalItems || 0} รายการ
+                    (หน้า {pagination.page || 1} / {pagination.totalPages || 1})
+                </div>
+                {
+                    pagination.totalItems > perPage && (
+                        <Pagination
+                            disablePrev={!pagination.hasPrevPage}
+                            disableNext={!pagination.hasNextPage}
+                            onPrevious={() => setPage(prev => prev - 1)}
+                            onNext={() => setPage(prev => prev + 1)}
+                        />
+                    )
+                }
+            </div>
+            <EditTypeInsur
+                value={form}
+                onChange={hdlOnChange}
+                onSubmit={handleUpdate}
+                isOpen={open}
+                onClose={closeForm}
+            />
         </div>
     )
 }

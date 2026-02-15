@@ -8,7 +8,7 @@ const TableYear = ({ data, page, limit, onDelete, onEdite, onSort, sortConfig, o
                 <thead>
                     <tr>
                         <th className='font-medium text-neutral-400'>
-                            <div className='flex items-center  gap-3'>
+                            <div className='flex items-center gap-3'>
                                 ลำดับ <Sort
                                     onSort={onSort}
                                     keyName='id'
@@ -16,8 +16,24 @@ const TableYear = ({ data, page, limit, onDelete, onEdite, onSort, sortConfig, o
                                 />
                             </div>
                         </th>
-                        <th className='font-medium text-neutral-400'>ปี พ.ศ.</th>
-                        <th className='font-medium text-neutral-400'>ปี ค.ศ.</th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center justify-center gap-3'>
+                                ปี พ.ศ. <Sort
+                                    onSort={onSort}
+                                    keyName='year_be'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center justify-center gap-3'>
+                                ปี ค.ศ. <Sort
+                                    onSort={onSort}
+                                    keyName='year_ad'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
                         <th className='font-medium text-neutral-400 text-center'>สถานะ</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
@@ -27,8 +43,8 @@ const TableYear = ({ data, page, limit, onDelete, onEdite, onSort, sortConfig, o
                         data?.map((i, idx) => (
                             <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
                                 <td>{(page - 1) * limit + idx + 1}</td>
-                                <td>{i.year_be}</td>
-                                <td>{i.year_ad}</td>
+                                <td className='text-center'>{i.year_be}</td>
+                                <td className='text-center'>{i.year_ad}</td>
                                 <td className='text-center'>
                                     <input
                                         type='checkbox'

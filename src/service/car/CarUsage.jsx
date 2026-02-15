@@ -62,7 +62,7 @@ export const listUsageType = async ({
             limit,
             sortKey,
             sortDirection,
-            search: search || undefined,
+            search: search || undefined
         }
     })
 }

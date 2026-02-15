@@ -1,6 +1,7 @@
 import React from 'react'
+import Sort from '../sortData/Sort'
 
-const TableInsurType = ({ data, page, limit, onDelete, onEdite, onToggle }) => {
+const TableInsurType = ({ data, page, limit, onDelete, onEdite, onToggle, onSort, sortConfig }) => {
     return (
         <div className="overflow-x-auto font-prompt">
             <table className="table">
@@ -8,9 +9,33 @@ const TableInsurType = ({ data, page, limit, onDelete, onEdite, onToggle }) => {
                 <thead>
                     <tr>
                         <th className='font-medium text-neutral-400'>ลำดับ</th>
-                        <th className='font-medium text-neutral-400'>รหัสประเภท</th>
-                        <th className='font-medium text-neutral-400'>ประเภทประกัน</th>
-                        <th className='font-medium text-neutral-400'>รายละเอียด</th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center gap-3'>
+                                รหัสประเภท <Sort
+                                    onSort={onSort}
+                                    keyName='type_code'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center gap-3'>
+                                ประเภทประกัน <Sort
+                                    onSort={onSort}
+                                    keyName='nametype'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center gap-3'>
+                                รายละเอียด <Sort
+                                    onSort={onSort}
+                                    keyName='description'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
                         <th className='font-medium text-neutral-400'>สถานะ</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>

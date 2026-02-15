@@ -4,8 +4,22 @@ export const createCompulsory = async (form) => {
     return api.post('/api/create-compulsory', form)
 }
 
-export const ListCompulsory = async (pageNumber, perPage) => {
-    return api.get(`/api/list-compulsory/page?page=${pageNumber}&per_page=${perPage}`)
+export const ListCompulsory = async ({
+    page,
+    limit,
+    sortKey,
+    sortDirection,
+    search
+}) => {
+    return api.get(`/api/list-compulsory`, {
+        params: {
+            page,
+            limit,
+            sortKey,
+            sortDirection,
+            search: search || undefined
+        }
+    })
 }
 
 export const listOption = async (id) => {

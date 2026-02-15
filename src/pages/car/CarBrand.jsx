@@ -12,6 +12,7 @@ import Title from '../../component/form/Title'
 import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
 import SelectPerPage from '../../component/form/SelectPerPage'
+import SearchBox from '../../component/quotation_about/SearchBox'
 
 const initialState = {
     name: '',
@@ -21,18 +22,27 @@ const initialState = {
 
 const CarBrand = () => {
     const token = useInsureAuth((s) => s.token)
-    const [data, setData] = useState()
+    const [data, setData] = useState([])
     const [form, setForm] = useState(initialState)
     const [open, setOpen] = useState(false)
     const [idSelect, setIdSelect] = useState(false)
     const [page, setPage] = useState(1)
-    const [total, setTotal] = useState(0)
     const [perPage, setPerPage] = useState(10)
-    const lastPage = Math.ceil(total / perPage)
+    const [pagination, setPagination] = useState({})
+    const [textSearch, setTextSearch] = useState('')
+    const [debouncedSearch, setDebouncedSearch] = useState('')
+    const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
 
     useEffect(() => {
-        getCarBrand(page, perPage);
-    }, [page, perPage])
+        const delay = setTimeout(() => {
+            setDebouncedSearch(textSearch)
+        }, 500)
+        return () => clearTimeout(delay)
+    }, [textSearch])
+
+    useEffect(() => {
+        getCarBrand();
+    }, [page, perPage, sortConfig, debouncedSearch])
 
     const handleOnChange = (e) => {
         setForm({
@@ -64,13 +74,20 @@ const CarBrand = () => {
         setForm(initialState)
     }
 
-    const getCarBrand = async (page, perPage) => {
-        await listCarBrand(page, perPage)
-            .then((res) => {
-                setData(res.data.data)
-                setTotal(res.data.total)
+    const getCarBrand = async () => {
+        try {
+            const res = await listCarBrand({
+                page,
+                limit: perPage,
+                sortKey: sortConfig.key,
+                sortDirection: sortConfig.direction,
+                search: debouncedSearch
             })
-            .catch((err) => console.log(err))
+            setData(res.data.data)
+            setPagination(res.data.pagination)
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     const handleSubmit = async (e) => {
@@ -85,12 +102,22 @@ const CarBrand = () => {
             const res = await createCarBrand(token, form)
             toast.success(res.data.msg)
             setForm(initialState)
-            getCarBrand(page, perPage)
+            getCarBrand()
             document.getElementById('modalcarbrand').close()
         } catch (err) {
             console.error(err)
             toast.error("เกิดข้อผิดพลาด")
         }
+    }
+
+    const handleSort = (keyName) => {
+        let direction = 'ASC';
+
+        if (sortConfig.key === keyName && sortConfig.direction === 'ASC') {
+            direction = 'DESC';
+        }
+
+        setSortConfig({ key: keyName, direction });
     }
 
     const hdlDelete = async (id) => {
@@ -109,7 +136,7 @@ const CarBrand = () => {
 
         try {
             const res = await removeCarBrand(token, id)
-            getCarBrand(page, perPage);
+            getCarBrand();
             toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
@@ -123,7 +150,7 @@ const CarBrand = () => {
             setForm(initialState)
             closeForm()
             toast.success(res.data.msg)
-            getCarBrand(page, perPage)
+            getCarBrand()
 
         } catch (err) {
             console.log(err)
@@ -133,7 +160,7 @@ const CarBrand = () => {
     const hdlToggleActive = async (id, currentStatus) => {
         try {
             await statusCarBrand(id, !currentStatus)
-            getCarBrand(page, perPage)
+            getCarBrand()
             toast.success('อัปเดตสถานะสำเร็จ')
         } catch (err) {
             console.log(err)
@@ -161,10 +188,17 @@ const CarBrand = () => {
                         icon='🚗'
                         name='ตารางยี่ห้อ'
                     />
-                    <SelectPerPage
-                        onChange={handlePerPageChange}
-                        perPage={perPage}
-                    />
+                    <div className='flex items-end gap-5'>
+                        <SearchBox
+                            width='md:w-sm'
+                            placeholder='ค้นหา...'
+                            onChange={(e) => setTextSearch(e.target.value)}
+                        />
+                        <SelectPerPage
+                            onChange={handlePerPageChange}
+                            perPage={perPage}
+                        />
+                    </div>
                 </div>
                 <TableCarBrand
                     data={data}
@@ -173,16 +207,22 @@ const CarBrand = () => {
                     page={page}
                     limit={perPage}
                     onToggle={hdlToggleActive}
+                    onSort={handleSort}
+                    sortConfig={sortConfig}
                 />
             </div>
-            <div className='flex justify-end'>
+            <div className='flex justify-between'>
+                <div className="font-prompt text-sm text-gray-600">
+                    แสดง {data.length} จาก {pagination.totalItems || 0} รายการ
+                    (หน้า {pagination.page || 1} / {pagination.totalPages || 1})
+                </div>
                 {
-                    total > perPage && (
+                    pagination.totalItems > perPage && (
                         <Pagination
-                            disablePrev={page === 1}
-                            disableNext={page === lastPage}
-                            onPrevious={() => setPage(page - 1)}
-                            onNext={() => setPage(page + 1)}
+                            disablePrev={!pagination.hasPrevPage}
+                            disableNext={!pagination.hasNextPage}
+                            onPrevious={() => setPage(prev => prev - 1)}
+                            onNext={() => setPage(prev => prev + 1)}
                         />
                     )
                 }

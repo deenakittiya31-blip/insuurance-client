@@ -2,10 +2,10 @@ import React from 'react'
 import TextInput from '../form/TextInput'
 import Select from '../form/Select'
 
-const ModalCarModel = ({ form, carbrand, onSubmit, onChange }) => {
+const ModalCarModel = ({ form, carbrand, isOpen, onSubmit, onChange }) => {
     return (
         <div className='font-prompt'>
-            <button className="btn bg-main px-5 rounded-md text-white font-semibold" onClick={() => document.getElementById('modalcarmodel').showModal()}>เพิ่มข้อมูล</button>
+            <button className="btn bg-main px-5 rounded-md text-white font-semibold" onClick={isOpen}>เพิ่มข้อมูล</button>
             <dialog id="modalcarmodel" className="modal">
                 <form onSubmit={onSubmit} className="modal-box w-auto flex flex-col gap-5">
                     <h3 className="font-bold text-lg text-text-primary">เพิ่มรุ่นรถยนต์</h3>

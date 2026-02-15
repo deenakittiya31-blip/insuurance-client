@@ -1,6 +1,7 @@
 import React from 'react'
+import Sort from '../sortData/Sort'
 
-const TableCompany = ({ data, page, limit, onDelete, onEdit, onToggle }) => {
+const TableCompany = ({ data, page, limit, onDelete, onEdit, onToggle, onSort, sortConfig }) => {
     return (
         <div className="overflow-x-auto font-prompt ">
             <table className="table">
@@ -9,9 +10,33 @@ const TableCompany = ({ data, page, limit, onDelete, onEdit, onToggle }) => {
                     <tr>
                         <th className='font-medium text-neutral-400'>ลำดับ</th>
                         <th className='font-medium text-neutral-400'>รูปภาพ</th>
-                        <th className='font-medium text-neutral-400'>บริษัท</th>
-                        <th className='font-medium text-neutral-400'>รหัส</th>
-                        <th className='font-medium text-neutral-400'>เบอร์โทรแจ้งเหตุ</th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center gap-3'>
+                                บริษัท <Sort
+                                    onSort={onSort}
+                                    keyName='namecompany'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center gap-3'>
+                                รหัส <Sort
+                                    onSort={onSort}
+                                    keyName='code'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center gap-3'>
+                                เบอร์โทรแจ้งเหตุ <Sort
+                                    onSort={onSort}
+                                    keyName='phone'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
                         <th className='font-medium text-neutral-400'>สถานะ</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>

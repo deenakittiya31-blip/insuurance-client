@@ -16,41 +16,38 @@ const InsurPackage = () => {
     const [readPackageData, setReadPackageData] = useState({})
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
     const [textSearch, setTextSearch] = useState('')
+    const [debouncedSearch, setDebouncedSearch] = useState('')
     const [page, setPage] = useState(1)
-    const [total, setTotal] = useState(0)
     const [perPage, setPerPage] = useState(10)
-    const lastPage = Math.ceil(total / perPage)
+    const [pagination, setPagination] = useState({})
 
     useEffect(() => {
-        const deley = setTimeout(() => {
-            if (textSearch.trim()) {
-                handleSearchPackage()
-            } else {
-                getPackage(page, perPage, sortConfig.key, sortConfig.direction)
-            }
+        const delay = setTimeout(() => {
+            setDebouncedSearch(textSearch)
         }, 500)
-        return () => clearTimeout(deley)
-    }, [page, perPage, sortConfig, textSearch])
+        return () => clearTimeout(delay)
+    }, [textSearch])
+
+    useEffect(() => {
+        getPackage();
+    }, [page, perPage, sortConfig, debouncedSearch])
 
     const handlePerPageChange = (e) => {
         setPerPage(Number(e.target.value))
         setPage(1)
     }
 
-    const getPackage = async (page, perPage, sortKey = 'id', sortDirection = 'DESC') => {
+    const getPackage = async () => {
         try {
-            const res = await listPackage(page, perPage, sortKey, sortDirection);
+            const res = await listPackage({
+                page,
+                limit: perPage,
+                sortKey: sortConfig.key,
+                sortDirection: sortConfig.direction,
+                search: debouncedSearch
+            });
             setPackageData(res.data.data)
-            setTotal(res.data.total)
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
-    const handleSearchPackage = async () => {
-        try {
-            const res = await searchPackage({ search: textSearch })
-            setPackageData(res.data.data)
+            setPagination(res.data.pagination)
         } catch (err) {
             console.log(err)
         }
@@ -82,7 +79,7 @@ const InsurPackage = () => {
 
         try {
             const res = await removePackage(id)
-            getPackage(page, perPage, sortConfig.key, sortConfig.direction)
+            getPackage()
             toast.success(res.data.msg)
 
         } catch (err) {
@@ -103,11 +100,10 @@ const InsurPackage = () => {
 
     const hdlToggleActive = async (id, currentStatus) => {
         try {
-            console.log('Toggling:', { id, newStatus: !currentStatus })
             const res = await statusPackage(id, !currentStatus)
 
             console.log('Success response:', res.data)
-            getPackage(page, perPage, sortConfig.key, sortConfig.direction)
+            getPackage()
             toast.success(res.data.msg)
         } catch (err) {
             console.log('Error response:', err.response)
@@ -122,6 +118,7 @@ const InsurPackage = () => {
 
             navigate(`/app/editpackage/${idReturnFromPackage}`)
             toast.success(res.data.msg)
+            getPackage()
         } catch (err) {
             console.log(err)
             toast.error('เกิดข้อผิดพลาดไม่สามารถคัดลอกได้')
@@ -170,14 +167,18 @@ const InsurPackage = () => {
                     onCopy={handleCopyPackage}
                 />
             </div>
-            <div className='flex justify-end'>
+            <div className='flex justify-between'>
+                <div className="font-prompt text-sm text-gray-600">
+                    แสดง {packageData.length} จาก {pagination.totalItems || 0} รายการ
+                    (หน้า {pagination.page || 1} / {pagination.totalPages || 1})
+                </div>
                 {
-                    total > perPage && (
+                    pagination.totalItems > perPage && (
                         <Pagination
-                            disablePrev={page === 1}
-                            disableNext={page === lastPage}
-                            onPrevious={() => setPage(page - 1)}
-                            onNext={() => setPage(page + 1)}
+                            disablePrev={!pagination.hasPrevPage}
+                            disableNext={!pagination.hasNextPage}
+                            onPrevious={() => setPage(prev => prev - 1)}
+                            onNext={() => setPage(prev => prev + 1)}
                         />
                     )
                 }

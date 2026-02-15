@@ -4,13 +4,20 @@ export const createPackage = (form) => {
     return api.post('/api/create-package', form)
 }
 
-export const listPackage = (pageNumber, perPage, sortKey, sortDirection) => {
-    return api.get('/api/list-package/page', {
+export const listPackage = ({
+    page,
+    limit,
+    sortKey,
+    sortDirection,
+    search
+}) => {
+    return api.get('/api/list-package', {
         params: {
-            page: pageNumber,
-            per_page: perPage,
+            page,
+            limit,
             sortKey,
-            sortDirection
+            sortDirection,
+            search: search || undefined
         }
     })
 }

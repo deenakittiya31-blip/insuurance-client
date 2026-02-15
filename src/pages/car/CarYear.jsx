@@ -10,6 +10,7 @@ import Pagination from '../../component/paginationComponent/Pagination'
 import ModalYear from '../../component/modal/ModalYear'
 import EditYear from '../../component/edit/EditYear'
 import SelectPerPage from '../../component/form/SelectPerPage'
+import SearchBox from '../../component/quotation_about/SearchBox'
 
 const initialState = {
     year_be: '',
@@ -25,21 +26,35 @@ const CarYear = () => {
     const [open, setOpen] = useState(false)
     const [page, setPage] = useState(1)
     const [perPage, setPerPage] = useState(10)
-    const [total, setTotal] = useState(0)
-    const lastPage = Math.ceil(total / perPage)
-
+    const [pagination, setPagination] = useState({})
+    const [textSearch, setTextSearch] = useState('')
+    const [debouncedSearch, setDebouncedSearch] = useState('')
 
     useEffect(() => {
-        getYear(page, perPage, sortConfig.key, sortConfig.direction);
-    }, [page, perPage, sortConfig])
+        const delay = setTimeout(() => {
+            setDebouncedSearch(textSearch)
+        }, 500)
+        return () => clearTimeout(delay)
+    }, [textSearch])
 
-    const getYear = async (page, perPage, sortKey = 'id', sortDirection = 'DESC') => {
-        await listYear(page, perPage, sortKey, sortDirection)
-            .then((res) => {
-                setYearData(res.data.data)
-                setTotal(res.data.total)
+    useEffect(() => {
+        getYear();
+    }, [page, perPage, sortConfig, debouncedSearch])
+
+    const getYear = async () => {
+        try {
+            const res = await listYear({
+                page,
+                limit: perPage,
+                sortKey: sortConfig.key,
+                sortDirection: sortConfig.direction,
+                search: debouncedSearch
             })
-            .catch((err) => console.log(err))
+            setYearData(res.data.data)
+            setPagination(res.data.pagination)
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     const handleSort = (keyName) => {
@@ -98,7 +113,7 @@ const CarYear = () => {
                 toast.success(res.data.msg)
                 document.getElementById('modalcaryear').close()
                 setForm(initialState)
-                getYear(page, perPage)
+                getYear()
             })
             .catch((err) => console.log(err))
     }
@@ -120,7 +135,7 @@ const CarYear = () => {
         try {
             const res = await removeYear(token, id)
             toast.success(res.data.msg)
-            getYear(page, perPage);
+            getYear();
         } catch (err) {
             console.log(err)
         }
@@ -132,7 +147,7 @@ const CarYear = () => {
             const res = await updateYear(token, idSelect, form)
             closeForm()
             toast.success(res.data.msg)
-            getYear(page, perPage)
+            getYear()
         } catch (err) {
             console.log(err)
         }
@@ -141,7 +156,7 @@ const CarYear = () => {
     const hdlToggleActive = async (id, currentStatus) => {
         try {
             await statusCarYear(id, !currentStatus)
-            getYear(page, perPage)
+            getYear()
             toast.success('อัปเดตสถานะสำเร็จ')
         } catch (err) {
             console.log(err)
@@ -168,10 +183,17 @@ const CarYear = () => {
                         icon='🚗'
                         name='ตารางประเภทการใช้งาน'
                     />
-                    <SelectPerPage
-                        onChange={handlePerPageChange}
-                        perPage={perPage}
-                    />
+                    <div className='flex items-end gap-5'>
+                        <SearchBox
+                            width='md:w-sm'
+                            placeholder='ค้นหา...'
+                            onChange={(e) => setTextSearch(e.target.value)}
+                        />
+                        <SelectPerPage
+                            onChange={handlePerPageChange}
+                            perPage={perPage}
+                        />
+                    </div>
                 </div>
                 <TableYear
                     data={yearData}
@@ -184,14 +206,18 @@ const CarYear = () => {
                     onToggle={hdlToggleActive}
                 />
             </div>
-            <div className='flex justify-end'>
+            <div className='flex justify-between'>
+                <div className="font-prompt text-sm text-gray-600">
+                    แสดง {yearData.length} จาก {pagination.totalItems || 0} รายการ
+                    (หน้า {pagination.page || 1} / {pagination.totalPages || 1})
+                </div>
                 {
-                    total > perPage && (
+                    pagination.totalItems > perPage && (
                         <Pagination
-                            disablePrev={page === 1}
-                            disableNext={page === lastPage}
-                            onPrevious={() => setPage(page - 1)}
-                            onNext={() => setPage(page + 1)}
+                            disablePrev={!pagination.hasPrevPage}
+                            disableNext={!pagination.hasNextPage}
+                            onPrevious={() => setPage(prev => prev - 1)}
+                            onNext={() => setPage(prev => prev + 1)}
                         />
                     )
                 }

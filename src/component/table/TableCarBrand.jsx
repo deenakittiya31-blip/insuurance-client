@@ -1,6 +1,7 @@
 import React from 'react'
+import Sort from '../sortData/Sort'
 
-const TableCarBrand = ({ data, page, limit, onDelete, onEdit, onToggle }) => {
+const TableCarBrand = ({ data, page, limit, onDelete, onEdit, onToggle, onSort, sortConfig }) => {
     return (
         <div className="overflow-x-auto font-prompt">
             <table className="table">
@@ -9,7 +10,15 @@ const TableCarBrand = ({ data, page, limit, onDelete, onEdit, onToggle }) => {
                     <tr>
                         <th className='font-medium text-neutral-400'>ลำดับ</th>
                         <th className='font-medium text-neutral-400'>รูปภาพ</th>
-                        <th className='font-medium text-neutral-400'>ยี่ห้อ</th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center gap-3'>
+                                ยี่ห้อ <Sort
+                                    onSort={onSort}
+                                    keyName='name'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
                         <th className='font-medium text-neutral-400 text-center'>สถานะ</th>
                         <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                     </tr>
