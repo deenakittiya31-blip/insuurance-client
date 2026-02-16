@@ -1,6 +1,6 @@
 import { FaRegBuilding } from "react-icons/fa6";
 import { FaRegCalendar } from "react-icons/fa";
-import { LuShield, LuCarTaxiFront, LuBrain } from "react-icons/lu";
+import { LuShield, LuCarTaxiFront, LuBrain, LuCalculator } from "react-icons/lu";
 import { TbPackages, TbPremiumRights } from "react-icons/tb";
 import { CgBmw } from "react-icons/cg";
 import { IoCarSportOutline, IoDocumentOutline } from "react-icons/io5";
@@ -28,6 +28,11 @@ export const adminInsur = [
         icon: <TbPremiumRights className='size-4' />,
         title: 'เบี้ยประกัน',
         link: '/app/insurpremium'
+    },
+    {
+        icon: <LuCalculator className='size-4' />,
+        title: 'โปรโมชั่น',
+        link: '/app/promotion'
     },
 ]
 

@@ -15,6 +15,7 @@ import SelectFormModel from '../../component/select/SelectFormModel';
 import toast from 'react-hot-toast';
 import { readPackageEdit, updatePackage } from '../../service/insurance/PackageInsur';
 import { useNavigate, useParams } from 'react-router-dom';
+import { listPromotionSelect } from '../../service/insurance/promotion';
 
 const initialState = {
     package_name: '',
@@ -25,7 +26,7 @@ const initialState = {
     engine_size: '',
     insurance_company: '',
     insurance_type: '',
-    promotion: '',
+    promotion_id: '',
     car_brand_id: [],
     car_model_id: [],
     car_usage_type_id: [],
@@ -51,6 +52,7 @@ const EditPackage = () => {
     const [carUsageType, setCarUsageType] = useState([])
     const [compusory, setCompusory] = useState([])
     const [carModel, setCarModel] = useState([])
+    const [promotion, setPromotion] = useState([])
 
     useEffect(() => {
         getCompanySelect();
@@ -61,6 +63,7 @@ const EditPackage = () => {
         getCarUsageType();
         getCompulsory();
         fetchPackageDetail();
+        getPromotion();
     }, [])
 
     useEffect(() => {
@@ -119,6 +122,15 @@ const EditPackage = () => {
         } catch (err) {
             console.log(err)
             setCarModel([])
+        }
+    }
+
+    const getPromotion = async () => {
+        try {
+            const res = await listPromotionSelect();
+            setPromotion(res.data.data)
+        } catch (error) {
+            console.log(error)
         }
     }
 
@@ -303,19 +315,15 @@ const EditPackage = () => {
                             valueKey='id'
                             labelKey='nametype'
                         />
-                        <div className='font-prompt'>
-                            <legend className="fieldset-legend text-text-primary  text-sm ">โปรโมชัน</legend>
-                            <select
-                                name='promotion'
-                                value={form.promotion}
-                                onChange={handleOnChange}
-                                className="select w-full"
-                            >
-                                <option value="" disabled={true}>กรุณาเลือกโปรโมชัน</option>
-                                <option value='ซื้อ 2 แถม  1'>ซื้อ 2 แถม  1</option>
-                                <option value='เคลมไวในชั่วพริบตา'>เคลมไวในชั่วพริบตา</option>
-                            </select>
-                        </div>
+                        <Select
+                            text='โปรโมชั่น'
+                            data={promotion}
+                            name='promotion_id'
+                            value={form.promotion_id}
+                            onChange={handleOnChange}
+                            valueKey='id'
+                            labelKey='promotion_name'
+                        />
                     </div>
                     <div className='mt-15'>
                         <h1 className='title'>เงื่อนไข</h1>

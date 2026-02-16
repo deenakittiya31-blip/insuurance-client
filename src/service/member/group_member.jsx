@@ -4,8 +4,22 @@ export const createGroup = (form) => {
     return api.post('/api/create-groupmember', form)
 }
 
-export const listGroup = () => {
-    return api.get('/api/list-groupmember')
+export const listGroup = ({
+    page,
+    limit,
+    sortKey,
+    sortDirection,
+    search
+}) => {
+    return api.get('/api/list-groupmember', {
+        params: {
+            page,
+            limit,
+            sortKey,
+            sortDirection,
+            search: search || undefined
+        }
+    })
 }
 
 export const listSelectGroup = () => {

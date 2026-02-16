@@ -37,6 +37,7 @@ import MemberPage from '../pages/member/MemberPage'
 import MessageApi from '../pages/member/MessageApi'
 import TagPage from '../pages/member/TagPage'
 import SearchPremium from '../pages/insur/SearchPremium'
+import Promotion from '../pages/insur/Promotion'
 
 
 const Approutes = () => {
@@ -95,6 +96,7 @@ const Approutes = () => {
                         <Route path='carmodel' element={<CarModel />} />
                         <Route path='carbrand' element={<CarBrand />} />
                         <Route path='insurtypes' element={<InsurTypes />} />
+                        <Route path='promotion' element={<Promotion />} />
                     </Route>
                 </Route>
             </Routes>

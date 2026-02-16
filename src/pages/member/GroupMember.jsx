@@ -5,6 +5,10 @@ import toast from "react-hot-toast"
 import Swal from "sweetalert2"
 import EditGroupMember from "../../component/edit/EditGroupMember"
 import ModalGroupMember from "../../component/modal/ModalGroupMember"
+import SelectPerPage from "../../component/form/SelectPerPage"
+import SearchBox from "../../component/quotation_about/SearchBox"
+import Pagination from "../../component/paginationComponent/Pagination"
+import Sort from "../../component/sortData/Sort"
 
 const intitailState = {
     group_name: '',
@@ -17,18 +21,53 @@ const GroupMember = () => {
     const [open, setOpen] = useState(false)
     const [idSelect, setIdSelect] = useState(false)
     const [form, setForm] = useState(intitailState)
+    const [page, setPage] = useState(1)
+    const [perPage, setPerPage] = useState(10)
+    const [pagination, setPagination] = useState({})
+    const [textSearch, setTextSearch] = useState('')
+    const [debouncedSearch, setDebouncedSearch] = useState('')
+    const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
+
+    useEffect(() => {
+        const delay = setTimeout(() => {
+            setDebouncedSearch(textSearch)
+        }, 500)
+        return () => clearTimeout(delay)
+    }, [textSearch])
 
     useEffect(() => {
         fetchGroupMember();
-    }, [])
+    }, [page, perPage, sortConfig, debouncedSearch])
 
     const fetchGroupMember = async () => {
         try {
-            const res = await listGroup()
+            const res = await listGroup({
+                page,
+                limit: perPage,
+                sortKey: sortConfig.key,
+                sortDirection: sortConfig.direction,
+                search: debouncedSearch
+            })
             setGroup(res.data.data)
+            setPagination(res.data.pagination)
         } catch (err) {
             console.log(err)
         }
+    }
+
+    const handlePerPageChange = (e) => {
+        setPerPage(Number(e.target.value))
+        setPage(1)  //รีเซ็ตกลับไปหน้า 1
+    }
+
+    const handleSort = (keyName) => {
+        let direction = 'ASC';
+
+        if (sortConfig.key === keyName && sortConfig.direction === 'ASC') {
+            direction = 'DESC';
+        }
+
+        setSortConfig({ key: keyName, direction });
     }
 
     const handleOnChange = (e) => {
@@ -132,14 +171,23 @@ const GroupMember = () => {
                 <Title
                     title='กลุ่มลูกค้า'
                 />
+                <ModalGroupMember
+                    form={form}
+                    setForm={setForm}
+                    onChange={handleOnChange}
+                    onSubmit={handleCreateGroup}
+                />
             </div>
             <div className='bg-white rounded-2xl p-5'>
-                <div className='flex justify-end items-baseline-last gap-3'>
-                    <ModalGroupMember
-                        form={form}
-                        setForm={setForm}
-                        onChange={handleOnChange}
-                        onSubmit={handleCreateGroup}
+                <div className='flex justify-end items-end gap-5'>
+                    <SearchBox
+                        width='md:w-sm'
+                        placeholder='ค้นหา...'
+                        onChange={(e) => setTextSearch(e.target.value)}
+                    />
+                    <SelectPerPage
+                        onChange={handlePerPageChange}
+                        perPage={perPage}
                     />
                 </div>
                 <div className="overflow-x-auto font-prompt">
@@ -148,7 +196,15 @@ const GroupMember = () => {
                             <tr>
                                 <th className='font-medium text-neutral-400'>ลำดับ</th>
                                 <th className='font-medium text-neutral-400'>รูปภาพ</th>
-                                <th className='font-medium text-neutral-400'>ประเภท</th>
+                                <th className='font-medium text-neutral-400'>
+                                    <div className='flex items-center gap-3'>
+                                        กลุ่ม <Sort
+                                            onSort={handleSort}
+                                            keyName='group_namee'
+                                            currentSort={sortConfig}
+                                        />
+                                    </div>
+                                </th>
                                 <th className='font-medium text-neutral-400'>สถานะ</th>
                                 <th className='font-medium text-neutral-400 text-center'>จัดการ</th>
                             </tr>
@@ -157,7 +213,7 @@ const GroupMember = () => {
                             {
                                 group?.map((i, idx) => (
                                     <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
-                                        <td>{idx + 1}</td>
+                                        <td>{(page - 1) * perPage + idx + 1}</td>
                                         <td>
                                             <div className="w-10 h-10 rounded-md">
                                                 <img src={i.logo_url} alt={i.group_name} className="w-full h-full object-cover" />
@@ -186,6 +242,22 @@ const GroupMember = () => {
                         </tbody>
                     </table>
                 </div>
+            </div>
+            <div className='flex justify-between'>
+                <div className="font-prompt text-sm text-gray-600">
+                    แสดง {group.length} จาก {pagination.totalItems || 0} รายการ
+                    (หน้า {pagination.page || 1} / {pagination.totalPages || 1})
+                </div>
+                {
+                    pagination.totalItems > perPage && (
+                        <Pagination
+                            disablePrev={!pagination.hasPrevPage}
+                            disableNext={!pagination.hasNextPage}
+                            onPrevious={() => setPage(prev => prev - 1)}
+                            onNext={() => setPage(prev => prev + 1)}
+                        />
+                    )
+                }
             </div>
             <EditGroupMember
                 form={form}
