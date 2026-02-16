@@ -38,6 +38,7 @@ import MessageApi from '../pages/member/MessageApi'
 import TagPage from '../pages/member/TagPage'
 import SearchPremium from '../pages/insur/SearchPremium'
 import Promotion from '../pages/insur/Promotion'
+import ProfileUser from '../pages/ProfileUser'
 
 
 const Approutes = () => {
@@ -78,6 +79,7 @@ const Approutes = () => {
                     <Route path='add-premium' element={<AddPremium />} />
                     <Route path='edit-premium/:id' element={<EditPremium />} />
                     <Route path='search-premium' element={<SearchPremium />} />
+                    <Route path='profileUser' element={<ProfileUser />} />
 
                     {/*admin only */}
                     <Route

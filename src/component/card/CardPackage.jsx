@@ -31,7 +31,7 @@ const CardPackage = ({ data, onRead }) => {
                                 <p>สถานะซ่อม : <span className="font-medium">{data.repair_type}</span></p>
                                 <p>บริษัทประกันภัย : <span className="font-medium">{data.namecompany}</span></p>
                                 <p>ประเภทประกันภัย : <span className="font-medium">{data.nametype}</span></p>
-                                <p>โปรโมชั่น : <span className="font-medium">{data.promotion}</span></p>
+                                <p>โปรโมชั่น : <span className="font-medium">{data.promotion_name}</span></p>
                             </div>
                             <div>
                                 <p>ประเภทรถยนต์ : </p>
@@ -90,8 +90,8 @@ const CardPackage = ({ data, onRead }) => {
                             <h3 className="font-bold text-lg tracking-wide">วิธีการชำระเงิน</h3>
                             <div className="w-full h-px bg-border my-3" />
                             <div className="font-semibold mb-3">
-                                ที่อนุญาติ : {data.payments?.map((i) => (
-                                    <span className={`${getPaymentColor(i.payment_method_id)} px-1 rounded-sm text-white mr-3`}>{i.payment_name}</span>
+                                ที่อนุญาติ : {data.payments?.map((i, idx) => (
+                                    <span key={idx} className={`${getPaymentColor(i.payment_method_id)} px-1 rounded-sm text-white mr-3`}>{i.payment_name}</span>
                                 )
                                 )}
                             </div>

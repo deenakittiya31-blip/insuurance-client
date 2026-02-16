@@ -9,12 +9,12 @@ import { TbLogout } from "react-icons/tb";
 import { IoDocumentAttachOutline, IoPeopleOutline } from "react-icons/io5";
 import ModalCompare from '../modal/ModalCompare';
 import ModalKeyInCompare from '../modal/modalKeyInCompare';
-import useActionStore from '../../store/action-store';
 import { createCompare } from '../../service/compare';
 import { MdOutlineSpaceDashboard, MdOutlineTag } from 'react-icons/md';
 import { FiMessageCircle } from "react-icons/fi";
 import { LuTableProperties } from "react-icons/lu";
 import { listByCarModel } from '../../service/car/CarModel';
+import { CgProfile } from 'react-icons/cg';
 
 const initialState = {
     to_name: '',
@@ -31,10 +31,21 @@ const SidebarNew = () => {
     const user = useInsureAuth((s) => s.user)
     const navigate = useNavigate();
     const [collapsed, setCollapsed] = useState(false)
-    const [insure, setInsur] = useState(false)
-    const [car, setCar] = useState(false)
     const [form, setForm] = useState(initialState)
     const [carModel, setCarModel] = useState([])
+    const [openMenu, setOpenMenu] = useState({
+        insure: false,
+        car: false,
+        member: false,
+        quotation: false
+    })
+
+    const toggleMenu = (key) => {
+        setOpenMenu(prev => ({
+            ...prev,
+            [key]: !prev[key]
+        }))
+    }
 
     const hdlLogout = () => {
         actionLogout()
@@ -146,9 +157,9 @@ const SidebarNew = () => {
                 transition-all duration-500 ease-in-out
                 ${collapsed ? 'opacity-0 -translate-x-50 pointer-events-none' : 'opacity-100 translate-x-0'}
             `}>
-                <div className='flex flex-col flex-1 gap-y-5 text-text-primary'>
+                <div className='flex flex-col flex-1 text-text-primary'>
                     <div>
-                        <div className='flex flex-col gap-4'>
+                        <div className='flex flex-col gap-4 mb-3'>
                             <NavLink
                                 to='/app'
                                 end
@@ -166,180 +177,15 @@ const SidebarNew = () => {
                         </div>
                     </div>
                     <div>
-                        <h1 className='font-semibold mb-5 pl-7 lg:text-lg'>ลูกค้า</h1>
-                        <div className='flex flex-col gap-4'>
-                            <NavLink
-                                to='/app/member'
-                                end
-                                className={({ isActive }) =>
-                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
-                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
-                                }
-                            >
-                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
-                                <div className='w-full flex items-center gap-3'>
-                                    <BsPerson className='size-4' />
-                                    <p className='group-[.active]:text-current'>รายชื่อลูกค้า</p>
-                                </div>
-                            </NavLink>
-                            <NavLink
-                                to='/app/member-group'
-                                end
-                                className={({ isActive }) =>
-                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
-                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
-                                }
-                            >
-                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
-                                <div className='w-full flex items-center gap-3'>
-                                    <IoPeopleOutline className='size-4' />
-                                    <p className='group-[.active]:text-current'>กลุ่มลูกค้า</p>
-                                </div>
-                            </NavLink>
-                            <NavLink
-                                to='/app/message-api'
-                                end
-                                className={({ isActive }) =>
-                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
-                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
-                                }
-                            >
-                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
-                                <div className='w-full flex items-center gap-3'>
-                                    <FiMessageCircle className='size-4' />
-                                    <p className='group-[.active]:text-current'>ส่งข้อความ Line</p>
-                                </div>
-                            </NavLink>
-                            <NavLink
-                                to='/app/member-tag'
-                                end
-                                className={({ isActive }) =>
-                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
-                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
-                                }
-                            >
-                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
-                                <div className='w-full flex items-center gap-3'>
-                                    <MdOutlineTag className='size-4' />
-                                    <p className='group-[.active]:text-current'>ป้ายกำกับลูกค้า</p>
-                                </div>
-                            </NavLink>
+                        <div className='flex justify-between items-center pl-7 pr-3 mb-3'>
+                            <h1 className='font-semibold lg:text-lg'>ลูกค้า</h1>
+                            <IoIosArrowDown onClick={() => toggleMenu('member')} />
                         </div>
-                    </div>
-                    <div>
-                        <h1 className='font-semibold mb-5 pl-7 lg:text-lg'>ใบเสนอราคา</h1>
-                        <div className='flex flex-col gap-4'>
-                            <NavLink
-                                to='/app/pin-compare'
-                                end
-                                className={({ isActive }) =>
-                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
-                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
-                                }
-                            >
-                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
-                                <div className='w-full flex items-center gap-3'>
-                                    <BsPinAngle className='size-4' />
-                                    <p className='group-[.active]:text-current'>เบี้ยประกันที่ใช้บ่อย</p>
-                                </div>
-
-                            </NavLink>
-                            <NavLink
-                                to='/app/quotationlist'
-                                end
-                                className={({ isActive }) =>
-                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
-                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
-                                }
-                            >
-                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
-                                <div className='w-full flex items-center gap-3'>
-                                    <IoDocumentAttachOutline className='size-4' />
-                                    <p className='group-[.active]:text-current'>รายการใบเสนอราคา</p>
-                                </div>
-
-                            </NavLink>
-                            <div className='flex gap-5 items-center text-sm transition duration-300 ease-in-out pl-7'>
-                                <ModalCompare
-                                    form={form}
-                                    onChange={hdlOnChange}
-                                    carmodel={carModel}
-                                    onClose={hdlOnClose}
-                                    onSubmit={hldOnSubmit}
-                                    setForm={setForm}
-                                />
-                            </div>
-                            <div className='flex gap-5 items-center text-sm transition duration-300 ease-in-out pl-7'>
-                                <ModalKeyInCompare
-                                    form={form}
-                                    onChange={hdlOnChange}
-                                    carmodel={carModel}
-                                    onClose={hdlOnCloseKeyIn}
-                                    onSubmit={hldOnSubmitKeyIn}
-                                    setForm={setForm}
-                                />
-                            </div>
-                            <NavLink
-                                to='/app/search-premium'
-                                end
-                                className={({ isActive }) =>
-                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
-                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
-                                }
-                            >
-                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
-                                <div className='w-full flex items-center gap-3'>
-                                    <LuTableProperties className='size-4' />
-                                    <p className='group-[.active]:text-current'>สร้างใบเสนอแพ็กเกจ</p>
-                                </div>
-
-                            </NavLink>
-                        </div>
-                    </div>
-                    {
-                        user.role === 'staff' && (
-                            <div>
-                                <div className='pl-7 pr-3 mb-5'>
-                                    <h1 className='font-semibold lg:text-lg'>ประกันภัย</h1>
-                                </div>
-                                {
-                                    insure && (
-                                        <div className='flex flex-col gap-4'>
-                                            {
-                                                staffInsur.map((i, idx) => (
-                                                    <NavLink
-                                                        to={i.link}
-                                                        key={idx}
-                                                        end
-                                                        className={({ isActive }) =>
-                                                            `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
-                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
-                                                        }
-                                                    >
-                                                        <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
-                                                        <div className='w-full flex items-center gap-3'>
-                                                            {i.icon}
-                                                            <p className='group-[.active]:text-current'>{i.title}</p>
-                                                        </div>
-
-                                                    </NavLink>
-                                                ))
-                                            }
-                                        </div>
-                                    )
-                                }
-
-                            </div>
-                        )
-                    }
-                    <div>
-                        <h1 className='font-semibold mb-5 pl-7 lg:text-lg'>ตั้งค่า</h1>
-                        <div className='flex flex-col gap-4'>
-                            {
-                                adminSetting.map((i, idx) => (
+                        {
+                            openMenu.member && (
+                                <div className='flex flex-col gap-4 mb-3'>
                                     <NavLink
-                                        to={i.link}
-                                        key={idx}
+                                        to='/app/member'
                                         end
                                         className={({ isActive }) =>
                                             `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
@@ -348,26 +194,175 @@ const SidebarNew = () => {
                                     >
                                         <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
                                         <div className='w-full flex items-center gap-3'>
-                                            {i.icon}
-                                            <p className='group-[.active]:text-current'>{i.title}</p>
+                                            <BsPerson className='size-4' />
+                                            <p className='group-[.active]:text-current'>รายชื่อลูกค้า</p>
+                                        </div>
+                                    </NavLink>
+                                    <NavLink
+                                        to='/app/member-group'
+                                        end
+                                        className={({ isActive }) =>
+                                            `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
+                                        }
+                                    >
+                                        <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                        <div className='w-full flex items-center gap-3'>
+                                            <IoPeopleOutline className='size-4' />
+                                            <p className='group-[.active]:text-current'>กลุ่มลูกค้า</p>
+                                        </div>
+                                    </NavLink>
+                                    <NavLink
+                                        to='/app/message-api'
+                                        end
+                                        className={({ isActive }) =>
+                                            `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
+                                        }
+                                    >
+                                        <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                        <div className='w-full flex items-center gap-3'>
+                                            <FiMessageCircle className='size-4' />
+                                            <p className='group-[.active]:text-current'>ส่งข้อความ Line</p>
+                                        </div>
+                                    </NavLink>
+                                    <NavLink
+                                        to='/app/member-tag'
+                                        end
+                                        className={({ isActive }) =>
+                                            `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
+                                        }
+                                    >
+                                        <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                        <div className='w-full flex items-center gap-3'>
+                                            <MdOutlineTag className='size-4' />
+                                            <p className='group-[.active]:text-current'>ป้ายกำกับลูกค้า</p>
+                                        </div>
+                                    </NavLink>
+                                </div>
+                            )
+                        }
+                    </div>
+                    <div>
+                        <div className='flex justify-between items-center pl-7 pr-3 mb-3'>
+                            <h1 className='font-semibold lg:text-lg'>ใบเสนอราคา</h1>
+                            <IoIosArrowDown onClick={() => toggleMenu('quotation')} />
+                        </div>
+                        {
+                            openMenu.quotation && (
+                                <div className='flex flex-col gap-4 mb-3'>
+                                    <NavLink
+                                        to='/app/pin-compare'
+                                        end
+                                        className={({ isActive }) =>
+                                            `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
+                                        }
+                                    >
+                                        <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                        <div className='w-full flex items-center gap-3'>
+                                            <BsPinAngle className='size-4' />
+                                            <p className='group-[.active]:text-current'>เบี้ยประกันที่ใช้บ่อย</p>
                                         </div>
 
                                     </NavLink>
-                                ))
-                            }
-                        </div>
+                                    <NavLink
+                                        to='/app/quotationlist'
+                                        end
+                                        className={({ isActive }) =>
+                                            `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
+                                        }
+                                    >
+                                        <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                        <div className='w-full flex items-center gap-3'>
+                                            <IoDocumentAttachOutline className='size-4' />
+                                            <p className='group-[.active]:text-current'>รายการใบเสนอราคา</p>
+                                        </div>
+
+                                    </NavLink>
+                                    <div className='flex gap-5 items-center text-sm transition duration-300 ease-in-out pl-7'>
+                                        <ModalCompare
+                                            form={form}
+                                            onChange={hdlOnChange}
+                                            carmodel={carModel}
+                                            onClose={hdlOnClose}
+                                            onSubmit={hldOnSubmit}
+                                            setForm={setForm}
+                                        />
+                                    </div>
+                                    <div className='flex gap-5 items-center text-sm transition duration-300 ease-in-out pl-7'>
+                                        <ModalKeyInCompare
+                                            form={form}
+                                            onChange={hdlOnChange}
+                                            carmodel={carModel}
+                                            onClose={hdlOnCloseKeyIn}
+                                            onSubmit={hldOnSubmitKeyIn}
+                                            setForm={setForm}
+                                        />
+                                    </div>
+                                    <NavLink
+                                        to='/app/search-premium'
+                                        end
+                                        className={({ isActive }) =>
+                                            `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
+                                        }
+                                    >
+                                        <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                        <div className='w-full flex items-center gap-3'>
+                                            <LuTableProperties className='size-4' />
+                                            <p className='group-[.active]:text-current'>สร้างใบเสนอแพ็กเกจ</p>
+                                        </div>
+
+                                    </NavLink>
+                                </div>
+                            )
+                        }
                     </div>
+                    {
+                        user.role === 'staff' && (
+                            <div>
+                                <div className='pl-7 pr-3 mb-3'>
+                                    <h1 className='font-semibold lg:text-lg'>ประกันภัย</h1>
+                                </div>
+                                <div className='flex flex-col gap-4 mb-3'>
+                                    {
+                                        staffInsur.map((i, idx) => (
+                                            <NavLink
+                                                to={i.link}
+                                                key={idx}
+                                                end
+                                                className={({ isActive }) =>
+                                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
+                                                }
+                                            >
+                                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                                <div className='w-full flex items-center gap-3'>
+                                                    {i.icon}
+                                                    <p className='group-[.active]:text-current'>{i.title}</p>
+                                                </div>
+
+                                            </NavLink>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+                        )
+                    }
                     {
                         user.role === 'admin' && (
                             <>
                                 <div>
-                                    <div className='flex justify-between items-center pl-7 pr-3 mb-5'>
+                                    <div className='flex justify-between items-center pl-7 pr-3 mb-3'>
                                         <h1 className='font-semibold lg:text-lg'>ประกันภัย</h1>
-                                        <IoIosArrowDown onClick={() => setInsur(!insure)} />
+                                        <IoIosArrowDown onClick={() => toggleMenu('insure')} />
                                     </div>
                                     {
-                                        insure && (
-                                            <div className='flex flex-col gap-4'>
+                                        openMenu.insure && (
+                                            <div className='flex flex-col gap-4 mb-3'>
                                                 {
                                                     adminInsur.map((i, idx) => (
                                                         <NavLink
@@ -395,13 +390,13 @@ const SidebarNew = () => {
                                 </div>
                                 {/* หัวข้อหลัก 3 */}
                                 <div>
-                                    <div className='flex justify-between items-center pl-7 pr-3 mb-5'>
+                                    <div className='flex justify-between items-center pl-7 pr-3 mb-3'>
                                         <h1 className='font-semibold lg:text-lg'>รถยนต์</h1>
-                                        <IoIosArrowDown onClick={() => setCar(!car)} />
+                                        <IoIosArrowDown onClick={() => toggleMenu('car')} />
                                     </div>
                                     {
-                                        car && (
-                                            <div className='flex flex-col gap-4'>
+                                        openMenu.car && (
+                                            <div className='flex flex-col gap-4 mb-3'>
                                                 {
                                                     adminCar.map((i, idx) => (
                                                         <NavLink
@@ -428,6 +423,46 @@ const SidebarNew = () => {
                             </>
                         )
                     }
+                    <div>
+                        <h1 className='font-semibold mb-3 pl-7 lg:text-lg'>ตั้งค่า</h1>
+                        <div className='flex flex-col gap-4 '>
+                            {
+                                adminSetting.map((i, idx) => (
+                                    <NavLink
+                                        to={i.link}
+                                        key={idx}
+                                        end
+                                        className={({ isActive }) =>
+                                            `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
+                                        }
+                                    >
+                                        <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                        <div className='w-full flex items-center gap-3'>
+                                            {i.icon}
+                                            <p className='group-[.active]:text-current'>{i.title}</p>
+                                        </div>
+
+                                    </NavLink>
+                                ))
+                            }
+                            <NavLink
+                                to='profileUser'
+                                end
+                                className={({ isActive }) =>
+                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
+                                }
+                            >
+                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                <div className='w-full flex items-center gap-3'>
+                                    <CgProfile className='size-4' />
+                                    <p className='group-[.active]:text-current'>บัญชีของฉัน</p>
+                                </div>
+
+                            </NavLink>
+                        </div>
+                    </div>
                 </div>
                 <div className='flex pr-5'>
                     {

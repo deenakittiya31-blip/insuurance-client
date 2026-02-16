@@ -5,8 +5,9 @@ import { RiLoader4Fill } from "react-icons/ri";
 import { removeImage, uploadImages } from '../../service/Image';
 import useInsureAuth from '../../store/auth-store';
 import toast from 'react-hot-toast';
+import { AiFillSmile } from 'react-icons/ai';
 
-const UploadFile = ({ form, setForm }) => {
+const UploadFile = ({ form, setForm, variant = "default", urlField, publicIdField }) => {
     const [isLoading, setLoading] = useState(false)
     const token = useInsureAuth((s) => s.token)
 
@@ -68,35 +69,70 @@ const UploadFile = ({ form, setForm }) => {
         }
     }
     return (
-        <div className='flex flex-col text-text-primary'>
-            <p className='font-semibold text-sm font-prompt'>รูปภาพ</p>
-            <div className='flex gap-5 mb-2'>
-                {
-                    isLoading && <RiLoader4Fill color='#FFBB20' size={20} className='animate-spin mb-3' />
-                }
+        <div>
+            {variant === "profile" ? (
+                <div className="flex flex-col items-center gap-3">
+                    <div className="flex justify-center items-center rounded-full bg-white border border-main w-30 h-30 overflow-hidden">
+                        {
+                            isLoading && <div className=' bg-white w-full h-full flex justify-center items-center'>
+                                <span className="loading loading-spinner loading-lg text-main"></span>
+                            </div>
+                        }
 
-                {
-                    form.logo_url && (
-                        <div className='relative'>
-                            <img
-                                className='w-24 h-24 rounded-md hover:scale-105'
-                                src={form.logo_url} />
-                            <span
-                                onClick={handleDelete}
-                                className='absolute -top-3 -right-3 bg-gray-300 opacity-25 rounded-full p-1'>
-                                <FaXmark className='w-5 h-5 text-black' />
+                        {form.logo_url ? (
+                            <img src={form.logo_url} className="object-cover w-full h-full" />
+                        ) : (
+                            <AiFillSmile className={`${isLoading ? 'hidden' : 'block'} size-30 text-main`} />
+                        )}
+                    </div>
 
-                            </span>
-                        </div>
-                    )
-                }
-            </div>
-            <input
-                onChange={handleOnchange}
-                type='file'
-                className='file-input w-full'
-                accept='image/*'
-            ></input>
+                    <input
+                        type="file"
+                        onChange={handleOnchange}
+                        className="hidden"
+                        id="profile-upload"
+                    />
+                    <label
+                        htmlFor="profile-upload"
+                        className="btn btn-sm px-10"
+                    >
+                        เลือกรูป
+                    </label>
+                    <span className="text-xs text-gray-400">ขนาดไฟล์: สูงสุด 1 MB ไฟล์ที่รองรับ: .JPEG, .PNG</span>
+                </div>
+            ) : (
+                // default layout เดิมของคุณ
+                <div className='flex flex-col text-text-primary'>
+                    <p className='font-semibold text-sm font-prompt'>รูปภาพ</p>
+                    <div className='flex gap-5 mb-2'>
+                        {
+                            isLoading && <RiLoader4Fill color='#FFBB20' size={20} className='animate-spin mb-3' />
+                        }
+
+                        {
+                            form.logo_url && (
+                                <div className='relative'>
+                                    <img
+                                        className='w-24 h-24 rounded-md hover:scale-105'
+                                        src={form.logo_url} />
+                                    <span
+                                        onClick={handleDelete}
+                                        className='absolute -top-3 -right-3 bg-gray-300 opacity-25 rounded-full p-1'>
+                                        <FaXmark className='w-5 h-5 text-black' />
+
+                                    </span>
+                                </div>
+                            )
+                        }
+                    </div>
+                    <input
+                        onChange={handleOnchange}
+                        type='file'
+                        className='file-input w-full'
+                        accept='image/*'
+                    ></input>
+                </div>
+            )}
         </div>
     )
 }
