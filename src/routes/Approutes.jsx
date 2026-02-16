@@ -39,6 +39,7 @@ import TagPage from '../pages/member/TagPage'
 import SearchPremium from '../pages/insur/SearchPremium'
 import Promotion from '../pages/insur/Promotion'
 import ProfileUser from '../pages/ProfileUser'
+import Users from '../pages/Users'
 
 
 const Approutes = () => {
@@ -99,6 +100,7 @@ const Approutes = () => {
                         <Route path='carbrand' element={<CarBrand />} />
                         <Route path='insurtypes' element={<InsurTypes />} />
                         <Route path='promotion' element={<Promotion />} />
+                        <Route path='users' element={<Users />} />
                     </Route>
                 </Route>
             </Routes>

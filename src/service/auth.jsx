@@ -36,5 +36,5 @@ export const loginWithGoogle = (credential) => {
 }
 
 export const register = (form) => {
-    return axios.post(`${API_URL}/api/register`, form)
+    return api.post(`/api/register`, form)
 }

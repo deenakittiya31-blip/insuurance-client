@@ -427,25 +427,40 @@ const SidebarNew = () => {
                         <h1 className='font-semibold mb-3 pl-7 lg:text-lg'>ตั้งค่า</h1>
                         <div className='flex flex-col gap-4 '>
                             {
-                                adminSetting.map((i, idx) => (
-                                    <NavLink
-                                        to={i.link}
-                                        key={idx}
-                                        end
-                                        className={({ isActive }) =>
-                                            `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                user.role === 'admin' && (
+                                    adminSetting.map((i, idx) => (
+                                        <NavLink
+                                            to={i.link}
+                                            key={idx}
+                                            end
+                                            className={({ isActive }) =>
+                                                `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
                                         ${isActive ? 'text-main active' : 'hover:text-main'}`
-                                        }
-                                    >
-                                        <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
-                                        <div className='w-full flex items-center gap-3'>
-                                            {i.icon}
-                                            <p className='group-[.active]:text-current'>{i.title}</p>
-                                        </div>
-
-                                    </NavLink>
-                                ))
+                                            }
+                                        >
+                                            <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                            <div className='w-full flex items-center gap-3'>
+                                                {i.icon}
+                                                <p className='group-[.active]:text-current'>{i.title}</p>
+                                            </div>
+                                        </NavLink>
+                                    ))
+                                )
                             }
+                            <NavLink
+                                to='setting'
+                                end
+                                className={({ isActive }) =>
+                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
+                                }
+                            >
+                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                                <div className='w-full flex items-center gap-3'>
+                                    <CgProfile className='size-4' />
+                                    <p className='group-[.active]:text-current'>ปรับแต่งโมเดลเอกสาร</p>
+                                </div>
+                            </NavLink>
                             <NavLink
                                 to='profileUser'
                                 end
@@ -459,7 +474,6 @@ const SidebarNew = () => {
                                     <CgProfile className='size-4' />
                                     <p className='group-[.active]:text-current'>บัญชีของฉัน</p>
                                 </div>
-
                             </NavLink>
                         </div>
                     </div>

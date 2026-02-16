@@ -2,7 +2,7 @@ import { useRef, useState } from "react"
 import TableMember from "../../component/table/TableMember";
 import { useEffect } from "react";
 import { listMember } from "../../service/member";
-import { listGroup } from "../../service/member/group_member";
+import { listSelectGroup } from "../../service/member/group_member";
 import { sendMessage } from "../../service/member/messageApi";
 import toast from "react-hot-toast";
 import TextAreaSendMessage from "../../component/input/TextAreaSendMessage";
@@ -44,7 +44,7 @@ const MessageApi = () => {
 
         const fetchStaticData = async () => {
             const [groupRes, tagRes] = await Promise.all([
-                listGroup(),
+                listSelectGroup(),
                 listTagSelect()
             ])
             setGroupData(groupRes.data.data)

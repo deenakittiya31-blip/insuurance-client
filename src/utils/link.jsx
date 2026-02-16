@@ -1,6 +1,6 @@
 import { FaRegBuilding } from "react-icons/fa6";
 import { FaRegCalendar } from "react-icons/fa";
-import { LuShield, LuCarTaxiFront, LuBrain, LuCalculator } from "react-icons/lu";
+import { LuShield, LuCarTaxiFront, LuBrain, LuCalculator, LuUserPlus } from "react-icons/lu";
 import { TbPackages, TbPremiumRights } from "react-icons/tb";
 import { CgBmw } from "react-icons/cg";
 import { IoCarSportOutline, IoDocumentOutline } from "react-icons/io5";
@@ -89,13 +89,13 @@ export const adminCar = [
 
 export const adminSetting = [
     {
-        icon: <LuBrain className='size-4' />,
-        title: 'ปรับแต่งโมเดลเอกสาร',
-        link: '/app/custommodel'
-    },
-    {
         icon: <RiSettings4Line className='size-4' />,
         title: 'การตั้งค่าระบบ',
         link: '/app/setting'
+    },
+    {
+        icon: <LuUserPlus className='size-4' />,
+        title: 'เพิ่มสิทธิ์ผู้ใช้งานระบบ',
+        link: '/app/users'
     },
 ]
