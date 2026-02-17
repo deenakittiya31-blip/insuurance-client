@@ -87,10 +87,16 @@ const GroupMember = () => {
 
         try {
             const res = await createGroup(form)
+
+            setGroup(prev => [res.data.data, ...prev])
+            setPagination(prev => ({
+                ...prev,
+                totalItems: prev.totalItems + 1
+            }))
+
             toast.success(res.data.msg)
             setForm(intitailState)
             document.getElementById('modalgroupmember').close()
-            fetchGroupMember()
         } catch (err) {
             console.log(err)
             toast.error('สร้างกลุ่มไม่สำเร็จ')
@@ -110,12 +116,19 @@ const GroupMember = () => {
         })
 
         if (!result.isConfirmed) return
+
+        setGroup(prev => prev.filter(item => item.id !== id))
+        setPagination(prev => ({
+            ...prev,
+            totalItems: prev.totalItems - 1
+        }))
+
         try {
             const res = await deleteGroup(id)
             toast.success(res.data.msg)
-            fetchGroupMember()
         } catch (err) {
             console.log(err)
+            fetchGroupMember()
             toast.error('ลบกลุ่มไม่สำเร็จ')
         }
     }
@@ -143,24 +156,35 @@ const GroupMember = () => {
             return toast.error('กรุณากรอกชื่อกลุ่ม')
         }
 
+        setGroup(prev => prev.map(item =>
+            item.id === idSelect ? { ...item, group_name: form.group_name } : item
+        ))
+        closeForm()
+
         try {
             const res = await updateGroup(idSelect, form)
-            closeForm()
             toast.success(res.data.msg)
-            fetchGroupMember()
         } catch (err) {
             console.log(err)
+            fetchGroupMember()
             toast.error('แก้ไขกลุ่มไม่สำเร็จ')
         }
     }
 
     const hdlToggleActive = async (id, currentStatus) => {
+        //อัปเดต UI ทันที (ไม่ต้องรอ API)
+        setGroup(prev => prev.map(item =>
+            item.id === id ? { ...item, is_active: !currentStatus } : item
+        ))
+
         try {
             await statusGroup(id, !currentStatus)
-            fetchGroupMember()
             toast.success('อัปเดตสถานะกลุ่มสำเร็จ')
         } catch (err) {
             console.log(err)
+            setGroup(prev => prev.map(item =>
+                item.id === id ? { ...item, is_active: currentStatus } : item
+            ))
             toast.error('อัปเดตสถานะไม่สำเร็จ')
         }
     }

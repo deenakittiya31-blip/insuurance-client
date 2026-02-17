@@ -25,8 +25,6 @@ const tagPage = () => {
     const [perPage, setPerPage] = useState(10)
     const [debouncedSearch, setDebouncedSearch] = useState('')
     const [textSearch, setTextSearch] = useState('')
-    const [searchMember, setSearchMember] = useState('')
-    const [currentTagId, setCurrentTagId] = useState(null)
     const [tag, setTag] = useState('')
 
     useEffect(() => {
@@ -35,16 +33,6 @@ const tagPage = () => {
         }, 500)
         return () => clearTimeout(delay)
     }, [textSearch])
-
-    useEffect(() => {
-        if (currentTagId) {
-            const delay = setTimeout(() => {
-                fetchMemberInTag(currentTagId, searchMember)
-            }, 400)
-
-            return () => clearTimeout(delay)
-        }
-    }, [searchMember])
 
     useEffect(() => {
         getTag();
@@ -57,7 +45,7 @@ const tagPage = () => {
                 limit: perPage,
                 sortKey: sortConfig.key,
                 sortDirection: sortConfig.direction,
-                search: textSearch,
+                search: debouncedSearch,
             })
             setTagData(res.data.data)
             setPagination(res.data.pagination)
@@ -89,8 +77,15 @@ const tagPage = () => {
 
         try {
             const res = await createTag(tag)
+
+            const newTag = res.data.data
+            setTagData(prev => [newTag, ...prev])
+            setPagination(prev => ({
+                ...prev,
+                totalItems: prev.totalItems + 1
+            }))
+
             toast.success(res.data.msg)
-            getTag();
             setTag('')
         } catch (err) {
             console.log(err)
@@ -112,35 +107,51 @@ const tagPage = () => {
 
         if (!result.isConfirmed) return
 
+        setTagData(prev => prev.filter(tag => tag.id !== id))
+        setPagination(prev => ({
+            ...prev,
+            totalItems: prev.totalItems - 1
+        }))
+
         try {
             const res = await removeTag(id)
-            getTag();
             toast.success(res.data.msg)
 
         } catch (err) {
             console.log(err)
+            getTag()
             toast.error(err.response.data.message)
         }
 
     }
 
     const hdlUpdateTag = async (id, value) => {
+        setTagData(prev => prev.map(tag =>
+            tag.id === id ? { ...tag, tag_name: value } : tag
+        ))
+
         try {
             const res = await updateTag(id, value)
             toast.success(res.data.msg)
-            getTag();
         } catch (err) {
             console.log(err)
+            getTag();
         }
     }
 
     const hdlToggleActive = async (id, currentState) => {
+        setTagData(prev => prev.map(tag =>
+            tag.id === id ? { ...tag, is_active: !currentState } : tag
+        ))
+
         try {
             const res = await statusTag(id, !currentState)
             toast.success(res.data.msg)
-            getTag();
         } catch (err) {
             console.log(err)
+            setTagData(prev => prev.map(tag =>
+                tag.id === id ? { ...tag, is_active: currentState } : tag
+            ))
             toast.error('ไม่สามารถอัปเดตสถานะได้')
         }
     }
@@ -177,12 +188,12 @@ const tagPage = () => {
                 <div className="flex justify-between items-end gap-1">
                     <form onSubmit={handleSubmit} className='flex items-baseline-last gap-1 font-prompt'>
                         <TextInput
-                            value={textSearch}
+                            value={tag}
                             placeholder='เพิ่มป้ายกำกับ...'
                             width='w-40 lg:w-xs'
                             name='tag_name'
                             type='text'
-                            onChange={(e) => setTextSearch(e.target.value)}
+                            onChange={(e) => setTag(e.target.value)}
                         />
                         <button className="btn bg-main px-5 rounded-md text-white font-semibold">บันทึก</button>
                     </form>

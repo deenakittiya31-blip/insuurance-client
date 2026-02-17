@@ -36,6 +36,7 @@ const Home = () => {
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
     const [form, setForm] = useState(initialState)
     const [pagination, setPagination] = useState({})
+    const [debouncedSearch, setDebouncedSearch] = useState('')
 
     useEffect(() => {
         if (editId) {
@@ -46,15 +47,18 @@ const Home = () => {
 
     useEffect(() => {
         const delay = setTimeout(() => {
-            getMember()
+            setDebouncedSearch(textSearch)
         }, 500)
-
         return () => clearTimeout(delay)
-    }, [page, perPage, sortConfig, textSearch])
+    }, [textSearch])
+
+    useEffect(() => {
+        getMember()
+    }, [page, perPage, sortConfig, debouncedSearch])
 
     useEffect(() => {
         fetchGroupMember();
-    }, [isOpen])
+    }, [])
 
     const getMember = async () => {
         try {
@@ -63,7 +67,7 @@ const Home = () => {
                 limit: perPage,
                 sortKey: sortConfig.key,
                 sortDirection: sortConfig.direction,
-                search: textSearch
+                search: debouncedSearch
             })
             setMember(res.data.data)
             setPagination(res.data.pagination)
@@ -123,13 +127,16 @@ const Home = () => {
 
     const handleUpdate = async (e) => {
         e.preventDefault()
+
+        setMember(prev => prev.map(item =>
+            item.id === idUpdate ? { ...item, ...form } : item
+        ))
+        closeForm()
+
         try {
             const res = await updateMember(idUpdate, form)
             setForm(initialState)
-            closeForm()
             toast.success(res.data.msg)
-            getMember()
-
         } catch (err) {
             console.log(err)
         }
@@ -149,9 +156,14 @@ const Home = () => {
 
         if (!result.isConfirmed) return
 
+        setMember(prev => prev.filter(item => item.id !== id))
+        setPagination(prev => ({
+            ...prev,
+            totalItems: prev.totalItems - 1
+        }))
+
         try {
             const res = await deleteMember(id)
-            getMember()
             toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
@@ -173,13 +185,18 @@ const Home = () => {
     }
 
     const handleOnToggle = async (id, currentStatus) => {
+        setMember(prev => prev.map(item =>
+            item.id === id ? { ...item, is_active: !currentStatus } : item
+        ))
         try {
             await statusMember(id, !currentStatus)
-            getMember()
             toast.success('อัปเดตสถานะสำเร็จ')
 
         } catch (err) {
             console.log(err)
+            setMember(prev => prev.map(item =>
+                item.id === id ? { ...item, is_active: currentStatus } : item
+            ))
             toast.error('อัปเดตสถานะไม่สำเร็จ')
         }
     }

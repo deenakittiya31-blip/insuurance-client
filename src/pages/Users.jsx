@@ -84,15 +84,12 @@ const Users = () => {
         setForm(initialState)
     }
 
-    console.log(form)
-
     const hdlSubmit = async (e) => {
         e.preventDefault()
 
         try {
             const res = await register(form)
             document.getElementById('modaluser').close();
-            getUser();
             toast.success(res.data.msg)
             setForm(initialState)
 

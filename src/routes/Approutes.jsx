@@ -1,7 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom'
 import Login from '../pages/auth/Login'
-import Register from '../pages/auth/Register'
 import Layout from '../layout/Layout'
 import UsageCar from '../pages/car/UsageCar'
 import GroupCar from '../pages/car/GroupCar'
@@ -9,7 +8,6 @@ import CarModel from '../pages/car/CarModel'
 import CarBrand from '../pages/car/CarBrand'
 import InsurCompany from '../pages/insur/InsurCompany'
 import InsurTypes from '../pages/insur/InsurTypes'
-import LoginLine from '../pages/auth/LoginLine'
 import CompulsoryCar from '../pages/car/CompulsoryCar'
 import InsurPackage from '../pages/insur/InsurPackage'
 import ProtectRoute from './ProtectRoute'
@@ -47,9 +45,7 @@ const Approutes = () => {
         <BrowserRouter>
             <Routes>
                 <Route index element={<Login />} />
-                <Route path='register' element={<Register />} />
                 <Route path='member-register' element={<MemberRegister />} />
-                <Route path='line' element={<LoginLine />} />
                 <Route path='forbidden' element={<Forbidden />} />
                 <Route path='package-product' element={<PackageProduct />} />
 

@@ -89,7 +89,7 @@ const MessageApi = () => {
                 limit: perPage,
                 sortKey: sortConfig.key,
                 sortDirection: sortConfig.direction,
-                search: textSearch,
+                search: debouncedSearch,
                 group_id: groupId
             })
             setMember(res.data.data)
