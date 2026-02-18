@@ -42,8 +42,8 @@ export const statusPremium = (id, is_active) => {
     return api.put(`/api/status-premium/${id}`, { is_active })
 }
 
-export const searchPremium = async (arg) => {
-    return api.post('/api/search-premium', arg)
+export const searchPremiumMember = async (filter) => {
+    return api.post('/api/search-premiummember', filter)
 }
 
 export const searchPremiumToCompare = async (arg) => {

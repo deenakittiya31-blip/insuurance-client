@@ -27,8 +27,12 @@ export const currentUser = () => {
     return api.post('/api/current-user')
 }
 
-export const loginWithLine = (form) => {
-    return axios.post(`${API_URL}/api/login-line`, form)
+export const currentMember = () => {
+    return api.post('/api/current-member')
+}
+
+export const loginWithLine = (idToken) => {
+    return axios.post(`${API_URL}/api/line`, { idToken })
 }
 
 export const loginWithGoogle = (credential) => {

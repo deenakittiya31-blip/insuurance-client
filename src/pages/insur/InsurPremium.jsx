@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import TablePremium from '../../component/table/TablePremium'
-import { listPremium, removePremium, searchPremium, statusPremium } from '../../service/insurance/PremiumInsur'
+import { listPremium, removePremium, statusPremium } from '../../service/insurance/PremiumInsur'
 import Swal from 'sweetalert2'
 import toast from 'react-hot-toast'
 import Title from '../../component/form/Title'

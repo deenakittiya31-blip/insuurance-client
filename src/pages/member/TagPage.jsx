@@ -26,6 +26,8 @@ const tagPage = () => {
     const [debouncedSearch, setDebouncedSearch] = useState('')
     const [textSearch, setTextSearch] = useState('')
     const [tag, setTag] = useState('')
+    const [searchMember, setSearchMember] = useState('')
+    const [currentTagId, setCurrentTagId] = useState(null)
 
     useEffect(() => {
         const delay = setTimeout(() => {
@@ -33,6 +35,16 @@ const tagPage = () => {
         }, 500)
         return () => clearTimeout(delay)
     }, [textSearch])
+
+    useEffect(() => {
+        if (currentTagId) {
+            const delay = setTimeout(() => {
+                fetchMemberInTag(currentTagId, searchMember)
+            }, 400)
+
+            return () => clearTimeout(delay)
+        }
+    }, [searchMember])
 
     useEffect(() => {
         getTag();

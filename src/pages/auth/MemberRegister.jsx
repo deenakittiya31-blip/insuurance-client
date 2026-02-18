@@ -4,9 +4,11 @@ import liff from "@line/liff"
 import toast from "react-hot-toast"
 import { useState } from "react"
 import { registerMember } from "../../service/member"
+import { useNavigate } from "react-router-dom"
 
 const MemberRegister = () => {
     const [profile, setProfile] = useState({})
+    const navigate = useNavigate()
     const [form, setForm] = useState({
         first_name: '',
         last_name: '',
@@ -51,7 +53,8 @@ const MemberRegister = () => {
             })
 
             toast.success('ลงทะเบียนสำเร็จ 🎉')
-            liff.closeWindow()
+            navigate('/user')
+            // liff.closeWindow()
         } catch (error) {
             console.log(error)
             toast.error(error.response?.data?.message || 'Login failed')

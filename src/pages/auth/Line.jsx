@@ -1,0 +1,39 @@
+import { useEffect, useState } from "react";
+import liff from "@line/liff"
+import { useNavigate } from "react-router-dom";
+import useInsureAuth from '../../store/auth-store'
+import toast from "react-hot-toast";
+
+const Line = () => {
+    const navigate = useNavigate();
+    const { actionCurrentMember, actionLoginLine } = useInsureAuth()
+
+    useEffect(() => {
+        const init = async () => {
+            await liff.init({ liffId: "2008929214-oMQadweJ" });
+
+            if (!liff.isLoggedIn()) {
+                liff.login();
+                return;
+            }
+
+            const idToken = liff.getIDToken();
+            // ส่ง token ไป backend
+            const res = await actionLoginLine(idToken)
+
+            if (res.status === 200) {
+                await actionCurrentMember()
+                toast.success('ล็อกอินสำเร็จ')
+                navigate("/user");
+            } else {
+                navigate("/member-register");
+            }
+        };
+
+        init();
+    }, []);
+    return (
+        <div className="w-full h-screen flex justify-center items-center"><span className="loading loading-bars loading-xl"></span></div>
+    )
+}
+export default Line

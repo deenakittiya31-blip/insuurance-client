@@ -38,6 +38,8 @@ import SearchPremium from '../pages/insur/SearchPremium'
 import Promotion from '../pages/insur/Promotion'
 import ProfileUser from '../pages/ProfileUser'
 import Users from '../pages/Users'
+import LayoutMember from '../layout/LayoutMember'
+import Line from '../pages/auth/Line'
 
 
 const Approutes = () => {
@@ -47,7 +49,14 @@ const Approutes = () => {
                 <Route index element={<Login />} />
                 <Route path='member-register' element={<MemberRegister />} />
                 <Route path='forbidden' element={<Forbidden />} />
-                <Route path='package-product' element={<PackageProduct />} />
+                <Route path='liff' element={<Line />} />
+
+
+                <Route
+                    path='/user'
+                    element={<LayoutMember />}>
+                    <Route index element={<PackageProduct />} />
+                </Route>
 
                 <Route
                     path='/app'
