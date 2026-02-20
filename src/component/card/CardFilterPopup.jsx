@@ -5,26 +5,44 @@ import { TiSpanner } from "react-icons/ti";
 
 const INITIAL_SHOW_COUNT = 3;
 
-const CardFilter = ({ isOpen, form, typeInsur, company, onSubmit, onChange, onClose }) => {
-    const [companyList, setCompanyList] = useState(false)
-    const [repair, setRepair] = useState(false)
+const CardFilterPopup = ({ isOpen, form, typeInsur, company, carUsage, onSubmit, onChange, onClose, onClear }) => {
+    const [companyList, setCompanyList] = useState(true)
+    const [repair, setRepair] = useState(true)
     const [showAllCompanies, setShowAllCompanies] = useState(false)
 
-    if (!isOpen) return null;
-
-    const visibleCompanies = company.slice(0, INITIAL_SHOW_COUNT);
+    const visibleCompanies = showAllCompanies ? company : company.slice(0, INITIAL_SHOW_COUNT);
     const extraCompanies = company.slice(INITIAL_SHOW_COUNT);
     const hasMore = company.length > INITIAL_SHOW_COUNT;
     const hiddenCount = company.length - INITIAL_SHOW_COUNT;
 
+    // console.log(typeInsur)
+    if (!isOpen) return null;
     return (
-        <div className='mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20'>
-            <form onSubmit={onSubmit} className="w-auto p-6 radius-box flex flex-col gap-5 bg-white rounded-lg text-text-primary">
+        <div onClick={onClose} className='z-60 mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20'>
+            <form onClick={(e) => e.stopPropagation()} onSubmit={onSubmit} className=" w-auto h-125 p-6 radius-box flex flex-col gap-3 bg-white rounded-lg text-text-primary overflow-y-auto">
                 <h3 className="font-bold text-sm font-prompt text-text-primary">ตัวกรองข้อมูล</h3>
                 <div className="flex gap-2">
                     {
                         typeInsur.map((i) => (
-                            <button key={i.id} type="button" className="bg-[#EDEDF3] p-3 rounded-md text-[10px] 2xl:text-sm">{i.nametype}</button>
+                            <button
+                                key={i.id}
+                                type="button"
+                                onClick={() =>
+                                    onChange({
+                                        target: {
+                                            name: 'insurance_type_id',
+                                            value: i.id
+                                        }
+                                    })
+                                }
+                                className={`p-3 rounded-md text-[10px] 2xl:text-sm
+                ${form.insurance_type_id == i.id
+                                        ? 'bg-main text-white'
+                                        : 'bg-[#EDEDF3]'
+                                    }`}
+                            >
+                                {i.nametype}
+                            </button>
                         ))
                     }
                 </div>
@@ -37,19 +55,26 @@ const CardFilter = ({ isOpen, form, typeInsur, company, onSubmit, onChange, onCl
                     {
                         companyList && (
                             <div className="flex flex-col">
-                                {visibleCompanies.map((j) => (
-                                    <div key={j.id} className="flex justify-between border-b border-[#EDEDF3] py-2">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-7 h-7 rounded-md overflow-clip">
-                                                <img src={j.logo_url} className="w-full h-full object-cover" />
+                                {
+                                    visibleCompanies.map((j) => (
+                                        <div key={j.id} className="flex justify-between border-b border-[#EDEDF3] py-2">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-7 h-7 rounded-md overflow-clip">
+                                                    <img src={j.logo_url} className="w-full h-full object-cover" />
+                                                </div>
+                                                <p className="text-xs">{j.namecompany}</p>
                                             </div>
-                                            <p className="text-xs">{j.namecompany}</p>
+                                            <input
+                                                type="checkbox"
+                                                name="insurance_company"
+                                                value={j.id}
+                                                onChange={onChange}
+                                                checked={form.insurance_company.includes(String(j.id))}
+                                                className="checkbox"
+                                            />
                                         </div>
-                                        <input type="checkbox" className="checkbox" />
-                                    </div>
-                                ))}
-
-                                {/* Animated extra companies */}
+                                    ))
+                                }
                                 <div
                                     style={{
                                         display: 'grid',
@@ -79,26 +104,69 @@ const CardFilter = ({ isOpen, form, typeInsur, company, onSubmit, onChange, onCl
                                         ))}
                                     </div>
                                 </div>
-
                                 {hasMore && (
                                     <button
                                         type="button"
                                         onClick={() => setShowAllCompanies(!showAllCompanies)}
-                                        className="mt-2 text-xs text-main font-medium flex items-center gap-1 self-start hover:underline transition-all duration-200"
+                                        className="mt-2 text-xs text-main font-medium flex items-center gap-1 self-start transition-all duration-200"
                                     >
-                                        <IoIosArrowDown
-                                            style={{
-                                                transform: showAllCompanies ? 'rotate(180deg)' : 'rotate(0deg)',
-                                                transition: 'transform 0.3s ease',
-                                            }}
-                                        />
-                                        {showAllCompanies ? 'แสดงน้อยลง' : `แสดงเพิ่มเติม (${hiddenCount} บริษัท)`}
+                                        {showAllCompanies ? (
+                                            <>
+                                                <IoIosArrowDown className="rotate-180 transition duration-300" />
+                                                แสดงน้อยลง
+                                            </>
+                                        ) : (
+                                            <>
+                                                <IoIosArrowDown className="transition duration-300" />
+                                                แสดงเพิ่มเติม ({hiddenCount} บริษัท)
+                                            </>
+                                        )}
                                     </button>
                                 )}
                             </div>
                         )
                     }
                 </div >
+                <div>
+                    {/* <p className="font-bold text-sm mb-2">ประเภทการใช้งาน</p>
+                    <div className="flex flex-wrap items-center gap-3">
+                        {
+                            carUsage.map((i) => (
+                                <label key={i.id} className="font-normal text-xs flex gap-3 items-center">
+                                    <input
+                                        type="checkbox"
+                                        name='car_usage_id'
+                                        value={i.id}
+                                        onChange={onChange}
+                                        checked={form.car_usage_id == i.id}
+                                        className="checkbox" />
+                                    {i.usage_name}
+                                </label>
+                            ))
+                        }
+                    </div> */}
+                    <fieldset className="fieldset font-prompt text-text-primary p-0">
+                        <legend className="fieldset-legend text-xs text-text-primary">ประเภทการใช้งาน</legend>
+                        <select
+                            name='car_usage_type_id'
+                            value={form.car_usage_type_id}
+                            onChange={onChange}
+                            className="select w-full select-sm"
+                        >
+                            <option value="" disabled={true}>โปรดเลือก</option>
+                            {
+                                carUsage.map((i) => (
+                                    <option
+                                        key={i.id}
+                                        value={i.id}
+                                    >
+                                        {i.car_type} / {i.usage}
+                                    </option>
+                                ))
+                            }
+                        </select>
+                    </fieldset>
+                </div>
                 <div>
                     <div className='flex justify-between items-center'>
                         <p className="font-bold text-sm">ประเภทซ่อม</p>
@@ -150,9 +218,13 @@ const CardFilter = ({ isOpen, form, typeInsur, company, onSubmit, onChange, onCl
                         )
                     }
                 </div>
-                <button className="btn bg-main hover:bg-second text-white">กรองข้อมูล</button>
+                <div className="flex justify-between">
+                    <button onClick={onClear} type="button" className="btn">ล้างข้อมูล</button>
+                    <button type="submit" className="btn bg-main hover:bg-second text-white">กรองข้อมูล</button>
+                </div>
+
             </form >
         </div >
     )
 }
-export default CardFilter
+export default CardFilterPopup

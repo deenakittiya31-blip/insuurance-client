@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { listCompanySelect, listCompanyTheme } from '../service/insurance/CompanyInsur';
 import { listTypeSelect } from '../service/insurance/TypeInsur';
 import { listPackageSelect } from '../service/insurance/PackageInsur';
-import { listCarUsageSelect } from '../service/car/CarUsage';
+import { listCarUsageSelect, listUsageTypeSelectMember } from '../service/car/CarUsage';
 import { listCarTypeSelect } from '../service/car/CarType';
 import { listCarBrandSelect } from '../service/car/CarBrand';
 import { listByCarModel } from '../service/car/CarModel';
@@ -16,10 +16,19 @@ const useActionStore = create((set) => ({
     cartype: [],
     carbrand: [],
     carmodel: [],
+    carUsageType: [],
     getCarBrandSelect: async () => {
         try {
             const res = await listCarBrandSelect()
             set({ carbrand: res.data.data })
+        } catch (err) {
+            console.log(err)
+        }
+    },
+    getUsageTypeSelectMember: async () => {
+        try {
+            const res = await listUsageTypeSelectMember()
+            set({ carUsageType: res.data.data })
         } catch (err) {
             console.log(err)
         }

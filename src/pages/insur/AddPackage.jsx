@@ -575,6 +575,28 @@ const AddPackage = () => {
                                             updatePaymentField(3, 'discount_amount', e.target.value)
                                         }
                                     />
+                                    <TextInput
+                                        title="ค่าธรรมเนียม"
+                                        type='number'
+                                        value={
+                                            form.payments.find(p => p.payment_method_id === 3)
+                                                ?.discount_amount || ''
+                                        }
+                                        onChange={e =>
+                                            updatePaymentField(3, 'discount_amount', e.target.value)
+                                        }
+                                    />
+                                    <TextInput
+                                        title="ผ่อนได้กี่งวด"
+                                        type='number'
+                                        value={
+                                            form.payments.find(p => p.payment_method_id === 3)
+                                                ?.discount_amount || ''
+                                        }
+                                        onChange={e =>
+                                            updatePaymentField(3, 'discount_amount', e.target.value)
+                                        }
+                                    />
                                 </div>
                             </>
                         )}
@@ -582,17 +604,6 @@ const AddPackage = () => {
                             <>
                                 <h2 className="font-semibold">ผ่อนบัตรเครดิต</h2>
                                 <div className="grid grid-cols-3 gap-3">
-                                    <TextInput
-                                        title="เงินงวดแรก"
-                                        type='number'
-                                        value={
-                                            form.payments.find(p => p.payment_method_id === 4)
-                                                ?.first_payment_amount || ''
-                                        }
-                                        onChange={e =>
-                                            updatePaymentField(4, 'first_payment_amount', e.target.value)
-                                        }
-                                    />
                                     <TextInput
                                         title="ส่วนลดเปอร์เซนต์ ผ่อน"
                                         type='number'

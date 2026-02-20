@@ -199,6 +199,8 @@ const SearchPremium = () => {
         }
     }
 
+    console.log(premiumSelected)
+
     return (
         <div className='flex flex-col gap-3 h-auto p-5'>
             <Title

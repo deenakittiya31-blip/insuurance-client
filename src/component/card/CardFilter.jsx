@@ -5,7 +5,7 @@ import { TiSpanner } from "react-icons/ti";
 
 const INITIAL_SHOW_COUNT = 3;
 
-const CardFilter = ({ isOpen, form, typeInsur, company, onSubmit, onChange, onClose, onClear }) => {
+const CardFilter = ({ form, typeInsur, company, onSubmit, onChange, onClear }) => {
     const [companyList, setCompanyList] = useState(true)
     const [repair, setRepair] = useState(true)
     const [showAllCompanies, setShowAllCompanies] = useState(false)
@@ -15,11 +15,9 @@ const CardFilter = ({ isOpen, form, typeInsur, company, onSubmit, onChange, onCl
     const hasMore = company.length > INITIAL_SHOW_COUNT;
     const hiddenCount = company.length - INITIAL_SHOW_COUNT;
 
-    // console.log(typeInsur)
-    if (!isOpen) return null;
     return (
-        <div onClick={onClose} className='z-60 mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20'>
-            <form onClick={(e) => e.stopPropagation()} onSubmit={onSubmit} className=" w-auto h-125 p-6 radius-box flex flex-col gap-3 bg-white rounded-lg text-text-primary overflow-y-auto">
+        <div className=''>
+            <form onSubmit={onSubmit} className="w-auto p-6 radius-box flex flex-col gap-3 bg-white rounded-lg text-text-primary overflow-y-auto">
                 <h3 className="font-bold text-sm font-prompt text-text-primary">ตัวกรองข้อมูล</h3>
                 <div className="flex gap-2">
                     {
@@ -182,7 +180,6 @@ const CardFilter = ({ isOpen, form, typeInsur, company, onSubmit, onChange, onCl
                     <button onClick={onClear} type="button" className="btn">ล้างข้อมูล</button>
                     <button type="submit" className="btn bg-main hover:bg-second text-white">กรองข้อมูล</button>
                 </div>
-
             </form >
         </div >
     )

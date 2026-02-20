@@ -4,10 +4,6 @@ export const createPremium = (form) => {
     return api.post('/api/create-premium', form)
 }
 
-export const createPremiumToCompare = (form) => {
-    return api.post('/api/create-premiumtocompare', form)
-}
-
 export const listPremium = ({
     page,
     limit,
@@ -48,4 +44,16 @@ export const searchPremiumMember = async (filter) => {
 
 export const searchPremiumToCompare = async (arg) => {
     return api.post('/api/search-premiumtocompare', arg)
+}
+
+export const createPremiumToCompareMember = (form) => {
+    return api.post('/api/create-comparemember', form)
+}
+
+export const previewCompareMember = (id) => {
+    return api.get(`/api/preview-compare/${id}`)
+}
+
+export const createPremiumToCompare = (form) => {
+    return api.post('/api/create-premiumtocompare', form)
 }

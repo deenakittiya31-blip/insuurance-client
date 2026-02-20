@@ -9,7 +9,7 @@ import ReCAPTCHA from 'react-google-recaptcha'
 import { getLoginWith } from '../../service/auth'
 
 const Login = () => {
-    const { actionLogin, actionCurrentUser } = useInsureAuth();
+    const { actionLogin, actionCurrentUser, actionLogout } = useInsureAuth();
     const navigate = useNavigate()
     const keyReCAPTCHA = import.meta.env.VITE_RECAPTCHA_SITE_KEY
     const [capVal, setCapVal] = useState(null)
@@ -52,6 +52,17 @@ const Login = () => {
         }
     }
 
+    // const navigateToStore = async () => {
+    //     await liff.init({ liffId: "2008929214-oMQadweJ" })
+    //     liff.logout()
+    //     actionLogout()
+    //     navigate('/user')
+    // }
+
+    const handleLogin = async () => {
+        navigate("/liff");
+    }
+
     return (
         <div className='bg-[url(/bg.jpg)] bg-cover bg-center bg-no-repeat w-full h-screen flex flex-col justify-center items-center'>
             <div className='flex flex-col gap-3 justify-center items-center p-7 bg-white/30 backdrop-blur-lg border border-white/50 rounded-xl font-prompt'>
@@ -79,6 +90,7 @@ const Login = () => {
                         onChange={(val) => setCapVal(val)}
                     />
                     <button type='submit' className="btn btn-neutral w-full">เข้าสู่ระบบ</button>
+                    <button onClick={handleLogin} type='button' className="btn btn-info w-full">ไปที่หน้าร้านค้า</button>
                 </form>
             </div>
         </div>

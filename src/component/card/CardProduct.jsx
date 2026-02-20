@@ -3,8 +3,9 @@ import { IoIosArrowForward } from "react-icons/io"
 import { numberFormat } from "../../utils/numerral"
 import { FaCarCrash } from "react-icons/fa"
 import CardDetails from "./CardDetails"
+import { TbZoomMoney } from "react-icons/tb";
 
-const CardProduct = ({ data }) => {
+const CardProduct = ({ data, onChange, checked }) => {
     return (
         <div className="flex flex-col gap-3 bg-white shadow-lg rounded-2xl w-full p-5 text-text-primary">
             <div className="flex flex-col gap-3">
@@ -19,11 +20,17 @@ const CardProduct = ({ data }) => {
                         </div>
                     </div>
                     <div className="flex gap-2 items-center">
-                        <input type="checkbox" className="checkbox" />
+                        <input
+                            type="checkbox"
+                            className="checkbox"
+                            value={data.index_premium}
+                            checked={checked}
+                            onChange={onChange}
+                        />
                         <p className="text-[10px] font-nomal">เปรียบเทียบ</p>
                     </div>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex justify-between items-center gap-3">
                     <button className="badge bg-[#f6f5f3] text-text-primary text-xs"><FaCarCrash className="text-main size-4" /> {data.repair_type}</button>
 
                     {
@@ -33,6 +40,7 @@ const CardProduct = ({ data }) => {
                             </button>
                         )
                     }
+                    <div className="badge badge-xs badge-ghost text-text-primary cursor-pointer"><TbZoomMoney /> <span className="hover:underline">ดูวิธีชำระเงิน</span></div>
                 </div>
             </div>
             <div className="w-full h-px bg-[#e3e3e2] my-1"></div>
@@ -73,6 +81,7 @@ const CardProduct = ({ data }) => {
                     <IoIosArrowForward className="2xl:size-7" />
                 </div>
                 <CardDetails
+                    id={data.index_premium}
                     car_protect={data.car_protect}
                     third_protect={data.third_protect}
                     additional_protect={data.additional_protect}
@@ -81,9 +90,11 @@ const CardProduct = ({ data }) => {
                     nametype={data.nametype}
                     repair_type={data.repair_type}
                     payments={data.payments}
+                    number_of_seats={data.additional_personal_permanent_driver_number}
+                    selling_price={data.selling_price}
                 />
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 export default CardProduct

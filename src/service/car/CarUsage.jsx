@@ -49,6 +49,10 @@ export const listUsageTypeSelect = async () => {
     return api.get(`/api/select-carusagetype`)
 }
 
+export const listUsageTypeSelectMember = async () => {
+    return api.get(`/api/select-carusagetype-member`)
+}
+
 export const listUsageType = async ({
     page = 1,
     limit = 10,

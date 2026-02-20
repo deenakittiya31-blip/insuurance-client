@@ -1,25 +1,36 @@
 import { listPromotionSelect } from "../service/insurance/promotion";
 import { useEffect, useState } from "react";
-import { FaCar, FaEdit } from "react-icons/fa";
 import { listCarYearSelect } from "../service/car/CarYear";
 import { listByCarModel } from "../service/car/CarModel";
 import useActionStore from "../store/action-store";
 import ModalCarMember from "../component/modal/ModalCarMember";
 import { LuListFilter } from "react-icons/lu";
-import CardFilter from "../component/card/CardFilter";
-import { searchPremiumMember } from "../service/insurance/PremiumInsur";
+import { createPremiumToCompareMember, searchPremiumMember } from "../service/insurance/PremiumInsur";
 import CardProduct from '../component/card/CardProduct'
 import { GoSortAsc, GoSortDesc } from "react-icons/go"
+import CardCarData from "../component/card/CardCarData";
+import CardFilterPopup from "../component/card/CardFilterPopup";
+import CardFilter from "../component/card/CardFilter";
+import CardPremiumSelect from "../component/card/CardPremiumSelect";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import useInsureAuth from "../store/auth-store";
+import { usePremium } from "../context/PremiumContext";
 
 const initialStateFilter = {
     insurance_type_id: '',
     insurance_company: [],
+    car_usage_type_id: '',
     repair_type: ''
 }
 
 const PackageProduct = () => {
+    const navigate = useNavigate()
+    const member = useInsureAuth((s) => s.member)
     const [premium, setPremium] = useState([])
     const [promotion, setPromotion] = useState([])
+    const { premiumSelected, setPremiumSelected } = usePremium();
+    const [pmToCompare, setPmToCompare] = useState([])
     const [filter, setFilter] = useState(initialStateFilter)
     const [sortOrder, setSortOrder] = useState("asc")
     const [carData, setCarData] = useState({
@@ -31,11 +42,12 @@ const PackageProduct = () => {
     })
     const [year, setYear] = useState([])
     const [carModel, setCarModel] = useState([])
-    const { typeInsur, getTypeInsurSelect, carbrand, getCarBrandSelect, company, getCompanySelect } = useActionStore()
+    const { typeInsur, getTypeInsurSelect, carbrand, getCarBrandSelect, company, getCompanySelect, getUsageTypeSelectMember, carUsageType } = useActionStore()
     const [isOpen, setIsOpen] = useState(false)
     const [isFilter, setIsFilter] = useState(false)
     const [savedCar, setSavedCar] = useState(null)
     const [total, setTotal] = useState(0)
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         getTypeInsurSelect();
@@ -44,6 +56,7 @@ const PackageProduct = () => {
         getCompanySelect();
         fetchPremiumSearch();
         getPromotion();
+        getUsageTypeSelectMember();
     }, [])
 
     const handleOnChange = async (e) => {
@@ -106,13 +119,17 @@ const PackageProduct = () => {
         }
     }
 
-    const fetchPremiumSearch = async () => {
+    //รับ param ได้ มี default เป็น filter
+    const fetchPremiumSearch = async (filterData = filter) => {
+        setLoading(true)
         try {
-            const res = await searchPremiumMember(filter);
+            const res = await searchPremiumMember(filterData);
             setPremium(res.data.data)
             setTotal(res.data.total)
         } catch (error) {
             console.log(error)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -147,8 +164,8 @@ const PackageProduct = () => {
             closeFilter()
         } catch (err) {
             console.log(err)
+            setPremium([])
         }
-
     }
 
     const handleSortPremium = () => {
@@ -167,74 +184,169 @@ const PackageProduct = () => {
         setSortOrder(newOrder)
     }
 
-    console.log(premium)
-    return (
-        <div className="flex flex-col gap-5 font-prompt">
-            {/* promotion section */}
-            <div>
-                <p className="font-semibold text-text-primary text-sm">โปรโมชั่น</p>
-                <div className="flex gap-2 items-center  overflow-x-scroll">
-                    {promotion.map((i) => (
-                        <div key={i.id} className="w-19.5 h-19.5 shrink-0">
-                            <img
-                                src={i.logo_url}
-                                alt={i.promotion_name}
-                                className="w-full h-full object-cover rounded-md"
-                            />
-                        </div>
-                    ))}
-                </div>
-            </div>
-            <div className="bg-white border-gray-300/25 border p-3 rounded-md text-text-primary">
-                <div className="flex gap-3 justify-between items-center mb-3">
-                    <div className="flex gap-3 items-center">
-                        <button className="w-8 h-8 p-1 rounded-full bg-main text-white flex justify-center items-center"><FaCar /></button>
-                        <p className="font-semibold text-sm">ข้อมูลรถของคุณ</p>
-                    </div>
-                    <button onClick={() => setIsOpen(true)} className="p-2 rounded-md bg-warning text-xs text-black flex gap-1 justify-center items-center"><FaEdit /> แก้ไขข้อมูล</button>
-                </div>
-                <p className="text-xs">
-                    {savedCar
-                        ? `${savedCar.brand} / ${savedCar.model} / ${savedCar.subModel} / ${savedCar.year}`
-                        : 'ยังไม่มีข้อมูลรถ กรุณากรอกข้อมูล'
-                    }
-                </p>
-            </div>
-            <div className="flex justify-between bg-white border-gray-300/25 border p-3 rounded-md text-text-primary">
-                <p className="font-semibold text-sm">ตัวกรองข้อมูล</p>
-                <LuListFilter onClick={() => setIsFilter(true)} />
-            </div>
-            <div className="flex flex-col gap-5">
-                <div className="flex justify-between items-baseline-last">
-                    <h1 className="font-semibold text-sm">ผลลัพธ์ <span className="text-main">{total} รายการ</span></h1>
-                    <button
-                        onClick={handleSortPremium}
-                        className="p-2 rounded-md bg-white font-semibold text-sm text-black flex gap-1 justify-center items-center transition-all duration-300"
-                    >
-                        {sortOrder === "asc" ? (
-                            <>
-                                <GoSortAsc size={20} />
-                                ราคาจาก น้อย-มาก
-                            </>
-                        ) : (
-                            <>
-                                <GoSortDesc size={20} />
-                                ราคาจาก มาก-น้อย
-                            </>
-                        )}
-                    </button>
-                </div>
-                <div className="grid justify-items-stretch lg:grid-cols-2 gap-5">
-                    {
-                        premium.map((i, idx) => (
-                            <div key={idx} className="w-auto">
-                                <CardProduct data={i} />
-                            </div>
-                        ))
-                    }
-                </div>
-            </div>
+    const clearFilter = () => {
+        setFilter(initialStateFilter)
+        fetchPremiumSearch(initialStateFilter)
+        closeFilter()
+    }
 
+    const addPremiumToState = (e) => {
+        //1 รับค่า index ที่เลือก
+        const indexPremium = parseInt(e.target.value)
+
+        //2 หาข้อมูลจากรายการทั้งหมด
+        const selectedPremium = premium.find(
+            item => item.index_premium === indexPremium
+        )
+
+        if (!selectedPremium) return
+
+        setPremiumSelected((prev) => {
+            //3 ตรวจสอบว่าเลือกซ้ำหรือไม่
+            const isExist = prev.some(
+                item => item.index_premium === indexPremium
+            )
+
+            //กรณีที่ 1 เลือกซ้ำ(ยกเลิกการเลือก)
+            if (isExist) {
+                //เอาข้อมูลออกจาก setPmToCompare
+                setPmToCompare(prevCompare =>
+                    prevCompare.filter(
+                        item => item.index_premium !== indexPremium
+                    )
+                )
+                //เอาข้อมูลออกจาก setPremiumSelected
+                return prev.filter(
+                    item => item.index_premium !== indexPremium
+                )
+            }
+
+            //กรณีที่ 2 ยังไม่เคยเลือก 
+            //3.1 ตรวจสอบจำนวน
+            if (prev.length >= 3) {
+                toast.error('เลือกได้สูงสุด 3 รายการเท่านั้น')
+                return prev
+            }
+
+            //3.2 เพิ่มข้อมูลเข้า State
+
+            //ข้อมูลส่งเข้า backend
+            setPmToCompare(prevCompare => [
+                ...prevCompare,
+                {
+                    index_premium: selectedPremium.index_premium,
+                    index_company: selectedPremium.index_company,
+                    index_package: selectedPremium.index_package,
+                }
+            ])
+
+            //ข้อมูลส่งเข้า component
+            const dataToState = {
+                index_premium: selectedPremium.index_premium,
+                total_premium: selectedPremium.total_premium,
+                repair_type: selectedPremium.repair_type,
+                insurance_type: selectedPremium.nametype,
+                insurance_company: selectedPremium.namecompany,
+                logo_url_company: selectedPremium.logo_url,
+            }
+
+            return [...prev, dataToState]
+        })
+    }
+
+    const handleSubmitPremiumSelected = async () => {
+        try {
+            const res = await createPremiumToCompareMember({
+                ...carData,
+                import_by: 'member',
+                premiums: pmToCompare
+            })
+
+            navigate(`/user/compare-insurance/${res.data.compare_id}`)
+        } catch (err) {
+            console.log(err)
+            toast.error(err.response?.data?.message || 'ดึงข้อมูลไม่สำเร็จ')
+        }
+    }
+
+    // console.log(premium)
+    // console.log(member.id)
+    return (
+        <div className="p-5 flex flex-col gap-5 font-prompt">
+            <div className="space-y-5 md:flex gap-5">
+                <div className="space-y-5">
+                    <CardCarData
+                        savedCar={savedCar}
+                        form={carData}
+                        onChange={handleOnChange}
+                        carModel={carModel}
+                        carbrand={carbrand}
+                        caryear={year}
+                        onSubmit={handleSubmit}
+                    />
+                    <div className="md:hidden">
+                        <div className="flex justify-between bg-white border-gray-300/25 border p-3 rounded-md text-text-primary">
+                            <p className="font-semibold text-sm">ตัวกรองข้อมูล</p>
+                            <LuListFilter onClick={() => setIsFilter(true)} />
+                        </div>
+                    </div>
+                    <div className="hidden md:block">
+                        <CardFilter
+                            typeInsur={typeInsur}
+                            company={company}
+                            onChange={handleOnChangeFilter}
+                            form={filter}
+                            onSubmit={handleSubmitFilter}
+                            onClear={clearFilter}
+                        />
+                    </div>
+                </div>
+
+                <div className="flex flex-col gap-5">
+                    <div className="flex justify-between items-baseline-last text-text-primary">
+                        <h1 className="font-semibold text-sm">ผลลัพธ์ <span className="text-main">{total} รายการ</span></h1>
+                        <button
+                            onClick={handleSortPremium}
+                            className="p-2 rounded-md bg-white font-semibold text-sm text-text-primary flex gap-1 justify-center items-center transition-all duration-300"
+                        >
+                            {sortOrder === "asc" ? (
+                                <>
+                                    <GoSortAsc size={20} />
+                                    ราคาจาก น้อย-มาก
+                                </>
+                            ) : (
+                                <>
+                                    <GoSortDesc size={20} />
+                                    ราคาจาก มาก-น้อย
+                                </>
+                            )}
+                        </button>
+                    </div>
+                    {
+                        loading ? (
+                            <div className="flex justify-center items-center min-h-[200px]">
+                                <span className="loading loading-spinner text-main"></span>
+                            </div>
+                        ) : premium.length === 0 ? (
+                            <div className="text-center py-10">
+                                ไม่มีข้อมูล
+                            </div>
+                        ) : (
+                            <div className="grid justify-items-stretch lg:grid-cols-2 gap-5">
+                                {premium.map((i) => (
+                                    <div key={i.index_premium}>
+                                        <CardProduct
+                                            data={i}
+                                            onChange={addPremiumToState}
+                                            checked={premiumSelected.some(p => p.index_premium === i.index_premium)}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        )
+                    }
+                </div>
+            </div>
             <ModalCarMember
                 isOpen={isOpen}
                 form={carData}
@@ -245,17 +357,23 @@ const PackageProduct = () => {
                 caryear={year}
                 onSubmit={handleSubmit}
             />
-            <CardFilter
+            <CardFilterPopup
                 isOpen={isFilter}
                 typeInsur={typeInsur}
                 company={company}
+                carUsage={carUsageType}
                 onChange={handleOnChangeFilter}
                 form={filter}
                 onClose={closeFilter}
                 onSubmit={handleSubmitFilter}
-                onClear={() => setFilter(initialStateFilter)}
+                onClear={clearFilter}
             />
-        </div>
+            <CardPremiumSelect
+                premiumSelect={premiumSelected}
+                onSubmit={handleSubmitPremiumSelected}
+                onClear={() => setPremiumSelected([])}
+            />
+        </div >
     )
 }
 export default PackageProduct

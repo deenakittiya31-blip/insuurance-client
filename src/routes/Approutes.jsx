@@ -40,6 +40,9 @@ import ProfileUser from '../pages/ProfileUser'
 import Users from '../pages/Users'
 import LayoutMember from '../layout/LayoutMember'
 import Line from '../pages/auth/Line'
+import CompareInsure from '../pages/CompareInsure'
+import { PremiumProvider } from '../context/PremiumContext'
+import CompareList from '../pages/user/CompareList'
 
 
 const Approutes = () => {
@@ -54,8 +57,14 @@ const Approutes = () => {
 
                 <Route
                     path='/user'
-                    element={<LayoutMember />}>
+                    element={
+                        <PremiumProvider>
+                            <LayoutMember />
+                        </PremiumProvider>
+                    }>
                     <Route index element={<PackageProduct />} />
+                    <Route path='compare-insurance/:id' element={<CompareInsure />} />
+                    <Route path='compare-insurance' element={<CompareList />} />
                 </Route>
 
                 <Route
