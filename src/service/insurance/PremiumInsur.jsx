@@ -22,6 +22,10 @@ export const listPremium = ({
     })
 }
 
+export const listComparePremium = () => {
+    return api.get('/api/list-comparemember')
+}
+
 export const readPremium = (id) => {
     return api.get(`/api/read-premium/${id}`)
 }
