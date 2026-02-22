@@ -17,7 +17,6 @@ import CarYear from '../pages/car/CarYear'
 import CustomModel from '../pages/custom_page/CustomModel'
 import CustomModelDetail from '../pages/custom_page/CustomModelDetail'
 import MemberRegister from '../pages/auth/MemberRegister'
-import PackageProduct from '../pages/PackageProduct'
 import PinListCompare from '../pages/compare/PinListCompare'
 import QuotationList from '../pages/compare/QuotationList'
 import QuotationDetail from '../pages/compare/QuotationDetail'
@@ -40,9 +39,11 @@ import ProfileUser from '../pages/ProfileUser'
 import Users from '../pages/Users'
 import LayoutMember from '../layout/LayoutMember'
 import Line from '../pages/auth/Line'
-import CompareInsure from '../pages/CompareInsure'
 import { PremiumProvider } from '../context/PremiumContext'
 import CompareList from '../pages/user/CompareList'
+import ProtectMember from './ProtectMember'
+import CompareInsure from '../pages/user/CompareInsure'
+import PackageProduct from '../pages/user/PackageProduct'
 
 
 const Approutes = () => {
@@ -56,11 +57,13 @@ const Approutes = () => {
 
 
                 <Route
-                    path='/user'
+                    path='/store'
                     element={
-                        <PremiumProvider>
-                            <LayoutMember />
-                        </PremiumProvider>
+                        <ProtectMember>
+                            <PremiumProvider>
+                                <LayoutMember />
+                            </PremiumProvider>
+                        </ProtectMember>
                     }>
                     <Route index element={<PackageProduct />} />
                     <Route path='compare-insurance/:id' element={<CompareInsure />} />

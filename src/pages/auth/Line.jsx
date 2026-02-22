@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 
 const Line = () => {
     const navigate = useNavigate();
-    const { actionCurrentMember, actionLoginLine } = useInsureAuth()
+    const { actionCurrentMember, actionLoginLine, token } = useInsureAuth()
 
     useEffect(() => {
         const init = async () => {
@@ -17,6 +17,15 @@ const Line = () => {
                 return;
             }
 
+            // เช็คก่อนว่ามี JWT อยู่แล้วไหม และยังไม่หมดอายุ
+            if (token) {
+                // ถ้ามีอยู่แล้ว ข้ามการ verify LINE ไปเลย
+                await actionCurrentMember()
+                navigate('/store')
+                return
+            }
+
+
             const idToken = liff.getIDToken();
             // ส่ง token ไป backend
             const res = await actionLoginLine(idToken)
@@ -24,7 +33,7 @@ const Line = () => {
             if (res.status === 200) {
                 await actionCurrentMember()
                 toast.success('ล็อกอินสำเร็จ')
-                navigate("/user");
+                navigate("/store");
             } else {
                 navigate("/member-register");
             }

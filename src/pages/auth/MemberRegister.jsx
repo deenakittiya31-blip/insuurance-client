@@ -53,7 +53,7 @@ const MemberRegister = () => {
             })
 
             toast.success('ลงทะเบียนสำเร็จ 🎉')
-            navigate('/user')
+            navigate('/store')
             // liff.closeWindow()
         } catch (error) {
             console.log(error)

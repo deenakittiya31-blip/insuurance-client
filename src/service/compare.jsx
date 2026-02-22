@@ -34,6 +34,10 @@ export const deleteQuotationCompare = (id) => {
     return api.delete(`api/delete-compare/${id}`)
 }
 
+export const deleteCompareMember = (id) => {
+    return api.delete(`api/delete-compare-member/${id}`)
+}
+
 export const getDetailCompare = (id) => {
     return api.get(`/api/detail-compare/${id}`)
 }

@@ -11,14 +11,14 @@ const CardCarData = ({ savedCar, form, carModel, carbrand, caryear, onSubmit, on
             <div className="flex gap-3 justify-between items-center mb-3">
                 <div className="flex gap-3 items-center">
                     <button className="w-8 h-8 p-1 rounded-full bg-main text-white flex justify-center items-center"><FaCar /></button>
-                    <p className="font-semibold text-sm">ข้อมูลรถของคุณ</p>
+                    <p className="font-semibold text-sm">ข้อมูลรถยนต์ของคุณ</p>
                 </div>
                 <button onClick={() => setIsOpen(!isOpen)} className="btn btn-xs btn-warning flex gap-1 justify-center items-center"><FaEdit /> แก้ไขข้อมูล</button>
             </div>
             <p className="text-xs">
                 {savedCar
                     ? `${savedCar.brand} / ${savedCar.model} / ${savedCar.subModel} / ${savedCar.year}`
-                    : 'ยังไม่มีข้อมูลรถ กรุณากรอกข้อมูล'
+                    : 'ยังไม่มีข้อมูลรถยนต์ กรุณากรอกข้อมูล'
                 }
             </p>
             <div
@@ -27,13 +27,6 @@ const CardCarData = ({ savedCar, form, carModel, carbrand, caryear, onSubmit, on
                 `}
             >
                 <form onSubmit={onSubmit} className="space-y-2">
-                    {/* <SelectSearch
-                        options={carbrand}
-                        placeholder="ยี่ห้อรถยนต์"
-                        value={form.car_brand_id}
-                        onChange={onChange}
-                        name='car_brand_id'
-                    /> */}
                     <fieldset className="fieldset font-prompt text-text-primary p-0">
                         <legend className="fieldset-legend text-xs text-text-primary">รุ่นรถยนต์</legend>
                         <select

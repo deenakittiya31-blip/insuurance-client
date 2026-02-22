@@ -52,13 +52,6 @@ const Login = () => {
         }
     }
 
-    // const navigateToStore = async () => {
-    //     await liff.init({ liffId: "2008929214-oMQadweJ" })
-    //     liff.logout()
-    //     actionLogout()
-    //     navigate('/user')
-    // }
-
     const handleLogin = async () => {
         navigate("/liff");
     }

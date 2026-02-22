@@ -19,7 +19,7 @@ const CardFilterPopup = ({ isOpen, form, typeInsur, company, carUsage, onSubmit,
     if (!isOpen) return null;
     return (
         <div onClick={onClose} className='z-60 mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20'>
-            <form onClick={(e) => e.stopPropagation()} onSubmit={onSubmit} className=" w-auto h-125 p-6 radius-box flex flex-col gap-3 bg-white rounded-lg text-text-primary overflow-y-auto">
+            <form onClick={(e) => e.stopPropagation()} onSubmit={onSubmit} className=" w-xs h-125 p-6 radius-box flex flex-col gap-3 bg-white rounded-lg text-text-primary overflow-y-auto">
                 <h3 className="font-bold text-sm font-prompt text-text-primary">ตัวกรองข้อมูล</h3>
                 <div className="flex gap-2">
                     {
@@ -128,25 +128,8 @@ const CardFilterPopup = ({ isOpen, form, typeInsur, company, carUsage, onSubmit,
                     }
                 </div >
                 <div>
-                    {/* <p className="font-bold text-sm mb-2">ประเภทการใช้งาน</p>
-                    <div className="flex flex-wrap items-center gap-3">
-                        {
-                            carUsage.map((i) => (
-                                <label key={i.id} className="font-normal text-xs flex gap-3 items-center">
-                                    <input
-                                        type="checkbox"
-                                        name='car_usage_id'
-                                        value={i.id}
-                                        onChange={onChange}
-                                        checked={form.car_usage_id == i.id}
-                                        className="checkbox" />
-                                    {i.usage_name}
-                                </label>
-                            ))
-                        }
-                    </div> */}
                     <fieldset className="fieldset font-prompt text-text-primary p-0">
-                        <legend className="fieldset-legend text-xs text-text-primary">ประเภทการใช้งาน</legend>
+                        <legend className="fieldset-legend font-bold text-sm text-text-primary">ประเภทการใช้งาน</legend>
                         <select
                             name='car_usage_type_id'
                             value={form.car_usage_type_id}
@@ -218,7 +201,7 @@ const CardFilterPopup = ({ isOpen, form, typeInsur, company, carUsage, onSubmit,
                         )
                     }
                 </div>
-                <div className="flex justify-between">
+                <div className="grid grid-cols-2 gap-2">
                     <button onClick={onClear} type="button" className="btn">ล้างข้อมูล</button>
                     <button type="submit" className="btn bg-main hover:bg-second text-white">กรองข้อมูล</button>
                 </div>

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { currentMember, currentUser, login, loginWithGoogle, loginWithLine, register } from '../service/auth';
+import { currentMember, currentUser, login, loginWithLine, register } from '../service/auth';
 
 const authStore = (set, get) => ({
     user: null,
@@ -39,13 +39,6 @@ const authStore = (set, get) => ({
     actionLoginLine: async (idToken) => {
         const res = await loginWithLine(idToken)
         set({ token: res.data.token })
-        return res
-    },
-    actionLoginGoogle: async (credential) => {
-        const res = await loginWithGoogle(credential)
-        set({
-            token: res.data.token
-        })
         return res
     },
     actionRegister: async (form) => {
