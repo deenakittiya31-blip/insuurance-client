@@ -1,4 +1,3 @@
-// import { listPromotionSelect } from "../service/insurance/promotion";
 import { useEffect, useState } from "react";
 import { listCarYearSelect } from "../../service/car/CarYear";
 import { listByCarModel } from "../../service/car/CarModel";
@@ -29,9 +28,7 @@ const initialStateFilter = {
 
 const PackageProduct = () => {
     const navigate = useNavigate()
-    const member = useInsureAuth((s) => s.member)
     const [premium, setPremium] = useState([])
-    // const [promotion, setPromotion] = useState([])
     const { premiumSelected, setPremiumSelected } = usePremium();
     const [pmToCompare, setPmToCompare] = useState([])
     const [filter, setFilter] = useState(initialStateFilter)
@@ -58,7 +55,6 @@ const PackageProduct = () => {
         getCarYear();
         getCompanySelect();
         fetchPremiumSearch();
-        getPromotion();
         getUsageTypeSelectMember();
     }, [])
 
@@ -109,16 +105,6 @@ const PackageProduct = () => {
             setYear(res.data.data)
         } catch (err) {
             console.log(err)
-        }
-    }
-
-
-    const getPromotion = async () => {
-        try {
-            const res = await listPromotionSelect();
-            setPromotion(res.data.data)
-        } catch (error) {
-            console.log(error)
         }
     }
 

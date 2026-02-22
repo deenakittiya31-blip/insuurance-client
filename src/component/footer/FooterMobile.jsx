@@ -5,8 +5,9 @@ import { FaCar } from "react-icons/fa6"
 import { IoMenu } from "react-icons/io5"
 import { Link } from "react-router-dom"
 import { usePremium } from "../../context/PremiumContext"
+import SideBarMobile from "../sidebar/SideBarMobile"
 
-const FooterMobile = () => {
+const FooterMobile = ({ setIsOpen, hasCardSelected }) => {
     const [show, setShow] = useState(true)
     const [lastScrollY, setLastScrollY] = useState(0)
     const { premiumSelected } = usePremium();
@@ -37,7 +38,9 @@ const FooterMobile = () => {
         <footer
             className={`fixed bottom-0 left-0 w-full h-16 z-20 shadow flex justify-center items-center bg-main rounded-t-2xl text-white
             transition-all duration-500 ease-in-out md:hidden
-            ${show && !hiddenByPremium ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"}`}
+            ${show && !hiddenByPremium ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"}
+            ${hiddenByPremium ? "mb-20" : "mb-0"}
+            `}
         >
             <div className="w-full flex justify-around items-center font-prompt">
                 <Link to='/store' className="flex flex-col gap-1 items-center">
@@ -54,10 +57,10 @@ const FooterMobile = () => {
                     <BsFillTicketPerforatedFill className="size-5" />
                     <span className="text-[10px] font-medium">โปรโมชั่น</span>
                 </Link>
-                <Link to='#' className="flex flex-col gap-1 items-center">
+                <button onClick={() => setIsOpen(true)} className="flex flex-col gap-1 items-center">
                     <IoMenu className="size-6" />
                     <span className="text-[10px] font-medium">เมนู</span>
-                </Link>
+                </button>
             </div>
         </footer>
     )

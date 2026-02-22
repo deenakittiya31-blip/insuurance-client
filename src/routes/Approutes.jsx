@@ -44,6 +44,9 @@ import CompareList from '../pages/user/CompareList'
 import ProtectMember from './ProtectMember'
 import CompareInsure from '../pages/user/CompareInsure'
 import PackageProduct from '../pages/user/PackageProduct'
+import Address from '../pages/user/Address'
+import TrackParcel from '../pages/user/TrackParcel'
+import HistoryOrder from '../pages/user/HistoryOrder'
 
 
 const Approutes = () => {
@@ -68,6 +71,9 @@ const Approutes = () => {
                     <Route index element={<PackageProduct />} />
                     <Route path='compare-insurance/:id' element={<CompareInsure />} />
                     <Route path='compare-insurance' element={<CompareList />} />
+                    <Route path='address' element={<Address />} />
+                    <Route path='trackparcel' element={<TrackParcel />} />
+                    <Route path='history' element={<HistoryOrder />} />
                 </Route>
 
                 <Route

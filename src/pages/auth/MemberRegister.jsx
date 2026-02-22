@@ -6,9 +6,46 @@ import { useState } from "react"
 import { registerMember } from "../../service/member"
 import { useNavigate } from "react-router-dom"
 
+// Modal แสดงนโยบาย
+const ConsentModal = ({ onAccept, onDecline }) => (
+    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-5">
+        <div className="bg-white rounded-xl p-6 max-w-sm w-full flex flex-col gap-4">
+            <h2 className="font-kanit font-semibold text-lg text-center">นโยบายความเป็นส่วนตัว</h2>
+            <div className="text-sm font-kanit text-gray-600 max-h-48 overflow-y-auto border rounded p-3">
+                <p>เราจะเก็บข้อมูลส่วนบุคคลของท่าน ได้แก่ ชื่อ-นามสกุล เบอร์โทรศัพท์ และข้อมูลจาก LINE เพื่อวัตถุประสงค์ดังนี้</p>
+                <ul className="list-disc pl-4 mt-2 flex flex-col gap-1">
+                    <li>การให้บริการสมาชิก</li>
+                    <li>การส่งข้อมูลข่าวสารและโปรโมชั่น</li>
+                    <li>การปรับปรุงบริการของเรา</li>
+                </ul>
+                <p className="mt-2">ท่านสามารถศึกษานโยบายฉบับเต็มได้ที่ <a href="/privacy-policy" className="text-blue-500 underline">นโยบายความเป็นส่วนตัว</a></p>
+            </div>
+            <p className="text-sm font-kanit text-gray-500 text-center">
+                หากท่านไม่ยินยอม จะไม่สามารถใช้งานระบบสมาชิกได้
+            </p>
+            <div className="flex gap-3">
+                <button
+                    onClick={onDecline}
+                    className="flex-1 btn btn-outline rounded-full text-sm"
+                >
+                    ไม่ยินยอม
+                </button>
+                <button
+                    onClick={onAccept}
+                    className="flex-1 btn rounded-full bg-main text-white text-sm"
+                >
+                    ยินยอม
+                </button>
+            </div>
+        </div>
+    </div>
+)
+
 const MemberRegister = () => {
     const [profile, setProfile] = useState({})
     const navigate = useNavigate()
+    const [showConsent, setShowConsent] = useState(true)   // เปิด modal ทันที
+    const [consentAccepted, setConsentAccepted] = useState(false)
     const [form, setForm] = useState({
         first_name: '',
         last_name: '',
@@ -31,6 +68,19 @@ const MemberRegister = () => {
         initLiff()
     }, [])
 
+    const hdlAcceptConsent = () => {
+        setConsentAccepted(true)
+        setShowConsent(false)
+    }
+
+    const hdlDeclineConsent = () => {
+        toast.error('ไม่สามารถใช้งานได้หากไม่ยินยอมนโยบาย')
+        // ปิด LIFF หรือ redirect ออก
+        liff.closeWindow()
+        // หรือ navigate('/') ถ้าไม่ได้อยู่ใน LIFF
+    }
+
+
     const hdlOnChange = (e) => {
         setForm({
             ...form,
@@ -40,6 +90,10 @@ const MemberRegister = () => {
 
     const hdlRegiterLine = async (e) => {
         e.preventDefault()
+        if (!consentAccepted) {
+            return toast.error('กรุณายินยอมนโยบายความเป็นส่วนตัวก่อน')
+        }
+
         if (!form.first_name || !form.last_name || !form.phone) {
             return toast.error('กรุณาใส่ข้อมูลให้ครบ')
         }
@@ -49,12 +103,12 @@ const MemberRegister = () => {
                 user_id: profile.userId,
                 display_name: profile.displayName,
                 picture_url: profile.pictureUrl,
+                consent_accepted: true,
                 ...form
             })
 
             toast.success('ลงทะเบียนสำเร็จ 🎉')
             navigate('/store')
-            // liff.closeWindow()
         } catch (error) {
             console.log(error)
             toast.error(error.response?.data?.message || 'Login failed')
@@ -63,6 +117,15 @@ const MemberRegister = () => {
 
     return (
         <div className='bg-[url(/bg-member-4.jpg)] bg-cover bg-center bg-no-repeat w-full h-screen flex flex-col justify-center items-center px-7'>
+            {/* Consent Modal */}
+            {showConsent && (
+                <ConsentModal
+                    onAccept={hdlAcceptConsent}
+                    onDecline={hdlDeclineConsent}
+                />
+            )}
+
+            {/* ฟอร์มลงทะเบียน (แสดงอยู่ด้านหลัง modal) */}
             <div className='flex flex-col gap-5 justify-center items-center p-5 bg-white/60 border border-white/50 rounded-xl'>
                 <div className="flex flex-col gap-3 items-center justify-center">
                     <div className="rounded-full border border-border w-15 h-15 overflow-clip">
