@@ -251,7 +251,7 @@ const PackageProduct = () => {
                 premiums: pmToCompare
             })
 
-            navigate(`/user/compare-insurance/${res.data.compare_id}`)
+            navigate(`/store/compare-insurance/${res.data.compare_id}`)
         } catch (err) {
             console.log(err)
             toast.error(err.response?.data?.message || 'ดึงข้อมูลไม่สำเร็จ')

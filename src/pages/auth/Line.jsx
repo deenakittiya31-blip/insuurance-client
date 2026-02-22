@@ -28,14 +28,18 @@ const Line = () => {
 
             const idToken = liff.getIDToken();
             // ส่ง token ไป backend
-            const res = await actionLoginLine(idToken)
-
-            if (res.status === 200) {
-                await actionCurrentMember()
-                toast.success('ล็อกอินสำเร็จ')
-                navigate("/store");
-            } else {
-                navigate("/member-register");
+            try {
+                const res = await actionLoginLine(idToken)
+                if (res.status === 200) {
+                    await actionCurrentMember()
+                    navigate("/store");
+                }
+            } catch (err) {
+                console.log(err)
+                const status = err.response?.status
+                if (status === 403 || status === 404) {
+                    navigate('/member-register')  // ไม่มีในระบบ หรือยังไม่ลงทะเบียน
+                }
             }
         };
 
