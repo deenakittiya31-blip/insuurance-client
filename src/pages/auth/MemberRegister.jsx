@@ -18,7 +18,33 @@ const ConsentModal = ({ onAccept, onDecline }) => (
                     <li>การส่งข้อมูลข่าวสารและโปรโมชั่น</li>
                     <li>การปรับปรุงบริการของเรา</li>
                 </ul>
-                <p className="mt-2">ท่านสามารถศึกษานโยบายฉบับเต็มได้ที่ <a href="/privacy-policy" className="text-blue-500 underline">นโยบายความเป็นส่วนตัว</a></p>
+                <p className="mt-2">
+                    ท่านสามารถศึกษานโยบายฉบับเต็มได้ที่{' '}
+                    <a
+                        href="/policy/privacy"
+                        target="_blank"          // เปิด tab ใหม่ ไม่ปิด modal
+                        rel="noopener noreferrer"
+                        className="text-blue-500 underline"
+                    >
+                        นโยบายความเป็นส่วนตัว
+                    </a>
+                    <a
+                        href="/policy/terms"
+                        target="_blank"          // เปิด tab ใหม่ ไม่ปิด modal
+                        rel="noopener noreferrer"
+                        className="text-blue-500 underline"
+                    >
+                        ข้อกําหนดในการให้บริการ
+                    </a>
+                    <a
+                        href="/policy/cookie"
+                        target="_blank"          // เปิด tab ใหม่ ไม่ปิด modal
+                        rel="noopener noreferrer"
+                        className="text-blue-500 underline"
+                    >
+                        นโยบายการใช้คุกกี้
+                    </a>
+                </p>
             </div>
             <p className="text-sm font-kanit text-gray-500 text-center">
                 หากท่านไม่ยินยอม จะไม่สามารถใช้งานระบบสมาชิกได้
@@ -38,7 +64,7 @@ const ConsentModal = ({ onAccept, onDecline }) => (
                 </button>
             </div>
         </div>
-    </div>
+    </div >
 )
 
 const MemberRegister = () => {
