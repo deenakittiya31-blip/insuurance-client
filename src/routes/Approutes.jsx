@@ -47,6 +47,8 @@ import PackageProduct from '../pages/user/PackageProduct'
 import Address from '../pages/user/Address'
 import TrackParcel from '../pages/user/TrackParcel'
 import HistoryOrder from '../pages/user/HistoryOrder'
+import PolicyManage from '../pages/consent/PolicyPage'
+import PolicyView from '../pages/consent/PolicyView'
 
 
 const Approutes = () => {
@@ -56,6 +58,7 @@ const Approutes = () => {
                 <Route index element={<Login />} />
                 <Route path='member-register' element={<MemberRegister />} />
                 <Route path='forbidden' element={<Forbidden />} />
+                <Route path='/policy/:type' element={<PolicyView />} />
                 <Route path='liff' element={<Line />} />
 
 
@@ -124,6 +127,7 @@ const Approutes = () => {
                         <Route path='insurtypes' element={<InsurTypes />} />
                         <Route path='promotion' element={<Promotion />} />
                         <Route path='users' element={<Users />} />
+                        <Route path='policy' element={<PolicyManage />} />
                     </Route>
                 </Route>
             </Routes>

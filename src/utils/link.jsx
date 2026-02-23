@@ -98,4 +98,9 @@ export const adminSetting = [
         title: 'เพิ่มสิทธิ์ผู้ใช้งานระบบ',
         link: '/app/users'
     },
+    {
+        icon: <LuUserPlus className='size-4' />,
+        title: 'ตั้งค่านโยบาย',
+        link: '/app/policy'
+    },
 ]

@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom"
 // Modal แสดงนโยบาย
 const ConsentModal = ({ onAccept, onDecline }) => (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-5">
-        <div className="bg-white rounded-xl p-6 max-w-sm w-full flex flex-col gap-4">
+        <div className="bg-white rounded-xl p-6 max-w-sm w-full flex flex-col gap-4 font-prompt">
             <h2 className="font-kanit font-semibold text-lg text-center">นโยบายความเป็นส่วนตัว</h2>
             <div className="text-sm font-kanit text-gray-600 max-h-48 overflow-y-auto border rounded p-3">
                 <p>เราจะเก็บข้อมูลส่วนบุคคลของท่าน ได้แก่ ชื่อ-นามสกุล เบอร์โทรศัพท์ และข้อมูลจาก LINE เพื่อวัตถุประสงค์ดังนี้</p>
@@ -116,7 +116,7 @@ const MemberRegister = () => {
     }
 
     return (
-        <div className='bg-[url(/bg-member-4.jpg)] bg-cover bg-center bg-no-repeat w-full h-screen flex flex-col justify-center items-center px-7'>
+        <div className='bg-[url(/bg-member-4.jpg)] bg-cover bg-center bg-no-repeat w-full h-full flex flex-col justify-center items-center px-7'>
             {/* Consent Modal */}
             {showConsent && (
                 <ConsentModal
