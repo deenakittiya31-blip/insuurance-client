@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom"
 const ConsentModal = ({ onAccept, onDecline }) => (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-5">
         <div className="bg-white rounded-xl p-6 max-w-sm w-full flex flex-col gap-4 font-prompt">
-            <h2 className="font-kanit font-semibold text-lg text-center">นโยบายความเป็นส่วนตัว</h2>
+            <h2 className="font-kanit font-semibold text-text-primary text-lg text-center">นโยบายความเป็นส่วนตัว</h2>
             <div className="text-sm font-kanit text-gray-600 max-h-48 overflow-y-auto border rounded p-3">
                 <p>เราจะเก็บข้อมูลส่วนบุคคลของท่าน ได้แก่ ชื่อ-นามสกุล เบอร์โทรศัพท์ และข้อมูลจาก LINE เพื่อวัตถุประสงค์ดังนี้</p>
                 <ul className="list-disc pl-4 mt-2 flex flex-col gap-1">
@@ -28,6 +28,7 @@ const ConsentModal = ({ onAccept, onDecline }) => (
                     >
                         นโยบายความเป็นส่วนตัว
                     </a>
+                    {' '}
                     <a
                         href="/policy/terms"
                         target="_blank"          // เปิด tab ใหม่ ไม่ปิด modal
@@ -36,6 +37,7 @@ const ConsentModal = ({ onAccept, onDecline }) => (
                     >
                         ข้อกําหนดในการให้บริการ
                     </a>
+                    {' '}
                     <a
                         href="/policy/cookie"
                         target="_blank"          // เปิด tab ใหม่ ไม่ปิด modal
@@ -46,7 +48,7 @@ const ConsentModal = ({ onAccept, onDecline }) => (
                     </a>
                 </p>
             </div>
-            <p className="text-sm font-kanit text-gray-500 text-center">
+            <p className="text-sm font-kanit text-text-primary">
                 หากท่านไม่ยินยอม จะไม่สามารถใช้งานระบบสมาชิกได้
             </p>
             <div className="flex gap-3">
@@ -142,7 +144,7 @@ const MemberRegister = () => {
     }
 
     return (
-        <div className='bg-[url(/bg-member-4.jpg)] bg-cover bg-center bg-no-repeat w-full h-full flex flex-col justify-center items-center px-7'>
+        <div className='bg-[url(/bg-member-4.jpg)] bg-cover bg-center bg-no-repeat w-full h-screen flex flex-col justify-center items-center px-7'>
             {/* Consent Modal */}
             {showConsent && (
                 <ConsentModal

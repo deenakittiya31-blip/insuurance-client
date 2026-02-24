@@ -4,6 +4,7 @@ import StarterKit from '@tiptap/starter-kit'
 import toast from 'react-hot-toast'
 import Swal from 'sweetalert2'
 import { getPolicyList, createPolicy, updatePolicy, publishPolicy, deletePolicy } from '../../service/policy'
+import Title from '../../component/form/Title'
 
 const POLICY_TYPES = [
     { value: 'privacy', label: 'นโยบายความเป็นส่วนตัว' },
@@ -209,9 +210,11 @@ const PolicyManage = () => {
     }
 
     return (
-        <div className="p-6 font-kanit">
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-semibold text-text-primary">จัดการนโยบาย</h1>
+        <div className="flex flex-col gap-5 h-auto p-5 font-prompt">
+            <div className='flex items-center justify-between'>
+                <Title
+                    title='จัดการนโยบาย'
+                />
                 {mode === 'list' && (
                     <button onClick={() => { setSelected(null); setMode('create') }} className="btn bg-main text-white">
                         + สร้าง version ใหม่
@@ -222,12 +225,12 @@ const PolicyManage = () => {
             {/* Tab เลือกประเภท */}
             {mode === 'list' && (
                 <>
-                    <div className="tabs tabs-bordered mb-6">
+                    <div role="tablist" className="tabs tabs-border">
                         {POLICY_TYPES.map(t => (
                             <button
                                 key={t.value}
                                 onClick={() => setActiveType(t.value)}
-                                className={`tab ${activeType === t.value ? 'tab-active font-semibold' : ''}`}
+                                className={`tab text-base text-gray-400 ${activeType === t.value ? 'tab-active font-semibold text-text-primary' : ''}`}
                             >
                                 {t.label}
                             </button>
@@ -235,62 +238,64 @@ const PolicyManage = () => {
                     </div>
 
                     {/* ตาราง list */}
-                    <div className="overflow-x-auto">
-                        <table className="table w-full">
-                            <thead>
-                                <tr className="text-text-primary">
-                                    <th>Version</th>
-                                    <th>ชื่อ</th>
-                                    <th>สถานะ</th>
-                                    <th>Publish เมื่อ</th>
-                                    <th>สร้างเมื่อ</th>
-                                    <th>จัดการ</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {policies.map(p => (
-                                    <tr key={p.id}>
-                                        <td className="font-medium">{p.version}</td>
-                                        <td>{p.title_th}</td>
-                                        <td>
-                                            {p.is_active
-                                                ? <span className="badge badge-success text-white">Active</span>
-                                                : <span className="badge badge-ghost">Draft</span>
-                                            }
-                                        </td>
-                                        <td className="text-sm text-gray-500">
-                                            {p.published_at ? new Date(p.published_at).toLocaleDateString('th-TH') : '-'}
-                                        </td>
-                                        <td className="text-sm text-gray-500">
-                                            {new Date(p.created_at).toLocaleDateString('th-TH')}
-                                        </td>
-                                        <td>
-                                            <div className="flex gap-1">
-                                                {!p.is_active && (
-                                                    <button onClick={() => hdlPublish(p.id)} className="btn btn-xs btn-success text-white">
-                                                        Publish
-                                                    </button>
-                                                )}
-                                                <button
-                                                    onClick={() => { setSelected(p); setMode('edit') }}
-                                                    className="btn btn-xs btn-outline"
-                                                >
-                                                    แก้ไข
-                                                </button>
-                                                {!p.is_active && (
-                                                    <button onClick={() => hdlDelete(p.id)} className="btn btn-xs btn-error text-white">
-                                                        ลบ
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </td>
+                    <div className='bg-white rounded-2xl p-5'>
+                        <div className="overflow-x-auto">
+                            <table className="table w-full">
+                                <thead>
+                                    <tr>
+                                        <th className='font-medium text-neutral-400'>Version</th>
+                                        <th className='font-medium text-neutral-400'>ชื่อ</th>
+                                        <th className='font-medium text-neutral-400 text-center'>สถานะ</th>
+                                        <th className='font-medium text-neutral-400 text-center'>Publish เมื่อ</th>
+                                        <th className='font-medium text-neutral-400 text-center'>สร้างเมื่อ</th>
+                                        <th className='font-medium text-neutral-400'>จัดการ</th>
                                     </tr>
-                                ))}
-                                {policies.length === 0 && (
-                                    <tr><td colSpan={6} className="text-center text-gray-400 py-8">ยังไม่มีข้อมูล</td></tr>
-                                )}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {policies.map(p => (
+                                        <tr key={p.id} className='text-text-primary'>
+                                            <td className="font-medium">{p.version}</td>
+                                            <td>{p.title_th}</td>
+                                            <td className='text-center'>
+                                                {p.is_active
+                                                    ? <span className="badge badge-success text-white">Active</span>
+                                                    : <span className="badge badge-ghost">Draft</span>
+                                                }
+                                            </td>
+                                            <td className="text-center">
+                                                {p.published_at ? new Date(p.published_at).toLocaleDateString('th-TH') : '-'}
+                                            </td>
+                                            <td className="text-center">
+                                                {new Date(p.created_at).toLocaleDateString('th-TH')}
+                                            </td>
+                                            <td>
+                                                <div className="flex gap-1">
+                                                    {!p.is_active && (
+                                                        <button onClick={() => hdlPublish(p.id)} className="btn btn-xs btn-success text-white">
+                                                            Publish
+                                                        </button>
+                                                    )}
+                                                    <button
+                                                        onClick={() => { setSelected(p); setMode('edit') }}
+                                                        className="btn btn-sm btn-warning"
+                                                    >
+                                                        แก้ไข
+                                                    </button>
+                                                    {!p.is_active && (
+                                                        <button onClick={() => hdlDelete(p.id)} className="btn btn-sm btn-error text-white">
+                                                            ลบ
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {policies.length === 0 && (
+                                        <tr><td colSpan={6} className="text-center text-gray-400 py-8">ยังไม่มีข้อมูล</td></tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </>
             )}

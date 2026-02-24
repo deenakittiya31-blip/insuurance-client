@@ -17,7 +17,7 @@ const premiumInitial = {
     car_lost_fire: '',
     total_premium: '',
     net_income: '',
-    selling_price: ''
+    selling_prices: []
 }
 
 const AddPremium = () => {
@@ -28,6 +28,7 @@ const AddPremium = () => {
         premiums: [premiumInitial]
     })
     const { packageSelect, getPackageSelect } = useActionStore()
+    const [packagePayments, setPackagePayments] = useState([])
 
     useEffect(() => {
         getPackageSelect();
@@ -37,21 +38,13 @@ const AddPremium = () => {
         const { name, value } = e.target
 
         setFrom(prev => {
-            //คัดลอกค่าเดิมของ premium ไว้
-            const discount = parseFloat(prev.premium_discount) || 0
             const premiums = [...prev.premiums]
-            premiums[index] = {
-                ...premiums[index],
-                [name]: value
-            }
+            premiums[index] = { ...premiums[index], [name]: value }
 
-            // คำนวณราคาขายอัตโนมัติ
             if (name === 'total_premium') {
-                const premium = parseFloat(premiums[index].total_premium) || 0
-                const net_total = premium * 0.9309
-
+                const net_total = (parseFloat(value) || 0) * 0.9309
                 premiums[index].net_income = net_total.toFixed(2)
-                premiums[index].selling_price = (premium - (net_total * (discount / 100))).toFixed(2)
+                premiums[index].selling_prices = calcSellingPrices(value, prev.premium_discount, packagePayments)
             }
 
             return { ...prev, premiums }
@@ -61,31 +54,45 @@ const AddPremium = () => {
     const handleChangeHead = (e) => {
         const { name, value } = e.target
 
+        if (name === 'package_id') {
+            // ดึง payments จาก packageSelect ที่มีอยู่แล้ว
+            const selected = packageSelect.find(p => String(p.id) === String(value))
+            setPackagePayments(selected?.payments || [])
+        }
+
         setFrom(prev => {
-            const updated = {
-                ...prev,
-                [name]: value
-            }
+            const updated = { ...prev, [name]: value }
 
             // ถ้าเปลี่ยน premium_discount ให้คำนวณ selling_price ทุกตัวใหม่
             if (name === 'premium_discount') {
-                const discount = parseFloat(value) || 0
-
-                updated.premiums = prev.premiums.map(item => {
-                    if (item.total_premium && item.net_income) {
-                        const premium = parseFloat(item.total_premium) || 0
-                        const netIncome = parseFloat(item.net_income) || 0
-
-                        return {
-                            ...item,
-                            selling_price: (premium - (netIncome * (discount / 100))).toFixed(2)
-                        }
-                    }
-                    return item
-                })
+                updated.premiums = prev.premiums.map(item => ({
+                    ...item,
+                    selling_prices: calcSellingPrices(item.total_premium, value, packagePayments)
+                }))
             }
 
             return updated
+        })
+    }
+
+    // ฟังก์ชันคำนวณราคาขาย
+    const calcSellingPrices = (total_premium, premium_discount, pkgPayments) => {
+        const premium = parseFloat(total_premium) || 0
+        const net_total = premium * 0.9309
+        //ส่วนลดหน้าเบี้ย
+        const extra_discount = net_total * ((parseFloat(premium_discount) || 0) / 100)
+
+        return pkgPayments.map(pm => {
+            const discount_percent = parseFloat(pm.discount_percent) || 0
+            const discount_amount = parseFloat(pm.discount_amount) || 0
+            //ส่วนลดแพ็กเกจ
+            const package_discount = (net_total * (discount_percent / 100)) + discount_amount
+            const selling = premium - (package_discount + extra_discount)
+
+            return {
+                payment_method_id: pm.payment_method_id,
+                selling_price: selling.toFixed(2)
+            }
         })
     }
 
@@ -137,7 +144,6 @@ const AddPremium = () => {
         }
     }
 
-    console.log(packageSelect)
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
             <Title
@@ -278,7 +284,7 @@ const AddPremium = () => {
                                         value={item.net_income}
                                         className='input flex-1'
                                     />
-                                    <div className='col-span-4 grid grid-cols-subgrid gap-4'>
+                                    {/* <div className='col-span-4 grid grid-cols-subgrid gap-4'>
                                         <div className="col-start-3"><p className='font-semibold text-sm'>ราคาขาย</p></div>
                                         <div className="col-start-4">
                                             <input
@@ -290,7 +296,27 @@ const AddPremium = () => {
                                                 readOnly
                                             />
                                         </div>
-                                    </div>
+                                    </div> */}
+                                    {item.selling_prices?.length > 0 && (
+                                        <div className="col-span-4 flex flex-col gap-2">
+                                            <p className="font-semibold text-sm">ราคาขาย</p>
+                                            {item.selling_prices.map(sp => (
+                                                <div key={sp.payment_method_id} className="grid grid-cols-4 gap-3 items-center">
+                                                    <p className="text-xs text-gray-500 col-span-3 text-right">
+                                                        {sp.payment_method_id === 1 ? 'เงินสด' :
+                                                            sp.payment_method_id === 2 ? 'บัตรเครดิต' :
+                                                                sp.payment_method_id === 3 ? 'ผ่อนเงินสด' : 'ผ่อนบัตรเครดิต'}
+                                                    </p>
+                                                    <input
+                                                        type="number"
+                                                        value={sp.selling_price}
+                                                        className="input flex-1"
+                                                        readOnly
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         ))

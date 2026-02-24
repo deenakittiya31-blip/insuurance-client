@@ -98,6 +98,7 @@ const InsurPackage = () => {
         }
     }
 
+    console.log(readPackageData)
     const hdlToggleActive = async (id, currentStatus) => {
         try {
             const res = await statusPackage(id, !currentStatus)

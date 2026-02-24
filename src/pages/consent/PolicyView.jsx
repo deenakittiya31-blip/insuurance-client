@@ -52,7 +52,7 @@ const PolicyView = () => {
 
     return (
         <div className="font-kanit">
-            <TabBackward linkTo='/store' title={POLICY_META[type]?.title || 'นโยบาย'} />
+            <TabBackward linkTo='/member-register' title={POLICY_META[type]?.title || 'นโยบาย'} />
 
             <div className="max-w-2xl mx-auto p-5">
                 {/* Toggle ภาษา */}

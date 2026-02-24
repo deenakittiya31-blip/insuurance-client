@@ -258,15 +258,14 @@ const PackageProduct = () => {
         }
     }
 
-    // console.log(premium)
-    // console.log(member.id)
+    console.log(premium)
     return (
         <div>
             <NavbarMobile />
             <div className="p-5 flex flex-col gap-5 font-prompt">
                 <div className="flex items-center w-full bg-main rounded-md p-5">
                     <div className="w-45">
-                        <span className="text-rotate text-lg font-semibold text-white tracking-wide leading-[2]">
+                        <span className="text-rotate text-lg font-semibold text-white tracking-wide leading-loose">
                             <span className="justify-items-start">
                                 <span>📑 เบี้ยประกันภัย</span>
                                 <span>🚐 รถยนต์</span>
@@ -336,7 +335,7 @@ const PackageProduct = () => {
                         </div>
                         {
                             loading ? (
-                                <div className="flex justify-center items-center min-h-[200px]">
+                                <div className="flex justify-center items-center min-h-50">
                                     <span className="loading loading-spinner text-main"></span>
                                 </div>
                             ) : premium.length === 0 ? (

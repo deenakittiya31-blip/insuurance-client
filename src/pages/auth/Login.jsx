@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { GoogleLogin } from '@react-oauth/google'
-import { Link, useNavigate } from 'react-router-dom'
-import liff from '@line/liff'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import useInsureAuth from '../../store/auth-store'
 import toast from 'react-hot-toast'
 import TextInputAuth from '../../component/form/TextInputAuth'
 import ReCAPTCHA from 'react-google-recaptcha'
-import { getLoginWith } from '../../service/auth'
 
 const Login = () => {
     const { actionLogin, actionCurrentUser, actionLogout } = useInsureAuth();

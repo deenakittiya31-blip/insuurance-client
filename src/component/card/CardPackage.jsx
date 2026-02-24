@@ -1,5 +1,6 @@
 import { FaRegEye } from "react-icons/fa6"
 import { dateFormatNoTime } from "../../utils/dateformat"
+import { numberFormat } from "../../utils/numerral"
 
 const CardPackage = ({ data, onRead }) => {
     const getPaymentColor = (paymentId) => {
@@ -75,14 +76,14 @@ const CardPackage = ({ data, onRead }) => {
                             <h3 className="font-bold text-lg tracking-wide">ความคุ้มครอง</h3>
                             <div className="w-full h-px bg-border my-3" />
                             <div className="grid grid-cols-3 gap-y-3">
-                                <p>บาดเจ็บ เสียชีวิต : <span className="font-semibold">{data.thirdparty_injury_death_per_person}</span></p>
-                                <p>บาดเจ็บ เสียชีวิตสูงสุด : <span className="font-semibold">{data.thirdparty_injury_death_per_accident}</span></p>
-                                <p>ทรัพย์สินคู่กรณี : <span className="font-semibold">{data.thirdparty_property}</span></p>
-                                <p>คุ้มครองน้ำท่วม : <span className="font-semibold">{data.flood_cover}</span></p>
-                                <p>ค่าเสียหายส่วนแรก : <span className="font-semibold">{data.car_own_damage_deductible}</span></p>
-                                <p>อุบัติเหตุส่วนบุคคล : <span className="font-semibold">{data.additional_personal_permanent_driver_cover}</span></p>
-                                <p>ค่ารักษาพยาบาล : <span className="font-semibold">{data.additional_medical_expense_cover}</span></p>
-                                <p>ประกันตัวผู้ขับขี่ : <span className="font-semibold">{data.additional_bail_bond}</span></p>
+                                <p>บาดเจ็บ เสียชีวิต : <span className="font-semibold">{numberFormat(data.thirdparty_injury_death_per_person)}</span></p>
+                                <p>บาดเจ็บ เสียชีวิตสูงสุด : <span className="font-semibold">{numberFormat(data.thirdparty_injury_death_per_accident)}</span></p>
+                                <p>ทรัพย์สินคู่กรณี : <span className="font-semibold">{numberFormat(data.thirdparty_property)}</span></p>
+                                <p>คุ้มครองน้ำท่วม : <span className="font-semibold">{numberFormat(data.flood_cover)}</span></p>
+                                <p>ค่าเสียหายส่วนแรก : <span className="font-semibold">{numberFormat(data.car_own_damage_deductible)}</span></p>
+                                <p>อุบัติเหตุส่วนบุคคล : <span className="font-semibold">{numberFormat(data.additional_personal_permanent_driver_cover)}</span></p>
+                                <p>ค่ารักษาพยาบาล : <span className="font-semibold">{numberFormat(data.additional_medical_expense_cover)}</span></p>
+                                <p>ประกันตัวผู้ขับขี่ : <span className="font-semibold">{numberFormat(data.additional_bail_bond)}</span></p>
                                 <p >จำนวนที่นั่ง : <span className="font-semibold">{data.additional_personal_permanent_driver_number}</span></p>
                             </div>
                         </div>
@@ -100,8 +101,44 @@ const CardPackage = ({ data, onRead }) => {
                                     <div key={idx}>
                                         <p className="font-semibold">{i.payment_name}</p>
                                         <div className="grid grid-cols-2">
-                                            <p>ส่วนลดเปอร์เซนต์ : <span className="font-semibold">{i.discount_percent}</span></p>
-                                            <p>ส่วนลดจำนวนเงิน : <span className="font-semibold">{i.discount_amount}</span></p>
+                                            {
+                                                i.payment_method_id === 1 && (
+                                                    <>
+                                                        <p>ส่วนลดเปอร์เซนต์ : <span className="font-semibold">{i.discount_percent} %</span></p>
+                                                        <p>ส่วนลดจำนวนเงิน : <span className="font-semibold">{i.discount_amount} เดือน</span></p>
+                                                    </>
+                                                )
+                                            }
+                                            {
+                                                i.payment_method_id === 2 && (
+                                                    <>
+                                                        <p>ส่วนลดเปอร์เซนต์ : <span className="font-semibold">{i.discount_percent} %</span></p>
+                                                        <p>ส่วนลดจำนวนเงิน : <span className="font-semibold">{i.discount_amount} เดือน</span></p>
+                                                    </>
+                                                )
+                                            }
+                                            {
+                                                i.payment_method_id === 3 && (
+                                                    <>
+                                                        <p>เงินงวดแรก : <span className="font-semibold">{i.first_payment_amount} บาท</span></p>
+                                                        <p>ส่วนลดเปอร์เซนต์ ผ่อน : <span className="font-semibold">{i.discount_percent} %</span></p>
+                                                        <p>ส่วนลดจำนวนเงิน ผ่อน : <span className="font-semibold">{i.discount_amount} บาท</span></p>
+                                                        <p>ค่าธรรมเนียม : <span className="font-semibold">{i.charge} บาท</span></p>
+                                                        <p>จำนวนงวด : <span className="font-semibold">{i.installment_min} เดือน</span></p>
+                                                        <p>งวดต่ำสุด : <span className="font-semibold">{i.installment_min} เดือน</span></p>
+                                                        <p>งวดสูงสุด : <span className="font-semibold">{i.installment_max} เดือน</span></p>
+                                                    </>
+                                                )
+                                            }
+                                            {
+                                                i.payment_method_id === 4 && (
+                                                    <>
+                                                        <p>ส่วนลดเปอร์เซนต์ ผ่อน : <span className="font-semibold">{i.discount_percent} %</span></p>
+                                                        <p>ส่วนลดจำนวนเงิน ผ่อน : <span className="font-semibold">{i.discount_amount} บาท</span></p>
+                                                        <p>จำนวนงวด : <span className="font-semibold">{i.installment_min} งวด</span></p>
+                                                    </>
+                                                )
+                                            }
                                         </div>
 
                                     </div>
@@ -114,8 +151,8 @@ const CardPackage = ({ data, onRead }) => {
                 <form method="dialog" className="modal-backdrop">
                     <button>close</button>
                 </form>
-            </dialog>
-        </div>
+            </dialog >
+        </div >
     )
 }
 export default CardPackage

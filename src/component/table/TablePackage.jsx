@@ -92,7 +92,7 @@ const TablePackage = ({ data, page, limit, onDelete, onSort, sortConfig, onToggl
                                 <td className="align-top">{i.package_id}</td>
                                 <td className="align-top"><p className='font-semibold line-clamp-1'>{i.package_name}</p></td>
                                 <td className="align-top">{i.namecompany}</td>
-                                <td className="align-top">{i.nametype}</td>
+                                <td className="align-top text-center">{i.nametype}</td>
                                 <td className="align-top">
                                     <div className='flex flex-col text-center'>
                                         {dateFormatNoTime(i.start_date)}

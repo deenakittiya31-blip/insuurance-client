@@ -16,6 +16,7 @@ import toast from 'react-hot-toast';
 import { createPackage } from '../../service/insurance/PackageInsur';
 import { useNavigate } from 'react-router-dom';
 import { listPromotionSelect } from '../../service/insurance/promotion';
+import InstallmentSetting from '../../component/payment/InstallmentSetting';
 
 const initialState = {
     package_name: '',
@@ -36,6 +37,7 @@ const initialState = {
     thirdparty_property: '',
     flood_cover: '',
     car_own_damage_deductible: '',
+    car_own_damage: '',
     additional_personal_permanent_driver_cover: '',
     additional_medical_expense_cover: '',
     additional_bail_bond: '',
@@ -384,16 +386,14 @@ const AddPackage = () => {
                                 onChange={handleOnChange}
                                 value={form.thirdparty_injury_death_per_accident}
                             />
-                            <div className='col-span-2'>
-                                <TextInput
-                                    width='w-full'
-                                    name='thirdparty_property'
-                                    title='ความรับผิดต่อทรัพย์สิน'
-                                    type='number'
-                                    onChange={handleOnChange}
-                                    value={form.thirdparty_property}
-                                />
-                            </div>
+                            <TextInput
+                                width='w-full'
+                                name='thirdparty_property'
+                                title='ความรับผิดต่อทรัพย์สิน'
+                                type='number'
+                                onChange={handleOnChange}
+                                value={form.thirdparty_property}
+                            />
                         </div>
                         <div>
                             <h2 className='font-semibold mb-3'>ความรับผิดต่อรถเอาประกันภัย
@@ -414,6 +414,14 @@ const AddPackage = () => {
                                     type='number'
                                     onChange={handleOnChange}
                                     value={form.car_own_damage_deductible}
+                                />
+                                <TextInput
+                                    width='w-full'
+                                    name='car_own_damage'
+                                    title='ความเสียหายต่อรถยนต์'
+                                    type='number'
+                                    onChange={handleOnChange}
+                                    value={form.car_own_damage}
                                 />
                             </div>
                         </div>
@@ -466,6 +474,7 @@ const AddPackage = () => {
                                     <label key={i.id} className='flex items-center gap-3 text-sm'>
                                         <input
                                             type="checkbox"
+                                            className='checkbox checkbox-sm checkbox-info text-white'
                                             checked={hasPayment(i.id)}
                                             onChange={e =>
                                                 handlePaymentToggle(i.id, e.target.checked)
@@ -478,7 +487,7 @@ const AddPackage = () => {
                         </div>
                         {hasPayment(1) && (
                             <>
-                                <h2 className="font-semibold">ชำระด้วยเงินสด</h2>
+                                <h2 className="font-semibold text-info">ชำระด้วยเงินสด</h2>
                                 <div className="grid grid-cols-2 gap-3">
                                     <TextInput
                                         name="discount_percent"
@@ -509,7 +518,7 @@ const AddPackage = () => {
                         )}
                         {hasPayment(2) && (
                             <>
-                                <h2 className="font-semibold">ชำระด้วยบัตรเครดิตครั้งเดียว</h2>
+                                <h2 className="font-semibold text-info">ชำระด้วยบัตรเครดิตครั้งเดียว</h2>
                                 <div className="grid grid-cols-2 gap-3">
                                     <TextInput
                                         name="discount_percent"
@@ -540,8 +549,8 @@ const AddPackage = () => {
                         )}
                         {hasPayment(3) && (
                             <>
-                                <h2 className="font-semibold">ผ่อนเงินสด</h2>
-                                <div className="grid grid-cols-3 gap-3">
+                                <h2 className="font-semibold text-info">ผ่อนเงินสด</h2>
+                                <div className="grid grid-cols-2 gap-3">
                                     <TextInput
                                         title="เงินงวดแรก"
                                         type='number'
@@ -578,31 +587,27 @@ const AddPackage = () => {
                                     <TextInput
                                         title="ค่าธรรมเนียม"
                                         type='number'
-                                        value={
-                                            form.payments.find(p => p.payment_method_id === 3)
-                                                ?.discount_amount || ''
-                                        }
-                                        onChange={e =>
-                                            updatePaymentField(3, 'discount_amount', e.target.value)
-                                        }
+                                        value={form.payments.find(p => p.payment_method_id === 3)?.charge || ''}
+                                        onChange={e => updatePaymentField(3, 'charge', e.target.value)}
                                     />
-                                    <TextInput
-                                        title="ผ่อนได้กี่งวด"
-                                        type='number'
-                                        value={
-                                            form.payments.find(p => p.payment_method_id === 3)
-                                                ?.discount_amount || ''
-                                        }
-                                        onChange={e =>
-                                            updatePaymentField(3, 'discount_amount', e.target.value)
-                                        }
-                                    />
+                                    <div className="col-span-2">
+                                        <InstallmentSetting
+                                            value={{
+                                                min: form.payments.find(p => p.payment_method_id === 3)?.installment_min ?? '',
+                                                max: form.payments.find(p => p.payment_method_id === 3)?.installment_max ?? '',
+                                            }}
+                                            onChange={({ min, max }) => {
+                                                updatePaymentField(3, 'installment_min', min)
+                                                updatePaymentField(3, 'installment_max', max)
+                                            }}
+                                        />
+                                    </div>
                                 </div>
                             </>
                         )}
                         {hasPayment(4) && (
                             <>
-                                <h2 className="font-semibold">ผ่อนบัตรเครดิต</h2>
+                                <h2 className="font-semibold text-info">ผ่อนบัตรเครดิต</h2>
                                 <div className="grid grid-cols-3 gap-3">
                                     <TextInput
                                         title="ส่วนลดเปอร์เซนต์ ผ่อน"
@@ -624,6 +629,17 @@ const AddPackage = () => {
                                         }
                                         onChange={e =>
                                             updatePaymentField(4, 'discount_amount', e.target.value)
+                                        }
+                                    />
+                                    <TextInput
+                                        title="จำนวนงวด"
+                                        type="number"
+                                        value={
+                                            form.payments.find(p => p.payment_method_id === 4)
+                                                ?.installment_min || ''
+                                        }
+                                        onChange={e =>
+                                            updatePaymentField(4, 'installment_min', e.target.value)
                                         }
                                     />
                                 </div>
