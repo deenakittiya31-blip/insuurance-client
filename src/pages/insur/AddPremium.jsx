@@ -3,7 +3,6 @@ import { FaCircleMinus, FaCirclePlus } from "react-icons/fa6"
 import Title from "../../component/form/Title"
 import toast from "react-hot-toast"
 import useActionStore from "../../store/action-store"
-import Select from "../../component/form/Select"
 import TextInput from "../../component/form/TextInput"
 import { createPremium } from "../../service/insurance/PremiumInsur"
 import { useNavigate } from "react-router-dom"
@@ -17,7 +16,7 @@ const premiumInitial = {
     car_lost_fire: '',
     total_premium: '',
     net_income: '',
-    selling_prices: []
+    selling_price: ''
 }
 
 const AddPremium = () => {
@@ -28,7 +27,7 @@ const AddPremium = () => {
         premiums: [premiumInitial]
     })
     const { packageSelect, getPackageSelect } = useActionStore()
-    const [packagePayments, setPackagePayments] = useState([])
+    const [packagePayments, setPackagePayments] = useState({})
 
     useEffect(() => {
         getPackageSelect();
@@ -44,7 +43,7 @@ const AddPremium = () => {
             if (name === 'total_premium') {
                 const net_total = (parseFloat(value) || 0) * 0.9309
                 premiums[index].net_income = net_total.toFixed(2)
-                premiums[index].selling_prices = calcSellingPrices(value, prev.premium_discount, packagePayments)
+                premiums[index].selling_price = calcSellingPrices(value, prev.premium_discount, packagePayments)
             }
 
             return { ...prev, premiums }
@@ -57,7 +56,7 @@ const AddPremium = () => {
         if (name === 'package_id') {
             // ดึง payments จาก packageSelect ที่มีอยู่แล้ว
             const selected = packageSelect.find(p => String(p.id) === String(value))
-            setPackagePayments(selected?.payments || [])
+            setPackagePayments(selected || {}) // เก็บ object แทน array
         }
 
         setFrom(prev => {
@@ -67,7 +66,7 @@ const AddPremium = () => {
             if (name === 'premium_discount') {
                 updated.premiums = prev.premiums.map(item => ({
                     ...item,
-                    selling_prices: calcSellingPrices(item.total_premium, value, packagePayments)
+                    selling_price: calcSellingPrices(item.total_premium, value, packagePayments)
                 }))
             }
 
@@ -76,24 +75,21 @@ const AddPremium = () => {
     }
 
     // ฟังก์ชันคำนวณราคาขาย
-    const calcSellingPrices = (total_premium, premium_discount, pkgPayments) => {
+    const calcSellingPrices = (total_premium, premium_discount, selected) => {
         const premium = parseFloat(total_premium) || 0
         const net_total = premium * 0.9309
+
         //ส่วนลดหน้าเบี้ย
         const extra_discount = net_total * ((parseFloat(premium_discount) || 0) / 100)
 
-        return pkgPayments.map(pm => {
-            const discount_percent = parseFloat(pm.discount_percent) || 0
-            const discount_amount = parseFloat(pm.discount_amount) || 0
-            //ส่วนลดแพ็กเกจ
-            const package_discount = (net_total * (discount_percent / 100)) + discount_amount
-            const selling = premium - (package_discount + extra_discount)
+        // ส่วนลดแพ็กเกจจาก payment_method_id = 1
+        const discount_percent = parseFloat(selected?.discount_percent) || 0
+        const discount_amount = parseFloat(selected?.discount_amount) || 0
+        const package_discount = (net_total * (discount_percent / 100)) + discount_amount
 
-            return {
-                payment_method_id: pm.payment_method_id,
-                selling_price: selling.toFixed(2)
-            }
-        })
+        const selling = premium - (package_discount + extra_discount)
+
+        return selling.toFixed(2)
     }
 
     const addFormPremium = () => {
@@ -284,7 +280,7 @@ const AddPremium = () => {
                                         value={item.net_income}
                                         className='input flex-1'
                                     />
-                                    {/* <div className='col-span-4 grid grid-cols-subgrid gap-4'>
+                                    <div className='col-span-4 grid grid-cols-subgrid gap-4'>
                                         <div className="col-start-3"><p className='font-semibold text-sm'>ราคาขาย</p></div>
                                         <div className="col-start-4">
                                             <input
@@ -296,8 +292,8 @@ const AddPremium = () => {
                                                 readOnly
                                             />
                                         </div>
-                                    </div> */}
-                                    {item.selling_prices?.length > 0 && (
+                                    </div>
+                                    {/* {item.selling_prices?.length > 0 && (
                                         <div className="col-span-4 flex flex-col gap-2">
                                             <p className="font-semibold text-sm">ราคาขาย</p>
                                             {item.selling_prices.map(sp => (
@@ -316,7 +312,7 @@ const AddPremium = () => {
                                                 </div>
                                             ))}
                                         </div>
-                                    )}
+                                    )} */}
                                 </div>
                             </div>
                         ))

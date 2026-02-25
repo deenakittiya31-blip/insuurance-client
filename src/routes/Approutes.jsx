@@ -49,6 +49,7 @@ import TrackParcel from '../pages/user/TrackParcel'
 import HistoryOrder from '../pages/user/HistoryOrder'
 import PolicyManage from '../pages/consent/PolicyPage'
 import PolicyView from '../pages/consent/PolicyView'
+import MemberLogin from '../pages/auth/MemberLogin'
 
 
 const Approutes = () => {
@@ -57,6 +58,7 @@ const Approutes = () => {
             <Routes>
                 <Route index element={<Login />} />
                 <Route path='member-register' element={<MemberRegister />} />
+                <Route path='member-login' element={<MemberLogin />} />
                 <Route path='forbidden' element={<Forbidden />} />
                 <Route path='/policy/:type' element={<PolicyView />} />
                 <Route path='liff' element={<Line />} />

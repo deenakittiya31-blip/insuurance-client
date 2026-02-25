@@ -16,6 +16,7 @@ const SideBarMobile = ({ isOpen, setIsOpen }) => {
         await liff.init({ liffId: "2008929214-oMQadweJ" })
         liff.logout()
         actionLogout()
+        navigate('/store')
     }
 
     const handleNavigate = (address) => {
@@ -40,13 +41,19 @@ const SideBarMobile = ({ isOpen, setIsOpen }) => {
                 {/* member profile */}
                 <div className="flex flex-col gap-3 justify-center items-center font-prompt mb-5">
                     <div className="w-20 h-20 rounded-full overflow-clip">
-                        <img src={member?.picture_url} className="w-full h-full object-cover" />
+                        {
+                            token
+                                ? (<img src={member?.picture_url} className="w-full h-full object-cover" />)
+                                : (
+                                    <FaRegFaceSmile className='fill-main size-6' />
+                                )
+                        }
                     </div>
                     <div className="flex gap-1 items-center text-gray-500">
                         <PiMedalBold className="size-3" />
-                        <p className="text-sm font-normal">{member?.group_name}</p>
+                        <p className="text-sm font-normal">{token ? `${member?.group_name}` : '-'}</p>
                     </div>
-                    <p className="font-semibold text-2xl text-text-primary">{member?.first_name} {member?.last_name}</p>
+                    <p className="font-semibold text-2xl text-text-primary">{token ? `${member?.first_name} ${member?.last_name}` : '-'}</p>
                 </div>
 
                 <div className='grid gap-5 bg-white p-5 rounded-4xl font-prompt text-text-primary'>

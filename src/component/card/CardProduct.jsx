@@ -50,7 +50,7 @@ const CardProduct = ({ data, onChange, checked }) => {
                     <div>
                         <p className="text-end text-[10px] font-nomal">ทุนประกัน</p>
                         <p className="font-semibold text-xs">{numberFormat(data.
-                            total_premium
+                            repair_fund_int
                         )} บาท</p>
                     </div>
                 </div>
@@ -74,7 +74,7 @@ const CardProduct = ({ data, onChange, checked }) => {
                         <div className="flex justify-end items-baseline gap-1">
                             <span className="font-bold text-sm tracking-wide">฿{numberFormat(data.
                                 selling_price)}</span>
-                            <del className="font-medium text-[#ede9e7] text-[10px]">฿2,000</del>
+                            <del className="font-medium text-[#ede9e7] text-[10px]">฿{numberFormat(data.total_premium)}</del>
                         </div>
 
                     </div>

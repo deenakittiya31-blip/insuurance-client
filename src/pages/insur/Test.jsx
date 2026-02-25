@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
+import { FaCircleMinus, FaCirclePlus } from "react-icons/fa6"
 import Title from "../../component/form/Title"
 import toast from "react-hot-toast"
 import useActionStore from "../../store/action-store"
 import Select from "../../component/form/Select"
 import TextInput from "../../component/form/TextInput"
-import { useNavigate, useParams } from "react-router-dom"
-import { readPremium, updatePremium } from "../../service/insurance/PremiumInsur"
+import { createPremium } from "../../service/insurance/PremiumInsur"
+import { useNavigate } from "react-router-dom"
 
 const premiumInitial = {
     premium_name: '',
@@ -19,50 +20,38 @@ const premiumInitial = {
     selling_price: ''
 }
 
-const EditPremium = () => {
+const AddPremium = () => {
     const navigate = useNavigate()
-    const { id } = useParams()
     const [form, setFrom] = useState({
         package_id: '',
         premium_discount: '',
         premiums: [premiumInitial]
     })
     const { packageSelect, getPackageSelect } = useActionStore()
-    const [packagePayments, setPackagePayments] = useState({})
 
     useEffect(() => {
         getPackageSelect();
-        fetchPackageDetail();
     }, [])
-
-    // เพิ่มตัวนี้ - sync packagePayments เมื่อ packageSelect หรือ form.package_id พร้อม
-    useEffect(() => {
-        if (packageSelect.length > 0 && form.package_id) {
-            const selected = packageSelect.find(p => String(p.id) === String(form.package_id))
-            setPackagePayments(selected || {})
-        }
-    }, [packageSelect, form.package_id])
-
-    const fetchPackageDetail = async () => {
-        try {
-            const res = await readPremium(id)
-            setFrom(res.data.data)
-        } catch (err) {
-            console.log(err)
-        }
-    }
 
     const handleOnChange = (index, e) => {
         const { name, value } = e.target
 
         setFrom(prev => {
+            //คัดลอกค่าเดิมของ premium ไว้
+            const discount = parseFloat(prev.premium_discount) || 0
             const premiums = [...prev.premiums]
-            premiums[index] = { ...premiums[index], [name]: value }
+            premiums[index] = {
+                ...premiums[index],
+                [name]: value
+            }
 
+            // คำนวณราคาขายอัตโนมัติ
             if (name === 'total_premium') {
-                const net_total = (parseFloat(value) || 0) * 0.9309
+                const premium = parseFloat(premiums[index].total_premium) || 0
+                const net_total = premium * 0.9309
+
                 premiums[index].net_income = net_total.toFixed(2)
-                premiums[index].selling_price = calcSellingPrices(value, prev.premium_discount, packagePayments)
+                premiums[index].selling_price = (premium - (net_total * (discount / 100))).toFixed(2)
             }
 
             return { ...prev, premiums }
@@ -72,47 +61,57 @@ const EditPremium = () => {
     const handleChangeHead = (e) => {
         const { name, value } = e.target
 
-        if (name === 'package_id') {
-            // ดึง payments จาก packageSelect ที่มีอยู่แล้ว
-            const selected = packageSelect.find(p => String(p.id) === String(value))
-            setPackagePayments(selected || {}) // เก็บ object แทน array
-        }
-
         setFrom(prev => {
-            const updated = { ...prev, [name]: value }
+            const updated = {
+                ...prev,
+                [name]: value
+            }
 
             // ถ้าเปลี่ยน premium_discount ให้คำนวณ selling_price ทุกตัวใหม่
             if (name === 'premium_discount') {
-                updated.premiums = prev.premiums.map(item => ({
-                    ...item,
-                    selling_price: calcSellingPrices(item.total_premium, value, packagePayments)
-                }))
+                const discount = parseFloat(value) || 0
+
+                updated.premiums = prev.premiums.map(item => {
+                    if (item.total_premium && item.net_income) {
+                        const premium = parseFloat(item.total_premium) || 0
+                        const netIncome = parseFloat(item.net_income) || 0
+
+                        return {
+                            ...item,
+                            selling_price: (premium - (netIncome * (discount / 100))).toFixed(2)
+                        }
+                    }
+                    return item
+                })
             }
 
             return updated
         })
     }
 
-    const calcSellingPrices = (total_premium, premium_discount, selected) => {
-        const premium = parseFloat(total_premium) || 0
-        const net_total = premium * 0.9309
-
-        //ส่วนลดหน้าเบี้ย
-        const extra_discount = net_total * ((parseFloat(premium_discount) || 0) / 100)
-
-        // ส่วนลดแพ็กเกจจาก payment_method_id = 1
-        const discount_percent = parseFloat(selected?.discount_percent) || 0
-        const discount_amount = parseFloat(selected?.discount_amount) || 0
-        const package_discount = (net_total * (discount_percent / 100)) + discount_amount
-
-        const selling = premium - (package_discount + extra_discount)
-
-        return selling.toFixed(2)
+    const addFormPremium = () => {
+        setFrom(prev => ({
+            ...prev,
+            premiums: [
+                ...prev.premiums,
+                { ...premiumInitial } // clone ใหม่ทุกครั้ง
+            ]
+        }))
     }
 
-    console.log(packagePayments)
+    const removeFormPremium = (index) => {
+        if (form.premiums.length <= 1) {
+            return toast.error('ไม่สามารถลบแบบฟอร์มนี้ได้')
+        }
 
-    const handleUpdatePremium = async (e) => {
+        //เก็บข้อมูลตำแหน่งที่ไม่เท่ากับ index ที่ส่งเข้ามา
+        setFrom(prev => ({
+            ...prev,
+            premiums: prev.premiums.filter((_, i) => i !== index)
+        }))
+    }
+
+    const handleCreatePremium = async (e) => {
         e.preventDefault()
         if (!form.package_id) {
             return toast.error('กรุณาเลือกแพ็กเกจ')
@@ -129,23 +128,25 @@ const EditPremium = () => {
         console.log('ข้อมูลพร้อมส่ง', form)
 
         try {
-            const res = await updatePremium(id, form)
+            const res = await createPremium(form)
             toast.success(res.data.msg)
             navigate('/app/insurpremium')
         } catch (err) {
             console.log(err)
-            toast.error('เกิดข้อผิดพลาดไม่สามารถแก้ไขเบี้ยได้')
+            toast.error('เกิดข้อผิดพลาดไม่สามารถสร้างเบี้ยได้')
         }
     }
+
+    console.log(packageSelect)
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
             <Title
-                title='แก้ไขเบี้ยประกัน'
+                title='สร้างเบี้ยประกัน'
                 subtitle='กรุณากรอกข้อมูลให้ครบ'
             />
-            <form onSubmit={handleUpdatePremium} className="bg-white rounded-2xl p-5 flex flex-col gap-5 font-prompt text-text-primary">
+            <form onSubmit={handleCreatePremium} className="bg-white rounded-2xl p-5 flex flex-col gap-5 font-prompt text-text-primary">
                 <div className='flex justify-between'>
-                    <h1 className='font-semibold text-lg text-accent'>แก้ไขข้อมูลเบี้ยประกัน</h1>
+                    <h1 className='font-semibold text-lg text-accent'>สร้างข้อมูลเบี้ยประกัน</h1>
                     <button type="submit" className="btn btn-sm btn-neutral px-10">บันทึก</button>
                 </div>
                 <div className="grid grid-cols-2 gap-3 items-end">
@@ -172,7 +173,7 @@ const EditPremium = () => {
                     </fieldset>
                     <TextInput
                         width='w-full'
-                        title='ส่วนลด (%)'
+                        title='ส่วนลด'
                         name='premium_discount'
                         type='text'
                         placeholder='0%'
@@ -180,13 +181,23 @@ const EditPremium = () => {
                         value={form.premium_discount}
                     />
                 </div>
+                <div className='flex gap-3'>
+                    <button type='button' onClick={addFormPremium} className='btn btn-sm btn-accent text-white'><FaCirclePlus /> เพิ่มแบบฟอร์ม </button>
+                </div>
                 <div className='w-full h-px bg-border' />
-                <div className='grid gap-5'>
+                <div className='grid lg:grid-cols-2 gap-5'>
                     {
                         form.premiums?.map((item, idx) => (
                             <div key={idx} className='w-full rounded-md shadow border border-border/30 text-text-primary'>
                                 <div className='flex justify-between p-3'>
-                                    <h2 className='font-semibold text-sm'>แบบฟอร์มแก้ไขเบี้ยประกันภัย ({idx + 1})</h2>
+                                    <h2 className='font-semibold text-sm'>แบบฟอร์มสร้างเบี้ยประกันภัย ({idx + 1})</h2>
+                                    <button
+                                        type="button"
+                                        onClick={() => removeFormPremium(idx)}
+                                        className="btn btn-sm btn-error text-white"
+                                    >
+                                        <FaCircleMinus /> ลบแบบฟอร์ม
+                                    </button>
                                 </div>
                                 <div className='w-full h-px bg-border/30' />
                                 <div className='grid grid-cols-4 gap-3 p-3'>
@@ -289,4 +300,12 @@ const EditPremium = () => {
         </div >
     )
 }
-export default EditPremium
+export default AddPremium
+
+
+
+
+
+
+
+
