@@ -67,11 +67,9 @@ const Approutes = () => {
                 <Route
                     path='/store'
                     element={
-                        <ProtectMember>
-                            <PremiumProvider>
-                                <LayoutMember />
-                            </PremiumProvider>
-                        </ProtectMember>
+                        <PremiumProvider>
+                            <LayoutMember />
+                        </PremiumProvider>
                     }>
                     <Route index element={<PackageProduct />} />
                     <Route path='compare-insurance/:id' element={<CompareInsure />} />
