@@ -50,6 +50,7 @@ import HistoryOrder from '../pages/user/HistoryOrder'
 import PolicyManage from '../pages/consent/PolicyPage'
 import PolicyView from '../pages/consent/PolicyView'
 import MemberLogin from '../pages/auth/MemberLogin'
+import DiscountLevel from '../pages/insur/DiscountLevel'
 
 
 const Approutes = () => {
@@ -126,6 +127,7 @@ const Approutes = () => {
                         <Route path='carbrand' element={<CarBrand />} />
                         <Route path='insurtypes' element={<InsurTypes />} />
                         <Route path='promotion' element={<Promotion />} />
+                        <Route path='discount-level' element={<DiscountLevel />} />
                         <Route path='users' element={<Users />} />
                         <Route path='policy' element={<PolicyManage />} />
                     </Route>

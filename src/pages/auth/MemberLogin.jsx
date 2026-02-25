@@ -42,8 +42,16 @@ const MemberLogin = () => {
             } catch (err) {
                 console.log(err)
                 const status = err.response?.status
+
+                // LINE idToken หมดอายุ → logout แล้ว login ใหม่
+                if (status === 401) {
+                    liff.logout()
+                    liff.login()
+                    return
+                }
+
                 if (status === 403 || status === 404) {
-                    navigate('/member-register')  // ไม่มีในระบบ หรือยังไม่ลงทะเบียน
+                    navigate('/member-register')
                 }
             }
         };

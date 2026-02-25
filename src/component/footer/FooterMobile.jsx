@@ -7,7 +7,7 @@ import { Link } from "react-router-dom"
 import { usePremium } from "../../context/PremiumContext"
 import SideBarMobile from "../sidebar/SideBarMobile"
 
-const FooterMobile = ({ setIsOpen, hasCardSelected }) => {
+const FooterMobile = ({ setIsOpen }) => {
     const [show, setShow] = useState(true)
     const [lastScrollY, setLastScrollY] = useState(0)
     const { premiumSelected } = usePremium();
@@ -18,7 +18,7 @@ const FooterMobile = ({ setIsOpen, hasCardSelected }) => {
         const handleScroll = () => {
             const currentScrollY = window.scrollY
 
-            if (currentScrollY > lastScrollY && currentScrollY > 70) {
+            if (currentScrollY > lastScrollY && currentScrollY > 60) {
                 // scroll ลง
                 setShow(false)
             } else {

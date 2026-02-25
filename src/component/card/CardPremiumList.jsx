@@ -1,4 +1,5 @@
 import { GoPackage } from "react-icons/go";
+import { numberFormat } from "../../utils/numerral";
 
 const CardPremiumList = ({ premiums }) => {
     return (
@@ -18,7 +19,7 @@ const CardPremiumList = ({ premiums }) => {
 
                 {/* ราคากับปุ่มสั่งซื้อ */}
                 <div className="flex flex-col gap-1 justify-center items-center w-25 border-l border-border/20 p-2">
-                    <span className="text-xs font-medium text-main">฿{premiums.selling_price}</span>
+                    <span className="text-xs font-medium text-main">฿{numberFormat(premiums.selling_price)}</span>
                     <button className="rounded-sm bg-main w-fit px-2 text-[10px]">ซื้อเลย</button>
                 </div>
             </div>

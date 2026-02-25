@@ -58,6 +58,10 @@ const PackageProduct = () => {
         getUsageTypeSelectMember();
     }, [])
 
+    useEffect(() => {
+        console.log('pmToCompare', pmToCompare)
+    }, [pmToCompare])
+
     const handleOnChange = async (e) => {
         const { name, value } = e.target
 
@@ -190,47 +194,32 @@ const PackageProduct = () => {
 
         if (!selectedPremium) return
 
-        setPremiumSelected((prev) => {
-            //3 ตรวจสอบว่าเลือกซ้ำหรือไม่
-            const isExist = prev.some(
-                item => item.index_premium === indexPremium
+        const isSelected = premiumSelected.some(
+            item => item.index_premium === indexPremium
+        )
+
+        // ถ้าเอาออก
+        if (isSelected) {
+            setPremiumSelected(prev =>
+                prev.filter(item => item.index_premium !== indexPremium)
             )
 
-            //กรณีที่ 1 เลือกซ้ำ(ยกเลิกการเลือก)
-            if (isExist) {
-                //เอาข้อมูลออกจาก setPmToCompare
-                setPmToCompare(prevCompare =>
-                    prevCompare.filter(
-                        item => item.index_premium !== indexPremium
-                    )
-                )
-                //เอาข้อมูลออกจาก setPremiumSelected
-                return prev.filter(
-                    item => item.index_premium !== indexPremium
-                )
-            }
+            setPmToCompare(prev =>
+                prev.filter(item => item.index_premium !== indexPremium)
+            )
+            return
+        }
 
-            //กรณีที่ 2 ยังไม่เคยเลือก 
-            //3.1 ตรวจสอบจำนวน
-            if (prev.length >= 3) {
-                toast.error('เลือกได้สูงสุด 3 รายการเท่านั้น')
-                return prev
-            }
+        //ถ้าเกิน 3
+        if (premiumSelected.length >= 3) {
+            toast.error('เลือกได้สูงสุด 3 รายการเท่านั้น')
+            return
+        }
 
-            //3.2 เพิ่มข้อมูลเข้า State
-
-            //ข้อมูลส่งเข้า backend
-            setPmToCompare(prevCompare => [
-                ...prevCompare,
-                {
-                    index_premium: selectedPremium.index_premium,
-                    index_company: selectedPremium.index_company,
-                    index_package: selectedPremium.index_package,
-                }
-            ])
-
-            //ข้อมูลส่งเข้า component
-            const dataToState = {
+        //ข้อมูลใน UI
+        setPremiumSelected(prev => [
+            ...prev,
+            {
                 index_premium: selectedPremium.index_premium,
                 total_premium: selectedPremium.total_premium,
                 repair_type: selectedPremium.repair_type,
@@ -238,8 +227,23 @@ const PackageProduct = () => {
                 insurance_company: selectedPremium.namecompany,
                 logo_url_company: selectedPremium.logo_url,
             }
+        ])
 
-            return [...prev, dataToState]
+        //ข้อมูลส่ง Backend data
+        setPmToCompare(prev => {
+            const exist = prev.some(
+                item => item.index_premium === indexPremium
+            )
+            if (exist) return prev
+
+            return [
+                ...prev,
+                {
+                    index_premium: selectedPremium.index_premium,
+                    index_company: selectedPremium.index_company,
+                    index_package: selectedPremium.index_package,
+                }
+            ]
         })
     }
 
@@ -252,13 +256,15 @@ const PackageProduct = () => {
             })
 
             navigate(`/store/compare-insurance/${res.data.compare_id}`)
+            setPmToCompare([])
+            setPremiumSelected([])
         } catch (err) {
             console.log(err)
-            toast.error(err.response?.data?.message || 'ดึงข้อมูลไม่สำเร็จ')
+            toast.error('สร้างใบเปรียบเทียบไม่ได้')
         }
     }
 
-    console.log(premium)
+    console.log(premiumSelected)
     return (
         <div>
             <NavbarMobile />
@@ -382,7 +388,10 @@ const PackageProduct = () => {
                 <CardPremiumSelect
                     premiumSelect={premiumSelected}
                     onSubmit={handleSubmitPremiumSelected}
-                    onClear={() => setPremiumSelected([])}
+                    onClear={() => {
+                        setPremiumSelected([])
+                        setPmToCompare([])
+                    }}
                 />
             </div >
         </div>

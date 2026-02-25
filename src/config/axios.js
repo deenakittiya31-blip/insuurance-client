@@ -23,13 +23,13 @@ api.interceptors.response.use(response => {
     return response;
 }, error => {
     if(error.response?.status === 401){
-        toast.error('Session หมดอายุ กรุณาเข้าสู่ระบบใหม่')
+        toast.error('กรุณาเข้าสู่ระบบใหม่')
 
         //reset zustand กับ localstorange
         useInsureAuth.getState().actionLogout()
 
         //redirect ไปที่หน้า login
-        window.location.href = '/'
+        // window.location.href = '/'
     }
     return Promise.reject(error);
 })

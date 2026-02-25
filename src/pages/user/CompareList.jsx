@@ -8,10 +8,12 @@ import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import TabBackward from "../../component/mobile/TabBackward";
 import { deleteCompareMember } from "../../service/compare";
+import { useNavigate } from "react-router-dom";
 
 const CompareList = () => {
     const [data, setData] = useState([])
-
+    const navigate = useNavigate()
+    const [isUnauth, setIsUnauth] = useState(false)
     useEffect(() => {
         fetchCompareQuotaion();
     }, [])
@@ -23,6 +25,9 @@ const CompareList = () => {
             setData(res.data.data)
         } catch (err) {
             console.log(err)
+            if (err.response?.status === 401) {
+                setIsUnauth(true) // แสดง UI แทน navigate
+            }
         }
     }
 
@@ -49,11 +54,24 @@ const CompareList = () => {
             toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
+            if (err.response?.status === 401) {
+                setIsUnauth(true)
+                return
+            }
             fetchCompareQuotaion()
         }
     }
-
-    console.log(data)
+    if (isUnauth) return (
+        <div className="w-full h-screen flex flex-col justify-center items-center gap-3 font-prompt">
+            <p className="text-text-primary font-medium">กรุณาเข้าสู่ระบบก่อนดูใบเสนอราคา</p>
+            <button
+                onClick={() => navigate('/member-login')}
+                className="btn btn-sm btn-neutral"
+            >
+                เข้าสู่ระบบ
+            </button>
+        </div>
+    )
     return (
         <div>
             <TabBackward

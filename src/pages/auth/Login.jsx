@@ -26,7 +26,8 @@ const Login = () => {
         e.preventDefault()
 
         if (!capVal) {
-            return toast.error('กรุณายืนยัน reCAPTCHA')
+            toast.error('กรุณายืนยัน reCAPTCHA')
+            return
         }
         try {
             await actionLogin({
