@@ -1,5 +1,5 @@
 import liff from "@line/liff";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Line = () => {
@@ -7,9 +7,13 @@ const Line = () => {
 
     useEffect(() => {
         const init = async () => {
-            await liff.init({ liffId: "2008929214-oMQadweJ" });
-            // เข้า store ได้เลย ไม่ต้องเช็ค login
-            navigate('/store')
+            try {
+                await liff.init({ liffId: "2008929214-oMQadweJ" });
+                navigate('/store')
+            } catch (err) {
+                console.log('liff init error', err)
+                navigate('/store') // init fail ก็ไป store ได้เลย
+            }
         };
 
         init();
