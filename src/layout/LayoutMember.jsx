@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom"
 import FooterMobile from "../component/footer/FooterMobile"
 import SideBarMobile from "../component/sidebar/SideBarMobile"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import useInsureAuth from "../store/auth-store"
 
 const LayoutMember = () => {
