@@ -19,6 +19,10 @@ const SideBarMobile = ({ isOpen, setIsOpen }) => {
         navigate('/store')
     }
 
+    const handleLogIn = async () => {
+        navigate('/member-login')
+    }
+
     const handleNavigate = (address) => {
         setIsOpen(false)
         navigate(`${address}`)
@@ -90,11 +94,16 @@ const SideBarMobile = ({ isOpen, setIsOpen }) => {
                         </div>
                     </div>
                     {
-                        token && (
+                        token ? (
                             <button onClick={handleLogout} className="btn rounded-xl btn-error font-medium text-xl text-text-primary">
                                 ออกจากระบบ
                             </button>
                         )
+                            : (
+                                <button onClick={handleLogIn} className="btn rounded-xl btn-error font-medium text-xl text-text-primary">
+                                    เข้าสู่ระบบ
+                                </button>
+                            )
                     }
 
                 </div>
