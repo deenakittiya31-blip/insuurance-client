@@ -3,7 +3,29 @@ import { IoIosArrowForward } from "react-icons/io"
 import { numberFormat } from "../../utils/numerral"
 import { FaCarCrash } from "react-icons/fa"
 import CardDetails from "./CardDetails"
-import { TbZoomMoney } from "react-icons/tb";
+import CardPayment from "./CardPayment"
+import { TbDiscount } from "react-icons/tb"
+
+const Promotion = ({ id, promotion_img, promotion_name }) => {
+    return (
+        <div>
+            <button className="badge badge-xs badge-ghost text-text-primary cursor-pointer" onClick={() => document.getElementById(`modalPromotion-${id}`).showModal()}><TbDiscount /> <span className="hover:underline">โปรโมชั่น</span></button>
+            <dialog id={`modalPromotion-${id}`} className="modal">
+                <div className="modal-box">
+                    <form method="dialog">
+                        {/* if there is a button in form, it will close the modal */}
+                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                    </form>
+                    <h3 className="font-bold text-lg mb-3">🎉 {promotion_name}</h3>
+                    <div className="w-full rounded-md overflow-clip">
+                        <img src={promotion_img} className="w-full h-full object-cover" />
+                    </div>
+
+                </div>
+            </dialog>
+        </div>
+    )
+}
 
 const CardProduct = ({ data, onChange, checked }) => {
     return (
@@ -40,7 +62,23 @@ const CardProduct = ({ data, onChange, checked }) => {
                             </button>
                         )
                     }
-                    <div className="badge badge-xs badge-ghost text-text-primary cursor-pointer"><TbZoomMoney /> <span className="hover:underline">ดูวิธีชำระเงิน</span></div>
+                    <div className="flex gap-1">
+                        {
+                            data.premium_name && (
+                                <Promotion
+                                    id={data.index_premium}
+                                    promotion_img={data.promotion_img}
+                                    promotion_name={data.promotion_name}
+                                />
+                            )
+                        }
+
+                        <CardPayment
+                            id={data.index_premium}
+                            payments={data.payments}
+                            groups={data.groups}
+                        />
+                    </div>
                 </div>
             </div>
             <div className="w-full h-px bg-[#e3e3e2] my-1"></div>
@@ -59,11 +97,11 @@ const CardProduct = ({ data, onChange, checked }) => {
                         <p className="text-[10px] font-nomal">ค่าเสียหายส่วนแรก</p>
                         <p className="font-semibold text-xs">{numberFormat(data.car_own_damage_deductible)
                         } บาท</p>
-
                     </div>
                     <div className="text-end">
-                        <p className="text-[10px] font-nomal"><span className="font-semibold text-base text-main">647</span> บาท/เดือน</p>
-                        <p className="text-[10px] font-nomal">(ผ่อนสูงสุด นาน 10 เดือน)</p>
+                        <p className="text-[10px] font-nomal">ทรัพย์สินบุคคลภายนอก</p>
+                        <p className="font-semibold text-xs">{numberFormat(data.thirdparty_property)
+                        } บาท</p>
                     </div>
                 </div>
             </div>
@@ -73,7 +111,7 @@ const CardProduct = ({ data, onChange, checked }) => {
                         <span className="text-[10px] font-normal">เบี้ยประกันต่อ/ปี</span>
                         <div className="flex justify-end items-baseline gap-1">
                             <span className="font-bold text-sm tracking-wide">฿{numberFormat(data.
-                                selling_price)}</span>
+                                selling_price_final)}</span>
                             <del className="font-medium text-[#ede9e7] text-[10px]">฿{numberFormat(data.total_premium)}</del>
                         </div>
 

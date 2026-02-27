@@ -1,14 +1,18 @@
 import React from 'react'
-import TextInput from '../form/TextInput';
+import TextArea from '../form/TextArea'
 import UploadFile from '../form/UploadFile';
 
 const EditPromotion = ({ isOpen, form, setForm, onSubmit, onChange, onClose }) => {
     if (!isOpen) return null;
     return (
         <div className='mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20'>
-            <form onSubmit={onSubmit} className="w-auto p-6 radius-box flex flex-col gap-5 bg-white rounded-lg">
+            <form onSubmit={onSubmit} className="w-sm p-6 radius-box flex flex-col gap-5 bg-white rounded-lg">
                 <h3 className="font-bold text-lg font-prompt text-text-primary">เพิ่มโปรโมชั่น</h3>
-                <TextInput
+                <UploadFile
+                    form={form}
+                    setForm={setForm}
+                />
+                <TextArea
                     width='w-sm'
                     title='ชื่อโปรโมชั่น'
                     name='promotion_name'
@@ -16,10 +20,6 @@ const EditPromotion = ({ isOpen, form, setForm, onSubmit, onChange, onClose }) =
                     placeholder='ชื่อโปรโมชั่น...'
                     onChange={onChange}
                     value={form.promotion_name}
-                />
-                <UploadFile
-                    form={form}
-                    setForm={setForm}
                 />
                 <div className='modal-action'>
                     <button type='button' className="btn btn-soft btn-error" onClick={onClose}>ยกเลิก</button>

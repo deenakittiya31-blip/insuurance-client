@@ -30,6 +30,15 @@ const TableSelectPackage = ({ data, page, limit, onChange, isChecked, onSort, so
                         </th>
                         <th className='font-medium text-neutral-400'>
                             <div className='flex items-center justify-center gap-3'>
+                                รหัสเบี้ย<Sort
+                                    onSort={onSort}
+                                    keyName='premium_id'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center justify-center gap-3'>
                                 ประเภท<Sort
                                     onSort={onSort}
                                     keyName='last_name'
@@ -127,13 +136,14 @@ const TableSelectPackage = ({ data, page, limit, onChange, isChecked, onSort, so
                                     </div>
                                 </td>
                                 <td className="align-middle text-center">{i.package_name}</td>
+                                <td className="align-middle text-center">{i.premium_id}</td>
                                 <td className="align-middle text-center">{i.nametype}</td>
                                 <td className="align-middle text-center">{i.repair_fund_max}</td>
-                                <td className="align-middle text-center">{i.medical_expense}</td>
+                                <td className="align-middle text-center">{i.additional_medical_expense_cover}</td>
                                 <td className="align-middle text-center">{i.total_premium}</td>
                                 <td className="align-middle text-center">{i.net_income}</td>
                                 <td className="align-middle text-center">{i.selling_price}</td>
-                                <td className="align-middle text-center">{i.premium_discount}</td>
+                                <td className="align-middle text-center">{i.premium_discount ? premium_discount : '0'}</td>
                             </tr>
                         ))
                     }

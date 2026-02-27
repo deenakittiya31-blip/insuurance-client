@@ -28,7 +28,7 @@ const PackageInfoSection = ({ form, onChange }) => {
                             className="input"
                             name='start_date'
                             onChange={onChange}
-                            value={form.start_date}
+                            value={form.start_date ? new Date(form.start_date).toISOString().split('T')[0] : ''}
                         />
                     </div>
                     <div>
@@ -38,7 +38,7 @@ const PackageInfoSection = ({ form, onChange }) => {
                             className="input"
                             name='end_date'
                             onChange={onChange}
-                            value={form.end_date}
+                            value={form.end_date ? new Date(form.end_date).toISOString().split('T')[0] : ''}
                         />
                     </div>
                 </div>

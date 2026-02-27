@@ -42,7 +42,7 @@ const initialState = {
     additional_bail_bond: '',
     additional_personal_permanent_driver_number: '',
     payments: [],
-    groups: [],
+    groups: []
 }
 
 const AddPackage = () => {
@@ -135,7 +135,7 @@ const AddPackage = () => {
             setForm(prev => ({
                 ...prev,
                 groups: res.data.data.map(g => ({
-                    group_id: g.id, // เช็ค field ให้ตรงกับที่ GroupLevelDiscount ใช้
+                    group_code: g.group_code, // เช็ค field ให้ตรงกับที่ GroupLevelDiscount ใช้
                     discount_percent: 0
                 }))
             }))
@@ -171,15 +171,15 @@ const AddPackage = () => {
     const handleSubmitPackage = async (e) => {
         e.preventDefault()
         console.log(form)
-        // try {
-        //     const res = await createPackage(form)
-        //     setForm(initialState)
-        //     toast.success('สร้างแพ็กเกจสำเร็จ')
-        //     navigate('/app/package')
-        // } catch (err) {
-        //     console.log(err)
-        //     toast.error('สร้างแพ็กเกจไม่สำเร็จ')
-        // }
+        try {
+            const res = await createPackage(form)
+            setForm(initialState)
+            toast.success('สร้างแพ็กเกจสำเร็จ')
+            navigate('/app/package')
+        } catch (err) {
+            console.log(err)
+            toast.error('สร้างแพ็กเกจไม่สำเร็จ')
+        }
     }
 
     const selectedCompany = company.find(
@@ -223,11 +223,11 @@ const AddPackage = () => {
         }))
     }
 
-    const updateGroupField = (id, field, value) => {
+    const updateGroupField = (code, field, value) => {
         setForm(prev => ({
             ...prev,
             groups: prev.groups.map(g =>
-                g.group_id === id
+                g.group_code === code
                     ? { ...g, [field]: value }
                     : g
             )

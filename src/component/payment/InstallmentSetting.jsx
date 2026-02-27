@@ -29,8 +29,8 @@ const InstallmentSetting = ({ value, onChange }) => {
         <TextInput
           title="จำนวนงวด"
           type="number"
-          value={value.min}
-          onChange={(e) => onChange({ min: +e.target.value, max: +e.target.value })}
+          value={value.max}
+          onChange={(e) => onChange({ max: +e.target.value, min: +e.target.value })}
         />
       ) : (
         <div className="grid grid-cols-2 gap-3">

@@ -174,10 +174,10 @@ const PaymentSection = ({ payment, payments, onToggle, onUpdate, hasPayment }) =
                                 type="number"
                                 value={
                                     payments.find(p => p.payment_method_id === 4)
-                                        ?.installment_min || ''
+                                        ?.installment_max || ''
                                 }
                                 onChange={e =>
-                                    onUpdate(4, 'installment_min', e.target.value)
+                                    onUpdate(4, 'installment_max', e.target.value)
                                 }
                             />
                         </div>

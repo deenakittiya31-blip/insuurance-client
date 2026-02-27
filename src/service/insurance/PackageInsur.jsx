@@ -53,3 +53,7 @@ export const statusPackage = (id, is_active) => {
 export const searchPackage = async (arg) => {
     return api.post('/api/search-package', arg)
 }
+
+export const updateDiscountLevel = async (form) => {
+    return api.patch('/api/package-group-discount', form)
+}

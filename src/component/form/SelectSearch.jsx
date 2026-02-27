@@ -12,7 +12,7 @@ const SelectSearch = ({ options, value, onChange, name }) => {
         formattedOptions.find(opt => opt.value === value) || null
 
     return (
-        <div className='flex flex-col gap-1 justify-end scale-90'>
+        <div className='flex flex-col gap-1 justify-end'>
             <label className='font-semibold text-sm text-text-primary'>ยี่ห้อรถยนต์</label>
             <Select
                 options={formattedOptions}

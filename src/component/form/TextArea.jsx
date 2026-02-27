@@ -8,7 +8,7 @@ const TextArea = ({ title, name, typ, onChange, value, placeholder }) => {
                 placeholder={placeholder}
                 onChange={onChange}
                 value={value}
-                className="textarea h-24 w-full text-text-primary">
+                className="textarea w-full h-24 text-text-primary">
             </textarea>
         </fieldset>
     )

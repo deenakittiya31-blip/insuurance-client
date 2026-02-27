@@ -217,9 +217,6 @@ const QuotationList = () => {
         }
     }
 
-
-    console.log(Compare)
-
     const handleCopyCompare = async (e) => {
         e.preventDefault()
         console.log({

@@ -5,7 +5,6 @@ import { FaCar } from "react-icons/fa6"
 import { IoMenu } from "react-icons/io5"
 import { Link } from "react-router-dom"
 import { usePremium } from "../../context/PremiumContext"
-import SideBarMobile from "../sidebar/SideBarMobile"
 
 const FooterMobile = ({ setIsOpen }) => {
     const [show, setShow] = useState(true)
@@ -18,7 +17,7 @@ const FooterMobile = ({ setIsOpen }) => {
         const handleScroll = () => {
             const currentScrollY = window.scrollY
 
-            if (currentScrollY > lastScrollY && currentScrollY > 60) {
+            if (currentScrollY > lastScrollY && currentScrollY > 70) {
                 // scroll ลง
                 setShow(false)
             } else {

@@ -28,6 +28,7 @@ const initialStateFilter = {
 
 const PackageProduct = () => {
     const navigate = useNavigate()
+    const member = useInsureAuth((m) => m.member)
     const [premium, setPremium] = useState([])
     const { premiumSelected, setPremiumSelected } = usePremium();
     const [pmToCompare, setPmToCompare] = useState([])
@@ -54,13 +55,13 @@ const PackageProduct = () => {
         getCarBrandSelect();
         getCarYear();
         getCompanySelect();
-        fetchPremiumSearch();
         getUsageTypeSelectMember();
     }, [])
 
     useEffect(() => {
-        console.log('pmToCompare', pmToCompare)
-    }, [pmToCompare])
+        if (!member?.group_code) return  // รอจนกว่าจะมี group_code
+        fetchPremiumSearch()
+    }, [member?.group_code])
 
     const handleOnChange = async (e) => {
         const { name, value } = e.target
@@ -116,7 +117,10 @@ const PackageProduct = () => {
     const fetchPremiumSearch = async (filterData = filter) => {
         setLoading(true)
         try {
-            const res = await searchPremiumMember(filterData);
+            const res = await searchPremiumMember({
+                ...filterData,
+                group_code: member?.group_code
+            });
             setPremium(res.data.data)
             setTotal(res.data.total)
         } catch (error) {
@@ -165,8 +169,8 @@ const PackageProduct = () => {
         const newOrder = sortOrder === "asc" ? "desc" : "asc"
 
         const sorted = [...premium].sort((a, b) => {
-            const priceA = parseFloat(a.selling_price)
-            const priceB = parseFloat(b.selling_price)
+            const priceA = parseFloat(a.selling_price_final)
+            const priceB = parseFloat(b.selling_price_final)
 
             return newOrder === "asc"
                 ? priceA - priceB
@@ -264,7 +268,7 @@ const PackageProduct = () => {
         }
     }
 
-    console.log(premiumSelected)
+    console.log(premium)
     return (
         <div>
             <NavbarMobile />

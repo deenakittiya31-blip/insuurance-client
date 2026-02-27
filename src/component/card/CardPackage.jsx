@@ -146,6 +146,18 @@ const CardPackage = ({ data, onRead }) => {
                                 )}
                             </div>
                         </div>
+                        <div>
+                            <h3 className="font-bold text-lg tracking-wide">ส่วนลดกลุ่มลูกค้า</h3>
+                            <div className="w-full h-px bg-border my-3" />
+                            <div className="grid grid-cols-5 gap-y-3">
+                                {
+                                    data.groups?.map((g, idx) => (
+                                        <p key={idx}>{g.group_name} : <span className="font-semibold">{g.discount_percent} %</span></p>
+                                    ))
+                                }
+
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <form method="dialog" className="modal-backdrop">

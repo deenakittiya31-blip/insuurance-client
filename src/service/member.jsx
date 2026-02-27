@@ -41,10 +41,11 @@ export const listMember = ({
 }
 
 
-export const sendDocumentToMember = (members, q_id) => {
+export const sendDocumentToMember = (members, q_id, mode) => {
     return api.post('/api/sendDocument-tomember', {
         members,
-        q_id
+        q_id,
+        mode
     })
 }
 
