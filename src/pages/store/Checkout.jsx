@@ -1,0 +1,282 @@
+import { useEffect, useState } from "react"
+import { confirmOrder, getDetailOrder } from "../../service/order/order"
+import { useNavigate, useParams } from "react-router-dom"
+import CardPremiumList from "../../component/card/CardPremiumList"
+import { FaNoteSticky } from "react-icons/fa6"
+import { FaLocationDot } from "react-icons/fa6";
+import { numberFormat } from "../../utils/numerral"
+import { IoIosArrowForward } from "react-icons/io";
+import { listAddress } from "../../service/member/address"
+import toast from "react-hot-toast"
+
+const Checkout = () => {
+    const { id } = useParams()
+    const navigate = useNavigate()
+    const [address, setAddress] = useState([])
+    const [orderData, setOrderData] = useState(null)
+    const [selectedInstallment, setSelectedInstallment] = useState(null)
+    const [selectedPaymentId, setSelectedPaymentId] = useState(null)
+
+    useEffect(() => {
+        const fetchOrder = async () => {
+            const res = await getDetailOrder(id)
+            setOrderData(res.data)
+
+            // default เลือกตัวแรก
+            if (res.data.payments.length > 0) {
+                setSelectedPaymentId(res.data.payments[0].payment_method_id)
+            }
+
+            // หา payment_method_id === 3
+            const installmentPayment = res.data.payments.find(
+                p => p.payment_method_id === 3
+            )
+
+            if (installmentPayment) {
+                setSelectedInstallment(installmentPayment.installment_min)
+            }
+        }
+        fetchOrder()
+    }, [id])
+
+    useEffect(() => {
+        const fetchAddress = async () => {
+            try {
+                const res = await listAddress()
+                setAddress(res.data.data)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        fetchAddress();
+    }, [])
+
+    if (!orderData) return <p>Loading...</p>
+
+
+    const payments = orderData.payments || []
+    const info = orderData.info || {}
+
+    console.log(info)
+
+
+    const selectedPayment = payments.find(
+        p => p.payment_method_id === selectedPaymentId
+    ) || {}
+
+    // console.log(selectedPayment)
+
+    const calculateDiscount = (payment) => {
+        if (!payment) return 0
+
+        const netTotal = parseFloat(payment.net_total) || 0
+        const premium_discount = (parseFloat(info.premium_discount) || 0) / 100
+        const level_discount_percent = (parseFloat(payment.group_discount_percent) || 0) / 100
+        const payment_discount_percent = (parseFloat(payment.payment_discount_percent) || 0) / 100
+        const payment_discount_amount = parseFloat(payment.payment_discount_amount) || 0
+
+        const discount_price = (netTotal * (premium_discount + level_discount_percent + payment_discount_percent)) + payment_discount_amount
+
+        return discount_price
+    }
+
+    const paymentDiscount = calculateDiscount(selectedPayment)
+
+    const finalTotal = selectedPayment?.selling_price_final || 0
+
+    const addressDefault = address[0]
+
+    console.log(paymentDiscount)
+
+    const handleSubmit = async () => {
+        // คำนวณ installment ที่จะส่ง
+        const installment = selectedPaymentId === 3
+            ? (selectedPayment.installment_min
+                ? (selectedInstallment || selectedPayment.installment_min)  // เลือกได้
+                : selectedPayment.installment_max)                           // fix
+            : selectedPayment.installment_max || null
+
+        const payload = {
+            address_id: addressDefault.id,
+            payment_method_id: selectedPaymentId,
+            installment: installment,
+            selling_price: parseInt(finalTotal),
+            discount_price: parseInt(paymentDiscount),
+            snap_discount_pct: parseInt(selectedPayment.payment_discount_percent || 0),
+            snap_discount_amt: parseInt(selectedPayment.payment_discount_amount || 0),
+            snap_charge: selectedPayment.charge || 0,
+            snap_first_payment: selectedPayment.first_payment_amount || 0,
+            snap_group_discount: selectedPayment.group_discount_percent || 0
+        }
+
+        try {
+            const res = await confirmOrder(id, payload)
+            navigate('/store/trackparcel')
+            toast.success(res.data.msg)
+        } catch (err) {
+            console.log(err)
+            toast.error(err.response.data.message)
+        }
+    }
+
+    return (
+        <div className="p-5 font-prompt space-y-3">
+            <div className="flex items-center justify-between bg-white text-text-primary border border-border/25 rounded-md p-2">
+                <div className="flex items-baseline gap-1">
+                    <FaLocationDot className="size-3 fill-main" />
+                    <div className="flex-1">
+                        <p className="flex gap-2 items-baseline-last font-semibold text-sm">{addressDefault?.full_name} <span className="font-normal text-xs text-gray-400">{addressDefault?.phone}</span></p>
+                        <span className="font-normal text-xs text-gray-400">{addressDefault?.address_line} {addressDefault?.subdistrict} {addressDefault?.district} {addressDefault?.province} {addressDefault?.zipcode}</span>
+                    </div>
+                </div>
+                <IoIosArrowForward className="text-gray-400" />
+            </div>
+            <div className="bg-white border border-border/25 rounded-md p-2">
+                <div className="flex items-center gap-1 mb-3">
+                    <FaNoteSticky className="size-3 text-text-primary" />
+                    <p className="font-semibold text-sm text-text-primary">{info.compare_id}</p>
+                </div>
+                <CardPremiumList premiums={info} have={false} />
+            </div>
+            <div className="bg-white border border-border/25 rounded-md p-2">
+                <p className="font-semibold text-sm text-text-primary mb-3">ช่องทางชำระเงิน</p>
+                <div className="space-y-3">
+                    {payments.map((i, index) => (
+                        <details
+                            key={i.payment_method_id}
+                            className="collapse bg-base-100 border border-base-300 text-text-primary"
+                            name={`payment-${i.payment_method_id}`}
+                            defaultOpen={index === 0}  // เปิดอันแรกไว้
+                        >
+                            <summary className="collapse-title font-medium text-sm flex items-center gap-2">
+                                <input
+                                    type="radio"
+                                    value={i.payment_method_id}
+                                    name="payment"
+                                    className="radio radio-xs"
+                                    checked={selectedPaymentId === i.payment_method_id}
+                                    onChange={() => setSelectedPaymentId(i.payment_method_id)}
+                                />
+                                {i.name_payment}
+                            </summary>
+
+                            <div className="collapse-content text-xs space-y-1">
+                                {i.payment_discount_percent > 0 && (
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-500">ส่วนลดเปอร์เซนต์</span>
+                                        <span className="text-main">{i.payment_discount_percent}%</span>
+                                    </div>
+                                )}
+                                {i.payment_discount_amount > 0 && (
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-500">ส่วนลดเงินบาท</span>
+                                        <span className="text-main">฿{i.payment_discount_amount}</span>
+                                    </div>
+                                )}
+                                {i.payment_method_id === 3 && (
+                                    <>
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-500">งวดแรก</span>
+                                            <span>{i.first_payment_amount ? `฿${numberFormat(i.first_payment_amount)}` : '-'}</span>
+                                        </div>
+                                        {/* แบบ fix งวด */}
+                                        {!i.installment_min && i.installment_max && (
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-500">จำนวนงวด</span>
+                                                <span>{i.installment_max ? `${i.installment_max} งวด` : '-'}</span>
+                                            </div>
+                                        )}
+                                        {/* แบบไม่ fix */}
+                                        {(i.installment_min && i.installment_max) && (
+                                            <>
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-500">จำนวนงวด</span>
+                                                    <span>{i.installment_min} - {i.installment_max} งวด</span>
+                                                </div>
+                                                <fieldset className="fieldset font-prompt text-text-primary p-0">
+                                                    <select
+                                                        className="select select-sm w-full"
+                                                        value={selectedInstallment || i.installment_min}
+                                                        onChange={(e) => setSelectedInstallment(Number(e.target.value))}
+                                                    >
+                                                        {Array.from(
+                                                            { length: i.installment_max - i.installment_min + 1 },
+                                                            (_, idx) => i.installment_min + idx
+                                                        ).map((num) => (
+                                                            <option key={num} value={num}>
+                                                                {num} งวด
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </fieldset>
+                                            </>
+                                        )}
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-500">ค่าธรรมเนียม</span>
+                                            <span className="text-gray-500">{i.charge ? `฿{parseInt(i.charge)}` : '-'}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-500">งวดละ</span>
+                                            <span className="text-gray-500">
+                                                {i.installment_max
+                                                    ? `฿${numberFormat(
+                                                        i.selling_price_final / (
+                                                            i.installment_min
+                                                                ? (selectedInstallment || i.installment_min)
+                                                                : i.installment_max
+                                                        )
+                                                    )}`
+                                                    : '-'
+                                                }
+                                            </span>
+                                        </div>
+                                    </>
+                                )}
+                                {i.payment_method_id === 4 && (
+                                    <>
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-500">จำนวนงวด</span>
+                                            <span className="text-gray-500">{i.installment_max ? `${i.installment_max} งวด` : '-'}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-500">งวดละ</span>
+                                            <span className="text-gray-500">
+                                                {i.installment_max
+                                                    ? `฿${numberFormat(i.selling_price_final / i.installment_max)}`
+                                                    : '-'
+                                                }
+                                            </span>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        </details>
+                    ))}
+                </div>
+            </div>
+            <div className="bg-white text-text-primary border border-border/25 rounded-md p-2">
+                <p className="font-semibold text-sm mb-3">ข้อมูลการชำระเงิน</p>
+                <div className="space-y-2 ">
+                    <div className="flex justify-between text-xs text-gray-500">
+                        <p>ส่วนลดวิธีการชำระเงิน</p>
+                        <p>฿{numberFormat(paymentDiscount)}</p>
+                    </div>
+                    <div className="flex justify-between text-xs text-gray-500">
+                        <p>ส่วนลดเลเวล</p>
+                        <p>{numberFormat(selectedPayment.group_discount_percent)} %</p>
+                    </div>
+                    <div className="w-full h-px bg-border/25 my-2" />
+                    <div className="flex justify-between text-xs">
+                        <p>ยอดเงินชำระทั้งหมด</p>
+                        <p className="font-semibold">฿{numberFormat(finalTotal)}</p>
+                    </div>
+                </div>
+            </div>
+            <div className="flex justify-end">
+                <button onClick={handleSubmit} className="btn text-white bg-main">สั่งซื้อ</button>
+            </div>
+        </div>
+    )
+}
+export default Checkout

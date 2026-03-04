@@ -175,6 +175,7 @@ const tagPage = () => {
     }
 
     const fetchMemberInTag = async (tagId, searchValue = '') => {
+        console.log(tagId, searchValue)
         try {
             const res = await listMemberByTag(tagId, searchValue)
             setMemberIntag(res.data.data)

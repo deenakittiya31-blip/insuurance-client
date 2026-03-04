@@ -18,6 +18,7 @@ import useInsureAuth from "../../store/auth-store";
 import NavbarMobile from '../../component/header/NavbarMobile'
 import { IoMdArrowDown } from "react-icons/io";
 import Car from '../../assets/car1.png'
+import { createOrder } from "../../service/order/order";
 
 const initialStateFilter = {
     insurance_type_id: '',
@@ -268,6 +269,19 @@ const PackageProduct = () => {
         }
     }
 
+    const handleCreteOrder = async (packageId, premiumId) => {
+        try {
+            const res = await createOrder({
+                package_id: packageId,
+                premium_id: premiumId,
+                member_id: member.id
+            })
+            navigate(`/store/order/checkout/${res.data.order_id}`)
+        } catch (err) {
+            toast.error('เกิดข้อผิดพลาด')
+        }
+    }
+
     console.log(premium)
     return (
         <div>
@@ -360,6 +374,7 @@ const PackageProduct = () => {
                                                 data={i}
                                                 onChange={addPremiumToState}
                                                 checked={premiumSelected.some(p => p.index_premium === i.index_premium)}
+                                                onCreateOrder={() => handleCreteOrder(i.index_package, i.index_premium)}
                                             />
                                         </div>
                                     ))}

@@ -10,6 +10,7 @@ import { deleteCompareMember } from "../../service/compare";
 import { Link, useNavigate } from "react-router-dom";
 import useInsureAuth from "../../store/auth-store";
 import { sendDocumentToMember } from "../../service/member";
+import { createOrder } from "../../service/order/order";
 
 const CompareList = () => {
     const [data, setData] = useState([])
@@ -33,37 +34,6 @@ const CompareList = () => {
         }
     }
 
-    // console.log(data)
-
-    const hdlDelete = async (id) => {
-        const result = await Swal.fire({
-            title: "คุณแน่ใจ ?",
-            text: "ต้องการจะลบจริง ๆ ใช่ไหม?",
-            icon: "question",
-            showCancelButton: true,
-            cancelButtonColor: "#E5E4E2",
-            confirmButtonColor: "#d33",
-            confirmButtonText: "ลบ",
-            cancelButtonText: 'ยกเลิก'
-        })
-
-        if (!result.isConfirmed) return
-
-        setData(prev => prev.filter(q => q.compare_id !== id))
-
-        try {
-            const res = await deleteCompareMember(id)
-            toast.success(res.data.msg);
-        } catch (err) {
-            console.log(err)
-            if (err.response?.status === 401) {
-                setIsUnauth(true)
-                return
-            }
-            fetchCompareQuotaion()
-        }
-    }
-
     const sendMessage = async (compareId) => {
         const memberId = [member?.user_id]
 
@@ -73,6 +43,23 @@ const CompareList = () => {
         } catch (error) {
             console.log(error)
             toast.error('ส่งไม่สำเร็จ')
+        }
+    }
+
+    console.log(data)
+
+    const handleCreteOrder = async (compareId, item) => {
+
+        try {
+            const res = await createOrder({
+                compare_id: compareId,
+                package_id: item.index_package,
+                premium_id: item.index_premium,
+                member_id: member.id
+            })
+            navigate(`/store/order/checkout/${res.data.order_id}`)
+        } catch (err) {
+            toast.error('เกิดข้อผิดพลาด')
         }
     }
 
@@ -119,15 +106,10 @@ const CompareList = () => {
                                         <CardPremiumList
                                             key={idx}
                                             premiums={j}
+                                            onCreateOrder={() => handleCreteOrder(i.compare_id, j)}
                                         />
                                     ))
                                 }
-                            </div>
-                            <div className="flex justify-end gap-1 px-2 pb-2">
-
-                                <div className="flex justify-end items-center gap-2">
-                                    <button onClick={() => hdlDelete(i.compare_id)} className="btn btn-xs">ลบ</button>
-                                </div>
                             </div>
                         </div>
                     ))

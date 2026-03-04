@@ -43,13 +43,16 @@ import { PremiumProvider } from '../context/PremiumContext'
 import CompareList from '../pages/store/CompareList'
 import CompareInsure from '../pages/store/CompareInsure'
 import PackageProduct from '../pages/store/PackageProduct'
-import Address from '../pages/store/Address'
+import AddressList from '../pages/store/AddressList'
 import TrackParcel from '../pages/store/TrackParcel'
 import HistoryOrder from '../pages/store/HistoryOrder'
 import PolicyManage from '../pages/consent/PolicyPage'
 import PolicyView from '../pages/consent/PolicyView'
 import MemberLogin from '../pages/auth/MemberLogin'
 import DiscountLevel from '../pages/insur/DiscountLevel'
+import AddressAdd from '../pages/store/AddressAdd'
+import AddressEdit from '../pages/store/AddressEdit'
+import Checkout from '../pages/store/Checkout'
 
 
 const Approutes = () => {
@@ -74,9 +77,12 @@ const Approutes = () => {
                     <Route index element={<PackageProduct />} />
                     <Route path='compare-insurance/:id' element={<CompareInsure />} />
                     <Route path='compare-insurance' element={<CompareList />} />
-                    <Route path='address' element={<Address />} />
+                    <Route path='address' element={<AddressList />} />
+                    <Route path='create-address' element={<AddressAdd />} />
+                    <Route path='address/:id' element={<AddressEdit />} />
                     <Route path='trackparcel' element={<TrackParcel />} />
                     <Route path='history' element={<HistoryOrder />} />
+                    <Route path='order/checkout/:id' element={<Checkout />} />
                 </Route>
 
                 <Route

@@ -5,7 +5,7 @@ const TrackParcel = () => {
         <div>
             <TabBackward
                 linkTo='/store'
-                title='ติดตามพัศดุ'
+                title='คำสั่งซื้อ'
             />
         </div>
     )

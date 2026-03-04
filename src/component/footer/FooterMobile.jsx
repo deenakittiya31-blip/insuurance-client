@@ -17,7 +17,7 @@ const FooterMobile = ({ setIsOpen }) => {
         const handleScroll = () => {
             const currentScrollY = window.scrollY
 
-            if (currentScrollY > lastScrollY && currentScrollY > 70) {
+            if (currentScrollY > lastScrollY && currentScrollY > 20) {
                 // scroll ลง
                 setShow(false)
             } else {

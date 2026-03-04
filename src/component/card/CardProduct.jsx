@@ -27,7 +27,7 @@ const Promotion = ({ id, promotion_img, promotion_name }) => {
     )
 }
 
-const CardProduct = ({ data, onChange, checked }) => {
+const CardProduct = ({ data, onChange, checked, onCreateOrder }) => {
     return (
         <div className="flex flex-col gap-3 bg-white shadow-lg rounded-2xl w-full p-5 text-text-primary">
             <div className="flex flex-col gap-3">
@@ -130,6 +130,7 @@ const CardProduct = ({ data, onChange, checked }) => {
                     payments={data.payments}
                     number_of_seats={data.additional_personal_permanent_driver_number}
                     selling_price={data.selling_price}
+                    onCreateOrder={onCreateOrder}
                 />
             </div >
         </div >

@@ -1,7 +1,7 @@
 import { FaCarCrash, FaMoneyBillWave } from "react-icons/fa"
 import { numberFormat } from "../../utils/numerral"
 
-const CardDetails = ({ id, car_protect, third_protect, additional_protect, logo_url, namecompany, nametype, repair_type, payments, number_of_seats, selling_price }) => {
+const CardDetails = ({ id, car_protect, third_protect, additional_protect, logo_url, namecompany, nametype, repair_type, payments, number_of_seats, selling_price, onCreateOrder }) => {
     return (
         <div>
             <button className="w-full h-full border border-gray-200 rounded-md font-medium bg-white hover:bg-gray-100 text-sm transition duration-400 ease-in-out hover:scale-105 hover:shadow-sm" onClick={() => document.getElementById(`modalDetail-${id}`).showModal()}>ความคุ้มครอง</button>
@@ -109,7 +109,7 @@ const CardDetails = ({ id, car_protect, third_protect, additional_protect, logo_
                         </div>
                         {/* ปุ่มซื้อ */}
                         <div className="flex justify-center mt-3">
-                            <div className="flex justify-center items-center gap-5 py-2 px-5 rounded-md w-fit bg-main hover:bg-[#f17e1f] text-white transition duration-400 ease-in-out hover:scale-105 hover:shadow-sm">
+                            <div onClick={onCreateOrder} className="flex justify-center items-center gap-5 py-2 px-5 rounded-md w-fit bg-main hover:bg-[#f17e1f] text-white transition duration-400 ease-in-out hover:scale-105 hover:shadow-sm">
                                 <div className="flex flex-col items-center">
                                     <span className="text-[10px] font-normal">เบี้ยประกันต่อ/ปี</span>
                                     <div className="flex justify-end items-baseline gap-1">
