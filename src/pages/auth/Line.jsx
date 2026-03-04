@@ -1,18 +1,59 @@
 import liff from "@line/liff";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import useInsureAuth from "../../store/auth-store";
 
 const Line = () => {
     const navigate = useNavigate();
+    const { actionCurrentMember, actionLoginLine, actionLogout, token } = useInsureAuth()
 
     useEffect(() => {
         const init = async () => {
+            await liff.init({ liffId: "2008929214-oMQadweJ" });
+
+            if (!liff.isLoggedIn()) {
+                liff.login();
+                return;
+            }
+
+            // เช็คก่อนว่ามี JWT อยู่แล้วไหม และยังไม่หมดอายุ
+            if (token) {
+                try {
+                    // ถ้ามีอยู่แล้ว ข้ามการ verify LINE ไปเลย
+                    await actionCurrentMember()
+                    navigate('/store')
+                    return
+                } catch (err) {
+                    // token หมดอายุ ให้ไปยิง LINE login ใหม่
+                    // ไม่ return เพื่อให้ flow ด้านล่างทำงานต่อ
+                    actionLogout()
+                }
+            }
+
+            const idToken = liff.getIDToken();
+
             try {
-                await liff.init({ liffId: "2008929214-oMQadweJ" });
-                navigate('/store')
+                const res = await actionLoginLine(idToken)
+                const { status, token } = res.data
+
+                if (status === 'member' || status === 'not_registered') {
+                    await actionCurrentMember()
+                    navigate('/store')
+                } else if (status === 'guest') {
+                    navigate('/store')
+                }
             } catch (err) {
-                console.log('liff init error', err)
-                navigate('/store') // init fail ก็ไป store ได้เลย
+                const status = err.response?.status
+
+                if (status === 401) {
+                    // idToken หมดอายุ
+                    liff.logout()
+                    liff.login()
+                    return
+                }
+
+                // error อื่นๆ → ไป store แบบ guest ก็ได้
+                navigate('/store')
             }
         };
 

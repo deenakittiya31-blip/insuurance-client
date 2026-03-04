@@ -71,6 +71,7 @@ const ConsentModal = ({ onAccept, onDecline }) => (
 
 const MemberRegister = () => {
     const [profile, setProfile] = useState({})
+    const [accessLine, setAccessLine] = useState(null)
     const navigate = useNavigate()
     const [showConsent, setShowConsent] = useState(true)   // เปิด modal ทันที
     const [consentAccepted, setConsentAccepted] = useState(false)
@@ -83,6 +84,9 @@ const MemberRegister = () => {
     useEffect(() => {
         const initLiff = async () => {
             await liff.init({ liffId: '2008929214-oMQadweJ' })
+
+            const access = liff.getAccessToken()
+            setAccessLine(access)
 
             if (!liff.isLoggedIn()) {
                 liff.login()
@@ -132,6 +136,7 @@ const MemberRegister = () => {
                 display_name: profile.displayName,
                 picture_url: profile.pictureUrl,
                 consent_accepted: true,
+                accessToken: accessLine,
                 ...form
             })
 
