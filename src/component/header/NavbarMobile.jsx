@@ -25,7 +25,10 @@ const NavbarMobile = () => {
                     <PiMedalBold className="size-3" />
                     <p className="text-xs font-normal">{token ? member?.group_name : 'lv.0'}</p>
                 </div>
-                <p className="font-semibold text-sm text-text-primary">{token ? member?.first_name : 'เข้าสู่ระบบ'}</p>
+                <p className="font-semibold text-sm text-text-primary">{token
+                    ? member?.first_name ?? member?.display_name
+                    : 'เข้าสู่ระบบ'}
+                </p>
             </div>
         </nav>
     )

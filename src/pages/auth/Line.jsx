@@ -16,12 +16,16 @@ const Line = () => {
                 return;
             }
 
+            // ดึง redirect param
+            const params = new URLSearchParams(window.location.search)
+            const redirect = params.get('redirect') // 'register' | 'store' | null
+
             // เช็คก่อนว่ามี JWT อยู่แล้วไหม และยังไม่หมดอายุ
             if (token) {
                 try {
                     // ถ้ามีอยู่แล้ว ข้ามการ verify LINE ไปเลย
                     await actionCurrentMember()
-                    navigate('/store')
+                    navigate(redirect === 'register' ? '/member-register' : '/store')
                     return
                 } catch (err) {
                     // token หมดอายุ ให้ไปยิง LINE login ใหม่
@@ -34,11 +38,18 @@ const Line = () => {
 
             try {
                 const res = await actionLoginLine(idToken)
-                const { status, token } = res.data
+                const { status } = res.data
 
-                if (status === 'member' || status === 'not_registered') {
+                if (status === 'member') {
                     await actionCurrentMember()
                     navigate('/store')
+
+                } else if (status === 'not_registered') {
+                    await actionCurrentMember()
+                    // ถ้ากดปุ่มลงทะเบียนมาไป register
+                    // ถ้ากดปุ่มร้านค้ามาไป store ได้เลย
+                    navigate(redirect === 'register' ? '/member-register' : '/store')
+
                 } else if (status === 'guest') {
                     navigate('/store')
                 }

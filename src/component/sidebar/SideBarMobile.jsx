@@ -3,7 +3,7 @@ import { BiSolidPackage } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
 import { FaAddressBook } from "react-icons/fa6";
 import { FaHistory, FaUserCircle } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useInsureAuth from "../../store/auth-store";
 import { PiMedalBold } from "react-icons/pi";
 import liff from "@line/liff";
@@ -72,7 +72,13 @@ const SideBarMobile = ({ isOpen, setIsOpen }) => {
                         <PiMedalBold className="size-3" />
                         <p className="text-sm font-normal">{token ? `${member?.group_name}` : 'lv.0'}</p>
                     </div>
-                    <p className="font-semibold text-2xl text-text-primary">{token ? `${member?.first_name} ${member?.last_name}` : 'กรุณาเข้าสู่ระบบ'}</p>
+                    <p className="font-semibold text-2xl text-text-primary">
+                        {token
+                            ? (member?.first_name && member?.last_name)
+                                ? `${member.first_name} ${member.last_name}`
+                                : member?.display_name
+                            : 'กรุณาเข้าสู่ระบบ'}
+                    </p>
                 </div>
 
                 <div className='grid gap-5 bg-white p-5 rounded-4xl font-prompt text-text-primary'>
@@ -108,6 +114,15 @@ const SideBarMobile = ({ isOpen, setIsOpen }) => {
                             <p className="font-medium text-xl">ประวัติการสั่งซื้อ</p>
                         </div>
                     </div>
+                    {
+                        member?.is_registered === false && (
+                            <Link to='/member-register'>
+                                <button className="btn rounded-xl btn-info font-medium text-xl text-text-primary">
+                                    ลงทะเบียน
+                                </button>
+                            </Link>
+                        )
+                    }
                     {
                         token ? (
                             <button onClick={handleLogout} className="btn rounded-xl btn-error font-medium text-xl text-text-primary">
