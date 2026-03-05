@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { confirmOrder, getDetailOrder } from "../../service/order/order"
-import { useNavigate, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import CardPremiumList from "../../component/card/CardPremiumList"
 import { FaNoteSticky } from "react-icons/fa6"
 import { FaLocationDot } from "react-icons/fa6";
@@ -16,6 +16,7 @@ const Checkout = () => {
     const [orderData, setOrderData] = useState(null)
     const [selectedInstallment, setSelectedInstallment] = useState(null)
     const [selectedPaymentId, setSelectedPaymentId] = useState(null)
+    const [selectedAddressId, setSelectedAddressId] = useState(null)
 
     useEffect(() => {
         const fetchOrder = async () => {
@@ -52,6 +53,18 @@ const Checkout = () => {
         fetchAddress();
     }, [])
 
+    // รับค่ากลับจากหน้า address
+    const location = useLocation()
+    useEffect(() => {
+        if (location.state?.selectedAddressId) {
+            setSelectedAddressId(location.state.selectedAddressId)
+        }
+    }, [location.state])
+
+    const selectedAddress = address.find(a => a.id === selectedAddressId)
+        || address.find(a => a.is_default)
+        || address[0]
+
     if (!orderData) return <p>Loading...</p>
 
 
@@ -85,9 +98,7 @@ const Checkout = () => {
 
     const finalTotal = selectedPayment?.selling_price_final || 0
 
-    const addressDefault = address[0]
-
-    console.log(paymentDiscount)
+    console.log(selectedPayment)
 
     const handleSubmit = async () => {
         // คำนวณ installment ที่จะส่ง
@@ -98,7 +109,7 @@ const Checkout = () => {
             : selectedPayment.installment_max || null
 
         const payload = {
-            address_id: addressDefault.id,
+            address_id: selectedAddress?.id,
             payment_method_id: selectedPaymentId,
             installment: installment,
             selling_price: parseInt(finalTotal),
@@ -112,7 +123,7 @@ const Checkout = () => {
 
         try {
             const res = await confirmOrder(id, payload)
-            navigate('/store/trackparcel')
+            navigate('/store/order')
             toast.success(res.data.msg)
         } catch (err) {
             console.log(err)
@@ -122,12 +133,21 @@ const Checkout = () => {
 
     return (
         <div className="p-5 font-prompt space-y-3">
-            <div className="flex items-center justify-between bg-white text-text-primary border border-border/25 rounded-md p-2">
+            <div
+                onClick={() => navigate('/store/address-select', {
+                    state: {
+                        fromCheckout: true,
+                        orderId: id,
+                        currentAddressId: selectedAddress?.id
+                    }
+                })}
+                className="flex items-center justify-between bg-white text-text-primary border border-border/25 rounded-md p-2 cursor-pointer"
+            >
                 <div className="flex items-baseline gap-1">
                     <FaLocationDot className="size-3 fill-main" />
                     <div className="flex-1">
-                        <p className="flex gap-2 items-baseline-last font-semibold text-sm">{addressDefault?.full_name} <span className="font-normal text-xs text-gray-400">{addressDefault?.phone}</span></p>
-                        <span className="font-normal text-xs text-gray-400">{addressDefault?.address_line} {addressDefault?.subdistrict} {addressDefault?.district} {addressDefault?.province} {addressDefault?.zipcode}</span>
+                        <p className="flex gap-2 items-baseline-last font-semibold text-sm">{selectedAddress?.full_name} <span className="font-normal text-xs text-gray-400">{selectedAddress?.phone}</span></p>
+                        <span className="font-normal text-xs text-gray-400">{selectedAddress?.address_line} {selectedAddress?.subdistrict} {selectedAddress?.district} {selectedAddress?.province} {selectedAddress?.zipcode}</span>
                     </div>
                 </div>
                 <IoIosArrowForward className="text-gray-400" />
@@ -135,7 +155,7 @@ const Checkout = () => {
             <div className="bg-white border border-border/25 rounded-md p-2">
                 <div className="flex items-center gap-1 mb-3">
                     <FaNoteSticky className="size-3 text-text-primary" />
-                    <p className="font-semibold text-sm text-text-primary">{info.compare_id}</p>
+                    <p className="font-semibold text-sm text-text-primary">{info.compare_id ? info.compare_id : '-'}</p>
                 </div>
                 <CardPremiumList premiums={info} have={false} />
             </div>
@@ -214,7 +234,7 @@ const Checkout = () => {
                                         )}
                                         <div className="flex justify-between">
                                             <span className="text-gray-500">ค่าธรรมเนียม</span>
-                                            <span className="text-gray-500">{i.charge ? `฿{parseInt(i.charge)}` : '-'}</span>
+                                            <span className="text-gray-500">{i.charge ? `฿${parseInt(i.charge)}` : '-'}</span>
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="text-gray-500">งวดละ</span>
@@ -276,7 +296,7 @@ const Checkout = () => {
             <div className="flex justify-end">
                 <button onClick={handleSubmit} className="btn text-white bg-main">สั่งซื้อ</button>
             </div>
-        </div>
+        </div >
     )
 }
 export default Checkout

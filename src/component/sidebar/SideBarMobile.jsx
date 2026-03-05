@@ -90,12 +90,12 @@ const SideBarMobile = ({ isOpen, setIsOpen }) => {
                             <p className="font-medium text-xl">ใบเสนอราคา</p>
                         </div>
                     </div>
-                    <div onClick={() => handleNavigate('/store/trackparcel')} className="flex items-center gap-5 w-full">
+                    <div onClick={() => handleNavigate('/store/order')} className="flex items-center gap-5 w-full">
                         <button className="btn btn-circle btn-sm btn-secondary">
                             <BiSolidPackage className="size-6 text-white" />
                         </button>
                         <div className="w-full py-3 border-b border-border/50">
-                            <p className="font-medium text-xl">ติดตามพัศดุ</p>
+                            <p className="font-medium text-xl">คำสั่งซื้อ</p>
                         </div>
                     </div>
                     <div onClick={() => handleNavigate('/store/address')} className="flex items-center gap-5 w-full">
@@ -106,18 +106,10 @@ const SideBarMobile = ({ isOpen, setIsOpen }) => {
                             <p className="font-medium text-xl">ที่อยู่ในการจัดส่งเอกสาร</p>
                         </div>
                     </div>
-                    <div onClick={() => handleNavigate('/store/history')} className="flex items-center gap-5 w-full">
-                        <button className="btn btn-circle btn-sm btn-warning">
-                            <FaHistory className="size-4 text-white" />
-                        </button>
-                        <div className="w-full py-3">
-                            <p className="font-medium text-xl">ประวัติการสั่งซื้อ</p>
-                        </div>
-                    </div>
                     {
                         member?.is_registered === false && (
                             <Link to='/member-register'>
-                                <button className="btn rounded-xl btn-info font-medium text-xl text-text-primary">
+                                <button className="w-full btn rounded-xl font-medium text-xl text-text-primary">
                                     ลงทะเบียน
                                 </button>
                             </Link>

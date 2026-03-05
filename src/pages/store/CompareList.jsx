@@ -107,6 +107,7 @@ const CompareList = () => {
                                             key={idx}
                                             premiums={j}
                                             onCreateOrder={() => handleCreteOrder(i.compare_id, j)}
+                                            have={true}
                                         />
                                     ))
                                 }

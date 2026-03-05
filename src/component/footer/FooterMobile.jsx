@@ -5,6 +5,7 @@ import { FaCar } from "react-icons/fa6"
 import { IoMenu } from "react-icons/io5"
 import { Link } from "react-router-dom"
 import { usePremium } from "../../context/PremiumContext"
+import { FaHistory } from "react-icons/fa"
 
 const FooterMobile = ({ setIsOpen }) => {
     const [show, setShow] = useState(true)
@@ -46,15 +47,13 @@ const FooterMobile = ({ setIsOpen }) => {
                     <AiFillHome className="size-5" />
                     <span className="text-[10px] font-medium">หน้าแรก</span>
                 </Link>
-
                 <Link to='/store/compare-insurance' className="flex flex-col gap-1 items-center">
                     <FaCar className="size-5" />
                     <span className="text-[10px] font-medium">ใบเสนอราคา</span>
                 </Link>
-
-                <Link to='/promotion' className="flex flex-col gap-1 items-center">
-                    <BsFillTicketPerforatedFill className="size-5" />
-                    <span className="text-[10px] font-medium">โปรโมชั่น</span>
+                <Link to='/store/order' className="flex flex-col gap-1 items-center">
+                    <FaHistory className="size-5" />
+                    <span className="text-[10px] font-medium">คำสั่งซื้อ</span>
                 </Link>
                 <button onClick={() => setIsOpen(true)} className="flex flex-col gap-1 items-center">
                     <IoMenu className="size-6" />

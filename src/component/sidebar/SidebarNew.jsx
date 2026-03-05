@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom';
-import { BsLayoutTextSidebar, BsPerson, BsPinAngle } from "react-icons/bs";
+import { BsCart4, BsLayoutTextSidebar, BsPerson, BsPinAngle } from "react-icons/bs";
 import { IoIosArrowDown } from "react-icons/io";
 import { adminCar, adminInsur, adminSetting, staffInsur } from '../../utils/link';
 import toast from 'react-hot-toast';
@@ -15,6 +15,8 @@ import { FiMessageCircle } from "react-icons/fi";
 import { LuTableProperties } from "react-icons/lu";
 import { listByCarModel } from '../../service/car/CarModel';
 import { CgProfile } from 'react-icons/cg';
+import { TiShoppingCart } from "react-icons/ti";
+
 
 const initialState = {
     to_name: '',
@@ -158,23 +160,37 @@ const SidebarNew = () => {
                 ${collapsed ? 'opacity-0 -translate-x-50 pointer-events-none' : 'opacity-100 translate-x-0'}
             `}>
                 <div className='flex flex-col flex-1 text-text-primary'>
-                    <div>
-                        <div className='flex flex-col gap-4 mb-3'>
-                            <NavLink
-                                to='/app'
-                                end
-                                className={({ isActive }) =>
-                                    `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                    <div className='flex flex-col gap-4 mb-3'>
+                        <NavLink
+                            to='/app'
+                            end
+                            className={({ isActive }) =>
+                                `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
                                         ${isActive ? 'text-main active' : 'hover:text-main'}`
-                                }
-                            >
-                                <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
-                                <div className='w-full flex items-center gap-3'>
-                                    <MdOutlineSpaceDashboard className='size-4' />
-                                    <p className='group-[.active]:text-current'>หน้าหลัก</p>
-                                </div>
-                            </NavLink>
-                        </div>
+                            }
+                        >
+                            <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                            <div className='w-full flex items-center gap-3'>
+                                <MdOutlineSpaceDashboard className='size-4' />
+                                <p className='group-[.active]:text-current'>หน้าหลัก</p>
+                            </div>
+                        </NavLink>
+                    </div>
+                    <div className='flex flex-col gap-4 mb-3'>
+                        <NavLink
+                            to='/app/order'
+                            end
+                            className={({ isActive }) =>
+                                `flex gap-5 items-center text-sm transition duration-300 ease-in-out group
+                                        ${isActive ? 'text-main active' : 'hover:text-main'}`
+                            }
+                        >
+                            <button className='group-[.active]:w-2 h-2 group-[.active]:bg-main rounded-full pr-2'></button>
+                            <div className='w-full flex items-center gap-3'>
+                                <BsCart4 className='size-5' />
+                                <p className='group-[.active]:text-current'>คำสั่งซื้อ</p>
+                            </div>
+                        </NavLink>
                     </div>
                     <div>
                         <div className='flex justify-between items-center pl-7 pr-3 mb-3'>

@@ -23,3 +23,7 @@ export const isDefaultAddress = (id, is_default) => {
 export const removeAddress = (id) => {
     return api.delete(`/api/delete-address/${id}`)
 }
+
+export const setDefaultAddress = (id) => {
+    return api.patch(`/api/address/${id}/default`)
+}

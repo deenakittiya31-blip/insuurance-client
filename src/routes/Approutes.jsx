@@ -44,7 +44,6 @@ import CompareList from '../pages/store/CompareList'
 import CompareInsure from '../pages/store/CompareInsure'
 import PackageProduct from '../pages/store/PackageProduct'
 import AddressList from '../pages/store/AddressList'
-import TrackParcel from '../pages/store/TrackParcel'
 import HistoryOrder from '../pages/store/HistoryOrder'
 import PolicyManage from '../pages/consent/PolicyPage'
 import PolicyView from '../pages/consent/PolicyView'
@@ -53,6 +52,8 @@ import DiscountLevel from '../pages/insur/DiscountLevel'
 import AddressAdd from '../pages/store/AddressAdd'
 import AddressEdit from '../pages/store/AddressEdit'
 import Checkout from '../pages/store/Checkout'
+import Order from '../pages/order/Order'
+import AddressSelect from '../pages/store/AddressSelect'
 
 
 const Approutes = () => {
@@ -80,9 +81,9 @@ const Approutes = () => {
                     <Route path='address' element={<AddressList />} />
                     <Route path='create-address' element={<AddressAdd />} />
                     <Route path='address/:id' element={<AddressEdit />} />
-                    <Route path='trackparcel' element={<TrackParcel />} />
-                    <Route path='history' element={<HistoryOrder />} />
+                    <Route path='order' element={<HistoryOrder />} />
                     <Route path='order/checkout/:id' element={<Checkout />} />
+                    <Route path='address-select' element={<AddressSelect />} />
                 </Route>
 
                 <Route
@@ -135,6 +136,7 @@ const Approutes = () => {
                         <Route path='discount-level' element={<DiscountLevel />} />
                         <Route path='users' element={<Users />} />
                         <Route path='policy' element={<PolicyManage />} />
+                        <Route path='order' element={<Order />} />
                     </Route>
                 </Route>
             </Routes>
