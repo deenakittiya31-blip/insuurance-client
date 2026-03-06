@@ -54,6 +54,7 @@ import AddressEdit from '../pages/store/AddressEdit'
 import Checkout from '../pages/store/Checkout'
 import Order from '../pages/order/Order'
 import AddressSelect from '../pages/store/AddressSelect'
+import ProfileMember from '../pages/store/ProfileMember'
 
 
 const Approutes = () => {
@@ -84,6 +85,7 @@ const Approutes = () => {
                     <Route path='order' element={<HistoryOrder />} />
                     <Route path='order/checkout/:id' element={<Checkout />} />
                     <Route path='address-select' element={<AddressSelect />} />
+                    <Route path='profile/:id' element={<ProfileMember />} />
                 </Route>
 
                 <Route

@@ -112,6 +112,18 @@ const CompareList = () => {
                                     ))
                                 }
                             </div>
+                            <div className="p-2 ">
+                                <div className="w-full h-px border-b border-border/20" />
+                            </div>
+                            <div className="px-2 pb-2 text-text-primary">
+                                <p className="font-medium text-sm">ข้อมูลการกรอง</p>
+                                <div className="grid grid-cols-2 text-xs">
+                                    <p><span className="font-medium">ประกัน:</span> {i.filter.insurance_type || '-'}</p>
+                                    <p><span className="font-medium">ซ่อม:</span> {i.filter.repair_type || '-'}</p>
+                                    <p><span className="font-medium">ประเภทรถ:</span> {i.filter.car_type || '-'}</p>
+                                    <p><span className="font-medium">การใช้งาน:</span> {i.filter.car_usage || '-'}</p>
+                                </div>
+                            </div>
                         </div>
                     ))
                 }

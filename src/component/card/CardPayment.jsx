@@ -121,19 +121,24 @@ const CardPayment = ({ id, payments, groups }) => {
                             )}
                             {activeTab === 2 && (
                                 <div className="grid grid-cols-2 gap-3">
-                                    {
-                                        groups.map((g, idx) => (
-                                            <div key={idx} className="flex gap-3 rounded-sm overflow-clip shadow">
-                                                <div className="bg-main w-15 h-15 flex flex-col items-center justify-center">
-                                                    <p className="font-semibold text-lg capitalize text-white">{g.group_name}</p>
-                                                    <p className="font-nomal text-[10px] capitalize text-text-primary">เลเวลลูกค้า</p>
-                                                </div>
-                                                <div className="flex justify-center items-center">
-                                                    <p className="text-[10px]"><span className="text-sm font-semibold">{g.discount_percent}</span> เปอร์เซนต์</p>
-                                                </div>
+                                    {/* ✅ เช็ค null ก่อน */}
+                                    {groups?.discount_percent != null ? (
+                                        <div className="flex gap-3 rounded-sm overflow-clip shadow">
+                                            <div className="bg-main w-15 h-15 flex flex-col items-center justify-center">
+                                                <p className="font-semibold text-lg capitalize text-white">
+                                                    {groups.group_name}
+                                                </p>
+                                                <p className="font-normal text-[10px] capitalize text-text-primary">เลเวลลูกค้า</p>
                                             </div>
-                                        ))
-                                    }
+                                            <div className="flex justify-center items-center">
+                                                <p className="text-[10px]">
+                                                    <span className="text-sm font-semibold">{groups.discount_percent}</span> เปอร์เซนต์
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <p className="text-sm text-center text-gray-400 col-span-2">ไม่มีส่วนลดตามเลเวล</p>
+                                    )}
                                 </div>
                             )}
                         </div>

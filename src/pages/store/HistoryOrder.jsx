@@ -55,7 +55,6 @@ const HistoryOrder = () => {
         title='คำสั่งซื้อ'
       />
       <div className="p-5 font-prompt space-y-3">
-
         {
           order.map((i) => (
             <CardOrder

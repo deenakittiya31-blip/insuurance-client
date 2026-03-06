@@ -12,6 +12,15 @@ const EditMember = ({ isOpen, form, onSubmit, onChange, onClose, group, removeTa
                 <h3 className="font-bold text-lg font-prompt text-text-primary">แก้ไขข้อมูลลูกค้า</h3>
                 <div className="grid grid-cols-2 gap-3 items-end">
                     <TextInput
+                        title='รหัสลูกค้า'
+                        name='member_code'
+                        type='text'
+                        placeholder='กรอกรหัสลูกค้า...'
+                        onChange={onChange}
+                        width='w-full'
+                        value={form.member_code}
+                    />
+                    <TextInput
                         title='ชื่อ'
                         name='first_name'
                         type='text'

@@ -76,7 +76,7 @@ const CardProduct = ({ data, onChange, checked, onCreateOrder }) => {
                         <CardPayment
                             id={data.index_premium}
                             payments={data.payments}
-                            groups={data.groups}
+                            groups={data.group_discount}
                         />
                     </div>
                 </div>

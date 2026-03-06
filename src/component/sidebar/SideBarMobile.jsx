@@ -2,7 +2,7 @@ import { FaNoteSticky, FaRegFaceSmile } from "react-icons/fa6";
 import { BiSolidPackage } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
 import { FaAddressBook } from "react-icons/fa6";
-import { FaHistory, FaUserCircle } from "react-icons/fa";
+import { FaHistory, FaUserCircle, FaUserEdit } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import useInsureAuth from "../../store/auth-store";
 import { PiMedalBold } from "react-icons/pi";
@@ -58,8 +58,8 @@ const SideBarMobile = ({ isOpen, setIsOpen }) => {
                     </button>
                 </div>
                 {/* member profile */}
-                <div className="flex flex-col gap-3 justify-center items-center font-prompt mb-5">
-                    <div className="w-20 h-20 rounded-full overflow-clip flex items-center justify-center">
+                <div className="flex flex-col justify-center items-center font-prompt mb-5">
+                    <div className="w-20 h-20 rounded-full overflow-clip flex items-center justify-center mb-3">
                         {
                             token
                                 ? (<img src={member?.picture_url} className="w-full h-full object-cover" />)
@@ -72,6 +72,7 @@ const SideBarMobile = ({ isOpen, setIsOpen }) => {
                         <PiMedalBold className="size-3" />
                         <p className="text-sm font-normal">{token ? `${member?.group_name}` : 'lv.0'}</p>
                     </div>
+                    <p className="text-sm font-normal text-gray-500">รหัส {token && `${member?.member_code}`}</p>
                     <p className="font-semibold text-2xl text-text-primary">
                         {token
                             ? (member?.first_name && member?.last_name)
@@ -106,6 +107,19 @@ const SideBarMobile = ({ isOpen, setIsOpen }) => {
                             <p className="font-medium text-xl">ที่อยู่ในการจัดส่งเอกสาร</p>
                         </div>
                     </div>
+                    {
+                        token && (
+                            <div onClick={() => handleNavigate(`/store/profile/${member?.id}`)} className="flex items-center gap-5 w-full">
+                                <button className="btn btn-circle btn-sm btn-warning">
+                                    <FaUserEdit className="size-5 text-white" />
+                                </button>
+                                <div className="w-full py-3 border-b border-border/50">
+                                    <p className="font-medium text-xl">แก้ไขข้อมูลส่วนตัว</p>
+                                </div>
+                            </div>
+                        )
+                    }
+
                     {
                         member?.is_registered === false && (
                             <Link to='/member-register'>

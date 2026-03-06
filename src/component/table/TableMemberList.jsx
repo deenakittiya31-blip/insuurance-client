@@ -4,7 +4,6 @@ import Sort from "../sortData/Sort"
 
 const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEdite, onToggle }) => {
 
-    console.log(data)
     return (
         <div className="overflow-x-auto font-prompt">
             <table className="table">
@@ -12,6 +11,15 @@ const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEd
                 <thead>
                     <tr>
                         <th className='font-medium text-neutral-400'>ลำดับ</th>
+                        <th className='font-medium text-neutral-400'>
+                            <div className='flex items-center  gap-3'>
+                                รหัสลูกค้า<Sort
+                                    onSort={onSort}
+                                    keyName='display_name'
+                                    currentSort={sortConfig}
+                                />
+                            </div>
+                        </th>
                         <th className='font-medium text-neutral-400'>
                             <div className='flex items-center  gap-3'>
                                 ชื่อไลน์<Sort
@@ -83,6 +91,7 @@ const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEd
                         data.map((i, idx) => (
                             <tr key={i.id} className='text-text-primary transition duration-300 ease-in hover:bg-neutral-50'>
                                 <td>{(page - 1) * limit + idx + 1}</td>
+                                <td>{i.member_code}</td>
                                 <td>
                                     <div className="flex items-center gap-3">
                                         {
@@ -110,20 +119,34 @@ const TableMemberList = ({ data, page, onSort, sortConfig, limit, onDelete, onEd
                                     {i.phone === null ? '-' : i.phone}
                                 </td>
                                 <td>
-                                    {i.note === null ? '-' : i.note}
+                                    <div className="">
+                                        <div className="flex flex-wrap gap-1">
+                                            {i.tags.slice(0, 1).map((t) => (
+                                                <button
+                                                    key={t.tag_member_id}
+                                                    type="button"
+                                                    className="relative btn btn-sm bg-main rounded-full font-prompt text-text-primary"
+                                                >
+                                                    {t.tag_name}  {/* ✅ เข้าถึง property */}
+
+                                                    {i.tags.length > 1 && (
+                                                        <div className="absolute right-0 -top-2 font-normal w-4 h-4 bg-white/70 text-text-primary rounded-full border border-border/25 flex items-center justify-center">
+                                                            <span className="text-[10px] text-gray-400">+{i.tags.length - 1}</span>
+                                                        </div>
+                                                    )}
+
+                                                </button>
+                                            ))}
+
+                                        </div>
+                                    </div>
+
                                 </td>
                                 <td>
                                     {i.created_at === null ? '-' : dateFormat(i.created_at)}
                                 </td>
                                 <td>
-                                    {i.tags.slice(0, 1).map((t, idx) => (
-                                        <button
-                                            key={idx}
-                                            type="button"
-                                            className="w-full btn btn-sm bg-main rounded-full font-prompt text-text-primary "
-                                        >{t}</button>
-                                    ))
-                                    }
+                                    {i.note === null ? '-' : i.note}
                                 </td>
                                 <td className='text-center'>
                                     <input

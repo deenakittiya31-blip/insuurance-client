@@ -16,9 +16,10 @@ const CardPremiumList = ({ premiums, onCreateOrder, have = true }) => {
                     </div>
                     <span className="font-medium text-[10px] line-clamp-1">ประกัน{premiums.insurance_type} <span className="font-light text-gray-400">|</span> {premiums.repair_type}</span>
                 </div>
-                <span className="text-xs font-medium text-main">฿{numberFormat(premiums.selling_price)}</span>
+
                 {/* ราคากับปุ่มสั่งซื้อ */}
                 <div className="flex flex-col gap-1 justify-center items-center w-27 border-l border-border/20 p-2">
+                    <span className="text-xs font-medium text-main">฿{numberFormat(premiums.selling_price)}</span>
                     {
                         !have && (
                             <>
@@ -30,7 +31,14 @@ const CardPremiumList = ({ premiums, onCreateOrder, have = true }) => {
                     }
                     {
                         have && (
-                            <button onClick={onCreateOrder} className="rounded-sm bg-main w-fit px-2 text-[10px]">ซื้อเลย</button>
+                            <>
+                                {
+                                    premiums.is_ordered ? (
+                                        <button className="rounded-sm bg-border/50 w-fit px-2 text-[10px]">สั่งซื้อแล้ว</button>
+                                    )
+                                        : <button onClick={onCreateOrder} className="rounded-sm bg-main w-fit px-2 text-[10px]">ซื้อเลย</button>
+                                }
+                            </>
                         )
                     }
                 </div>

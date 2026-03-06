@@ -19,6 +19,7 @@ const initialState = {
     group_id: '',
     phone: '',
     note: '',
+    member_code: '',
     tags: []
 }
 
@@ -113,6 +114,7 @@ const Home = () => {
         setIdUpdate(id)
         try {
             const res = await readMember(id)
+            console.log(res.data.data.tags)
             setForm(res.data.data)
 
         } catch (err) {
@@ -128,6 +130,8 @@ const Home = () => {
     const handleUpdate = async (e) => {
         e.preventDefault()
 
+        const previousMember = member
+
         setMember(prev => prev.map(item =>
             item.id === idUpdate ? { ...item, ...form } : item
         ))
@@ -139,6 +143,8 @@ const Home = () => {
             toast.success(res.data.msg)
         } catch (err) {
             console.log(err)
+            setMember(previousMember)
+            toast.error(err.response?.data?.message || 'เกิดข้อผิดพลาด')
         }
     }
 

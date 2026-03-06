@@ -32,10 +32,13 @@ const CardOrder = ({ data, onDelete }) => {
                         <button onClick={() => onDelete(data.id)} className="btn btn-xs">ยกเลิก</button>
                     )
                 }
-                <a href={`https://track.thailandpost.co.th/?trackNumber=${data.tracking}`} target="_blank">
-                    <button className="btn btn-xs">ติดตาม</button>
-                </a>
-
+                {
+                    data.tracking !== null && (
+                        <a href={`https://track.thailandpost.co.th/?trackNumber=${data.tracking}`} target="_blank">
+                            <button className="btn btn-xs">ติดตาม</button>
+                        </a>
+                    )
+                }
             </div>
         </div>
     )

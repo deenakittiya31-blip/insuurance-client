@@ -59,10 +59,10 @@ const PackageProduct = () => {
         getUsageTypeSelectMember();
     }, [])
 
-    useEffect(() => {
-        if (!member?.group_code) return  // รอจนกว่าจะมี group_code
-        fetchPremiumSearch()
-    }, [member?.group_code])
+    // useEffect(() => {
+    //     if (!member?.group_code) return  // รอจนกว่าจะมี group_code
+    //     fetchPremiumSearch()
+    // }, [member?.group_code])
 
     const handleOnChange = async (e) => {
         const { name, value } = e.target
@@ -115,17 +115,30 @@ const PackageProduct = () => {
     }
 
     //รับ param ได้ มี default เป็น filter
-    const fetchPremiumSearch = async (filterData = filter) => {
+    const fetchPremiumSearch = async () => {
+        if (!member?.group_code) {
+            toast.error('ไม่พบข้อมูลกลุ่มลูกค้า')
+            return
+        }
+
         setLoading(true)
         try {
             const res = await searchPremiumMember({
-                ...filterData,
-                group_code: member?.group_code
+                ...filter,
+                group_code: member.group_code
             });
             setPremium(res.data.data)
             setTotal(res.data.total)
-        } catch (error) {
-            console.log(error)
+            if (res.data.data.length === 0) {
+                toast(res.data.message || 'ไม่พบข้อมูลเบี้ย', { icon: '🔍' })
+            }
+
+            closeFilter()
+        } catch (err) {
+            console.log(err)
+            console.log(err.response?.data)
+            toast.error(err.response?.data?.message || 'เกิดข้อผิดพลาด')
+            setPremium([])
         } finally {
             setLoading(false)
         }
@@ -155,15 +168,7 @@ const PackageProduct = () => {
 
     const handleSubmitFilter = async (e) => {
         e.preventDefault()
-        try {
-            const res = await searchPremiumMember(filter);
-            setPremium(res.data.data)
-            setTotal(res.data.total)
-            closeFilter()
-        } catch (err) {
-            console.log(err)
-            setPremium([])
-        }
+        await fetchPremiumSearch()
     }
 
     const handleSortPremium = () => {
@@ -184,7 +189,8 @@ const PackageProduct = () => {
 
     const clearFilter = () => {
         setFilter(initialStateFilter)
-        fetchPremiumSearch(initialStateFilter)
+        setPremium([])
+        setTotal(0)
         closeFilter()
     }
 
@@ -256,6 +262,10 @@ const PackageProduct = () => {
         try {
             const res = await createPremiumToCompareMember({
                 ...carData,
+                insurance_type_id: filter.insurance_type_id || null,
+                insurance_company: filter.insurance_company,
+                car_usage_type_id: filter.car_usage_type_id || null,
+                repair_type: filter.repair_type || null,
                 import_by: 'member',
                 premiums: pmToCompare
             })
@@ -364,7 +374,7 @@ const PackageProduct = () => {
                                 </div>
                             ) : premium.length === 0 ? (
                                 <div className="text-center py-10">
-                                    ไม่มีข้อมูล
+                                    กรุณาเลือกตัวกรองเพื่อค้นหาเบี้ยประกัน
                                 </div>
                             ) : (
                                 <div className="grid justify-items-stretch lg:grid-cols-2 gap-5">
