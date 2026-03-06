@@ -108,4 +108,9 @@ export const adminSetting = [
         title: 'ตั้งค่านโยบาย',
         link: '/app/policy'
     },
+    {
+        icon: <LuUserPlus className='size-4' />,
+        title: 'ธนาคาร + บัตรเครดิต',
+        link: '/app/policy'
+    },
 ]

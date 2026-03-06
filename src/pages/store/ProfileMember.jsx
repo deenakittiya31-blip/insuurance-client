@@ -94,6 +94,7 @@ const ProfileMember = () => {
                         type='text'
                         onChange={handleChange}
                         value={form.first_name}
+                        disabled={true}
                     />
                     <TextInput
                         width='w-auto'
@@ -102,6 +103,7 @@ const ProfileMember = () => {
                         type='text'
                         onChange={handleChange}
                         value={form.last_name}
+                        disabled={true}
                     />
                     <TextInput
                         width='w-auto'

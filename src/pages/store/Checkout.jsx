@@ -131,6 +131,14 @@ const Checkout = () => {
         }
     }
 
+    // const numChrage = (final, select, max, min) = {
+    // const install = i.selling_price_final / (
+    //     i.installment_min
+    //         ? (selectedInstallment - 1 || i.installment_min - 1)
+    //         : i.installment_max
+    // )
+    // }
+
     return (
         <div className="p-5 font-prompt space-y-3">
             <div
@@ -237,19 +245,15 @@ const Checkout = () => {
                                             <span className="text-gray-500">{i.charge ? `฿${parseInt(i.charge)}` : '-'}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-gray-500">งวดละ</span>
-                                            <span className="text-gray-500">
-                                                {i.installment_max
-                                                    ? `฿${numberFormat(
-                                                        i.selling_price_final / (
-                                                            i.installment_min
-                                                                ? (selectedInstallment || i.installment_min)
-                                                                : i.installment_max
-                                                        )
-                                                    )}`
-                                                    : '-'
-                                                }
-                                            </span>
+                                            <p className="text-gray-500">ชำระงวดแรก + ค่าธรรมเนียม <span>{`${i.first_payment_amount}+${parseInt(i.charge)}`} = </span></p>
+                                            <span>{`฿${numberFormat(parseFloat(i.first_payment_amount) + parseInt(i.charge))}`}</span>
+
+                                            {/* งวดละ */}
+
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <p className="text-gray-500">งวดที่ {i.installment_min} - 10 งวดละ</p>
+                                            <span>{`฿${numberFormat(parseFloat(i.first_payment_amount) + parseInt(i.charge))}`}  </span>
                                         </div>
                                     </>
                                 )}
@@ -260,7 +264,7 @@ const Checkout = () => {
                                             <span className="text-gray-500">{i.installment_max ? `${i.installment_max} งวด` : '-'}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-gray-500">งวดละ</span>
+                                            <span className="text-gray-500">งวดละ </span>
                                             <span className="text-gray-500">
                                                 {i.installment_max
                                                     ? `฿${numberFormat(i.selling_price_final / i.installment_max)}`
