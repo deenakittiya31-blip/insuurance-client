@@ -1,7 +1,7 @@
 import InstallmentSetting from "../payment/InstallmentSetting"
 import TextInput from '../form/TextInput'
 
-const PaymentSection = ({ payment, payments, onToggle, onUpdate, hasPayment }) => {
+const PaymentSection = ({ payment, payments, onToggle, onUpdate, hasPayment, creditGroups }) => {
     return (
         <div>
             <h1 className='title'>วิธีการชำระเงิน</h1>
@@ -146,7 +146,7 @@ const PaymentSection = ({ payment, payments, onToggle, onUpdate, hasPayment }) =
                 {hasPayment(4) && (
                     <>
                         <h2 className="font-semibold text-info">ผ่อนบัตรเครดิต</h2>
-                        <div className="grid grid-cols-3 gap-3">
+                        <div className="grid grid-cols-3 gap-3 items-end">
                             <TextInput
                                 title="ส่วนลดเปอร์เซนต์ ผ่อน"
                                 type='number'
@@ -169,7 +169,7 @@ const PaymentSection = ({ payment, payments, onToggle, onUpdate, hasPayment }) =
                                     onUpdate(4, 'discount_amount', e.target.value)
                                 }
                             />
-                            <TextInput
+                            {/* <TextInput
                                 title="จำนวนงวด"
                                 type="number"
                                 value={
@@ -179,12 +179,25 @@ const PaymentSection = ({ payment, payments, onToggle, onUpdate, hasPayment }) =
                                 onChange={e =>
                                     onUpdate(4, 'installment_max', e.target.value)
                                 }
-                            />
+                            /> */}
+                            <fieldset className="fieldset font-prompt text-text-primary p-0">
+                                <legend className="fieldset-legend text-sm text-text-primary">ชุดบัตรเครดิต</legend>
+                                <select
+                                    className="select w-full"
+                                    value={payments.find(p => p.payment_method_id === 4)?.credit_group_id || ''}
+                                    onChange={e => onUpdate(4, 'credit_group_id', Number(e.target.value))}
+                                >
+                                    <option value=''>เลือกชุดบัตรเครดิต</option>
+                                    {creditGroups?.map(g => (
+                                        <option key={g.id} value={g.id}>{g.group_name}</option>
+                                    ))}
+                                </select>
+                            </fieldset>
                         </div>
                     </>
                 )}
             </div>
-        </div>
+        </div >
     )
 }
 export default PaymentSection

@@ -1,7 +1,7 @@
 import { FaCarCrash, FaMoneyBillWave } from "react-icons/fa"
 import { numberFormat } from "../../utils/numerral"
 
-const CardDetails = ({ id, car_protect, third_protect, additional_protect, logo_url, namecompany, nametype, repair_type, payments, number_of_seats, selling_price, onCreateOrder }) => {
+const CardDetails = ({ id, car_protect, third_protect, additional_protect, logo_url, namecompany, nametype, repair_type, payments, number_of_seats, selling_price, onCreateOrder, total }) => {
     return (
         <div>
             <button className="w-full h-full border border-gray-200 rounded-md font-medium bg-white hover:bg-gray-100 text-sm transition duration-400 ease-in-out hover:scale-105 hover:shadow-sm" onClick={() => document.getElementById(`modalDetail-${id}`).showModal()}>ความคุ้มครอง</button>
@@ -114,7 +114,7 @@ const CardDetails = ({ id, car_protect, third_protect, additional_protect, logo_
                                     <span className="text-[10px] font-normal">เบี้ยประกันต่อ/ปี</span>
                                     <div className="flex justify-end items-baseline gap-1">
                                         <span className="font-bold text-sm tracking-wide">฿{numberFormat(selling_price)}</span>
-                                        <del className="font-medium text-[#ede9e7] text-[10px]">฿2,000</del>
+                                        <del className="font-medium text-[#ede9e7] text-[10px]">฿{numberFormat(total)}</del>
                                     </div>
 
                                 </div>

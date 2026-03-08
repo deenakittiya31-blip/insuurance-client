@@ -16,6 +16,7 @@ import PackageInfoSection from '../../component/addpackage/PackageInfoSection'
 import InsuranceInfoSection from '../../component/addpackage/InsuranceInfoSection ';
 import { listSelectGroup } from '../../service/member/group_member';
 import GroupLevelDiscount from '../../component/addpackage/GroupLevelDiscount';
+import { listGroupCreditSelect } from '../../service/bank/bankandcardsevice';
 
 const initialState = {
     package_name: '',
@@ -55,6 +56,7 @@ const AddPackage = () => {
     const [carModel, setCarModel] = useState([])
     const [promotion, setPromotion] = useState([])
     const [group, setGroup] = useState([])
+    const [creditGroups, setCreditGroups] = useState([])
 
     useEffect(() => {
         getCompanySelect();
@@ -66,6 +68,7 @@ const AddPackage = () => {
         getCompulsory();
         getPromotion();
         getGroup();
+        getCreditGroups();
     }, [])
 
     useEffect(() => {
@@ -85,6 +88,15 @@ const AddPackage = () => {
         try {
             const res = await listPayment()
             setPayment(res.data.data)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const getCreditGroups = async () => {
+        try {
+            const res = await listGroupCreditSelect()
+            setCreditGroups(res.data.data)
         } catch (err) {
             console.log(err)
         }
@@ -197,7 +209,8 @@ const AddPackage = () => {
                         payment_method_id: paymentId,
                         discount_percent: 0,
                         discount_amount: 0,
-                        first_payment_amount: null
+                        first_payment_amount: null,
+                        credit_group_id: null
                     }
                 ]
             }))
@@ -276,6 +289,7 @@ const AddPackage = () => {
                     onToggle={handlePaymentToggle}
                     onUpdate={updatePaymentField}
                     hasPayment={hasPayment}
+                    creditGroups={creditGroups}
                 />
                 <GroupLevelDiscount
                     group={group}

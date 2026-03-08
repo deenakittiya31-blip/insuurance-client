@@ -1,22 +1,14 @@
 import Title from '../../component/form/Title'
-import TextInput from '../../component/form/TextInput'
-import TextArea from '../../component/form/TextArea'
 import useActionStore from '../../store/action-store';
-import Select from '../../component/form/Select';
 import { useEffect, useState } from 'react';
 import { listPayment } from '../../service/payment';
-import SelectFormBrand from '../../component/select/SelectFormBrand';
-import SelectFormUsage from '../../component/select/SelectFormUsage';
 import { listUsageTypeSelect } from '../../service/car/CarUsage';
-import SelectFormCompulsory from '../../component/select/SelectFormCompulsory';
 import { listCompulPackage } from '../../service/car/Compulsory';
 import { listByCarModel } from '../../service/car/CarModel';
-import SelectFormModel from '../../component/select/SelectFormModel';
 import toast from 'react-hot-toast';
 import { readPackageEdit, updatePackage } from '../../service/insurance/PackageInsur';
 import { useNavigate, useParams } from 'react-router-dom';
 import { listPromotionSelect } from '../../service/insurance/promotion';
-import InstallmentSetting from '../../component/payment/InstallmentSetting';
 import GroupLevelDiscount from '../../component/addpackage/GroupLevelDiscount';
 import { listSelectGroup } from '../../service/member/group_member';
 import PackageInfoSection from '../../component/addpackage/PackageInfoSection';
@@ -24,6 +16,7 @@ import InsuranceInfoSection from '../../component/addpackage/InsuranceInfoSectio
 import CarConditionSection from '../../component/addpackage/CarConditionSection';
 import CoverageSection from '../../component/addpackage/CoverageSection';
 import PaymentSection from '../../component/addpackage/PaymentSection';
+import { listGroupCreditSelect } from '../../service/bank/bankandcardsevice';
 
 const initialState = {
     package_name: '',
@@ -64,6 +57,7 @@ const EditPackage = () => {
     const [carModel, setCarModel] = useState([])
     const [promotion, setPromotion] = useState([])
     const [group, setGroup] = useState([])
+    const [creditGroups, setCreditGroups] = useState([])
 
     useEffect(() => {
         const init = async () => {
@@ -75,6 +69,7 @@ const EditPackage = () => {
             getCarUsageType();
             getCompulsory();
             getPromotion();
+            getCreditGroups();
 
             // รอให้ได้ข้อมูลทั้งสองก่อนค่อย merge
             const [packageRes, groupRes] = await Promise.all([
@@ -142,6 +137,15 @@ const EditPackage = () => {
         }
     }
 
+    const getCreditGroups = async () => {
+        try {
+            const res = await listGroupCreditSelect()
+            setCreditGroups(res.data.data)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     const getCompulsory = async () => {
         try {
             const res = await listCompulPackage();
@@ -169,28 +173,6 @@ const EditPackage = () => {
             console.log(error)
         }
     }
-
-    // const getGroup = async () => {
-    //     try {
-    //         const res = await listSelectGroup()
-    //         const allGroups = res.data.data
-    //         setGroup(allGroups)
-
-    //         setForm(prev => ({
-    //             ...prev,
-    //             groups: allGroups.map(g => {
-    //                 // หาว่า package นี้มีส่วนลดของ group นี้ไหม
-    //                 const existing = res.data.data.find(pg => pg.group_id === g.id)
-    //                 return {
-    //                     group_id: g.id,
-    //                     discount_percent: existing?.discount_percent || 0
-    //                 }
-    //             })
-    //         }))
-    //     } catch (err) {
-    //         console.log(err)
-    //     }
-    // }
 
     const handleOnChange = (e) => {
         const { name, value } = e.target
@@ -230,7 +212,8 @@ const EditPackage = () => {
                         payment_method_id: paymentId,
                         discount_percent: 0,
                         discount_amount: 0,
-                        first_payment_amount: null
+                        first_payment_amount: null,
+                        credit_group_id: null
                     }
                 ]
             }))
@@ -310,6 +293,7 @@ const EditPackage = () => {
                     onToggle={handlePaymentToggle}
                     onUpdate={updatePaymentField}
                     hasPayment={hasPayment}
+                    creditGroups={creditGroups}
                 />
                 <GroupLevelDiscount
                     group={group}

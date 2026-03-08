@@ -17,7 +17,7 @@ const LayoutMember = () => {
     return (
         <div className="bg-[#f5f2f0] min-h-dvh">
             <SideBarMobile isOpen={isOpen} setIsOpen={setIsOpen} />
-            <div className=" lg:px-36">{/* p-5 */}
+            <div className=" lg:px-36 pb-10 md:pb-0">{/* p-5 */}
                 <Outlet />
             </div>
             <FooterMobile setIsOpen={setIsOpen} />

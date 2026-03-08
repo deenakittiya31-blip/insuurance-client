@@ -130,6 +130,7 @@ const CardProduct = ({ data, onChange, checked, onCreateOrder }) => {
                     payments={data.payments}
                     number_of_seats={data.additional_personal_permanent_driver_number}
                     selling_price={data.selling_price}
+                    total={data.total_premium}
                     onCreateOrder={onCreateOrder}
                 />
             </div >

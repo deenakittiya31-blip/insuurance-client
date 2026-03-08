@@ -55,6 +55,7 @@ import Checkout from '../pages/store/Checkout'
 import Order from '../pages/order/Order'
 import AddressSelect from '../pages/store/AddressSelect'
 import ProfileMember from '../pages/store/ProfileMember'
+import BankAndCard from '../pages/setting/BankAndCard'
 
 
 const Approutes = () => {
@@ -139,6 +140,7 @@ const Approutes = () => {
                         <Route path='users' element={<Users />} />
                         <Route path='policy' element={<PolicyManage />} />
                         <Route path='order' element={<Order />} />
+                        <Route path='bankandcard' element={<BankAndCard />} />
                     </Route>
                 </Route>
             </Routes>

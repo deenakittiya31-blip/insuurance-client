@@ -17,6 +17,7 @@ const Checkout = () => {
     const [selectedInstallment, setSelectedInstallment] = useState(null)
     const [selectedPaymentId, setSelectedPaymentId] = useState(null)
     const [selectedAddressId, setSelectedAddressId] = useState(null)
+    const [selectedBank, setSelectedBank] = useState(null)
 
     useEffect(() => {
         const fetchOrder = async () => {
@@ -259,7 +260,7 @@ const Checkout = () => {
                                 )}
                                 {i.payment_method_id === 4 && (
                                     <>
-                                        <div className="flex justify-between">
+                                        {/* <div className="flex justify-between">
                                             <span className="text-gray-500">จำนวนงวด</span>
                                             <span className="text-gray-500">{i.installment_max ? `${i.installment_max} งวด` : '-'}</span>
                                         </div>
@@ -271,7 +272,84 @@ const Checkout = () => {
                                                     : '-'
                                                 }
                                             </span>
-                                        </div>
+                                        </div> */}
+                                        {i.credit_banks?.length > 0 && (
+                                            <div className="space-y-2 mt-1">
+                                                <p className="text-gray-500 font-medium">ธนาคารที่ร่วมรายการ</p>
+                                                {i.credit_banks.map((bank) => (
+                                                    <div key={bank.bank_id} className="flex items-center justify-between">
+                                                        <div className="flex items-center gap-2">
+                                                            {bank.logo_url && (
+                                                                <img
+                                                                    src={bank.logo_url}
+                                                                    className="w-6 h-6 object-contain rounded"
+                                                                />
+                                                            )}
+                                                            <span className="text-gray-500">{bank.bank_name}</span>
+                                                        </div>
+                                                        <span className="text-gray-500">
+                                                            {bank.installments.map(ins => ins.installment_month).join(', ')} เดือน
+                                                        </span>
+                                                    </div>
+                                                ))}
+                                                {/* ลูกค้าเลือกธนาคารและงวด */}
+                                                {selectedPaymentId === 4 && i.credit_banks?.length > 0 && (
+                                                    <div className="space-y-2 mt-2">
+                                                        <fieldset className="fieldset font-prompt text-text-primary p-0">
+                                                            <legend className="text-gray-500 text-xs">เลือกธนาคาร</legend>
+                                                            <select
+                                                                className="select select-sm w-full"
+                                                                value={selectedBank || ''}
+                                                                onChange={(e) => {
+                                                                    setSelectedBank(Number(e.target.value))
+                                                                    setSelectedInstallment(null)  // reset งวด
+                                                                }}
+                                                            >
+                                                                <option value=''>เลือกธนาคาร</option>
+                                                                {i.credit_banks.map(bank => (
+                                                                    <option key={bank.bank_id} value={bank.bank_id}>
+                                                                        {bank.bank_name}
+                                                                    </option>
+                                                                ))}
+                                                            </select>
+                                                        </fieldset>
+
+                                                        {/* เลือกงวดตามธนาคารที่เลือก */}
+                                                        {selectedBank && (
+                                                            <fieldset className="fieldset font-prompt text-text-primary p-0">
+                                                                <legend className="text-gray-500 text-xs">เลือกจำนวนงวด</legend>
+                                                                <select
+                                                                    className="select select-sm w-full"
+                                                                    value={selectedInstallment || ''}
+                                                                    onChange={(e) => setSelectedInstallment(Number(e.target.value))}
+                                                                >
+                                                                    <option value=''>เลือกงวด</option>
+                                                                    {i.credit_banks
+                                                                        .find(b => b.bank_id === selectedBank)
+                                                                        ?.installments.map(ins => (
+                                                                            <option key={ins.installment_month} value={ins.installment_month}>
+                                                                                {ins.installment_month} เดือน
+                                                                            </option>
+                                                                        ))
+                                                                    }
+                                                                </select>
+                                                            </fieldset>
+                                                        )}
+
+                                                        {/* งวดละ */}
+                                                        {selectedInstallment && (
+                                                            <div className="flex justify-between">
+                                                                <span className="text-gray-500">งวดละประมาณ</span>
+                                                                <span className="font-semibold">
+                                                                    ฿{numberFormat(i.selling_price_final / selectedInstallment)}
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+
                                     </>
                                 )}
                             </div>

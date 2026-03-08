@@ -104,7 +104,7 @@ const CompareList = () => {
                                 <p className="font-medium text-sm">ข้อมูลการกรอง</p>
                                 <div className="grid grid-cols-2 text-xs">
 
-                                    <ul class="list-disc">
+                                    <ul class="list-inside">
                                         <li>ประกัน:{i.filter.insurance_type || '-'}</li>
 
                                     </ul>

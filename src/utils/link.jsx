@@ -7,6 +7,7 @@ import { IoCarSportOutline, IoDocumentOutline } from "react-icons/io5";
 import { MdOutlineElectricCar } from "react-icons/md";
 import { FiBox } from "react-icons/fi";
 import { RiSettings4Line } from "react-icons/ri";
+import { PiPiggyBankBold } from "react-icons/pi";
 
 export const adminInsur = [
     {
@@ -109,8 +110,8 @@ export const adminSetting = [
         link: '/app/policy'
     },
     {
-        icon: <LuUserPlus className='size-4' />,
+        icon: <PiPiggyBankBold className='size-4' />,
         title: 'ธนาคาร + บัตรเครดิต',
-        link: '/app/policy'
+        link: '/app/bankandcard'
     },
 ]
