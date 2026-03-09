@@ -4,6 +4,7 @@ import { numberFormat } from "../../utils/numerral"
 
 const CardHeadCheckInsure = ({ data }) => {
     const { handleCreateOrder } = useCreateOrder()
+    console.log(data)
     return (
         <div className="space-y-1 w-full bg-white rounded-xl p-1 md:p-2 border border-border/50 font-prompt" >
             <div className="flex gap-2">

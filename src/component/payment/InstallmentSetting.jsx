@@ -15,7 +15,7 @@ const InstallmentSetting = ({ value, onChange }) => {
             checked={mode === 'fix'}
             onChange={() => {
               setMode('fix')
-              onChange({ min: value.min, max: value.min })
+              onChange({ min: null, max: value.max })
             }} />
           Fix งวด
         </label>
@@ -30,7 +30,7 @@ const InstallmentSetting = ({ value, onChange }) => {
           title="จำนวนงวด"
           type="number"
           value={value.max}
-          onChange={(e) => onChange({ max: +e.target.value, min: +e.target.value })}
+          onChange={(e) => onChange({ max: +e.target.value, min: null })}
         />
       ) : (
         <div className="grid grid-cols-2 gap-3">

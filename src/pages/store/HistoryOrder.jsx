@@ -48,6 +48,8 @@ const HistoryOrder = () => {
       toast.error(err.response.data.message)
     }
   }
+
+  console.log(order)
   return (
     <div>
       <TabBackward

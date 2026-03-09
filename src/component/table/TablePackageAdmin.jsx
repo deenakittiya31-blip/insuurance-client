@@ -95,18 +95,18 @@ const TablePackageAdmin = ({ data, page, limit, onSort, sortConfig, onRead, onUp
                         </th>
                         <th className='font-medium text-neutral-400'>
                             <div className='flex items-center  gap-3'>
-                                ชื่อบริษัท<Sort
+                                รหัสแพ็กเกจ<Sort
                                     onSort={onSort}
-                                    keyName='namecompany'
+                                    keyName='package_id'
                                     currentSort={sortConfig}
                                 />
                             </div>
                         </th>
                         <th className='font-medium text-neutral-400'>
                             <div className='flex items-center  gap-3'>
-                                รหัสแพ็กเกจ<Sort
+                                ชื่อบริษัท<Sort
                                     onSort={onSort}
-                                    keyName='package_id'
+                                    keyName='namecompany'
                                     currentSort={sortConfig}
                                 />
                             </div>

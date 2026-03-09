@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Sort from '../sortData/Sort'
 import { dateFormat } from '../../utils/dateformat'
 import { numberFormat } from '../../utils/numerral';
+import { FaLocationDot } from 'react-icons/fa6';
 
 const TableOrder = ({ data, onSort, sortConfig, onUpdateStatus, onUpdateTracking }) => {
     const [editingId, setEditingId] = useState(null)
@@ -150,9 +151,100 @@ const TableOrder = ({ data, onSort, sortConfig, onUpdateStatus, onUpdateTracking
                                 </td>
                                 <td className="align-top">{numberFormat(i.selling_price)}</td>
                                 <td className="align-top">
-                                    {i.name_payment}
+                                    <div className='mb-1'>
+                                        <button className="btn btn-xs text-text-primary" onClick={() => document.getElementById(`modaltableorder-${i.id}`).showModal()}>การชำระเงิน</button>
+                                        <dialog id={`modaltableorder-${i.id}`} className="modal">
+                                            <div className="modal-box w-11/12 max-w-70">
+                                                <h3 className="font-bold text-lg text-center mb-3">ข้อมูลวิธีการชำระเงิน</h3>
+                                                <div>
+                                                    <div className='flex justify-between'>
+                                                        <span className='font-medium'>วิธีการชำระเงิน</span>
+                                                        <span className='font-normal'>{i.name_payment}</span>
+                                                    </div>
+                                                    {
+                                                        i.bank_name != null && (
+                                                            <>
+                                                                <div className='flex justify-between'>
+                                                                    <span className='font-medium'>ธนาคาร</span>
+                                                                    <span className='font-normal'>{i.bank_name}</span>
+                                                                </div>
+                                                                <div className='flex justify-between'>
+                                                                    <span className='font-medium'>ธนาคาร</span>
+                                                                    <span className='font-normal'>{i.credit_installment} งวด</span>
+                                                                </div>
+                                                            </>
+                                                        )
+                                                    }
+                                                    <div className='w-full h-px bg-border/25 my-3' />
+                                                    <div className='flex justify-between'>
+                                                        <span className='font-medium'>ส่วนลดที่ได้</span>
+                                                        <span className='font-normal'>{numberFormat(i.discount_price)} บาท</span>
+                                                    </div>
+                                                    <div className='flex justify-between'>
+                                                        <span className='font-medium'>ส่วนลดเปอร์เซนต์</span>
+                                                        <span className='font-normal'>{i.snap_discount_pct} %</span>
+                                                    </div>
+                                                    <div className='flex justify-between'>
+                                                        <span className='font-medium'>ส่วนลดเงินบาท</span>
+                                                        <span className='font-normal'>{i.snap_discount_amt} บาท</span>
+                                                    </div>
+                                                    {
+                                                        i.snap_first_payment > 0 && (
+                                                            <div className='flex justify-between'>
+                                                                <span className='font-medium'>จ่ายครั้งแรก</span>
+                                                                <span className='font-normal'>{numberFormat(i.snap_first_payment)} บาท</span>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    {
+                                                        i.snap_charge > 0 && (
+                                                            <div className='flex justify-between'>
+                                                                <span className='font-medium'>ค่าธรรมเนียม</span>
+                                                                <span className='font-normal'>{i.snap_charge} บาท</span>
+                                                            </div>
+                                                        )
+                                                    }
+
+                                                    <div className='flex justify-between'>
+                                                        <span className='font-medium'>ส่วนลดเลเวล</span>
+                                                        <span className='font-normal'>{i.snap_group_discount} %</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <form method="dialog" className="modal-backdrop">
+                                                <button>close</button>
+                                            </form>
+                                        </dialog>
+                                    </div>
+                                    <p className='text-xs text-center'>{i.name_payment}</p>
                                 </td>
                                 <td className="align-top text-center">
+                                    <div className='mb-1'>
+                                        <button className="btn btn-xs text-text-primary" onClick={() => document.getElementById(`modaltableorder-${i.id}`).showModal()}>ที่อยู่จัดส่ง</button>
+                                        <dialog id={`modaltableorder-${i.id}`} className="modal">
+                                            <div className="modal-box">
+                                                <h3 className="font-bold text-lg">ที่อยู่จัดส่ง</h3>
+                                                {i.address ? (
+                                                    <div className="flex items-baseline gap-1">
+                                                        <FaLocationDot className="size-5 fill-main" />
+                                                        <div className="flex-1">
+                                                            <p className="flex gap-2 items-baseline-last font-semibold text-sm">
+                                                                {i.address.full_name}
+                                                                <span className="font-normal text-xs text-gray-400">{i.address.phone}</span>
+                                                            </p>
+                                                            <span className="font-normal text-xs text-gray-400">{i.address.address_line} {i.address.subdistrict} {i.address.district} {i.address.province} {i.address.zipcode}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <p className="text-xs text-gray-400">ไม่มีที่อยู่</p>
+                                                )}
+                                            </div>
+                                            <form method="dialog" className="modal-backdrop">
+                                                <button>close</button>
+                                            </form>
+                                        </dialog>
+                                    </div>
                                     {editingId === i.id ? (
                                         <input
                                             autoFocus

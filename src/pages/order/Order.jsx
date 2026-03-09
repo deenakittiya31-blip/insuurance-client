@@ -91,6 +91,8 @@ const Order = () => {
             toast.error('เพิ่มเลขพัสดุไม่สำเร็จ')
         }
     }
+
+    console.log(order)
     return (
         <div className='flex flex-col gap-5 h-auto p-5'>
             <Title

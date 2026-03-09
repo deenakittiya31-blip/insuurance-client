@@ -1,11 +1,13 @@
 import { GoPackage } from "react-icons/go"
 import { numberFormat } from "../../utils/numerral"
+import { FaLocationDot } from "react-icons/fa6"
 
 const CardOrder = ({ data, onDelete }) => {
+    const address = data.address
     return (
         <div className="bg-white shadow-sx rounded-md w-full p-2 text-text-primary ">
             <div className="flex justify-between items-baseline-last">
-                <p className="font-medium text-xs">ORDER ID {data.order_id}</p>
+                <p className="font-medium text-xs">หมายเลขคำสั่งซื้อ {data.order_id}</p>
                 <p className="text-sm text-main">{data.status}</p>
             </div>
             <div className="flex gap-3 py-2">
@@ -26,19 +28,48 @@ const CardOrder = ({ data, onDelete }) => {
                     </p>
                 </div>
             </div>
-            <div className="flex justify-end items-center gap-2">
-                {
-                    data.status === 'สั่งซื้อสำเร็จ' && (
-                        <button onClick={() => onDelete(data.id)} className="btn btn-xs">ยกเลิก</button>
-                    )
-                }
-                {
-                    data.tracking !== null && (
-                        <a href={`https://track.thailandpost.co.th/?trackNumber=${data.tracking}`} target="_blank">
-                            <button className="btn btn-xs">ติดตาม</button>
-                        </a>
-                    )
-                }
+            <div className="flex justify-between items-center gap-2">
+                <div>
+                    <button className="btn btn-xs text-text-primary" onClick={() => document.getElementById(`modaladdress-${data.id}`).showModal()}>ที่อยู่จัดส่ง</button>
+                    <dialog id={`modaladdress-${data.id}`} className="modal">
+                        <div className="modal-box">
+                            <h3 className="font-bold text-lg">ที่อยู่จัดส่ง</h3>
+                            {address ? (
+                                <div className="flex items-baseline gap-1">
+                                    <FaLocationDot className="size-3 fill-main" />
+                                    <div className="flex-1">
+                                        <p className="flex gap-2 items-baseline-last font-semibold text-sm">
+                                            {address.full_name}
+                                            <span className="font-normal text-xs text-gray-400">{address.phone}</span>
+                                        </p>
+                                        <span className="font-normal text-xs text-gray-400">
+                                            {address.address_line} {address.subdistrict} {address.district} {address.province} {address.zipcode}
+                                        </span>
+                                    </div>
+                                </div>
+                            ) : (
+                                <p className="text-xs text-gray-400">ไม่มีที่อยู่</p>
+                            )}
+                        </div>
+                        <form method="dialog" className="modal-backdrop">
+                            <button>close</button>
+                        </form>
+                    </dialog>
+                </div>
+                <div className="space-x-2">
+                    {
+                        data.status === 'สั่งซื้อสำเร็จ' && (
+                            <button onClick={() => onDelete(data.id)} className="btn btn-xs text-text-primary">ยกเลิก</button>
+                        )
+                    }
+                    {
+                        data.tracking !== null && (
+                            <a href={`https://track.thailandpost.co.th/?trackNumber=${data.tracking}`} target="_blank">
+                                <button className="btn btn-xs text-text-primary">ติดตาม</button>
+                            </a>
+                        )
+                    }
+                </div>
             </div>
         </div>
     )

@@ -18,6 +18,7 @@ const Checkout = () => {
     const [selectedPaymentId, setSelectedPaymentId] = useState(null)
     const [selectedAddressId, setSelectedAddressId] = useState(null)
     const [selectedBank, setSelectedBank] = useState(null)
+    const [selectIns, setSelectedIns] = useState(null)
 
     useEffect(() => {
         const fetchOrder = async () => {
@@ -81,8 +82,8 @@ const Checkout = () => {
 
     // console.log(selectedPayment)
 
-    const calculateDiscount = (payment) => {
-        if (!payment) return 0
+    const calculateDiscountDetail = (payment) => {
+        if (!payment) return { levelDiscount: 0, paymentPercentDiscount: 0, paymentAmountDiscount: 0, total: 0 }
 
         const netTotal = parseFloat(payment.net_total) || 0
         const premium_discount = (parseFloat(info.premium_discount) || 0) / 100
@@ -90,12 +91,19 @@ const Checkout = () => {
         const payment_discount_percent = (parseFloat(payment.payment_discount_percent) || 0) / 100
         const payment_discount_amount = parseFloat(payment.payment_discount_amount) || 0
 
-        const discount_price = (netTotal * (premium_discount + level_discount_percent + payment_discount_percent)) + payment_discount_amount
+        const levelDiscount = netTotal * (premium_discount + level_discount_percent)
+        const paymentPercentDiscount = (netTotal * payment_discount_percent) + payment_discount_amount
+        // const paymentAmountDiscount = 
 
-        return discount_price
+        return {
+            levelDiscount,
+            paymentPercentDiscount,
+            // paymentAmountDiscount,
+            total: levelDiscount + paymentPercentDiscount
+        }
     }
 
-    const paymentDiscount = calculateDiscount(selectedPayment)
+    const discountDetail = calculateDiscountDetail(selectedPayment)
 
     const finalTotal = selectedPayment?.selling_price_final || 0
 
@@ -113,8 +121,10 @@ const Checkout = () => {
             address_id: selectedAddress?.id,
             payment_method_id: selectedPaymentId,
             installment: installment,
+            bank_id: selectedPaymentId === 4 ? selectedBank : null,
+            credit_installment: selectedPaymentId === 4 ? selectedInstallment : null,
             selling_price: parseInt(finalTotal),
-            discount_price: parseInt(paymentDiscount),
+            discount_price: parseInt(discountDetail.total),
             snap_discount_pct: parseInt(selectedPayment.payment_discount_percent || 0),
             snap_discount_amt: parseInt(selectedPayment.payment_discount_amount || 0),
             snap_charge: selectedPayment.charge || 0,
@@ -132,13 +142,6 @@ const Checkout = () => {
         }
     }
 
-    // const numChrage = (final, select, max, min) = {
-    // const install = i.selling_price_final / (
-    //     i.installment_min
-    //         ? (selectedInstallment - 1 || i.installment_min - 1)
-    //         : i.installment_max
-    // )
-    // }
 
     return (
         <div className="p-5 font-prompt space-y-3">
@@ -166,7 +169,7 @@ const Checkout = () => {
                     <FaNoteSticky className="size-3 text-text-primary" />
                     <p className="font-semibold text-sm text-text-primary">{info.compare_id ? info.compare_id : '-'}</p>
                 </div>
-                <CardPremiumList premiums={info} have={false} />
+                <CardPremiumList premiums={info} have={false} final={selectedPayment.selling_price_final} />
             </div>
             <div className="bg-white border border-border/25 rounded-md p-2">
                 <p className="font-semibold text-sm text-text-primary mb-3">ช่องทางชำระเงิน</p>
@@ -193,14 +196,20 @@ const Checkout = () => {
                             <div className="collapse-content text-xs space-y-1">
                                 {i.payment_discount_percent > 0 && (
                                     <div className="flex justify-between">
-                                        <span className="text-gray-500">ส่วนลดเปอร์เซนต์</span>
-                                        <span className="text-main">{i.payment_discount_percent}%</span>
+                                        <div className="space-x-3">
+                                            <span className="text-gray-500">ส่วนลดเปอร์เซนต์</span>
+                                            <span className="text-main">{i.payment_discount_percent}%</span>
+                                        </div>
+                                        <span className="text-main">-฿{numberFormat(discountDetail.paymentPercentDiscount)}</span>
                                     </div>
                                 )}
                                 {i.payment_discount_amount > 0 && (
                                     <div className="flex justify-between">
-                                        <span className="text-gray-500">ส่วนลดเงินบาท</span>
-                                        <span className="text-main">฿{i.payment_discount_amount}</span>
+                                        <div className="space-x-3">
+                                            <span className="text-gray-500">ส่วนลดเงินบาท</span>
+                                            <span className="text-main">฿{i.payment_discount_amount}</span>
+                                        </div>
+                                        <span className="text-main">-฿{i.payment_discount_amount}</span>
                                     </div>
                                 )}
                                 {i.payment_method_id === 3 && (
@@ -236,6 +245,7 @@ const Checkout = () => {
                                                             <option key={num} value={num}>
                                                                 {num} งวด
                                                             </option>
+
                                                         ))}
                                                     </select>
                                                 </fieldset>
@@ -245,34 +255,45 @@ const Checkout = () => {
                                             <span className="text-gray-500">ค่าธรรมเนียม</span>
                                             <span className="text-gray-500">{i.charge ? `฿${parseInt(i.charge)}` : '-'}</span>
                                         </div>
-                                        <div className="flex justify-between">
-                                            <p className="text-gray-500">ชำระงวดแรก + ค่าธรรมเนียม <span>{`${i.first_payment_amount}+${parseInt(i.charge)}`} = </span></p>
-                                            <span>{`฿${numberFormat(parseFloat(i.first_payment_amount) + parseInt(i.charge))}`}</span>
+                                        {
+                                            (i.first_payment_amount && i.charge) && (
+                                                <div className="flex justify-between">
+                                                    <p className="text-gray-500">ชำระงวดแรก + ค่าธรรมเนียม <span>{`${i.first_payment_amount}+${parseInt(i.charge)}`} = </span></p>
+                                                    <span>฿{numberFormat(parseFloat(i.first_payment_amount || 0) + parseInt(i.charge || 0))}</span>
+                                                </div>
+                                            )
+                                        }
 
-                                            {/* งวดละ */}
-
-                                        </div>
                                         <div className="flex justify-between">
-                                            <p className="text-gray-500">งวดที่ {i.installment_min} - 10 งวดละ</p>
-                                            <span>{`฿${numberFormat(parseFloat(i.first_payment_amount) + parseInt(i.charge))}`}  </span>
+                                            {(i.installment_min && i.installment_max) && (
+                                                <>
+                                                    <p className="text-gray-500">
+                                                        งวดที่ {
+                                                            i.installment_min === (selectedInstallment || i.installment_min)
+                                                                ? i.installment_min
+                                                                : `${i.installment_min} - ${selectedInstallment || i.installment_min}`
+                                                        } งวดละ
+                                                    </p>
+                                                    <span className="font-semibold">
+                                                        {(() => {
+                                                            const installCount = selectedInstallment || i.installment_min
+                                                            const firstAndCharge = parseFloat(i.first_payment_amount || 0) + parseInt(i.charge || 0)
+                                                            const remaining = parseFloat(i.selling_price_final || 0) - firstAndCharge
+                                                            const perInstallment = installCount > 1 ? remaining / (installCount - 1) : remaining
+                                                            return `฿${numberFormat(perInstallment)}`
+                                                        })()}
+                                                    </span>
+                                                </>
+                                            )}
+                                            <p className="text-gray-500">งวดละ</p>
+                                            <span className="font-semibold">
+                                                {i.selling_price_final / i.installment_max}
+                                            </span>
                                         </div>
                                     </>
                                 )}
                                 {i.payment_method_id === 4 && (
                                     <>
-                                        {/* <div className="flex justify-between">
-                                            <span className="text-gray-500">จำนวนงวด</span>
-                                            <span className="text-gray-500">{i.installment_max ? `${i.installment_max} งวด` : '-'}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-gray-500">งวดละ </span>
-                                            <span className="text-gray-500">
-                                                {i.installment_max
-                                                    ? `฿${numberFormat(i.selling_price_final / i.installment_max)}`
-                                                    : '-'
-                                                }
-                                            </span>
-                                        </div> */}
                                         {i.credit_banks?.length > 0 && (
                                             <div className="space-y-2 mt-1">
                                                 <p className="text-gray-500 font-medium">ธนาคารที่ร่วมรายการ</p>
@@ -296,7 +317,7 @@ const Checkout = () => {
                                                 {selectedPaymentId === 4 && i.credit_banks?.length > 0 && (
                                                     <div className="space-y-2 mt-2">
                                                         <fieldset className="fieldset font-prompt text-text-primary p-0">
-                                                            <legend className="text-gray-500 text-xs">เลือกธนาคาร</legend>
+                                                            <legend className="text-gray-500 text-xs mb-1">เลือกธนาคาร</legend>
                                                             <select
                                                                 className="select select-sm w-full"
                                                                 value={selectedBank || ''}
@@ -317,7 +338,7 @@ const Checkout = () => {
                                                         {/* เลือกงวดตามธนาคารที่เลือก */}
                                                         {selectedBank && (
                                                             <fieldset className="fieldset font-prompt text-text-primary p-0">
-                                                                <legend className="text-gray-500 text-xs">เลือกจำนวนงวด</legend>
+                                                                <legend className="text-gray-500 text-xs  mb-1">เลือกจำนวนงวด</legend>
                                                                 <select
                                                                     className="select select-sm w-full"
                                                                     value={selectedInstallment || ''}
@@ -361,12 +382,24 @@ const Checkout = () => {
                 <p className="font-semibold text-sm mb-3">ข้อมูลการชำระเงิน</p>
                 <div className="space-y-2 ">
                     <div className="flex justify-between text-xs text-gray-500">
-                        <p>ส่วนลดวิธีการชำระเงิน</p>
-                        <p>฿{numberFormat(paymentDiscount)}</p>
+                        <div className="space-x-3">
+                            <p>ส่วนลดวิธีการชำระเงิน {numberFormat(selectedPayment.payment_discount_percent)} % + ลดอีก {numberFormat(selectedPayment.payment_discount_amount)}</p>
+                        </div>
+                        <p className="text-main">-฿{numberFormat(discountDetail.paymentPercentDiscount)}</p>
                     </div>
+                    {discountDetail.levelDiscount > 0 && (
+                        <div className="flex justify-between text-xs text-gray-500">
+                            <div className="space-x-3 flex">
+                                <p>ส่วนลดเลเวล</p>
+                                <p>{numberFormat(selectedPayment.group_discount_percent)} %</p>
+                            </div>
+                            <p className="text-main">-฿{numberFormat(discountDetail.levelDiscount)}</p>
+                        </div>
+                    )}
+                    {/* รวมส่วนลด */}
                     <div className="flex justify-between text-xs text-gray-500">
-                        <p>ส่วนลดเลเวล</p>
-                        <p>{numberFormat(selectedPayment.group_discount_percent)} %</p>
+                        <p>รวมส่วนลดทั้งหมด</p>
+                        <p className="text-main">-฿{numberFormat(discountDetail.total)}</p>
                     </div>
                     <div className="w-full h-px bg-border/25 my-2" />
                     <div className="flex justify-between text-xs">

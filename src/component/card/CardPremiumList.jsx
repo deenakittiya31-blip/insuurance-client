@@ -1,7 +1,7 @@
 import { GoPackage } from "react-icons/go";
 import { numberFormat } from "../../utils/numerral";
 
-const CardPremiumList = ({ premiums, onCreateOrder, have = true }) => {
+const CardPremiumList = ({ premiums, onCreateOrder, have = true, final }) => {
     return (
         <div className="w-full flex gap-2 text-text-primary">
             <div className="w-15 h-15 border border-border/25 rounded-md overflow-clip">
@@ -19,12 +19,13 @@ const CardPremiumList = ({ premiums, onCreateOrder, have = true }) => {
 
                 {/* ราคากับปุ่มสั่งซื้อ */}
                 <div className="flex flex-col gap-1 justify-center items-center w-27 border-l border-border/20 p-2">
-                    <span className="text-xs font-medium text-main">฿{numberFormat(premiums.selling_price)}</span>
+                    {/* <span className="text-xs font-medium text-main">฿{numberFormat(premiums.selling_price)}</span> */}
+                    <span className="text-xs font-medium text-main">฿{!have ? `${numberFormat(final)}` : numberFormat(premiums.selling_price)}</span>
                     {
                         !have && (
                             <>
 
-                                <span className="bg-[#f5f2f0] rounded-full text-[8px] px-1">ราคาส่วนลดจ่ายเงินสด</span>
+                                <span className="bg-[#f5f2f0] rounded-full text-[8px] px-1">ราคาเต็ม</span>
                                 <del className="font-normal text-[10px] text-gray-400"> ฿{numberFormat(premiums.total_premium)}</del>
                             </>
                         )
