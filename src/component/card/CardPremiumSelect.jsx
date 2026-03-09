@@ -7,7 +7,7 @@ const CardPremiumSelect = ({ onClear, onSubmit }) => {
     const { premiumSelected } = usePremium();
 
     return (
-        <div className={`fixed bottom-0 left-0 w-full h-20 rounded-t-md z-40 shadow-[0_-5px_50px_rgba(0,0,0,0.05)] border border-border/25 flex justify-center items-center bg-white
+        <div className={`fixed bottom-0 left-0 w-full h-25 rounded-t-md z-40 shadow-[0_-5px_50px_rgba(0,0,0,0.05)] border border-border/25 flex justify-center items-center bg-white
         transition-all duration-500 ease-in-out
         ${premiumSelected.length > 0 ? "translate-y-0 opacity-100 pointer-events-auto" : "translate-y-full opacity-0 pointer-events-auto"}`}
         >

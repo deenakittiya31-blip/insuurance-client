@@ -4,7 +4,7 @@ import liff from "@line/liff"
 import toast from "react-hot-toast"
 import { useState } from "react"
 import { registerMember } from "../../service/member"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { registerSchema } from "../../utils/schema"
 
 // Modal แสดงนโยบาย
@@ -215,6 +215,7 @@ const MemberRegister = () => {
                     />
                     <button type="submit" className="btn rounded-full bg-main hover:bg-second text-white text-base">ลงทะเบียน</button>
                 </form>
+                <Link to='/store' className="link font-prompt text-xs text-text-primary">หน้าร้านค้า</Link>
             </div>
         </div>
     )
