@@ -1,6 +1,6 @@
 import React from 'react'
 
-const TextInput = ({ width, name, title, type, placeholder, onChange, value, readOnly = false, disabled = false, font }) => {
+const TextInput = ({ width, name, title, type, placeholder, onChange, value, readOnly = false, disabled = false, font, error }) => {
     return (
         <div className={`flex flex-col w-full ${font || 'font-prompt'} text-text-primary`}>
             <label htmlFor={name} className='mb-2 font-semibold text-sm capitalize'>
@@ -16,6 +16,7 @@ const TextInput = ({ width, name, title, type, placeholder, onChange, value, rea
                 readOnly={readOnly}
                 disabled={disabled}
             />
+            {error && <span className={`w-sm text-red-600 text-xs mt-1`}>{error}</span>}
         </div>
     )
 }

@@ -40,7 +40,7 @@ const MessageApi = () => {
 
     // useEffect ใหม่ที่โหลดครั้งเดียว
     useEffect(() => {
-        if (isStaticDataLoaded) return // ⭐ ไม่โหลดซ้ำ
+        if (isStaticDataLoaded) return // 
 
         const fetchStaticData = async () => {
             const [groupRes, tagRes] = await Promise.all([
@@ -195,6 +195,11 @@ const MessageApi = () => {
             setTextSearch('')
         } catch (error) {
             console.log(error)
+            setForm(intitailState)
+            setGroupId([])
+            setMemberSelected([])
+            setTagsSelected([])
+            setTextSearch('')
         } finally {
             setLoading(false)
         }

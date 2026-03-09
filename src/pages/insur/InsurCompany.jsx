@@ -11,6 +11,7 @@ import NameTable from '../../component/form/NameTable'
 import Pagination from '../../component/paginationComponent/Pagination'
 import SelectPerPage from '../../component/form/SelectPerPage'
 import SearchBox from '../../component/quotation_about/SearchBox'
+import { companySchema } from '../../utils/schema'
 
 const initialState = {
     namecompany: '',
@@ -31,6 +32,7 @@ const InsurCompany = () => {
     const [pagination, setPagination] = useState({})
     const [textSearch, setTextSearch] = useState('')
     const [debouncedSearch, setDebouncedSearch] = useState('')
+    const [errors, setErrors] = useState({})
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
 
     useEffect(() => {
@@ -90,6 +92,19 @@ const InsurCompany = () => {
             toast.error('กรุณากรอกชื่อและเลือกรูป')
             return
         }
+
+        const result = companySchema.safeParse(form)
+
+        if (!result.success) {
+            const fieldErrors = {}
+            result.error.issues.forEach(err => {  //.issues แทน .errors
+                fieldErrors[err.path[0]] = err.message
+            })
+            setErrors(fieldErrors)
+            return
+        }
+
+        setErrors({})
 
         try {
             const res = await createCompany(token, form)
@@ -182,6 +197,7 @@ const InsurCompany = () => {
                     setForm={setForm}
                     onChange={handleOnChange}
                     onSubmit={hdlSubmit}
+                    error={errors}
                 />
             </div>
             <div className='bg-white rounded-2xl p-5'>

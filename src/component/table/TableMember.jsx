@@ -112,14 +112,27 @@ const TableMember = ({ data, onChange, selected, onSort, sortConfig, onCheckAll,
                                 <td className="text-center">{i.group_name === null ? '-' : i.group_name}</td>
                                 <td className="text-center">{i.phone === null ? '-' : i.phone}</td>
                                 <td className="text-center">
-                                    {i.tags.slice(0, 1).map((t, idx) => (
-                                        <button
-                                            key={idx}
-                                            type="button"
-                                            className="w-full btn btn-sm bg-main rounded-full font-prompt text-text-primary "
-                                        >{t}</button>
-                                    ))
-                                    }
+                                    <div className="">
+                                        <div className="flex flex-wrap gap-1">
+                                            {i.tags.slice(0, 1).map((t) => (
+                                                <button
+                                                    key={t.tag_member_id}
+                                                    type="button"
+                                                    className="relative btn btn-sm bg-main rounded-full font-prompt text-text-primary"
+                                                >
+                                                    {t.tag_name}  {/* ✅ เข้าถึง property */}
+
+                                                    {i.tags.length > 1 && (
+                                                        <div className="absolute right-0 -top-2 font-normal w-4 h-4 bg-white/70 text-text-primary rounded-full border border-border/25 flex items-center justify-center">
+                                                            <span className="text-[10px] text-gray-400">+{i.tags.length - 1}</span>
+                                                        </div>
+                                                    )}
+
+                                                </button>
+                                            ))}
+
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         ))

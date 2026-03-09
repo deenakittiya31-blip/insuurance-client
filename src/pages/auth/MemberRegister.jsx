@@ -5,6 +5,7 @@ import toast from "react-hot-toast"
 import { useState } from "react"
 import { registerMember } from "../../service/member"
 import { useNavigate } from "react-router-dom"
+import { registerSchema } from "../../utils/schema"
 
 // Modal แสดงนโยบาย
 const ConsentModal = ({ onAccept, onDecline }) => (
@@ -73,7 +74,8 @@ const MemberRegister = () => {
     const [profile, setProfile] = useState({})
     const [accessLine, setAccessLine] = useState(null)
     const navigate = useNavigate()
-    const [showConsent, setShowConsent] = useState(true)   // เปิด modal ทันที
+    const [showConsent, setShowConsent] = useState(true)
+    const [errors, setErrors] = useState({})
     const [consentAccepted, setConsentAccepted] = useState(false)
     const [form, setForm] = useState({
         first_name: '',
@@ -126,9 +128,21 @@ const MemberRegister = () => {
             return toast.error('กรุณายินยอมนโยบายความเป็นส่วนตัวก่อน')
         }
 
-        if (!form.first_name || !form.last_name || !form.phone) {
-            return toast.error('กรุณาใส่ข้อมูลให้ครบ')
+        // if (!form.first_name || !form.last_name || !form.phone) {
+        //     return toast.error('กรุณาใส่ข้อมูลให้ครบ')
+        // }
+
+        const result = registerSchema.safeParse(form)
+        if (!result.success) {
+            const fieldErrors = {}
+            result.error.issues.forEach(err => {  //.issues แทน .errors
+                fieldErrors[err.path[0]] = err.message
+            })
+            setErrors(fieldErrors)
+            return
         }
+
+        setErrors({})
 
         try {
             await registerMember({
@@ -179,6 +193,7 @@ const MemberRegister = () => {
                         placeholder='กรอกชื่อจริง...'
                         onChange={hdlOnChange}
                         width='w-70 md:w-sm'
+                        error={errors.first_name}
                     />
                     <Input
                         title='นามสกุล'
@@ -187,6 +202,7 @@ const MemberRegister = () => {
                         placeholder='กรอกนามสกุล...'
                         onChange={hdlOnChange}
                         width='w-70 md:w-sm'
+                        error={errors.last_name}
                     />
                     <Input
                         title='เบอร์โทรศัพท์'
@@ -195,8 +211,9 @@ const MemberRegister = () => {
                         placeholder='กรอกเบอร์โทรศัพท์...'
                         onChange={hdlOnChange}
                         width='w-70 md:w-sm'
+                        error={errors.phone}
                     />
-                    <button className="btn rounded-full bg-main hover:bg-second text-white text-base">ลงทะเบียน</button>
+                    <button type="submit" className="btn rounded-full bg-main hover:bg-second text-white text-base">ลงทะเบียน</button>
                 </form>
             </div>
         </div>

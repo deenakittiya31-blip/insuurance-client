@@ -21,7 +21,7 @@ import PinListCompare from '../pages/compare/PinListCompare'
 import QuotationList from '../pages/compare/QuotationList'
 import QuotationDetail from '../pages/compare/QuotationDetail'
 import Quotaion from '../pages/compare/Quotaion'
-import Setting from '../pages/Setting'
+import Setting from '../pages/setting/Setting'
 import Compare from '../pages/insur/Compare'
 import DashBoard from '../pages/dashboard/DashBoard'
 import AddPackage from '../pages/insur/AddPackage'
@@ -106,7 +106,7 @@ const Approutes = () => {
                     <Route path='quotation/:q_id' element={<Quotaion />} />
                     <Route path='compare-detail/:q_id' element={<QuotationDetail />} />
                     <Route path='compare/:q_id' element={<Compare />} />
-                    <Route path='setting' element={<Setting />} />
+
                     <Route path='custommodel' element={<CustomModel />} />
                     <Route path='custommodel-detail/:id' element={<CustomModelDetail />} />
                     <Route path='package' element={<InsurPackage />} />
@@ -141,6 +141,7 @@ const Approutes = () => {
                         <Route path='policy' element={<PolicyManage />} />
                         <Route path='order' element={<Order />} />
                         <Route path='bankandcard' element={<BankAndCard />} />
+                        <Route path='setting' element={<Setting />} />
                     </Route>
                 </Route>
             </Routes>

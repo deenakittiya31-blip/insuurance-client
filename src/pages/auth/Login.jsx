@@ -4,12 +4,14 @@ import useInsureAuth from '../../store/auth-store'
 import toast from 'react-hot-toast'
 import TextInputAuth from '../../component/form/TextInputAuth'
 import ReCAPTCHA from 'react-google-recaptcha'
+import { loginSchema } from '../../utils/schema'
 
 const Login = () => {
     const { actionLogin, actionCurrentUser, actionLogout } = useInsureAuth();
     const navigate = useNavigate()
     const keyReCAPTCHA = import.meta.env.VITE_RECAPTCHA_SITE_KEY
     const [capVal, setCapVal] = useState(null)
+    const [errors, setErrors] = useState({})
     const [form, setForm] = useState({
         email: '',
         password: '',
@@ -29,6 +31,18 @@ const Login = () => {
             toast.error('กรุณายืนยัน reCAPTCHA')
             return
         }
+
+        const result = loginSchema.safeParse(form)
+        if (!result.success) {
+            const fieldErrors = {}
+            result.error.issues.forEach(err => {  //.issues แทน .errors
+                fieldErrors[err.path[0]] = err.message
+            })
+            setErrors(fieldErrors)
+            return
+        }
+
+        setErrors({})  //clear errors ถ้าผ่าน
         try {
             await actionLogin({
                 ...form,
@@ -68,6 +82,7 @@ const Login = () => {
                         placeholder='Enter your email'
                         onChange={hdlOnChange}
                         width='w-70 md:w-sm'
+                        error={errors.email}
                     />
                     <TextInputAuth
                         name='password'
@@ -75,6 +90,7 @@ const Login = () => {
                         placeholder='Enter password'
                         onChange={hdlOnChange}
                         width='w-70 md:w-sm'
+                        error={errors.password}
                     />
                     <ReCAPTCHA
                         sitekey={keyReCAPTCHA}

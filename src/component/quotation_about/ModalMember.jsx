@@ -3,7 +3,7 @@ import TableMember from "../table/TableMember";
 import SearchBox from "./SearchBox";
 import { LuSend } from "react-icons/lu";
 import { listMember } from "../../service/member";
-import { listGroup } from "../../service/member/group_member";
+import { listGroup, listSelectGroup } from "../../service/member/group_member";
 import { getDetailCompare } from "../../service/compare";
 import StateDetailSend from "./StateDetailSend";
 import SelectPerPage from "../form/SelectPerPage";
@@ -42,7 +42,7 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
 
     const getGroup = async () => {
         try {
-            const res = await listGroup()
+            const res = await listSelectGroup()
             setGroupData(res.data.data)
         } catch (err) {
             console.log(err)
@@ -102,14 +102,17 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
     }
 
     const handleCheckFilter = (e) => {
-        const idGroup = Number(e.target.value)
+        const idGroup = e.target.value
 
+        console.log(idGroup)
         setGroupId((prev) =>
             prev.includes(idGroup)
                 ? prev.filter(id => id !== idGroup)
                 : [...prev, idGroup]
         )
     }
+
+    console.log(GroupData)
 
     const handleCheckAll = (e) => {
         if (e.target.checked) {
@@ -142,7 +145,7 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
         setMemberSelected([])
         setGroupId([])
         setTextSearch('')
-        onClose(setMemberSelected);
+        onClose();
     }
 
     if (!isOpen) return null;
@@ -194,10 +197,10 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
                             GroupData.map((i) => (
                                 <label key={i.id} className='flex items-center gap-3 text-sm font-medium'>
                                     <input
-                                        value={i.id}
+                                        value={i.group_code}
                                         type="checkbox"
                                         onChange={handleCheckFilter}
-                                        checked={groupId.includes(i.id)}
+                                        checked={groupId.includes(i.group_code)}
                                         className="checkbox checkbox-success"
                                     />
                                     {i.group_name}

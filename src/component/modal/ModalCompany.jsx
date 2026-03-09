@@ -2,7 +2,7 @@ import React from 'react'
 import TextInput from '../form/TextInput'
 import UploadFile from '../form/UploadFile'
 
-const ModalCompany = ({ form, setForm, onChange, onSubmit }) => {
+const ModalCompany = ({ form, setForm, onChange, onSubmit, error }) => {
 
     return (
         <div className='font-prompt'>
@@ -22,6 +22,7 @@ const ModalCompany = ({ form, setForm, onChange, onSubmit }) => {
                         placeholder='ชื่อบริษัท'
                         onChange={onChange}
                         value={form.namecompany}
+                        error={error.namecompany}
                     />
                     <TextInput
                         width='w-sm'
@@ -40,6 +41,7 @@ const ModalCompany = ({ form, setForm, onChange, onSubmit }) => {
                         placeholder='เบอร์โทรศัพท์'
                         onChange={onChange}
                         value={form.phone}
+                        error={error.phone}
                     />
                     <div className='modal-action'>
                         <button type='button' className="btn btn-soft btn-error" onClick={() => document.getElementById('modalcompany').close()}>ยกเลิก</button>

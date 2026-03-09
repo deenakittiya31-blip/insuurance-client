@@ -14,7 +14,7 @@ const TextInputAuth = ({ width, name, type, placeholder, onChange, value, error 
                 value={value}
                 className={`${width} rounded-md bg-white pl-3 py-2 focus:outline-none`}
             />
-            {error && <span className={`w-sm text-red-600 text-xs mt-1`}>{error}</span>}
+            {error && <span className={`w-full text-red-600 text-xs mt-1`}>{error}</span>}
         </div>
     )
 }
