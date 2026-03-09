@@ -507,7 +507,7 @@ const BankAndCard = () => {
                 onChangeBank={editActions.handleChangeBank}
                 onAddMonth={editActions.addMonth}
                 onChangeMonth={editActions.handleChangeMonth}
-                onClose={handleCloseFormGroup}
+                onClose={closeFormGroup}
             />
         </div>
     )
