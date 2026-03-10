@@ -464,7 +464,7 @@ const SidebarNew = () => {
                                 )
                             }
                             <NavLink
-                                to='setting'
+                                to='custommodel'
                                 end
                                 className={({ isActive }) =>
                                     `flex gap-5 items-center text-sm transition duration-300 ease-in-out group

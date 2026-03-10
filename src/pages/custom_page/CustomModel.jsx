@@ -6,7 +6,6 @@ import Pagination from '../../component/paginationComponent/Pagination'
 import Swal from 'sweetalert2'
 import toast from 'react-hot-toast'
 import ModalModel from '../../component/modal/ModalModel'
-import { quotation } from '../../utils/dataQuotation'
 import SelectPerPage from '../../component/form/SelectPerPage'
 
 const CustomModel = () => {
@@ -33,7 +32,7 @@ const CustomModel = () => {
 
     const handlePerPageChange = (e) => {
         setPerPage(Number(e.target.value))
-        setPage(1)  //รีเซ็ตกลับไปหน้า 1
+        setPage(1)
     }
 
     const handleSubmit = async (e) => {
