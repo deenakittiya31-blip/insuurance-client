@@ -408,27 +408,11 @@ const QuotationDetail = () => {
                     <div className="flex gap-5 h-192.5 overflow-y-clip">
                         <div className="flex-3 overflow-auto bg-zinc-800 p-4">
                             {pdfPreviewByTab[activeTab] ? (
-                                typeof pdfPreviewByTab[activeTab] === 'string' && pdfPreviewByTab[activeTab].startsWith('blob:') ? (
-                                    // ไฟล์ที่เพิ่งอัปโหลด → iframe ได้เลย
-                                    <iframe
-                                        src={`${pdfPreviewByTab[activeTab]}#zoom=85`}
-                                        className="w-full h-full bg-white rounded"
-                                        title="PDF Preview"
-                                    />
-                                ) : (
-                                    // URL จาก Cloudinary → เปิดแท็บใหม่
-                                    <div className="flex justify-center items-center h-full gap-3 flex-col text-zinc-400">
-                                        <p>มีไฟล์ PDF แนบอยู่</p>
-                                        <a
-                                            href={pdfPreviewByTab[activeTab]}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="btn btn-sm bg-white text-zinc-800"
-                                        >
-                                            เปิดดู PDF
-                                        </a>
-                                    </div>
-                                )
+                                <iframe
+                                    src={`https://docs.google.com/viewer?url=${encodeURIComponent(pdfPreviewByTab[activeTab])}&embedded=true`}
+                                    className="w-full h-full bg-white rounded"
+                                    title="PDF Preview"
+                                />
                             ) : (
                                 <div className="flex justify-center items-center h-full text-zinc-400">
                                     กรุณาเลือกไฟล์ PDF เพื่อดูตัวอย่าง
