@@ -1,23 +1,37 @@
 import api from '../config/axios'
 
-export const listQuotationCompare = (pageNumber, perPage, sortKey, sortDirection) => {
+export const listQuotationCompare = ({
+    page,
+    limit,
+    sortKey,
+    sortDirection,
+    search
+}) => {
     return api.get('/api/list-compare/page', {
         params: {
-            page: pageNumber,
-            per_page: perPage,
+            page,
+            limit,
             sortKey,
-            sortDirection
+            sortDirection,
+            search: search || undefined
         }
     })
 }
 
-export const listPinCompare = (pageNumber, perPage, sortKey, sortDirection) => {
+export const listPinCompare = ({
+    page,
+    limit,
+    sortKey,
+    sortDirection,
+    search
+}) => {
     return api.get('/api/list-pin/page', {
         params: {
-            page: pageNumber,
-            per_page: perPage,
+            page,
+            limit,
             sortKey,
-            sortDirection
+            sortDirection,
+            search: search || undefined
         }
     })
 }

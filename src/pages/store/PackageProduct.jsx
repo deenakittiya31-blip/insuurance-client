@@ -59,11 +59,6 @@ const PackageProduct = () => {
         getUsageTypeSelectMember();
     }, [])
 
-    // useEffect(() => {
-    //     if (!member?.group_code) return  // รอจนกว่าจะมี group_code
-    //     fetchPremiumSearch()
-    // }, [member?.group_code])
-
     const handleOnChange = async (e) => {
         const { name, value } = e.target
 

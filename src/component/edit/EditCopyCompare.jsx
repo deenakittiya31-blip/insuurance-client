@@ -112,7 +112,7 @@ const EditCopyCompare = ({ isOpen, form, carmodel, onSubmit, onChange, onClose }
                         />
                     </div>
                 </div>
-                <div className='modal-action'>
+                <div className='modal-action font-prompt'>
                     <button type='button' className="btn btn-soft btn-error" onClick={onClose}>ยกเลิก</button>
                     <button type="submit" className="btn btn-soft btn-primary">คัดลอก</button>
                 </div>

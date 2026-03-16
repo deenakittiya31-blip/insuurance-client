@@ -104,15 +104,12 @@ const ModalMember = ({ isOpen, onClose, onSubmit, q_id }) => {
     const handleCheckFilter = (e) => {
         const idGroup = e.target.value
 
-        console.log(idGroup)
         setGroupId((prev) =>
             prev.includes(idGroup)
                 ? prev.filter(id => id !== idGroup)
                 : [...prev, idGroup]
         )
     }
-
-    console.log(GroupData)
 
     const handleCheckAll = (e) => {
         if (e.target.checked) {

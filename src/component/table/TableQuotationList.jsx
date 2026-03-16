@@ -22,7 +22,7 @@ const TableQuotationList = ({ data, page, limit, onDelete, isOpen, pdf, jpg, onS
                             <div className='flex items-center  gap-3'>
                                 ใบเสนอราคา No.<Sort
                                     onSort={onSort}
-                                    keyName='id'
+                                    keyName='q_id'
                                     currentSort={sortConfig}
                                 />
                             </div>

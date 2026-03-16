@@ -57,7 +57,7 @@ const ModalAddTagMember = () => {
                 sortKey: sortConfig.key,
                 sortDirection: sortConfig.direction,
                 search: textSearch,
-                group_id: groupId
+                group_id: groupId.length > 0 ? groupId : undefined
             })
             setMember(res.data.data)
             setPagination(res.data.pagination)
@@ -102,7 +102,7 @@ const ModalAddTagMember = () => {
     }
 
     const handleCheckFilter = (e) => {
-        const idGroup = Number(e.target.value)
+        const idGroup = e.target.value
 
         setGroupId((prev) =>
             prev.includes(idGroup)
@@ -193,10 +193,10 @@ const ModalAddTagMember = () => {
                             groupData.map((i) => (
                                 <label key={i.id} className='flex items-center gap-3 text-sm'>
                                     <input
-                                        value={i.id}
+                                        value={i.group_code}
                                         type="checkbox"
                                         onChange={handleCheckFilter}
-                                        checked={groupId.includes(i.id)}
+                                        checked={groupId.includes(i.group_code)}
                                     />
                                     {i.group_name}
                                 </label>

@@ -18,6 +18,7 @@ import { BiSolidFilePdf, BiSolidFileJpg } from "react-icons/bi";
 import Badge from "../../component/quotation_about/Badge"
 import { createJPEG } from "../../utils/jpg"
 import { createComparePDF } from "../../utils/pdf"
+import { uploadPDF } from "../../service/Image"
 
 const initialForm = {
     company_id: '',
@@ -140,7 +141,7 @@ const Quotaion = () => {
 
             const base64 = await new Promise((resolve) => {
                 const reader = new FileReader()
-                reader.onloadend = () => resolve(reader.result) // มี prefix
+                reader.onloadend = () => resolve(reader.result)
                 reader.readAsDataURL(file)
             })
 
@@ -209,6 +210,7 @@ const Quotaion = () => {
 
         if (!form.company_id || !form.image) {
             toast.error('ข้อมูลไม่ครบ')
+            return
         }
 
         setLoadingByTab(prev => ({
@@ -217,10 +219,16 @@ const Quotaion = () => {
         }))
 
         try {
+            const uploadRes = await uploadPDF(form.image)
+            const pdfUrl = uploadRes.data
+
             const payload = {
-                ...form,
+                company_id: form.company_id,
+                image: form.image,
                 compare_id: q_id,
-                doc_id: activeTab
+                doc_id: activeTab,
+                pdf_url: pdfUrl.url,
+                pdf_public_id: pdfUrl.public_id,
             };
             const res = await createAkson(token, payload)
 
@@ -250,9 +258,6 @@ const Quotaion = () => {
                 err.response?.data?.msg ||
                 'เกิดข้อผิดพลาด'
             )
-
-            //แก้ error
-
         } finally {
             setLoadingByTab(prev => ({
                 ...prev,

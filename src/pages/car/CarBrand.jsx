@@ -190,7 +190,7 @@ const CarBrand = () => {
                     />
                     <div className='flex items-end gap-5'>
                         <SearchBox
-                            width='md:w-sm'
+                            width='w-auto'
                             placeholder='ค้นหา...'
                             onChange={(e) => setTextSearch(e.target.value)}
                         />

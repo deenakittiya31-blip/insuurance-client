@@ -169,8 +169,7 @@ const Promotion = () => {
         <div className='flex flex-col gap-5 h-auto p-5'>
             <div className='flex items-center justify-between'>
                 <Title
-                    title='บริษัทประกัน'
-                    subtitle='ข้อมูลของบริษัทประกันที่เป็นพาร์ทเนอร์'
+                    title='โปรโมชั่น'
                 />
                 <ModalPromotion
                     form={form}
@@ -183,7 +182,7 @@ const Promotion = () => {
                 <div className='flex justify-between items-baseline-last'>
                     <NameTable
                         icon='🏢'
-                        name='ตารางบริษัท'
+                        name='ตารางโปรโมชั่น'
                     />
                     <div className='flex items-end gap-5'>
                         <SearchBox

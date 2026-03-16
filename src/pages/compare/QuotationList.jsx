@@ -15,19 +15,9 @@ import { BsPinAngle } from "react-icons/bs"
 import { createComparePDF } from "../../utils/pdf"
 import { createJPEG } from "../../utils/jpg"
 import EditCopyCompare from "../../component/edit/EditCopyCompare"
-import { listByCarModel } from "../../service/car/CarModel"
 import useInsureAuth from "../../store/auth-store"
-import Compare from "../insur/Compare"
+import { useCompareForm } from "../../hooks/useCompareForm"
 
-const initialState = {
-    to_name: '',
-    details: '',
-    car_brand_id: '',
-    car_model_id: '',
-    car_year_id: '',
-    car_usage_id: '',
-    sub_car_model: ''
-}
 
 const QuotationList = () => {
     const user = useInsureAuth((s) => s.user)
@@ -35,48 +25,52 @@ const QuotationList = () => {
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
     const [carModel, setCarModel] = useState([])
     const [quotationId, setQuotationId] = useState(null)
-    const [compareId, setCompareId] = useState(null)
-    const [text, setText] = useState('')
     const [open, setOpen] = useState(false)
-    const [openCopy, setOpenCopy] = useState(false)
-    const [form, setForm] = useState(initialState)
     const [page, setPage] = useState(1)
-    const [total, setTotal] = useState(0)
     const [perPage, setPerPage] = useState(10)
-    const lastPage = Math.ceil(total / perPage)
+    const [pagination, setPagination] = useState({})
+    const [textSearch, setTextSearch] = useState('')
+    const [debouncedSearch, setDebouncedSearch] = useState('')
 
     useEffect(() => {
-        getQuotationList(page, perPage, sortConfig.key, sortConfig.direction)
-    }, [page, perPage, sortConfig])
-
-    useEffect(() => {
-        const deley = setTimeout(() => {
-            handleSearchQuotation()
+        const delay = setTimeout(() => {
+            setDebouncedSearch(textSearch)
         }, 500)
-        return () => clearTimeout(deley)
-    }, [text])
+        return () => clearTimeout(delay)
+    }, [textSearch])
 
-    const handleSearchQuotation = async () => {
+    useEffect(() => {
+        getQuotationList()
+    }, [page, perPage, sortConfig, debouncedSearch])
+
+    const getQuotationList = async () => {
         try {
-            const res = await searchText({ search: text })
+            const res = await listQuotationCompare({
+                page,
+                limit: perPage,
+                sortKey: sortConfig.key,
+                sortDirection: sortConfig.direction,
+                search: debouncedSearch
+            })
             setList(res.data.data)
-            if (!text) {
-                getQuotationList(page, perPage, sortConfig.key, sortConfig.direction)
-            }
+            setPagination(res.data.pagination)
         } catch (err) {
             console.log(err)
         }
     }
 
-    const getQuotationList = async (page, perPage, sortKey = 'id', sortDirection = 'DESC') => {
-        try {
-            const res = await listQuotationCompare(page, perPage, sortKey, sortDirection)
-            setList(res.data.data)
-            setTotal(res.data.total)
-        } catch (err) {
-            console.log(err)
-        }
-    }
+    const {
+        openCopy,
+        form,
+        openModalCopy,
+        closeFormCopy,
+        handleOnChange,
+        handleCopyCompare
+    } = useCompareForm({
+        user,
+        setCarModel,
+        getQuotationList
+    })
 
     const handleSort = (keyName) => {
         let direction = 'ASC';
@@ -119,7 +113,7 @@ const QuotationList = () => {
 
         try {
             const res = await deleteQuotationCompare(id)
-            getQuotationList(page, perPage, sortConfig.key, sortConfig.direction)
+            getQuotationList()
             toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
@@ -134,7 +128,7 @@ const QuotationList = () => {
 
         try {
             const res = await sendDocumentToMember(memberSelected, quotationId)
-            getQuotationList(page, perPage, sortConfig.key, sortConfig.direction)
+            getQuotationList()
             toast.success(res.data.msg)
         } catch (error) {
             console.log(error)
@@ -146,103 +140,10 @@ const QuotationList = () => {
         try {
             const res = await pinQuotation(id)
             toast.success(res.data.msg)
-            getQuotationList(page, perPage, sortConfig.key, sortConfig.direction)
+            getQuotationList()
         } catch (err) {
             console.log(err)
             toast.error('ปักหมุดไม่สำเร็จ')
-        }
-    }
-
-    //Copy Section
-    const openModalCopy = async (id) => {
-        setOpenCopy(true)
-        setCompareId(id)
-        try {
-            const res = await getDetailCompare(id)
-            const {
-                to_name,
-                details,
-                car_brand_id,
-                car_model_id,
-                car_year_id,
-                car_usage_id,
-                sub_car_model
-            } = res.data.data
-
-            setForm({
-                to_name,
-                details,
-                car_brand_id,
-                car_model_id,
-                car_year_id,
-                car_usage_id,
-                sub_car_model
-            })
-
-            if (car_brand_id) {
-                fetchCarModels(car_brand_id)
-            }
-
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
-    const closeFormCopy = () => {
-        setOpenCopy(false)
-        setForm(initialState)
-        setCompareId(null)
-    }
-
-    const fetchCarModels = async (brandId) => {
-        try {
-            const res = await listByCarModel(brandId)
-            setCarModel(res.data.data)
-        } catch (err) {
-            console.log(err)
-            setCarModel([])
-        }
-    }
-
-    const handleOnChange = async (e) => {
-        const { name, value } = e.target
-
-        setForm(prev => ({
-            ...prev,
-            [name]: value,
-        }))
-
-        if (name === 'car_brand_id') {
-            await fetchCarModels(value)
-        }
-    }
-
-    const handleCopyCompare = async (e) => {
-        e.preventDefault()
-        console.log({
-            ...form,
-            offer_id: user.user_id,
-            import_by: 'key-in',
-            qIdOld: compareId
-        })
-
-        try {
-            const res = await copyCompare({
-                ...form,
-                offer_id: user.user_id,
-                import_by: 'key-in',
-                qIdOld: compareId
-            })
-            closeFormCopy()
-            toast(`${res.data.msg} รหัสใบเสนอราคาที่ ${res.data.qIdNew}`,
-                {
-                    duration: 3000,
-                }
-            );
-            getQuotationList(page, perPage, sortConfig.key, sortConfig.direction)
-        } catch (err) {
-            console.log(err)
-            toast.error(err.response.data.message)
         }
     }
 
@@ -256,7 +157,7 @@ const QuotationList = () => {
             </div>
             <div className='flex-1 bg-white rounded-2xl p-5'>
                 <div className="flex justify-between items-baseline-last mb-5">
-                    <Link to='/admin/pin-compare'>
+                    <Link to='/app/pin-compare'>
                         <button className="flex justify-center items-center gap-1 btn btn-outline btn-secondary font-prompt">
                             <BsPinAngle className='size-4' />
                             เบี้ยประกันที่ใช้บ่อย
@@ -264,9 +165,9 @@ const QuotationList = () => {
                     </Link>
                     <div className="flex gap-3 items-baseline-last">
                         <SearchBox
-                            width='w-sm'
+                            width='w-auto'
                             placeholder='ค้นหาเลขที่ใบเสนอราคา, ชื่อ, ยี่ห้อรถยนต์...'
-                            onChange={(e) => setText(e.target.value)}
+                            onChange={(e) => setTextSearch(e.target.value)}
                         />
                         <SelectPerPage
                             width='w-20'
@@ -289,18 +190,22 @@ const QuotationList = () => {
                     onPin={handlePinQuotation}
                     onCopy={openModalCopy}
                 />
-                <div className='flex justify-end mt-5'>
-                    {
-                        total > perPage && (
-                            <Pagination
-                                disablePrev={page === 1}
-                                disableNext={page === lastPage}
-                                onPrevious={() => setPage(page - 1)}
-                                onNext={() => setPage(page + 1)}
-                            />
-                        )
-                    }
+            </div>
+            <div className='flex justify-between'>
+                <div className="font-prompt text-sm text-gray-600">
+                    แสดง {list.length} จาก {pagination.totalItems || 0} รายการ
+                    (หน้า {pagination.page || 1} / {pagination.totalPages || 1})
                 </div>
+                {
+                    pagination.totalItems > perPage && (
+                        <Pagination
+                            disablePrev={!pagination.hasPrevPage}
+                            disableNext={!pagination.hasNextPage}
+                            onPrevious={() => setPage(prev => prev - 1)}
+                            onNext={() => setPage(prev => prev + 1)}
+                        />
+                    )
+                }
             </div>
             <ModalMember
                 onSubmit={sendMessage}
@@ -310,12 +215,10 @@ const QuotationList = () => {
             />
             <EditCopyCompare
                 isOpen={openCopy}
-                form={form}
-                setForm={setForm}
-                onSubmit={handleCopyCompare}
-                onChange={handleOnChange}
-                // onChangeSelect={hdlSelectChange}
                 onClose={closeFormCopy}
+                form={form}
+                onChange={handleOnChange}
+                onSubmit={handleCopyCompare}
                 carmodel={carModel}
             />
         </div>

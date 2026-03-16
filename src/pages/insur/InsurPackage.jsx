@@ -112,6 +112,7 @@ const InsurPackage = () => {
     }
 
     const handleCopyPackage = async (idPackage) => {
+        console.log(idPackage)
         try {
             const res = await copyPackage(idPackage)
             const idReturnFromPackage = res.data.id

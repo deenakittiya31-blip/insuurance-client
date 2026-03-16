@@ -15,32 +15,57 @@ import { createComparePDF } from "../../utils/pdf";
 import { createJPEG } from "../../utils/jpg";
 import { sendDocumentToMember } from "../../service/member";
 import ModalMember from "../../component/quotation_about/ModalMember";
+import { useCompareForm } from "../../hooks/useCompareForm";
+import EditCopyCompare from "../../component/edit/EditCopyCompare";
+
 
 const PinListCompare = () => {
-    const token = useInsureAuth((s) => s.token)
+    const user = useInsureAuth((s) => s.user)
     const [pinList, setPinList] = useState([])
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'DESC' });
+    const [carModel, setCarModel] = useState([])
     const [quotationId, setQuotationId] = useState(null)
-    const [text, setText] = useState('')
     const [open, setOpen] = useState(false)
     const [page, setPage] = useState(1)
-    const [total, setTotal] = useState(0)
     const [perPage, setPerPage] = useState(10)
-    const lastPage = Math.ceil(total / perPage)
+    const [pagination, setPagination] = useState({})
+    const [textSearch, setTextSearch] = useState('')
+    const [debouncedSearch, setDebouncedSearch] = useState('')
+
+
 
     useEffect(() => {
-        getPinList(page, perPage, sortConfig.key, sortConfig.direction)
-    }, [page, perPage, sortConfig])
+        getPinList();
+    }, [page, perPage, sortConfig, debouncedSearch])
 
-    const getPinList = async (page, perPage, sortKey = 'id', sortDirection = 'DESC') => {
+    const getPinList = async () => {
         try {
-            const res = await listPinCompare(page, perPage, sortKey, sortDirection)
+            const res = await listPinCompare({
+                page,
+                limit: perPage,
+                sortKey: sortConfig.key,
+                sortDirection: sortConfig.direction,
+                search: debouncedSearch
+            })
             setPinList(res.data.data)
-            setTotal(res.data.total)
+            setPagination(res.data.pagination)
         } catch (err) {
             console.log(err)
         }
     }
+
+    const {
+        openCopy,
+        form,
+        openModalCopy,
+        closeFormCopy,
+        handleOnChange,
+        handleCopyCompare
+    } = useCompareForm({
+        user,
+        setCarModel,
+        getQuotationList: getPinList  // ส่ง getPinList แทน
+    })
 
     const handlePerPageChange = (e) => {
         setPerPage(Number(e.target.value))
@@ -61,7 +86,7 @@ const PinListCompare = () => {
         try {
             const res = await pinQuotation(id)
             toast.success(res.data.msg)
-            getPinList(page, perPage, sortConfig.key, sortConfig.direction)
+            getPinList()
         } catch (err) {
             console.log(err)
             toast.error('ปักหมุดไม่สำเร็จ')
@@ -84,7 +109,7 @@ const PinListCompare = () => {
 
         try {
             const res = await deleteQuotationCompare(id)
-            getPinList(page, perPage, sortConfig.key, sortConfig.direction)
+            getPinList()
             toast.success(res.data.msg);
         } catch (err) {
             console.log(err)
@@ -109,7 +134,7 @@ const PinListCompare = () => {
 
         try {
             const res = await sendDocumentToMember(memberSelected, quotationId)
-            getPinList(page, perPage, sortConfig.key, sortConfig.direction)
+            getPinList()
             toast.success(res.data.msg)
         } catch (error) {
             console.log(error)
@@ -126,7 +151,7 @@ const PinListCompare = () => {
             </div>
             <div className='flex-1 bg-white rounded-2xl p-5'>
                 <div className="flex justify-between items-baseline-last mb-5">
-                    <Link to='/admin/quotationlist'>
+                    <Link to='/app/quotationlist'>
                         <button className="flex justify-center items-center gap-1 btn btn-outline btn-accent font-prompt">
                             <IoDocumentAttachOutline className='size-4' />
                             รายการใบเสนอราคา
@@ -134,9 +159,9 @@ const PinListCompare = () => {
                     </Link>
                     <div className="flex gap-3 items-baseline-last">
                         <SearchBox
-                            width='w-sm'
+                            width='w-auto'
                             placeholder='ค้นหาเลขที่ใบเสนอราคา, ชื่อ, ยี่ห้อรถยนต์...'
-                            onChange={(e) => setText(e.target.value)}
+                            onChange={(e) => setTextSearch(e.target.value)}
                         />
                         <SelectPerPage
                             width='w-20'
@@ -157,25 +182,38 @@ const PinListCompare = () => {
                     onSort={handleSort}
                     sortConfig={sortConfig}
                     onPin={handlePinQuotation}
+                    onCopy={openModalCopy}
                 />
-                <div className='flex justify-end mt-5'>
-                    {
-                        total > perPage && (
-                            <Pagination
-                                disablePrev={page === 1}
-                                disableNext={page === lastPage}
-                                onPrevious={() => setPage(page - 1)}
-                                onNext={() => setPage(page + 1)}
-                            />
-                        )
-                    }
+            </div>
+            <div className='flex justify-between'>
+                <div className="font-prompt text-sm text-gray-600">
+                    แสดง {pinList.length} จาก {pagination.totalItems || 0} รายการ
+                    (หน้า {pagination.page || 1} / {pagination.totalPages || 1})
                 </div>
+                {
+                    pagination.totalItems > perPage && (
+                        <Pagination
+                            disablePrev={!pagination.hasPrevPage}
+                            disableNext={!pagination.hasNextPage}
+                            onPrevious={() => setPage(prev => prev - 1)}
+                            onNext={() => setPage(prev => prev + 1)}
+                        />
+                    )
+                }
             </div>
             <ModalMember
                 onSubmit={sendMessage}
                 isOpen={open}
                 onClose={closeForm}
                 q_id={quotationId}
+            />
+            <EditCopyCompare
+                isOpen={openCopy}
+                onClose={closeFormCopy}
+                form={form}
+                onChange={handleOnChange}
+                onSubmit={handleCopyCompare}
+                carmodel={carModel}
             />
         </div>
     )

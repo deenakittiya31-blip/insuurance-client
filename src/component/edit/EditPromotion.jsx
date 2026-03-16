@@ -6,7 +6,7 @@ const EditPromotion = ({ isOpen, form, setForm, onSubmit, onChange, onClose }) =
     if (!isOpen) return null;
     return (
         <div className='mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20'>
-            <form onSubmit={onSubmit} className="w-sm p-6 radius-box flex flex-col gap-5 bg-white rounded-lg">
+            <form onSubmit={onSubmit} className="w-sm p-6 radius-box flex flex-col gap-5 bg-white rounded-lg font-prompt">
                 <h3 className="font-bold text-lg font-prompt text-text-primary">เพิ่มโปรโมชั่น</h3>
                 <UploadFile
                     form={form}

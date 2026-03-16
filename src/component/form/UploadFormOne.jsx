@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import useActionStore from "../../store/action-store"
 
 const UploadFormOne = ({ onChange, isLoading, onSubmit, form }) => {
@@ -46,7 +46,7 @@ const UploadFormOne = ({ onChange, isLoading, onSubmit, form }) => {
                     onChange={onChange}
                     type='file'
                     className='file-input w-full'
-                    accept='image/*,application/pdf'
+                    accept='application/pdf'
                 ></input>
             </div>
             <button

@@ -7,7 +7,11 @@ const EditCarBrand = ({ isOpen, form, setForm, onSubmit, onChange, onClose }) =>
     return (
         <div className='mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20'>
             <form onSubmit={onSubmit} className="w-auto p-6 radius-box flex flex-col gap-5 bg-white rounded-lg">
-                <h3 className="font-bold text-lg font-prompt text-text-primary">เพิ่มยี่ห้อของรถ</h3>
+                <h3 className="font-bold text-lg font-prompt text-text-primary">แก้ไขยี่ห้อของรถ</h3>
+                <UploadFile
+                    form={form}
+                    setForm={setForm}
+                />
                 <TextInput
                     width='w-sm'
                     title='ชื่อยี่ห้อ'
@@ -17,11 +21,7 @@ const EditCarBrand = ({ isOpen, form, setForm, onSubmit, onChange, onClose }) =>
                     onChange={onChange}
                     value={form.name}
                 />
-                <UploadFile
-                    form={form}
-                    setForm={setForm}
-                />
-                <div className='modal-action'>
+                <div className='modal-action font-prompt'>
                     <button type='button' className="btn btn-soft btn-error" onClick={onClose}>ยกเลิก</button>
                     <button type="submit" className="btn btn-soft btn-primary" >บันทึก</button>
                 </div>

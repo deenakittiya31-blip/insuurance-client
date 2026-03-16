@@ -15,6 +15,7 @@ import State from "../../component/quotation_about/State"
 import Badge from "../../component/quotation_about/Badge"
 import { BiSolidFileJpg, BiSolidFilePdf } from "react-icons/bi"
 import Swal from "sweetalert2"
+import { uploadPDF } from "../../service/Image"
 
 const initialData = {
     quotation_number: '',
@@ -48,6 +49,11 @@ const Compare = () => {
     const [compulsory, setCompulsory] = useState([])
     //PDF (ไม่เกี่ยวกับ create quotation)
     const [pdfPreviewByTab, setPdfPreviewByTab] = useState({
+        1: null,
+        2: null,
+        3: null
+    })
+    const [pdfFileByTab, setPdfFileByTab] = useState({
         1: null,
         2: null,
         3: null
@@ -113,7 +119,7 @@ const Compare = () => {
                 cancelButtonColor: '#6c757d',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    navigate('/admin/quotationlist')
+                    navigate('/app/quotationlist')
                 }
             })
         }
@@ -146,7 +152,7 @@ const Compare = () => {
     }
 
     //onChange สำหรับ PDF
-    const hdlPdfChange = (e) => {
+    const hdlPdfChange = async (e) => {
         const file = e.target.files?.[0]
         if (!file) return
 
@@ -159,7 +165,20 @@ const Compare = () => {
             ...prev,
             [activeTab]: URL.createObjectURL(file)
         }))
+
+        const base64 = await new Promise((resolve) => {
+            const reader = new FileReader()
+            reader.onloadend = () => resolve(reader.result)
+            reader.readAsDataURL(file)
+        })
+
+        setPdfFileByTab(prev => ({
+            ...prev,
+            [activeTab]: base64
+        }))
     }
+
+    console.log(pdfFileByTab[activeTab]?.slice(0, 50))
 
     const getDetail = async () => {
         if (!q_id) return
@@ -197,6 +216,7 @@ const Compare = () => {
         const selectedId = compulsoryByTab[activeTab]
 
         if (selectedId === null) {
+            toast.error('กรุณาเลือกพ.ร.บ.รถยนต์')
             console.log('log compul test : 0')
             return
         }
@@ -209,6 +229,19 @@ const Compare = () => {
 
         const amount = Number(found?.total ?? 0)
 
+        let pdfUrl = null
+        if (pdfFileByTab[activeTab]) {
+            try {
+                const uploadRes = await uploadPDF(pdfFileByTab[activeTab])
+                pdfUrl = uploadRes.data
+            } catch (err) {
+                toast.error("อัปโหลด PDF ไม่สำเร็จ")
+                return
+            }
+        }
+
+        console.log(pdfUrl?.url)
+
         const payload = {
             ...formByTab[activeTab],
             compulsory_amount: amount
@@ -219,7 +252,9 @@ const Compare = () => {
                 compare_id: q_id,
                 company_id: currentQuotation.company_id,
                 doc_id: activeTab,
-                fields: payload   // ข้อมูลจาก form ที่ผู้ใช้กรอก
+                fields: payload,
+                pdf_url: pdfUrl?.url || null,
+                pdf_public_id: pdfUrl?.public_id || null
             })
 
             toast.success(res.data.msg)

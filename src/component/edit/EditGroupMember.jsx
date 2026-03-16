@@ -5,8 +5,12 @@ const EditGroupMember = ({ isOpen, form, setForm, onSubmit, onChange, onClose })
     if (!isOpen) return null;
     return (
         <div className='mx-auto fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 w-full h-full bg-black/20'>
-            <form onSubmit={onSubmit} className="w-auto p-6 radius-box flex flex-col gap-5 bg-white rounded-lg">
+            <form onSubmit={onSubmit} className="w-auto p-6 radius-box flex flex-col gap-5 bg-white rounded-lg text-text-primary font-prompt">
                 <h3 className="font-bold text-lg text-text-primary">แก้ไขข้อมูลกลุ่ม</h3>
+                <UploadFile
+                    form={form}
+                    setForm={setForm}
+                />
                 <TextInput
                     width='w-sm'
                     title='ชื่อกลุ่ม'
@@ -15,10 +19,6 @@ const EditGroupMember = ({ isOpen, form, setForm, onSubmit, onChange, onClose })
                     placeholder='ชื่อกลุ่ม...'
                     onChange={onChange}
                     value={form.group_name}
-                />
-                <UploadFile
-                    form={form}
-                    setForm={setForm}
                 />
                 <div className='modal-action'>
                     <button type='button' className="btn btn-soft btn-error" onClick={onClose}>ยกเลิก</button>

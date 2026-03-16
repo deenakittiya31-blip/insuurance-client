@@ -11,8 +11,8 @@ export const uploadImages = async (token, form) => {
     })
 }
 
-export const uploadDocument = async (data) => {
-    return api.post('/api/document', data)
+export const uploadPDF = async (file) => {
+    return api.post('/api/pdf', { file })
 }
 
 export const removeImage = async (token, logo_public_id) => {

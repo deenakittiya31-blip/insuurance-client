@@ -271,7 +271,7 @@ const PolicyManage = () => {
                                             <td>
                                                 <div className="flex gap-1">
                                                     {!p.is_active && (
-                                                        <button onClick={() => hdlPublish(p.id)} className="btn btn-xs btn-success text-white">
+                                                        <button onClick={() => hdlPublish(p.id)} className="btn btn-sm btn-success text-white">
                                                             Publish
                                                         </button>
                                                     )}

@@ -139,7 +139,7 @@ const MessageApi = () => {
 
     //กรองข้อมูลกลุ่ม
     const handleCheckFilter = (e) => {
-        const idGroup = Number(e.target.value)
+        const idGroup = e.target.value
 
         setGroupId((prev) =>
             prev.includes(idGroup)
@@ -147,7 +147,6 @@ const MessageApi = () => {
                 : [...prev, idGroup]
         )
     }
-
     //เลือกสมาชิกทั้งหมด
     const handleCheckAll = (e) => {
         if (e.target.checked) {
@@ -269,10 +268,10 @@ const MessageApi = () => {
                                             GroupData.map((i) => (
                                                 <label key={i.id} className='flex items-center gap-3 p-3 text-sm text font-medium text-text-primary hover:bg-secondary-content'>
                                                     <input
-                                                        value={i.id}
+                                                        value={i.group_code}
                                                         type="checkbox"
                                                         onChange={handleCheckFilter}
-                                                        checked={groupId.includes(i.id)}
+                                                        checked={groupId.includes(i.group_code)}
                                                         className="checkbox bg-white"
                                                     />
                                                     {i.group_name}

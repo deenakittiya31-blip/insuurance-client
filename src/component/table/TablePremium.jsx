@@ -112,10 +112,19 @@ const TablePremium = ({ data, page, limit, onDelete, onSort, sortConfig, onToggl
                                 <td className="align-top text-center">{i.nametype}</td>
                                 <td className="align-top text-center">
                                     {
-                                        i.type?.map((t, idx) => (
-                                            <span key={idx} className='line-clamp-1'>
+                                        i.type?.slice(0, 1).map((t, idx) => (
+                                            <button
+                                                key={idx}
+                                                type="button"
+                                                className="relative btn btn-sm btn-ghost rounded-full font-prompt text-text-primary"
+                                            >
                                                 {t.code_type}({t.code_usage})
-                                            </span>
+                                                {i.type.length > 1 && (
+                                                    <div className="absolute right-0 -top-2 font-normal w-4 h-4 bg-white/70 text-text-primary rounded-full border border-border/25 flex items-center justify-center">
+                                                        <span className="text-[10px] text-gray-400">+{i.type.length - 1}</span>
+                                                    </div>
+                                                )}
+                                            </button>
                                         ))
                                     }
                                 </td>
