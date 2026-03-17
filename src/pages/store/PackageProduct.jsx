@@ -338,6 +338,7 @@ const PackageProduct = () => {
                                 form={filter}
                                 onSubmit={handleSubmitFilter}
                                 onClear={clearFilter}
+                                carUsage={carUsageType}
                             />
                         </div>
                     </div>

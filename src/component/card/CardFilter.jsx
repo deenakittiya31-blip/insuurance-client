@@ -5,7 +5,7 @@ import { TiSpanner } from "react-icons/ti";
 
 const INITIAL_SHOW_COUNT = 3;
 
-const CardFilter = ({ form, typeInsur, company, onSubmit, onChange, onClear }) => {
+const CardFilter = ({ form, typeInsur, company, onSubmit, onChange, onClear, carUsage }) => {
     const [companyList, setCompanyList] = useState(true)
     const [repair, setRepair] = useState(true)
     const [showAllCompanies, setShowAllCompanies] = useState(false)
@@ -125,6 +125,29 @@ const CardFilter = ({ form, typeInsur, company, onSubmit, onChange, onClear }) =
                         )
                     }
                 </div >
+                <div>
+                    <fieldset className="fieldset font-prompt text-text-primary p-0">
+                        <legend className="fieldset-legend font-bold text-sm text-text-primary">ประเภทการใช้งาน</legend>
+                        <select
+                            name='car_usage_type_id'
+                            value={form.car_usage_type_id}
+                            onChange={onChange}
+                            className="select w-full select-sm"
+                        >
+                            <option value="" disabled={true}>โปรดเลือก</option>
+                            {
+                                carUsage.map((i) => (
+                                    <option
+                                        key={i.id}
+                                        value={i.id}
+                                    >
+                                        {i.car_type} / {i.usage}
+                                    </option>
+                                ))
+                            }
+                        </select>
+                    </fieldset>
+                </div>
                 <div>
                     <div className='flex justify-between items-center'>
                         <p className="font-bold text-sm">ประเภทซ่อม</p>
