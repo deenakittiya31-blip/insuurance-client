@@ -152,8 +152,8 @@ const TableOrder = ({ data, onSort, sortConfig, onUpdateStatus, onUpdateTracking
                                 <td className="align-top">{numberFormat(i.selling_price)}</td>
                                 <td className="align-top">
                                     <div className='mb-1'>
-                                        <button className="btn btn-xs text-text-primary" onClick={() => document.getElementById(`modaltableorder-${i.id}`).showModal()}>การชำระเงิน</button>
-                                        <dialog id={`modaltableorder-${i.id}`} className="modal">
+                                        <button className="btn btn-xs text-text-primary" onClick={() => document.getElementById(`modaltablepayment-${i.id}`).showModal()}>การชำระเงิน</button>
+                                        <dialog id={`modaltablepayment-${i.id}`} className="modal">
                                             <div className="modal-box w-11/12 max-w-70">
                                                 <h3 className="font-bold text-lg text-center mb-3">ข้อมูลวิธีการชำระเงิน</h3>
                                                 <div>
@@ -220,8 +220,8 @@ const TableOrder = ({ data, onSort, sortConfig, onUpdateStatus, onUpdateTracking
                                 </td>
                                 <td className="align-top text-center">
                                     <div className='mb-1'>
-                                        <button className="btn btn-xs text-text-primary" onClick={() => document.getElementById(`modaltableorder-${i.id}`).showModal()}>ที่อยู่จัดส่ง</button>
-                                        <dialog id={`modaltableorder-${i.id}`} className="modal">
+                                        <button className="btn btn-xs text-text-primary" onClick={() => document.getElementById(`modaltracking-${i.id}`).showModal()}>ที่อยู่จัดส่ง</button>
+                                        <dialog id={`modaltracking-${i.id}`} className="modal">
                                             <div className="modal-box">
                                                 <h3 className="font-bold text-lg">ที่อยู่จัดส่ง</h3>
                                                 {i.address ? (
