@@ -280,15 +280,12 @@ const Checkout = () => {
                                                             const firstAndCharge = parseFloat(i.first_payment_amount || 0) + parseInt(i.charge || 0)
                                                             const remaining = parseFloat(i.selling_price_final || 0) - firstAndCharge
                                                             const perInstallment = installCount > 1 ? remaining / (installCount - 1) : remaining
-                                                            return `฿${numberFormat(perInstallment)}`
+                                                            return `฿${perInstallment}`
                                                         })()}
                                                     </span>
                                                 </>
                                             )}
-                                            <p className="text-gray-500">งวดละ</p>
-                                            <span className="font-semibold">
-                                                {i.selling_price_final / i.installment_max}
-                                            </span>
+
                                         </div>
                                     </>
                                 )}
