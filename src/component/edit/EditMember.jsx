@@ -44,7 +44,7 @@ const EditMember = ({ isOpen, form, onSubmit, onChange, onClose, group, removeTa
                         name='group_id'
                         value={form.group_id}
                         onChange={onChange}
-                        valueKey='id'
+                        valueKey='group_code'
                         labelKey='group_name'
                     />
                     <TextInput
