@@ -9,7 +9,7 @@ const Line = () => {
 
     useEffect(() => {
         const init = async () => {
-            await liff.init({ liffId: "2008929214-oMQadweJ" });
+            await liff.init({ liffId: "1655907951-VyHVQyHl" });
 
             if (!liff.isLoggedIn()) {
                 liff.login();

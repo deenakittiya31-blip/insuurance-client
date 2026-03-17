@@ -85,7 +85,7 @@ const MemberRegister = () => {
 
     useEffect(() => {
         const initLiff = async () => {
-            await liff.init({ liffId: '2008929214-oMQadweJ' })
+            await liff.init({ liffId: '1655907951-VyHVQyHl' })
 
             const access = liff.getAccessToken()
             setAccessLine(access)
